@@ -1,0 +1,54 @@
+{
+  "page": 1,
+  "per_page": 1,
+  "results": [
+    {
+      "captive": false,
+      "geojson": {
+        "coordinates": [
+          4.8718,
+          50.4674
+        ],
+        "type": "Point"
+      },
+      "id": 910003,
+      "license_code": "cc-by",
+      "photos": [
+        {
+          "attribution": "(c) Test Observer, some rights reserved (CC BY-NC)",
+          "attribution_name": "Test Observer",
+          "id": 810003,
+          "license_code": "cc-by-nc",
+          "original_dimensions": {
+            "height": 960,
+            "width": 1280
+          },
+          "original_url": "https://static.inaturalist.org/photos/810003/original.jpg",
+          "url": "https://static.inaturalist.org/photos/810003/square.jpg"
+        }
+      ],
+      "place_guess": "Namur, BE",
+      "quality_grade": "research",
+      "taxon": {
+        "ancestor_ids": [
+          48460,
+          1,
+          2,
+          355675,
+          3,
+          7251,
+          15977,
+          13093,
+          13094
+        ],
+        "id": 13094,
+        "name": "Erithacus rubecula",
+        "preferred_common_name": "European Robin",
+        "rank": "species"
+      },
+      "time_observed_at": "2025-02-12T08:05:00+00:00",
+      "uri": "https://www.inaturalist.org/observations/910003"
+    }
+  ],
+  "total_results": 1
+}

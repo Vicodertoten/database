@@ -1,0 +1,54 @@
+{
+  "page": 1,
+  "per_page": 1,
+  "results": [
+    {
+      "captive": false,
+      "geojson": {
+        "coordinates": [
+          4.3517,
+          50.8503
+        ],
+        "type": "Point"
+      },
+      "id": 910001,
+      "license_code": "cc-by",
+      "photos": [
+        {
+          "attribution": "(c) Test Observer, some rights reserved (CC BY)",
+          "attribution_name": "Test Observer",
+          "id": 810001,
+          "license_code": "cc-by",
+          "original_dimensions": {
+            "height": 1200,
+            "width": 1600
+          },
+          "original_url": "https://static.inaturalist.org/photos/810001/original.jpg",
+          "url": "https://static.inaturalist.org/photos/810001/square.jpg"
+        }
+      ],
+      "place_guess": "Brussels, BE",
+      "quality_grade": "research",
+      "taxon": {
+        "ancestor_ids": [
+          48460,
+          1,
+          2,
+          355675,
+          3,
+          7251,
+          15977,
+          12705,
+          12716
+        ],
+        "id": 12716,
+        "name": "Turdus merula",
+        "preferred_common_name": "Eurasian Blackbird",
+        "rank": "species"
+      },
+      "time_observed_at": "2025-04-18T07:31:00+00:00",
+      "uri": "https://www.inaturalist.org/observations/910001"
+    }
+  ],
+  "total_results": 1
+}

@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "database-core"
+version = "0.1.0"
+description = "Minimal bird-focused knowledge-core MVP for a future biodiversity learning platform."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "pydantic>=2.7,<3",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0,<9",
+  "ruff>=0.4,<1",
+]
+
+[project.scripts]
+database-run-pipeline = "database_core.cli:run_pipeline_entrypoint"
+database-inspect = "database_core.cli:inspect_entrypoint"
+database-fetch-inat-snapshot = "database_core.cli:fetch_inat_snapshot_entrypoint"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]

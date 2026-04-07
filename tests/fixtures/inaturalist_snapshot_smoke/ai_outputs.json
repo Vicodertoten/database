@@ -1,0 +1,50 @@
+{
+  "810001": {
+    "confidence": 0.94,
+    "life_stage": "adult",
+    "model_name": "gemini-2.5-flash-fixture",
+    "notes": "Clear lateral view with diagnostic plumage.",
+    "pedagogical_quality": "high",
+    "sex": "male",
+    "technical_quality": "high",
+    "view_angle": "lateral",
+    "visible_parts": [
+      "full_body",
+      "head",
+      "beak",
+      "wing"
+    ]
+  },
+  "810002": {
+    "confidence": 0.88,
+    "life_stage": "adult",
+    "model_name": "gemini-2.5-flash-fixture",
+    "notes": "Strong frontal pose with useful field marks.",
+    "pedagogical_quality": "high",
+    "sex": "male",
+    "technical_quality": "high",
+    "view_angle": "frontal",
+    "visible_parts": [
+      "full_body",
+      "head",
+      "beak",
+      "breast"
+    ]
+  },
+  "810003": {
+    "confidence": 0.9,
+    "life_stage": "adult",
+    "model_name": "gemini-2.5-flash-fixture",
+    "notes": "Licensing blocks export despite good visual quality.",
+    "pedagogical_quality": "high",
+    "sex": "unknown",
+    "technical_quality": "high",
+    "view_angle": "lateral",
+    "visible_parts": [
+      "full_body",
+      "head",
+      "beak",
+      "breast"
+    ]
+  }
+}

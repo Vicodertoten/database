@@ -1,0 +1,206 @@
+{
+  "dataset_id": "pilot-birds-v1",
+  "captured_at": "2026-04-07T00:00:00Z",
+  "canonical_taxa": [
+    {
+      "canonical_taxon_id": "bird:turdus-merula",
+      "scientific_name": "Turdus merula",
+      "canonical_rank": "species",
+      "common_names": ["Common Blackbird", "Eurasian Blackbird"],
+      "bird_scope_compatible": true,
+      "external_source_mappings": [
+        {"source_name": "inaturalist", "external_id": "12716"}
+      ],
+      "similar_taxon_ids": []
+    },
+    {
+      "canonical_taxon_id": "bird:erithacus-rubecula",
+      "scientific_name": "Erithacus rubecula",
+      "canonical_rank": "species",
+      "common_names": ["European Robin"],
+      "bird_scope_compatible": true,
+      "external_source_mappings": [
+        {"source_name": "inaturalist", "external_id": "13094"}
+      ],
+      "similar_taxon_ids": []
+    },
+    {
+      "canonical_taxon_id": "bird:passer-domesticus",
+      "scientific_name": "Passer domesticus",
+      "canonical_rank": "species",
+      "common_names": ["House Sparrow"],
+      "bird_scope_compatible": true,
+      "external_source_mappings": [
+        {"source_name": "inaturalist", "external_id": "13858"}
+      ],
+      "similar_taxon_ids": []
+    }
+  ],
+  "observations": [
+    {
+      "source_name": "inaturalist",
+      "source_observation_id": "fixture-obs-blackbird-001",
+      "source_taxon_id": "12716",
+      "canonical_taxon_id": "bird:turdus-merula",
+      "observed_at": "2025-04-18T07:31:00Z",
+      "location": {
+        "place_name": "Brussels, BE",
+        "latitude": 50.8503,
+        "longitude": 4.3517,
+        "country_code": "BE"
+      },
+      "source_quality": {
+        "quality_grade": "research",
+        "research_grade": true,
+        "observation_license": "CC-BY",
+        "captive": false
+      },
+      "raw_payload_ref": "data/fixtures/birds_pilot.json#/observations/0",
+      "media": [
+        {
+          "source_media_id": "fixture-media-blackbird-001",
+          "media_type": "image",
+          "source_url": "fixture://inaturalist/media/fixture-media-blackbird-001",
+          "attribution": "(c) pilot observer, some rights reserved (CC BY)",
+          "author": "pilot observer",
+          "license": "CC-BY",
+          "mime_type": "image/jpeg",
+          "file_extension": "jpg",
+          "width": 1600,
+          "height": 1200,
+          "checksum": "sha256:fixture-media-blackbird-001"
+        },
+        {
+          "source_media_id": "fixture-media-blackbird-002",
+          "media_type": "image",
+          "source_url": "fixture://inaturalist/media/fixture-media-blackbird-002",
+          "attribution": "(c) pilot observer, some rights reserved (CC BY)",
+          "author": "pilot observer",
+          "license": "CC-BY",
+          "mime_type": "image/jpeg",
+          "file_extension": "jpg",
+          "width": 960,
+          "height": 960,
+          "checksum": "sha256:fixture-media-blackbird-002"
+        }
+      ]
+    },
+    {
+      "source_name": "inaturalist",
+      "source_observation_id": "fixture-obs-sparrow-001",
+      "source_taxon_id": "13858",
+      "canonical_taxon_id": "bird:passer-domesticus",
+      "observed_at": "2025-03-28T10:15:00Z",
+      "location": {
+        "place_name": "Leuven, BE",
+        "latitude": 50.8798,
+        "longitude": 4.7005,
+        "country_code": "BE"
+      },
+      "source_quality": {
+        "quality_grade": "research",
+        "research_grade": true,
+        "observation_license": "CC0",
+        "captive": false
+      },
+      "raw_payload_ref": "data/fixtures/birds_pilot.json#/observations/1",
+      "media": [
+        {
+          "source_media_id": "fixture-media-sparrow-001",
+          "media_type": "image",
+          "source_url": "fixture://inaturalist/media/fixture-media-sparrow-001",
+          "attribution": "(c) pilot observer, some rights reserved (CC BY-SA)",
+          "author": "pilot observer",
+          "license": "CC-BY-SA",
+          "mime_type": "image/jpeg",
+          "file_extension": "jpg",
+          "width": 1400,
+          "height": 1050,
+          "checksum": "sha256:fixture-media-sparrow-001"
+        }
+      ]
+    },
+    {
+      "source_name": "inaturalist",
+      "source_observation_id": "fixture-obs-robin-001",
+      "source_taxon_id": "13094",
+      "canonical_taxon_id": "bird:erithacus-rubecula",
+      "observed_at": "2025-02-12T08:05:00Z",
+      "location": {
+        "place_name": "Namur, BE",
+        "latitude": 50.4674,
+        "longitude": 4.8718,
+        "country_code": "BE"
+      },
+      "source_quality": {
+        "quality_grade": "research",
+        "research_grade": true,
+        "observation_license": "CC-BY",
+        "captive": false
+      },
+      "raw_payload_ref": "data/fixtures/birds_pilot.json#/observations/2",
+      "media": [
+        {
+          "source_media_id": "fixture-media-robin-001",
+          "media_type": "image",
+          "source_url": "fixture://inaturalist/media/fixture-media-robin-001",
+          "attribution": "(c) pilot observer, some rights reserved (CC BY-NC)",
+          "author": "pilot observer",
+          "license": "CC-BY-NC",
+          "mime_type": "image/jpeg",
+          "file_extension": "jpg",
+          "width": 1280,
+          "height": 960,
+          "checksum": "sha256:fixture-media-robin-001"
+        }
+      ]
+    }
+  ],
+  "ai_fixture_outputs": {
+    "fixture-media-blackbird-001": {
+      "technical_quality": "high",
+      "pedagogical_quality": "high",
+      "life_stage": "adult",
+      "sex": "male",
+      "visible_parts": ["full_body", "head", "beak", "wing"],
+      "view_angle": "lateral",
+      "confidence": 0.94,
+      "model_name": "gemini-2.5-flash-fixture",
+      "notes": "Clear lateral view with diagnostic plumage."
+    },
+    "fixture-media-blackbird-002": {
+      "technical_quality": "medium",
+      "pedagogical_quality": "low",
+      "life_stage": "unknown",
+      "sex": "unknown",
+      "visible_parts": ["head", "eye"],
+      "view_angle": "close_up",
+      "confidence": 0.48,
+      "model_name": "gemini-2.5-flash-fixture",
+      "notes": "Too tight for broad identification training."
+    },
+    "fixture-media-sparrow-001": {
+      "technical_quality": "high",
+      "pedagogical_quality": "high",
+      "life_stage": "adult",
+      "sex": "male",
+      "visible_parts": ["full_body", "head", "beak", "breast"],
+      "view_angle": "frontal",
+      "confidence": 0.88,
+      "model_name": "gemini-2.5-flash-fixture",
+      "notes": "Strong frontal pose with useful field marks."
+    },
+    "fixture-media-robin-001": {
+      "technical_quality": "high",
+      "pedagogical_quality": "high",
+      "life_stage": "adult",
+      "sex": "unknown",
+      "visible_parts": ["full_body", "head", "beak", "breast"],
+      "view_angle": "lateral",
+      "confidence": 0.9,
+      "model_name": "gemini-2.5-flash-fixture",
+      "notes": "Licensing blocks export despite good visual quality."
+    }
+  }
+}
+

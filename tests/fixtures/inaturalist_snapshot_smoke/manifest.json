@@ -1,0 +1,92 @@
+{
+  "ai_outputs_path": "ai_outputs.json",
+  "created_at": "2026-04-07T00:00:00+00:00",
+  "media_downloads": [
+    {
+      "download_status": "downloaded",
+      "image_path": "images/810001.jpg",
+      "mime_type": "image/jpeg",
+      "sha256": "sha256:smoke810001",
+      "source_media_id": "810001",
+      "source_observation_id": "910001",
+      "source_url": "https://static.inaturalist.org/photos/810001/original.jpg"
+    },
+    {
+      "download_status": "downloaded",
+      "image_path": "images/810002.jpg",
+      "mime_type": "image/jpeg",
+      "sha256": "sha256:smoke810002",
+      "source_media_id": "810002",
+      "source_observation_id": "910002",
+      "source_url": "https://static.inaturalist.org/photos/810002/original.jpg"
+    },
+    {
+      "download_status": "downloaded",
+      "image_path": "images/810003.jpg",
+      "mime_type": "image/jpeg",
+      "sha256": "sha256:smoke810003",
+      "source_media_id": "810003",
+      "source_observation_id": "910003",
+      "source_url": "https://static.inaturalist.org/photos/810003/original.jpg"
+    }
+  ],
+  "snapshot_id": "smoke-snapshot",
+  "source_name": "inaturalist",
+  "taxon_seeds": [
+    {
+      "canonical_rank": "species",
+      "canonical_taxon_id": "bird:turdus-merula",
+      "common_names": [
+        "Common Blackbird",
+        "Eurasian Blackbird"
+      ],
+      "query_params": {
+        "order": "desc",
+        "order_by": "created_at",
+        "per_page": "5",
+        "photos": "true",
+        "quality_grade": "research",
+        "taxon_id": "12716"
+      },
+      "response_path": "responses/bird_turdus_merula.json",
+      "scientific_name": "Turdus merula",
+      "source_taxon_id": "12716"
+    },
+    {
+      "canonical_rank": "species",
+      "canonical_taxon_id": "bird:passer-domesticus",
+      "common_names": [
+        "House Sparrow"
+      ],
+      "query_params": {
+        "order": "desc",
+        "order_by": "created_at",
+        "per_page": "5",
+        "photos": "true",
+        "quality_grade": "research",
+        "taxon_id": "13858"
+      },
+      "response_path": "responses/bird_passer_domesticus.json",
+      "scientific_name": "Passer domesticus",
+      "source_taxon_id": "13858"
+    },
+    {
+      "canonical_rank": "species",
+      "canonical_taxon_id": "bird:erithacus-rubecula",
+      "common_names": [
+        "European Robin"
+      ],
+      "query_params": {
+        "order": "desc",
+        "order_by": "created_at",
+        "per_page": "5",
+        "photos": "true",
+        "quality_grade": "research",
+        "taxon_id": "13094"
+      },
+      "response_path": "responses/bird_erithacus_rubecula.json",
+      "scientific_name": "Erithacus rubecula",
+      "source_taxon_id": "13094"
+    }
+  ]
+}

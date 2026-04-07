@@ -1,0 +1,53 @@
+{
+  "page": 1,
+  "per_page": 1,
+  "results": [
+    {
+      "captive": false,
+      "geojson": {
+        "coordinates": [
+          4.7005,
+          50.8798
+        ],
+        "type": "Point"
+      },
+      "id": 910002,
+      "license_code": "cc0",
+      "photos": [
+        {
+          "attribution": "(c) Test Observer, some rights reserved (CC BY-SA)",
+          "attribution_name": "Test Observer",
+          "id": 810002,
+          "license_code": "cc-by-sa",
+          "original_dimensions": {
+            "height": 1050,
+            "width": 1400
+          },
+          "original_url": "https://static.inaturalist.org/photos/810002/original.jpg",
+          "url": "https://static.inaturalist.org/photos/810002/square.jpg"
+        }
+      ],
+      "place_guess": "Leuven, BE",
+      "quality_grade": "research",
+      "taxon": {
+        "ancestor_ids": [
+          48460,
+          1,
+          2,
+          355675,
+          3,
+          7251,
+          7257,
+          13858
+        ],
+        "id": 13858,
+        "name": "Passer domesticus",
+        "preferred_common_name": "House Sparrow",
+        "rank": "species"
+      },
+      "time_observed_at": "2025-03-28T10:15:00+00:00",
+      "uri": "https://www.inaturalist.org/observations/910002"
+    }
+  ],
+  "total_results": 1
+}

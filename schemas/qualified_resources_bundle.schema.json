@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/database/schemas/qualified_resources_bundle.schema.json",
+  "title": "QualifiedResourcesBundle",
+  "type": "object",
+  "required": [
+    "export_version",
+    "generated_at",
+    "canonical_taxa",
+    "qualified_resources"
+  ],
+  "properties": {
+    "export_version": {
+      "type": "string"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "canonical_taxa": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["canonical_taxon_id", "scientific_name", "canonical_rank"],
+        "properties": {
+          "canonical_taxon_id": {"type": "string"},
+          "scientific_name": {"type": "string"},
+          "canonical_rank": {"type": "string"},
+          "common_names": {
+            "type": "array",
+            "items": {"type": "string"}
+          }
+        }
+      }
+    },
+    "qualified_resources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "qualified_resource_id",
+          "canonical_taxon_id",
+          "media_asset_id",
+          "qualification_status",
+          "license_safety_result",
+          "export_eligible"
+        ],
+        "properties": {
+          "qualified_resource_id": {"type": "string"},
+          "canonical_taxon_id": {"type": "string"},
+          "media_asset_id": {"type": "string"},
+          "qualification_status": {"type": "string"},
+          "license_safety_result": {"type": "string"},
+          "export_eligible": {"type": "boolean"}
+        }
+      }
+    }
+  }
+}
+
