@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import sqlite3
+from collections import Counter
 from collections.abc import Sequence
 from contextlib import contextmanager
 from pathlib import Path
@@ -261,30 +262,57 @@ class SQLiteRepository:
             ).fetchall()
             return [dict(row) for row in rows]
 
-    def fetch_qualification_metrics(self) -> dict[str, int]:
+    def fetch_qualification_metrics(self) -> dict[str, object]:
         with self.connect() as connection:
             rows = connection.execute(
                 """
-                SELECT qualification_status, provenance_summary_json
+                SELECT
+                    qualification_status,
+                    provenance_summary_json,
+                    qualification_flags_json,
+                    license_safety_result,
+                    export_eligible
                 FROM qualified_resources
                 """
             ).fetchall()
             accepted_resources = 0
+            rejected_resources = 0
+            review_required_resources = 0
             ai_qualified_images = 0
+            exportable_resources = 0
+            flag_counts: Counter[str] = Counter()
+            license_distribution: Counter[str] = Counter()
+            ai_model_distribution: Counter[str] = Counter()
             for row in rows:
                 if row["qualification_status"] == "accepted":
                     accepted_resources += 1
+                elif row["qualification_status"] == "rejected":
+                    rejected_resources += 1
+                elif row["qualification_status"] == "review_required":
+                    review_required_resources += 1
                 provenance = json.loads(row["provenance_summary_json"])
                 if provenance.get("ai_model"):
                     ai_qualified_images += 1
+                    ai_model_distribution[str(provenance["ai_model"])] += 1
+                if row["export_eligible"]:
+                    exportable_resources += 1
+                license_distribution[row["license_safety_result"]] += 1
+                for flag in json.loads(row["qualification_flags_json"]):
+                    flag_counts[flag] += 1
 
             review_queue_count = connection.execute(
                 "SELECT COUNT(*) AS count FROM review_queue"
             ).fetchone()["count"]
             return {
                 "accepted_resources": accepted_resources,
+                "rejected_resources": rejected_resources,
+                "review_required_resources": review_required_resources,
                 "ai_qualified_images": ai_qualified_images,
+                "exportable_resources": exportable_resources,
                 "review_queue_count": review_queue_count,
+                "top_rejection_flags": dict(flag_counts.most_common(5)),
+                "license_distribution": dict(sorted(license_distribution.items())),
+                "ai_model_distribution": dict(sorted(ai_model_distribution.items())),
             }
 
 

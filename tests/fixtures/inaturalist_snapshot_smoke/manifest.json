@@ -4,6 +4,10 @@
   "media_downloads": [
     {
       "download_status": "downloaded",
+      "downloaded_height": 1200,
+      "downloaded_variant": "original",
+      "downloaded_width": 1600,
+      "file_size_bytes": 123456,
       "image_path": "images/810001.jpg",
       "mime_type": "image/jpeg",
       "sha256": "sha256:smoke810001",
@@ -13,6 +17,10 @@
     },
     {
       "download_status": "downloaded",
+      "downloaded_height": 1050,
+      "downloaded_variant": "original",
+      "downloaded_width": 1400,
+      "file_size_bytes": 123457,
       "image_path": "images/810002.jpg",
       "mime_type": "image/jpeg",
       "sha256": "sha256:smoke810002",
@@ -22,6 +30,10 @@
     },
     {
       "download_status": "downloaded",
+      "downloaded_height": 960,
+      "downloaded_variant": "original",
+      "downloaded_width": 1280,
+      "file_size_bytes": 123458,
       "image_path": "images/810003.jpg",
       "mime_type": "image/jpeg",
       "sha256": "sha256:smoke810003",
@@ -40,15 +52,21 @@
         "Common Blackbird",
         "Eurasian Blackbird"
       ],
+      "effective_order_by": "votes",
+      "fallback_applied": false,
       "query_params": {
+        "captive": "false",
+        "license": "cc0,cc-by,cc-by-sa",
         "order": "desc",
-        "order_by": "created_at",
+        "order_by": "votes",
         "per_page": "5",
+        "photo_license": "cc0,cc-by,cc-by-sa",
         "photos": "true",
         "quality_grade": "research",
         "taxon_id": "12716"
       },
       "response_path": "responses/bird_turdus_merula.json",
+      "requested_order_by": "votes",
       "scientific_name": "Turdus merula",
       "source_taxon_id": "12716"
     },
@@ -58,15 +76,21 @@
       "common_names": [
         "House Sparrow"
       ],
+      "effective_order_by": "votes",
+      "fallback_applied": false,
       "query_params": {
+        "captive": "false",
+        "license": "cc0,cc-by,cc-by-sa",
         "order": "desc",
-        "order_by": "created_at",
+        "order_by": "votes",
         "per_page": "5",
+        "photo_license": "cc0,cc-by,cc-by-sa",
         "photos": "true",
         "quality_grade": "research",
         "taxon_id": "13858"
       },
       "response_path": "responses/bird_passer_domesticus.json",
+      "requested_order_by": "votes",
       "scientific_name": "Passer domesticus",
       "source_taxon_id": "13858"
     },
@@ -76,15 +100,21 @@
       "common_names": [
         "European Robin"
       ],
+      "effective_order_by": "votes",
+      "fallback_applied": false,
       "query_params": {
+        "captive": "false",
+        "license": "cc0,cc-by,cc-by-sa",
         "order": "desc",
-        "order_by": "created_at",
+        "order_by": "votes",
         "per_page": "5",
+        "photo_license": "cc0,cc-by,cc-by-sa",
         "photos": "true",
         "quality_grade": "research",
         "taxon_id": "13094"
       },
       "response_path": "responses/bird_erithacus_rubecula.json",
+      "requested_order_by": "votes",
       "scientific_name": "Erithacus rubecula",
       "source_taxon_id": "13094"
     }

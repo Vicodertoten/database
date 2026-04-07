@@ -27,6 +27,6 @@ Phase 1 stays intentionally small:
 - image-only media qualification
 - research-grade source quality only
 - commercial-safe export only
-- review queue for uncertain cases
+- optional review queue for audit only
 
 The first fixture dataset is a tiny pilot seed. It exists to validate the data model and pipeline before live harvesting is expanded.

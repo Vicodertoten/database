@@ -24,7 +24,9 @@ from database_core.review.queue import build_review_item
 
 SAFE_LICENSES = {"cc0", "cc-by", "cc-by-sa", "public domain", "pd"}
 UNSAFE_LICENSE_MARKERS = ("nc", "nd", "all rights reserved")
-AI_CONFIDENCE_THRESHOLD = 0.6
+AI_CONFIDENCE_THRESHOLD = 0.8
+MIN_ACCEPTED_WIDTH = 1000
+MIN_ACCEPTED_HEIGHT = 750
 QUALIFICATION_VERSION = "phase1.v1"
 
 
@@ -34,7 +36,10 @@ def qualify_media_assets(
     media_assets: Iterable[MediaAsset],
     ai_qualifications_by_source_media_id: dict[str, AIQualification | AIQualificationOutcome],
     created_at: datetime,
+    uncertain_policy: str = "review",
 ) -> tuple[list[QualifiedResource], list[ReviewItem]]:
+    if uncertain_policy not in {"review", "reject"}:
+        raise ValueError(f"Unsupported uncertain_policy: {uncertain_policy}")
     observations_by_uid = {item.observation_uid: item for item in observations}
     qualified_resources: list[QualifiedResource] = []
     review_items: list[ReviewItem] = []
@@ -46,6 +51,7 @@ def qualify_media_assets(
             media_asset=media_asset,
             observation=observation,
             ai_outcome=ai_outcome,
+            uncertain_policy=uncertain_policy,
         )
         qualified_resources.append(resource)
         if resource.qualification_status == QualificationStatus.REVIEW_REQUIRED:
@@ -66,6 +72,7 @@ def _qualify_single_media(
     media_asset: MediaAsset,
     observation: SourceObservation,
     ai_outcome: AIQualificationOutcome | None,
+    uncertain_policy: str,
 ) -> QualifiedResource:
     ai_qualification = ai_outcome.qualification if ai_outcome else None
     technical_quality = _resolve_technical_quality(media_asset, ai_qualification)
@@ -84,6 +91,13 @@ def _qualify_single_media(
         qualification_flags.append("unsupported_media_type")
     if license_safety_result == LicenseSafetyResult.UNSAFE:
         qualification_flags.append("unsafe_license")
+    if (
+        media_asset.width is None
+        or media_asset.height is None
+        or media_asset.width < MIN_ACCEPTED_WIDTH
+        or media_asset.height < MIN_ACCEPTED_HEIGHT
+    ):
+        qualification_flags.append("insufficient_resolution")
     if ai_qualification and ai_qualification.confidence < AI_CONFIDENCE_THRESHOLD:
         qualification_flags.append("low_ai_confidence")
     if not visible_parts:
@@ -92,8 +106,7 @@ def _qualify_single_media(
         qualification_flags.append("missing_view_angle")
     if technical_quality in {TechnicalQuality.LOW, TechnicalQuality.UNKNOWN}:
         qualification_flags.append("insufficient_technical_quality")
-    if pedagogical_quality in {PedagogicalQuality.LOW, PedagogicalQuality.UNKNOWN}:
-        qualification_flags.append("insufficient_pedagogical_quality")
+    qualification_flags = list(dict.fromkeys(qualification_flags))
 
     if "unsupported_media_type" in qualification_flags or "unsafe_license" in qualification_flags:
         status = QualificationStatus.REJECTED
@@ -101,18 +114,23 @@ def _qualify_single_media(
         flag in qualification_flags
         for flag in (
             "missing_cached_image",
+            "missing_cached_ai_output",
             "gemini_error",
             "invalid_gemini_json",
             "missing_fixture_ai_output",
+            "insufficient_resolution",
             "incomplete_required_tags",
             "low_ai_confidence",
             "missing_visible_parts",
             "missing_view_angle",
             "insufficient_technical_quality",
-            "insufficient_pedagogical_quality",
         )
     ):
-        status = QualificationStatus.REVIEW_REQUIRED
+        status = (
+            QualificationStatus.REVIEW_REQUIRED
+            if uncertain_policy == "review"
+            else QualificationStatus.REJECTED
+        )
     else:
         status = QualificationStatus.ACCEPTED
 
@@ -176,6 +194,10 @@ def _single_license_result(license_code: str | None) -> LicenseSafetyResult:
     return LicenseSafetyResult.REVIEW_REQUIRED
 
 
+def is_safe_license(license_code: str | None) -> bool:
+    return _single_license_result(license_code) == LicenseSafetyResult.SAFE
+
+
 def _resolve_technical_quality(
     media_asset: MediaAsset,
     ai_qualification: AIQualification | None,
@@ -203,14 +225,15 @@ def _build_notes(
     ai_qualification: AIQualification | None,
     ai_outcome: AIQualificationOutcome | None,
 ) -> str:
-    note_parts = []
+    note_parts: list[str] = []
     if flags:
         note_parts.append(",".join(flags))
     if ai_outcome and ai_outcome.note:
         note_parts.append(ai_outcome.note)
     if ai_qualification and ai_qualification.notes:
         note_parts.append(ai_qualification.notes)
-    return " | ".join(note_parts)
+    unique_note_parts = list(dict.fromkeys(part for part in note_parts if part))
+    return " | ".join(unique_note_parts)
 
 
 def _coerce_ai_outcome(

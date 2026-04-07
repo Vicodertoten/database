@@ -10,7 +10,6 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 from database_core.adapters.common import SourceDataset
 from database_core.domain.enums import CanonicalRank, SourceName
 from database_core.domain.models import (
-    AIQualification,
     CanonicalTaxon,
     ExternalMapping,
     LocationMetadata,
@@ -18,9 +17,13 @@ from database_core.domain.models import (
     SourceObservation,
     SourceQualityMetadata,
 )
+from database_core.qualification.ai import AIQualificationOutcome, inspect_image_dimensions
+from database_core.qualification.rules import is_safe_license
 
 DEFAULT_INAT_SNAPSHOT_ROOT = Path("data/raw/inaturalist")
 DEFAULT_PILOT_TAXA_PATH = Path("data/fixtures/inaturalist_pilot_taxa.json")
+MIN_ACCEPTED_WIDTH = 1000
+MIN_ACCEPTED_HEIGHT = 750
 
 
 class SnapshotModel(BaseModel):
@@ -50,6 +53,9 @@ class SnapshotTaxonSeed(SnapshotModel):
     source_taxon_id: str
     query_params: dict[str, str]
     response_path: str
+    requested_order_by: str | None = None
+    effective_order_by: str | None = None
+    fallback_applied: bool = False
 
 
 class SnapshotMediaDownload(SnapshotModel):
@@ -60,6 +66,10 @@ class SnapshotMediaDownload(SnapshotModel):
     source_url: str
     mime_type: str | None = None
     sha256: str | None = None
+    downloaded_width: int | None = None
+    downloaded_height: int | None = None
+    downloaded_variant: str | None = None
+    file_size_bytes: int | None = None
 
 
 class InaturalistSnapshotManifest(SnapshotModel):
@@ -98,6 +108,14 @@ def load_snapshot_manifest(
     return manifest, manifest_path.parent
 
 
+def write_snapshot_manifest(snapshot_dir: Path, manifest: InaturalistSnapshotManifest) -> None:
+    path = snapshot_dir / "manifest.json"
+    path.write_text(
+        json.dumps(manifest.model_dump(mode="json"), indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+
+
 def load_snapshot_dataset(
     *,
     snapshot_id: str | None = None,
@@ -120,7 +138,7 @@ def load_snapshot_dataset(
     for seed in sorted(manifest.taxon_seeds, key=lambda item: item.canonical_taxon_id):
         payload = json.loads((snapshot_dir / seed.response_path).read_text(encoding="utf-8"))
         for raw_index, result in enumerate(payload.get("results", [])):
-            if not _is_supported_observation(result, seed.source_taxon_id):
+            if not is_supported_observation_result(result, seed.source_taxon_id):
                 continue
             observation = _build_snapshot_observation(
                 result=result,
@@ -141,6 +159,7 @@ def load_snapshot_dataset(
                     download=download_by_media_id.get(str(primary_photo["id"])),
                     response_path=seed.response_path,
                     raw_index=raw_index,
+                    snapshot_dir=snapshot_dir,
                 )
             )
 
@@ -150,10 +169,11 @@ def load_snapshot_dataset(
         canonical_taxa=canonical_taxa,
         observations=sorted(observations, key=lambda item: item.observation_uid),
         media_assets=sorted(media_assets, key=lambda item: item.media_id),
-        ai_qualifications=_load_ai_outputs(snapshot_dir, manifest.ai_outputs_path),
+        ai_qualifications={},
         cached_image_paths_by_source_media_id={
             item.source_media_id: snapshot_dir / item.image_path for item in manifest.media_downloads
         },
+        ai_qualification_outcomes=_load_ai_outputs(snapshot_dir, manifest.ai_outputs_path),
     )
 
 
@@ -162,32 +182,53 @@ def summarize_snapshot_manifest(
     snapshot_id: str | None = None,
     snapshot_root: Path = DEFAULT_INAT_SNAPSHOT_ROOT,
     manifest_path: Path | None = None,
-) -> dict[str, int]:
+) -> dict[str, object]:
     manifest, snapshot_dir = load_snapshot_manifest(
         snapshot_id=snapshot_id,
         snapshot_root=snapshot_root,
         manifest_path=manifest_path,
     )
     harvested_observations = 0
+    harvested_per_taxon: dict[str, int] = {}
     for seed in manifest.taxon_seeds:
         payload = json.loads((snapshot_dir / seed.response_path).read_text(encoding="utf-8"))
-        harvested_observations += len(
-            [
-                item
-                for item in payload.get("results", [])
-                if _is_supported_observation(item, seed.source_taxon_id)
-            ]
-        )
-    downloaded_images = len(
+        supported_observations = [
+            item
+            for item in payload.get("results", [])
+            if is_supported_observation_result(item, seed.source_taxon_id)
+        ]
+        harvested_per_taxon[seed.canonical_taxon_id] = len(supported_observations)
+        harvested_observations += len(supported_observations)
+
+    downloaded_images = 0
+    insufficient_resolution_images = 0
+    for item in manifest.media_downloads:
+        image_path = snapshot_dir / item.image_path
+        if item.download_status == "downloaded" and image_path.exists():
+            downloaded_images += 1
+        width, height = _resolve_download_dimensions(snapshot_dir, item)
+        if width is not None and height is not None:
+            if width < MIN_ACCEPTED_WIDTH or height < MIN_ACCEPTED_HEIGHT:
+                insufficient_resolution_images += 1
+
+    ai_outputs = _load_ai_outputs(snapshot_dir, manifest.ai_outputs_path)
+    images_sent_to_gemini = len(
         [
             item
-            for item in manifest.media_downloads
-            if item.download_status == "downloaded" and (snapshot_dir / item.image_path).exists()
+            for item in ai_outputs.values()
+            if item.status not in {"missing_cached_image", "insufficient_resolution", "missing_cached_ai_output"}
         ]
     )
+    ai_valid_outputs = len([item for item in ai_outputs.values() if item.status == "ok"])
+
     return {
         "harvested_observations": harvested_observations,
+        "taxa_with_results": len([count for count in harvested_per_taxon.values() if count > 0]),
+        "harvested_per_taxon": harvested_per_taxon,
         "downloaded_images": downloaded_images,
+        "images_sent_to_gemini": images_sent_to_gemini,
+        "insufficient_resolution_images": insufficient_resolution_images,
+        "ai_valid_outputs": ai_valid_outputs,
     }
 
 
@@ -205,14 +246,28 @@ def _build_canonical_taxon(seed: SnapshotTaxonSeed) -> CanonicalTaxon:
     )
 
 
-def _is_supported_observation(result: dict[str, object], seed_source_taxon_id: str) -> bool:
+def is_supported_observation_result(result: dict[str, object], seed_source_taxon_id: str) -> bool:
     photos = result.get("photos") or []
     if result.get("quality_grade") != "research" or not photos:
+        return False
+    if not is_safe_license(_normalize_license(result.get("license_code"))):
+        return False
+    if result.get("captive") is True:
         return False
     taxon = result.get("taxon") or {}
     taxon_id = str(taxon.get("id", ""))
     ancestor_ids = {str(item) for item in taxon.get("ancestor_ids", [])}
-    return taxon_id == seed_source_taxon_id or seed_source_taxon_id in ancestor_ids
+    if taxon_id != seed_source_taxon_id and seed_source_taxon_id not in ancestor_ids:
+        return False
+    primary_photo = photos[0]
+    return is_safe_license(_normalize_license((primary_photo or {}).get("license_code")))
+
+
+def _normalize_license(value: object) -> str | None:
+    if value is None:
+        return None
+    text = str(value).strip()
+    return text or None
 
 
 def _build_snapshot_observation(
@@ -257,15 +312,18 @@ def _build_snapshot_media_asset(
     download: SnapshotMediaDownload | None,
     response_path: str,
     raw_index: int,
+    snapshot_dir: Path,
 ) -> MediaAsset:
     source_url = (
-        photo.get("original_url")
+        download.source_url
+        if download and download.source_url
+        else photo.get("original_url")
         or photo.get("large_url")
         or photo.get("medium_url")
         or photo.get("url")
         or observation.raw_payload_ref
     )
-    original_dimensions = photo.get("original_dimensions") or {}
+    width, height = _resolve_download_dimensions(snapshot_dir, download)
     return MediaAsset(
         media_id=f"media:inaturalist:{photo['id']}",
         source_name=SourceName.INATURALIST,
@@ -277,8 +335,8 @@ def _build_snapshot_media_asset(
         license=str(photo.get("license_code")) if photo.get("license_code") else None,
         mime_type=download.mime_type if download and download.mime_type else _guess_mime_type(str(source_url)),
         file_extension=_guess_extension(str(source_url)),
-        width=original_dimensions.get("width"),
-        height=original_dimensions.get("height"),
+        width=width,
+        height=height,
         checksum=download.sha256 if download else None,
         source_observation_uid=observation.observation_uid,
         canonical_taxon_id=observation.canonical_taxon_id,
@@ -286,11 +344,28 @@ def _build_snapshot_media_asset(
     )
 
 
-def _load_ai_outputs(snapshot_dir: Path, ai_outputs_path: str | None) -> dict[str, AIQualification]:
+def _load_ai_outputs(
+    snapshot_dir: Path,
+    ai_outputs_path: str | None,
+) -> dict[str, AIQualificationOutcome]:
     if ai_outputs_path is None:
         return {}
     payload = json.loads((snapshot_dir / ai_outputs_path).read_text(encoding="utf-8"))
-    return {media_id: AIQualification(**item) for media_id, item in payload.items()}
+    return {
+        media_id: AIQualificationOutcome.from_snapshot_payload(item)
+        for media_id, item in payload.items()
+    }
+
+
+def _resolve_download_dimensions(
+    snapshot_dir: Path,
+    download: SnapshotMediaDownload | None,
+) -> tuple[int | None, int | None]:
+    if download is None:
+        return None, None
+    if download.downloaded_width is not None and download.downloaded_height is not None:
+        return download.downloaded_width, download.downloaded_height
+    return inspect_image_dimensions(snapshot_dir / download.image_path)
 
 
 def _parse_datetime(value: object) -> datetime | None:

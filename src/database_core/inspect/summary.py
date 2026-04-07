@@ -62,9 +62,20 @@ def render_snapshot_health(
         [
             "Snapshot health",
             f"harvested_observations: {snapshot_metrics['harvested_observations']}",
+            f"taxa_with_results: {snapshot_metrics['taxa_with_results']}",
+            f"harvested_per_taxon: {snapshot_metrics['harvested_per_taxon']}",
             f"downloaded_images: {snapshot_metrics['downloaded_images']}",
+            f"images_sent_to_gemini: {snapshot_metrics['images_sent_to_gemini']}",
+            f"insufficient_resolution_images: {snapshot_metrics['insufficient_resolution_images']}",
+            f"ai_valid_outputs: {snapshot_metrics['ai_valid_outputs']}",
             f"ai_qualified_images: {qualification_metrics['ai_qualified_images']}",
             f"accepted_resources: {qualification_metrics['accepted_resources']}",
+            f"rejected_resources: {qualification_metrics['rejected_resources']}",
+            f"review_required_resources: {qualification_metrics['review_required_resources']}",
+            f"exportable_resources: {qualification_metrics['exportable_resources']}",
             f"review_queue: {qualification_metrics['review_queue_count']}",
+            f"license_distribution: {qualification_metrics['license_distribution']}",
+            f"ai_model_distribution: {qualification_metrics['ai_model_distribution']}",
+            f"top_rejection_flags: {qualification_metrics['top_rejection_flags']}",
         ]
     )

@@ -38,16 +38,23 @@ pytest
 - manual iNaturalist snapshot harvesting with local raw cache
 - cached snapshot normalization without live network access
 - qualification with license safety enforcement
-- Gemini-ready image qualification over cached media
-- review queue for uncertain cases
+- persisted Gemini image qualification over cached media
+- fully automated rejection path for uncertain snapshot records
+- optional review queue for audit, not required for the nominal snapshot flow
 - JSON export bundle for downstream consumers
 - lightweight inspection CLI
 
 ## AI-assisted qualification
 
-The default local pipeline uses deterministic fixture AI outputs so the repository stays executable offline.
+The default local fixture pipeline uses deterministic AI outputs so the repository stays executable offline.
 
-An optional Gemini adapter is included as a future-ready seam for image qualification. As of April 7, 2026, Google's official Gemini docs list `gemini-3-flash-preview` as a preview model and `gemini-2.5-flash` as a stable Flash model. The code defaults to the stable model ID until a live qualification workflow is tested against the preview series.
+For cached iNaturalist snapshots, the nominal flow is:
+
+1. `fetch-inat-snapshot`
+2. `qualify-inat-snapshot`
+3. `run-pipeline --source-mode inat_snapshot --snapshot-id <id> --qualifier-mode cached --uncertain-policy reject`
+
+The CLI auto-loads `.env` and expects `GEMINI_API_KEY` there for the live Gemini step. The default live model is `gemini-3.1-flash-lite-preview`. Snapshot qualification now applies built-in pacing and retry/backoff to reduce Gemini rate-limit losses on larger batches.
 
 ## Commands
 
@@ -55,8 +62,10 @@ An optional Gemini adapter is included as a future-ready seam for image qualific
 python scripts/fetch_inat_snapshot.py --snapshot-id birds-20260407 --max-observations-per-taxon 1
 python scripts/run_pipeline.py
 python scripts/run_pipeline.py --db-path data/pilot.sqlite --qualifier-mode rules
-python scripts/run_pipeline.py --source-mode inat_snapshot --snapshot-id birds-20260407
-python scripts/run_pipeline.py --source-mode inat_snapshot --snapshot-id birds-20260407 --qualifier-mode gemini
+python scripts/qualify_inat_snapshot.py --snapshot-id birds-20260407
+python scripts/qualify_inat_snapshot.py --snapshot-id birds-20260407 --request-interval-seconds 4.5 --max-retries 4
+python scripts/run_pipeline.py --source-mode inat_snapshot --snapshot-id birds-20260407 --qualifier-mode cached --uncertain-policy reject
+python scripts/run_pipeline.py --source-mode inat_snapshot --snapshot-id birds-20260407 --qualifier-mode gemini --uncertain-policy reject
 python scripts/inspect_database.py summary
 python scripts/inspect_database.py review-queue
 python scripts/inspect_database.py snapshot-health --snapshot-id birds-20260407
@@ -71,11 +80,25 @@ Running the pipeline writes:
 - export bundle to `data/exports/qualified_resources_bundle.json`
 - SQLite database to `data/database.sqlite`
 
+In `inat_snapshot` mode, the default derived outputs become snapshot-scoped:
+
+- SQLite: `data/databases/<snapshot_id>.sqlite`
+- normalized: `data/normalized/<snapshot_id>.json`
+- qualified: `data/qualified/<snapshot_id>.json`
+- export: `data/exports/<snapshot_id>.json`
+
 Running `fetch_inat_snapshot.py` writes:
 
 - raw iNaturalist responses to `data/raw/inaturalist/<snapshot_id>/responses/`
 - cached candidate images to `data/raw/inaturalist/<snapshot_id>/images/`
 - manifest to `data/raw/inaturalist/<snapshot_id>/manifest.json`
+
+The harvester now filters the iNaturalist request to commercial-safe licenses and `captive=false`, tries `order_by=votes`, and falls back to `order_by=observed_on` if needed. The manifest records which sort was requested and which one was actually used.
+
+Running `qualify_inat_snapshot.py` writes:
+
+- cached AI outputs to `data/raw/inaturalist/<snapshot_id>/ai_outputs.json`
+- an updated manifest pointing to that AI cache
 
 ## Fixture scope
 

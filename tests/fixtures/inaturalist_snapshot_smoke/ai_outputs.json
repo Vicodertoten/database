@@ -1,50 +1,80 @@
 {
   "810001": {
-    "confidence": 0.94,
-    "life_stage": "adult",
-    "model_name": "gemini-2.5-flash-fixture",
-    "notes": "Clear lateral view with diagnostic plumage.",
-    "pedagogical_quality": "high",
-    "sex": "male",
-    "technical_quality": "high",
-    "view_angle": "lateral",
-    "visible_parts": [
-      "full_body",
-      "head",
-      "beak",
-      "wing"
-    ]
+    "flags": [],
+    "image_height": 1200,
+    "image_width": 1600,
+    "model_name": "gemini-3.1-flash-lite-preview-fixture",
+    "note": "Clear lateral view with diagnostic plumage.",
+    "prompt_version": "phase1.inat.image.v2",
+    "qualification": {
+      "confidence": 0.94,
+      "life_stage": "adult",
+      "model_name": "gemini-3.1-flash-lite-preview-fixture",
+      "notes": "Clear lateral view with diagnostic plumage.",
+      "pedagogical_quality": "high",
+      "sex": "male",
+      "technical_quality": "high",
+      "view_angle": "lateral",
+      "visible_parts": [
+        "full_body",
+        "head",
+        "beak",
+        "wing"
+      ]
+    },
+    "qualified_at": "2026-04-07T00:00:00Z",
+    "status": "ok"
   },
   "810002": {
-    "confidence": 0.88,
-    "life_stage": "adult",
-    "model_name": "gemini-2.5-flash-fixture",
-    "notes": "Strong frontal pose with useful field marks.",
-    "pedagogical_quality": "high",
-    "sex": "male",
-    "technical_quality": "high",
-    "view_angle": "frontal",
-    "visible_parts": [
-      "full_body",
-      "head",
-      "beak",
-      "breast"
-    ]
+    "flags": [],
+    "image_height": 1050,
+    "image_width": 1400,
+    "model_name": "gemini-3.1-flash-lite-preview-fixture",
+    "note": "Strong frontal pose with useful field marks.",
+    "prompt_version": "phase1.inat.image.v2",
+    "qualification": {
+      "confidence": 0.88,
+      "life_stage": "adult",
+      "model_name": "gemini-3.1-flash-lite-preview-fixture",
+      "notes": "Strong frontal pose with useful field marks.",
+      "pedagogical_quality": "high",
+      "sex": "male",
+      "technical_quality": "high",
+      "view_angle": "frontal",
+      "visible_parts": [
+        "full_body",
+        "head",
+        "beak",
+        "breast"
+      ]
+    },
+    "qualified_at": "2026-04-07T00:00:00Z",
+    "status": "ok"
   },
   "810003": {
-    "confidence": 0.9,
-    "life_stage": "adult",
-    "model_name": "gemini-2.5-flash-fixture",
-    "notes": "Licensing blocks export despite good visual quality.",
-    "pedagogical_quality": "high",
-    "sex": "unknown",
-    "technical_quality": "high",
-    "view_angle": "lateral",
-    "visible_parts": [
-      "full_body",
-      "head",
-      "beak",
-      "breast"
-    ]
+    "flags": [],
+    "image_height": 960,
+    "image_width": 1280,
+    "model_name": "gemini-3.1-flash-lite-preview-fixture",
+    "note": "Clear lateral view with safe licensing.",
+    "prompt_version": "phase1.inat.image.v2",
+    "qualification": {
+      "confidence": 0.9,
+      "life_stage": "adult",
+      "model_name": "gemini-3.1-flash-lite-preview-fixture",
+      "notes": "Clear lateral view with safe licensing.",
+      "pedagogical_quality": "high",
+      "sex": "unknown",
+      "technical_quality": "high",
+      "view_angle": "lateral",
+      "visible_parts": [
+        "full_body",
+        "head",
+        "beak",
+        "breast"
+      ]
+    },
+    "qualified_at": "2026-04-07T00:00:00Z",
+    "status": "ok"
   }
 }

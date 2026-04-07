@@ -9,7 +9,9 @@ description = "Minimal bird-focused knowledge-core MVP for a future biodiversity
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+  "Pillow>=10,<12",
   "pydantic>=2.7,<3",
+  "python-dotenv>=1.0,<2",
 ]
 
 [project.optional-dependencies]
@@ -22,6 +24,7 @@ dev = [
 database-run-pipeline = "database_core.cli:run_pipeline_entrypoint"
 database-inspect = "database_core.cli:inspect_entrypoint"
 database-fetch-inat-snapshot = "database_core.cli:fetch_inat_snapshot_entrypoint"
+database-qualify-inat-snapshot = "database_core.cli:qualify_inat_snapshot_entrypoint"
 
 [tool.setuptools]
 package-dir = {"" = "src"}

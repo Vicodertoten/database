@@ -1,15 +1,91 @@
 from __future__ import annotations
 
 import base64
+import io
 import json
+import re
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from pathlib import Path
 import urllib.request
 from collections.abc import Mapping, Sequence
 from typing import Protocol
 
+from PIL import Image, UnidentifiedImageError
+
 from database_core.domain.enums import ViewAngle
 from database_core.domain.models import AIQualification, MediaAsset
+
+DEFAULT_GEMINI_MODEL = "gemini-3.1-flash-lite-preview"
+DEFAULT_GEMINI_PROMPT_VERSION = "phase1.inat.image.v2"
+MIN_AI_IMAGE_WIDTH = 512
+MIN_AI_IMAGE_HEIGHT = 512
+STRICT_GEMINI_PROMPT = (
+    "Classify this bird image for a biodiversity learning dataset. "
+    "Return strict JSON only, with exactly these keys: technical_quality, pedagogical_quality, "
+    "life_stage, sex, visible_parts, view_angle, confidence, notes. "
+    "technical_quality and pedagogical_quality must be one of: unknown, low, medium, high. "
+    "sex must be one of: unknown, male, female, mixed. "
+    "visible_parts must be a JSON array of short snake_case strings. "
+    "view_angle must be one of: unknown, lateral, frontal, dorsal, ventral, oblique, close_up. "
+    "confidence must be a number between 0.0 and 1.0. "
+    "Do not return prose outside the JSON object."
+)
+STRICT_GEMINI_RESPONSE_SCHEMA: dict[str, object] = {
+    "type": "object",
+    "properties": {
+        "technical_quality": {
+            "type": "string",
+            "enum": ["unknown", "low", "medium", "high"],
+            "description": "Technical image quality for identification use.",
+        },
+        "pedagogical_quality": {
+            "type": "string",
+            "enum": ["unknown", "low", "medium", "high"],
+            "description": "Pedagogical usefulness. Descriptive only.",
+        },
+        "life_stage": {
+            "type": "string",
+            "description": "Estimated life stage or unknown.",
+        },
+        "sex": {
+            "type": "string",
+            "enum": ["unknown", "male", "female", "mixed"],
+            "description": "Estimated sex or unknown.",
+        },
+        "visible_parts": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "Short snake_case names of visible bird parts.",
+        },
+        "view_angle": {
+            "type": "string",
+            "enum": ["unknown", "lateral", "frontal", "dorsal", "ventral", "oblique", "close_up"],
+            "description": "Primary view angle of the bird.",
+        },
+        "confidence": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "description": "Confidence in the structured assessment.",
+        },
+        "notes": {
+            "type": ["string", "null"],
+            "description": "Short justification or uncertainty note.",
+        },
+    },
+    "required": [
+        "technical_quality",
+        "pedagogical_quality",
+        "life_stage",
+        "sex",
+        "visible_parts",
+        "view_angle",
+        "confidence",
+        "notes",
+    ],
+    "additionalProperties": False,
+}
 
 
 class AIQualifier(Protocol):
@@ -19,9 +95,69 @@ class AIQualifier(Protocol):
 
 @dataclass(frozen=True)
 class AIQualificationOutcome:
-    qualification: AIQualification | None
+    status: str = "ok"
+    qualification: AIQualification | None = None
     flags: tuple[str, ...] = ()
     note: str | None = None
+    model_name: str | None = None
+    prompt_version: str | None = None
+    qualified_at: datetime | None = None
+    image_width: int | None = None
+    image_height: int | None = None
+
+    def to_snapshot_payload(self) -> dict[str, object]:
+        return {
+            "status": self.status,
+            "qualification": (
+                self.qualification.model_dump(mode="json") if self.qualification is not None else None
+            ),
+            "flags": list(self.flags),
+            "note": self.note,
+            "model_name": self.model_name,
+            "prompt_version": self.prompt_version,
+            "qualified_at": self.qualified_at.isoformat().replace("+00:00", "Z")
+            if self.qualified_at
+            else None,
+            "image_width": self.image_width,
+            "image_height": self.image_height,
+        }
+
+    @classmethod
+    def from_snapshot_payload(cls, payload: Mapping[str, object]) -> AIQualificationOutcome:
+        if "status" not in payload and "qualification" not in payload:
+            qualification = AIQualification(**payload)
+            return cls(
+                status="ok",
+                qualification=qualification,
+                flags=_completeness_flags(qualification),
+                model_name=qualification.model_name,
+            )
+
+        qualification_payload = payload.get("qualification")
+        qualification = AIQualification(**qualification_payload) if qualification_payload else None
+        qualified_at_raw = payload.get("qualified_at")
+        qualified_at = None
+        if qualified_at_raw:
+            qualified_at = datetime.fromisoformat(str(qualified_at_raw).replace("Z", "+00:00"))
+        return cls(
+            status=str(payload.get("status") or "ok"),
+            qualification=qualification,
+            flags=tuple(payload.get("flags", ())),
+            note=str(payload["note"]) if payload.get("note") is not None else None,
+            model_name=(
+                str(payload["model_name"])
+                if payload.get("model_name") is not None
+                else qualification.model_name if qualification is not None else None
+            ),
+            prompt_version=(
+                str(payload["prompt_version"])
+                if payload.get("prompt_version") is not None
+                else None
+            ),
+            qualified_at=qualified_at,
+            image_width=int(payload["image_width"]) if payload.get("image_width") is not None else None,
+            image_height=int(payload["image_height"]) if payload.get("image_height") is not None else None,
+        )
 
 
 class FixtureAIQualifier:
@@ -34,7 +170,7 @@ class FixtureAIQualifier:
 
 
 class GeminiVisionQualifier:
-    def __init__(self, api_key: str, model_name: str = "gemini-2.5-flash") -> None:
+    def __init__(self, api_key: str, model_name: str = DEFAULT_GEMINI_MODEL) -> None:
         self.api_key = api_key
         self.model_name = model_name
 
@@ -47,11 +183,7 @@ class GeminiVisionQualifier:
                 {
                     "parts": [
                         {
-                            "text": (
-                                "Classify this bird image for a biodiversity learning dataset. "
-                                "Return strict JSON with keys: technical_quality, pedagogical_quality, "
-                                "life_stage, sex, visible_parts, view_angle, confidence, notes."
-                            )
+                            "text": STRICT_GEMINI_PROMPT
                         },
                         {
                             "inline_data": {
@@ -63,7 +195,9 @@ class GeminiVisionQualifier:
                 }
             ],
             "generationConfig": {
-                "response_mime_type": "application/json"
+                "responseMimeType": "application/json",
+                "responseJsonSchema": STRICT_GEMINI_RESPONSE_SCHEMA,
+                "mediaResolution": "MEDIA_RESOLUTION_HIGH",
             },
         }
         request = urllib.request.Request(
@@ -79,7 +213,7 @@ class GeminiVisionQualifier:
             response_payload = json.loads(response.read().decode("utf-8"))
 
         text = response_payload["candidates"][0]["content"]["parts"][0]["text"]
-        candidate = json.loads(text)
+        candidate = _normalize_gemini_candidate(json.loads(text))
         candidate["model_name"] = self.model_name
         return AIQualification(**candidate)
 
@@ -89,9 +223,11 @@ def collect_ai_qualification_outcomes(
     *,
     qualifier_mode: str,
     precomputed_ai_qualifications: Mapping[str, AIQualification] | None = None,
+    precomputed_ai_outcomes: Mapping[str, AIQualificationOutcome] | None = None,
     cached_image_paths_by_source_media_id: Mapping[str, Path] | None = None,
     gemini_api_key: str | None = None,
-    gemini_model: str = "gemini-2.5-flash",
+    gemini_model: str = DEFAULT_GEMINI_MODEL,
+    prompt_version: str = DEFAULT_GEMINI_PROMPT_VERSION,
     qualifier: AIQualifier | None = None,
 ) -> dict[str, AIQualificationOutcome]:
     if qualifier_mode == "rules":
@@ -102,15 +238,35 @@ def collect_ai_qualification_outcomes(
         return {
             media_asset.source_media_id: (
                 AIQualificationOutcome(
+                    status="ok",
                     qualification=precomputed[media_asset.source_media_id],
                     flags=_completeness_flags(precomputed[media_asset.source_media_id]),
+                    model_name=precomputed[media_asset.source_media_id].model_name,
+                    prompt_version="fixture",
                 )
                 if media_asset.source_media_id in precomputed
                 else AIQualificationOutcome(
+                    status="missing_fixture_ai_output",
                     qualification=None,
                     flags=("missing_fixture_ai_output",),
                     note=f"no fixture ai output for {media_asset.source_media_id}",
+                    prompt_version="fixture",
                 )
+            )
+            for media_asset in media_assets
+        }
+
+    if qualifier_mode == "cached":
+        precomputed = dict(precomputed_ai_outcomes or {})
+        return {
+            media_asset.source_media_id: precomputed.get(
+                media_asset.source_media_id,
+                AIQualificationOutcome(
+                    status="missing_cached_ai_output",
+                    qualification=None,
+                    flags=("missing_cached_ai_output",),
+                    note=f"no cached ai output for {media_asset.source_media_id}",
+                ),
             )
             for media_asset in media_assets
         }
@@ -126,54 +282,158 @@ def collect_ai_qualification_outcomes(
     image_paths = dict(cached_image_paths_by_source_media_id or {})
     outcomes: dict[str, AIQualificationOutcome] = {}
     for media_asset in media_assets:
-        image_path = image_paths.get(media_asset.source_media_id)
-        if image_path is None or not image_path.exists():
-            outcomes[media_asset.source_media_id] = AIQualificationOutcome(
-                qualification=None,
-                flags=("missing_cached_image",),
-                note=f"missing cached image for {media_asset.source_media_id}",
-            )
-            continue
-        try:
-            image_bytes = image_path.read_bytes()
-        except OSError as exc:
-            outcomes[media_asset.source_media_id] = AIQualificationOutcome(
-                qualification=None,
-                flags=("missing_cached_image",),
-                note=f"failed to read cached image for {media_asset.source_media_id}: {exc}",
-            )
-            continue
-
-        try:
-            qualification = qualifier.qualify(media_asset, image_bytes=image_bytes)
-        except json.JSONDecodeError as exc:
-            outcomes[media_asset.source_media_id] = AIQualificationOutcome(
-                qualification=None,
-                flags=("invalid_gemini_json",),
-                note=f"gemini returned invalid json for {media_asset.source_media_id}: {exc}",
-            )
-            continue
-        except Exception as exc:  # noqa: BLE001
-            outcomes[media_asset.source_media_id] = AIQualificationOutcome(
-                qualification=None,
-                flags=("gemini_error",),
-                note=f"gemini error for {media_asset.source_media_id}: {type(exc).__name__}: {exc}",
-            )
-            continue
-
-        if qualification is None:
-            outcomes[media_asset.source_media_id] = AIQualificationOutcome(
-                qualification=None,
-                flags=("gemini_error",),
-                note=f"gemini returned no result for {media_asset.source_media_id}",
-            )
-            continue
-
-        outcomes[media_asset.source_media_id] = AIQualificationOutcome(
-            qualification=qualification,
-            flags=_completeness_flags(qualification),
+        outcomes[media_asset.source_media_id] = _collect_single_ai_outcome(
+            media_asset=media_asset,
+            image_path=image_paths.get(media_asset.source_media_id),
+            qualifier=qualifier,
+            gemini_model=gemini_model,
+            prompt_version=prompt_version,
         )
     return outcomes
+
+
+def build_ai_outputs_payload(
+    outcomes_by_source_media_id: Mapping[str, AIQualificationOutcome],
+) -> dict[str, object]:
+    return {
+        source_media_id: outcome.to_snapshot_payload()
+        for source_media_id, outcome in sorted(outcomes_by_source_media_id.items())
+    }
+
+
+def inspect_image_dimensions(path: Path) -> tuple[int | None, int | None]:
+    try:
+        with Image.open(path) as image:
+            return image.width, image.height
+    except (FileNotFoundError, OSError, UnidentifiedImageError):
+        return None, None
+
+
+def _collect_single_ai_outcome(
+    *,
+    media_asset: MediaAsset,
+    image_path: Path | None,
+    qualifier: AIQualifier,
+    gemini_model: str,
+    prompt_version: str,
+) -> AIQualificationOutcome:
+    qualified_at = datetime.now(timezone.utc)
+
+    if image_path is None or not image_path.exists():
+        return AIQualificationOutcome(
+            status="missing_cached_image",
+            qualification=None,
+            flags=("missing_cached_image",),
+            note=f"missing cached image for {media_asset.source_media_id}",
+            model_name=gemini_model,
+            prompt_version=prompt_version,
+            qualified_at=qualified_at,
+            image_width=media_asset.width,
+            image_height=media_asset.height,
+        )
+
+    try:
+        image_bytes = image_path.read_bytes()
+    except OSError as exc:
+        return AIQualificationOutcome(
+            status="missing_cached_image",
+            qualification=None,
+            flags=("missing_cached_image",),
+            note=f"failed to read cached image for {media_asset.source_media_id}: {exc}",
+            model_name=gemini_model,
+            prompt_version=prompt_version,
+            qualified_at=qualified_at,
+            image_width=media_asset.width,
+            image_height=media_asset.height,
+        )
+
+    image_width, image_height = _resolve_image_dimensions(media_asset, image_bytes)
+    if not _meets_minimum_ai_resolution(image_width=image_width, image_height=image_height):
+        return AIQualificationOutcome(
+            status="insufficient_resolution",
+            qualification=None,
+            flags=("insufficient_resolution",),
+            note=(
+                f"cached image below minimum Gemini resolution for {media_asset.source_media_id}: "
+                f"{image_width}x{image_height}"
+            ),
+            model_name=gemini_model,
+            prompt_version=prompt_version,
+            qualified_at=qualified_at,
+            image_width=image_width,
+            image_height=image_height,
+        )
+
+    try:
+        qualification = qualifier.qualify(media_asset, image_bytes=image_bytes)
+    except json.JSONDecodeError as exc:
+        return AIQualificationOutcome(
+            status="invalid_gemini_json",
+            qualification=None,
+            flags=("invalid_gemini_json",),
+            note=f"gemini returned invalid json for {media_asset.source_media_id}: {exc}",
+            model_name=gemini_model,
+            prompt_version=prompt_version,
+            qualified_at=qualified_at,
+            image_width=image_width,
+            image_height=image_height,
+        )
+    except Exception as exc:  # noqa: BLE001
+        return AIQualificationOutcome(
+            status="gemini_error",
+            qualification=None,
+            flags=("gemini_error",),
+            note=f"gemini error for {media_asset.source_media_id}: {type(exc).__name__}: {exc}",
+            model_name=gemini_model,
+            prompt_version=prompt_version,
+            qualified_at=qualified_at,
+            image_width=image_width,
+            image_height=image_height,
+        )
+
+    if qualification is None:
+        return AIQualificationOutcome(
+            status="gemini_error",
+            qualification=None,
+            flags=("gemini_error",),
+            note=f"gemini returned no result for {media_asset.source_media_id}",
+            model_name=gemini_model,
+            prompt_version=prompt_version,
+            qualified_at=qualified_at,
+            image_width=image_width,
+            image_height=image_height,
+        )
+
+    return AIQualificationOutcome(
+        status="ok",
+        qualification=qualification,
+        flags=_completeness_flags(qualification),
+        note=qualification.notes,
+        model_name=qualification.model_name or gemini_model,
+        prompt_version=prompt_version,
+        qualified_at=qualified_at,
+        image_width=image_width,
+        image_height=image_height,
+    )
+
+
+def _resolve_image_dimensions(
+    media_asset: MediaAsset,
+    image_bytes: bytes,
+) -> tuple[int | None, int | None]:
+    if media_asset.width is not None and media_asset.height is not None:
+        return media_asset.width, media_asset.height
+    try:
+        with Image.open(io.BytesIO(image_bytes)) as image:
+            return image.width, image.height
+    except (OSError, UnidentifiedImageError):
+        return media_asset.width, media_asset.height
+
+
+def _meets_minimum_ai_resolution(*, image_width: int | None, image_height: int | None) -> bool:
+    if image_width is None or image_height is None:
+        return False
+    return image_width >= MIN_AI_IMAGE_WIDTH and image_height >= MIN_AI_IMAGE_HEIGHT
 
 
 def _completeness_flags(qualification: AIQualification) -> tuple[str, ...]:
@@ -181,3 +441,157 @@ def _completeness_flags(qualification: AIQualification) -> tuple[str, ...]:
     if not qualification.visible_parts or qualification.view_angle == ViewAngle.UNKNOWN:
         flags.append("incomplete_required_tags")
     return tuple(flags)
+
+
+def _normalize_gemini_candidate(candidate: Mapping[str, object]) -> dict[str, object]:
+    notes = candidate.get("notes")
+    if notes is None and candidate.get("note") is not None:
+        notes = candidate.get("note")
+    return {
+        "technical_quality": _normalize_quality(candidate.get("technical_quality")),
+        "pedagogical_quality": _normalize_quality(candidate.get("pedagogical_quality")),
+        "life_stage": _normalize_life_stage(candidate.get("life_stage")),
+        "sex": _normalize_sex(candidate.get("sex")),
+        "visible_parts": _normalize_visible_parts(candidate.get("visible_parts")),
+        "view_angle": _normalize_view_angle(candidate.get("view_angle")),
+        "confidence": _normalize_confidence(candidate.get("confidence")),
+        "notes": str(notes).strip() if notes not in {None, ""} else None,
+    }
+
+
+def _normalize_quality(value: object) -> str:
+    text = _normalize_text(value)
+    if text in {"unknown", "low", "medium", "high"}:
+        return text
+    if "excellent" in text:
+        return "high"
+    if re.search(r"\bhigh\b", text):
+        return "high"
+    if any(token in text for token in ("good", "fair", "adequate", "moderate")):
+        return "medium"
+    if any(token in text for token in ("poor", "low", "blurry", "obscured")):
+        return "low"
+    return "unknown"
+
+
+def _normalize_life_stage(value: object) -> str:
+    text = _normalize_text(value)
+    if not text:
+        return "unknown"
+    return text.replace(" ", "_")
+
+
+def _normalize_sex(value: object) -> str:
+    text = _normalize_text(value)
+    if "male" in text and "female" in text:
+        return "mixed"
+    if "female" in text:
+        return "female"
+    if "male" in text:
+        return "male"
+    if any(token in text for token in ("unknown", "undetermined", "indeterminate", "cannot determine")):
+        return "unknown"
+    return "unknown"
+
+
+def _normalize_visible_parts(value: object) -> list[str]:
+    raw_items: list[str]
+    if value is None:
+        return []
+    if isinstance(value, Sequence) and not isinstance(value, str):
+        raw_items = [str(item) for item in value if str(item).strip()]
+    else:
+        raw_items = [
+            item.strip()
+            for item in re.split(r"[,;/]", str(value))
+            if item.strip()
+        ]
+
+    normalized_parts: list[str] = []
+    for raw_item in raw_items:
+        text = _normalize_text(raw_item)
+        if any(token in text for token in ("full body", "whole body", "entire body")):
+            normalized_parts.append("full_body")
+        for keyword in (
+            "head",
+            "beak",
+            "wing",
+            "breast",
+            "tail",
+            "eye",
+            "leg",
+            "foot",
+            "back",
+            "body",
+        ):
+            if keyword in text:
+                normalized_parts.append(keyword.replace("foot", "feet").replace("leg", "legs"))
+        if not normalized_parts or normalized_parts[-1] != _to_token(text):
+            fallback = _to_token(text)
+            if fallback and fallback not in normalized_parts:
+                normalized_parts.append(fallback)
+    return list(dict.fromkeys(part for part in normalized_parts if part))
+
+
+def _normalize_view_angle(value: object) -> str:
+    text = _normalize_text(value)
+    if not text:
+        return "unknown"
+    if any(token in text for token in ("close", "macro", "headshot")):
+        return "close_up"
+    if "front" in text and "side" in text:
+        return "oblique"
+    if any(token in text for token in ("profile", "lateral", "side")):
+        return "lateral"
+    if any(token in text for token in ("frontal", "front")):
+        return "frontal"
+    if any(token in text for token in ("dorsal", "from above", "top")):
+        return "dorsal"
+    if any(token in text for token in ("ventral", "underside", "from below")):
+        return "ventral"
+    if any(token in text for token in ("oblique", "angled", "slightly from")):
+        return "oblique"
+    return "unknown"
+
+
+def _normalize_confidence(value: object) -> float:
+    if isinstance(value, (int, float)):
+        return _scale_confidence(float(value))
+
+    text = _normalize_text(value)
+    if not text:
+        return 0.0
+    try:
+        return _scale_confidence(float(text.rstrip("%")))
+    except ValueError:
+        pass
+
+    if any(token in text for token in ("very high", "high", "excellent", "confident")):
+        return 0.9
+    if any(token in text for token in ("medium", "moderate", "good")):
+        return 0.7
+    if any(token in text for token in ("low", "poor")):
+        return 0.4
+    return 0.0
+
+
+def _scale_confidence(value: float) -> float:
+    if value < 0:
+        return 0.0
+    if value <= 1:
+        return value
+    if value <= 5:
+        return round(value / 5, 4)
+    if value <= 100:
+        return round(value / 100, 4)
+    return 1.0
+
+
+def _normalize_text(value: object) -> str:
+    if value in {None, ""}:
+        return ""
+    return re.sub(r"\s+", " ", str(value).strip().lower())
+
+
+def _to_token(value: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "_", value).strip("_")
