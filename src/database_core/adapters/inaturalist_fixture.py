@@ -4,7 +4,7 @@ import json
 from datetime import datetime
 from pathlib import Path
 
-from database_core.adapters.common import SourceDataset
+from database_core.adapters.common import SourceDataset, source_external_key
 from database_core.domain.enums import SourceName
 from database_core.domain.models import (
     AIQualification,
@@ -40,7 +40,10 @@ def load_fixture_dataset(path: Path) -> SourceDataset:
             )
 
     ai_qualifications = {
-        media_id: AIQualification(**item)
+        source_external_key(
+            source_name=SourceName.INATURALIST,
+            external_id=media_id,
+        ): AIQualification(**item)
         for media_id, item in payload.get("ai_fixture_outputs", {}).items()
     }
 
@@ -51,7 +54,7 @@ def load_fixture_dataset(path: Path) -> SourceDataset:
         observations=sorted(observations, key=lambda item: item.observation_uid),
         media_assets=sorted(media_assets, key=lambda item: item.media_id),
         ai_qualifications=ai_qualifications,
-        cached_image_paths_by_source_media_id={},
+        cached_image_paths_by_source_media_key={},
     )
 
 

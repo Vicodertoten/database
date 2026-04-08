@@ -62,6 +62,33 @@ def render_exportables(repository: SQLiteRepository) -> str:
     return "\n".join(lines)
 
 
+def render_canonical_governance_review_queue(
+    repository: SQLiteRepository,
+    *,
+    run_id: str | None = None,
+    reason_code: str | None = None,
+    review_status: str | None = None,
+) -> str:
+    rows = repository.fetch_canonical_governance_review_queue(
+        run_id=run_id,
+        reason_code=reason_code,
+        review_status=review_status,
+    )
+    if not rows:
+        return "Canonical governance review queue is empty."
+    lines = ["Canonical governance review queue"]
+    for row in rows:
+        lines.append(
+            f"{row['governance_review_item_id']} | "
+            f"run={row['run_id']} | "
+            f"{row['reason_code']} | "
+            f"{row['canonical_taxon_id']} | "
+            f"{row['review_status']} | "
+            f"{row['review_note']}"
+        )
+    return "\n".join(lines)
+
+
 def render_snapshot_health(
     repository: SQLiteRepository,
     *,

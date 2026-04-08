@@ -47,6 +47,94 @@ CREATE TABLE IF NOT EXISTS canonical_taxon_events (
     FOREIGN KEY (canonical_taxon_id) REFERENCES canonical_taxa (canonical_taxon_id)
 );
 
+CREATE TABLE IF NOT EXISTS pipeline_runs (
+    run_id TEXT PRIMARY KEY,
+    source_mode TEXT NOT NULL,
+    dataset_id TEXT NOT NULL,
+    snapshot_id TEXT,
+    schema_version TEXT NOT NULL,
+    qualification_version TEXT NOT NULL,
+    enrichment_version TEXT NOT NULL,
+    export_version TEXT NOT NULL,
+    started_at TEXT NOT NULL,
+    completed_at TEXT,
+    run_status TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS canonical_taxa_history (
+    run_id TEXT NOT NULL,
+    canonical_taxon_id TEXT NOT NULL,
+    payload_json TEXT NOT NULL,
+    PRIMARY KEY (run_id, canonical_taxon_id),
+    FOREIGN KEY (run_id) REFERENCES pipeline_runs (run_id)
+);
+
+CREATE TABLE IF NOT EXISTS source_observations_history (
+    run_id TEXT NOT NULL,
+    observation_uid TEXT NOT NULL,
+    source_name TEXT NOT NULL,
+    source_observation_id TEXT NOT NULL,
+    payload_json TEXT NOT NULL,
+    PRIMARY KEY (run_id, observation_uid),
+    FOREIGN KEY (run_id) REFERENCES pipeline_runs (run_id)
+);
+
+CREATE TABLE IF NOT EXISTS media_assets_history (
+    run_id TEXT NOT NULL,
+    media_id TEXT NOT NULL,
+    source_name TEXT NOT NULL,
+    source_media_id TEXT NOT NULL,
+    payload_json TEXT NOT NULL,
+    PRIMARY KEY (run_id, media_id),
+    FOREIGN KEY (run_id) REFERENCES pipeline_runs (run_id)
+);
+
+CREATE TABLE IF NOT EXISTS qualified_resources_history (
+    run_id TEXT NOT NULL,
+    qualified_resource_id TEXT NOT NULL,
+    payload_json TEXT NOT NULL,
+    PRIMARY KEY (run_id, qualified_resource_id),
+    FOREIGN KEY (run_id) REFERENCES pipeline_runs (run_id)
+);
+
+CREATE TABLE IF NOT EXISTS review_queue_history (
+    run_id TEXT NOT NULL,
+    review_item_id TEXT NOT NULL,
+    payload_json TEXT NOT NULL,
+    PRIMARY KEY (run_id, review_item_id),
+    FOREIGN KEY (run_id) REFERENCES pipeline_runs (run_id)
+);
+
+CREATE TABLE IF NOT EXISTS canonical_governance_events (
+    governance_event_id TEXT PRIMARY KEY,
+    run_id TEXT NOT NULL,
+    canonical_taxon_id TEXT NOT NULL,
+    event_type TEXT NOT NULL,
+    source_name TEXT NOT NULL,
+    effective_at TEXT NOT NULL,
+    decision_status TEXT NOT NULL,
+    decision_reason TEXT NOT NULL,
+    payload_json TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    FOREIGN KEY (run_id) REFERENCES pipeline_runs (run_id)
+);
+
+CREATE TABLE IF NOT EXISTS canonical_governance_review_queue (
+    governance_review_item_id TEXT PRIMARY KEY,
+    run_id TEXT NOT NULL,
+    governance_event_id TEXT NOT NULL,
+    canonical_taxon_id TEXT NOT NULL,
+    reason_code TEXT NOT NULL,
+    review_note TEXT NOT NULL,
+    review_status TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    FOREIGN KEY (run_id) REFERENCES pipeline_runs (run_id),
+    FOREIGN KEY (governance_event_id) REFERENCES canonical_governance_events (governance_event_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_canonical_governance_review_queue_status
+    ON canonical_governance_review_queue (review_status, created_at);
+
 CREATE TABLE IF NOT EXISTS source_observations (
     observation_uid TEXT PRIMARY KEY,
     source_name TEXT NOT NULL,
@@ -59,6 +147,9 @@ CREATE TABLE IF NOT EXISTS source_observations (
     canonical_taxon_id TEXT,
     FOREIGN KEY (canonical_taxon_id) REFERENCES canonical_taxa (canonical_taxon_id)
 );
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_source_observations_source_external
+    ON source_observations (source_name, source_observation_id);
 
 CREATE TABLE IF NOT EXISTS media_assets (
     media_id TEXT PRIMARY KEY,
@@ -80,6 +171,9 @@ CREATE TABLE IF NOT EXISTS media_assets (
     FOREIGN KEY (source_observation_uid) REFERENCES source_observations (observation_uid),
     FOREIGN KEY (canonical_taxon_id) REFERENCES canonical_taxa (canonical_taxon_id)
 );
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_media_assets_source_external
+    ON media_assets (source_name, source_media_id);
 
 CREATE TABLE IF NOT EXISTS qualified_resources (
     qualified_resource_id TEXT PRIMARY KEY,

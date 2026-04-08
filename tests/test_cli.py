@@ -5,8 +5,11 @@ from contextlib import redirect_stdout
 from datetime import datetime as real_datetime
 from pathlib import Path
 
+import pytest
+
 import database_core.cli as cli
 from database_core.adapters.inaturalist_qualification import SnapshotQualificationResult
+from database_core.storage.sqlite import SQLiteRepository
 
 
 def test_cli_qualify_inat_snapshot_loads_dotenv(monkeypatch, tmp_path: Path) -> None:
@@ -162,3 +165,63 @@ def test_review_overrides_cli_upsert_and_list(monkeypatch, tmp_path: Path) -> No
     output = buffer.getvalue()
     assert "Review override upserted" in output
     assert "media_asset_id=media:inaturalist:810001" in output
+
+
+def test_review_overrides_cli_rejects_wrong_override_version(monkeypatch, tmp_path: Path) -> None:
+    override_path = tmp_path / "review_overrides.json"
+    override_path.write_text(
+        json.dumps(
+            {
+                "override_version": "review.override.v0",
+                "snapshot_id": "smoke-snapshot",
+                "overrides": [],
+            },
+            indent=2,
+            sort_keys=True,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "database-core",
+            "review-overrides",
+            "list",
+            "--snapshot-id",
+            "smoke-snapshot",
+            "--path",
+            str(override_path),
+        ],
+    )
+
+    with pytest.raises(ValueError, match="Review overrides version mismatch"):
+        cli.main()
+
+
+def test_migrate_cli_applies_pending_schema_migration(monkeypatch, tmp_path: Path) -> None:
+    db_path = tmp_path / "migrate.sqlite"
+    repository = SQLiteRepository(db_path)
+    repository.initialize()
+    with repository.connect() as connection:
+        connection.execute("PRAGMA user_version = 3")
+
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "database-core",
+            "migrate",
+            "--db-path",
+            str(db_path),
+        ],
+    )
+
+    buffer = io.StringIO()
+    with redirect_stdout(buffer):
+        cli.main()
+
+    assert "Database migrated" in buffer.getvalue()
+    assert repository.current_schema_version() == 5

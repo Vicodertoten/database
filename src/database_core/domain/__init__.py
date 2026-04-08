@@ -1,7 +1,15 @@
+from database_core.domain.canonical_governance import (
+    CanonicalGovernanceDecision,
+    derive_canonical_governance_decisions,
+)
 from database_core.domain.canonical_policy import is_resolved_canonical_taxon_id
+from database_core.domain.canonical_reconciliation import (
+    reconcile_canonical_taxa_with_previous_state,
+)
 from database_core.domain.enums import (
     CanonicalChangeRelationType,
     CanonicalEventType,
+    CanonicalGovernanceDecisionStatus,
     CanonicalRank,
     EnrichmentStatus,
     LicenseSafetyResult,
@@ -21,6 +29,7 @@ from database_core.domain.enums import (
 )
 from database_core.domain.models import (
     AIQualification,
+    CanonicalGovernanceReviewItem,
     CanonicalTaxon,
     CanonicalTaxonEvent,
     CanonicalTaxonRelationship,
@@ -40,6 +49,11 @@ __all__ = [
     "AIQualification",
     "CanonicalChangeRelationType",
     "CanonicalEventType",
+    "CanonicalGovernanceDecisionStatus",
+    "CanonicalGovernanceDecision",
+    "derive_canonical_governance_decisions",
+    "reconcile_canonical_taxa_with_previous_state",
+    "CanonicalGovernanceReviewItem",
     "CanonicalRank",
     "CanonicalTaxon",
     "CanonicalTaxonEvent",

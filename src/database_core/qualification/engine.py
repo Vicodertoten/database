@@ -13,7 +13,12 @@ from database_core.domain.models import (
     ReviewItem,
     SourceObservation,
 )
-from database_core.qualification.ai import AIQualificationOutcome
+from database_core.qualification.ai import (
+    AIQualificationOutcome,
+    SourceExternalKey,
+    serialize_source_external_key,
+    source_external_key_for_media,
+)
 from database_core.qualification.policy import (
     build_notes,
     qualification_method,
@@ -31,8 +36,11 @@ def qualify_media_assets(
     canonical_taxa: Iterable[CanonicalTaxon] | None = None,
     observations: Iterable[SourceObservation],
     media_assets: Iterable[MediaAsset],
-    ai_qualifications_by_source_media_id: dict[str, AIQualification | AIQualificationOutcome],
+    ai_qualifications_by_source_media_key: dict[
+        SourceExternalKey, AIQualification | AIQualificationOutcome
+    ],
     created_at: datetime,
+    run_id: str,
     uncertain_policy: str = "review",
 ) -> tuple[list[QualifiedResource], list[ReviewItem]]:
     observations_by_uid = {item.observation_uid: item for item in observations}
@@ -44,7 +52,7 @@ def qualify_media_assets(
     for media_asset in sorted(media_assets, key=lambda item: item.media_id):
         observation = observations_by_uid[media_asset.source_observation_uid]
         ai_outcome = _coerce_ai_outcome(
-            ai_qualifications_by_source_media_id.get(media_asset.source_media_id)
+            ai_qualifications_by_source_media_key.get(source_external_key_for_media(media_asset))
         )
         qualified_resources.append(
             _qualify_single_media(
@@ -52,6 +60,7 @@ def qualify_media_assets(
                 observation=observation,
                 taxon_status_by_id=taxon_status_by_id,
                 ai_outcome=ai_outcome,
+                run_id=run_id,
                 uncertain_policy=uncertain_policy,
             )
         )
@@ -64,6 +73,7 @@ def _qualify_single_media(
     observation: SourceObservation,
     taxon_status_by_id: dict[str, str],
     ai_outcome: AIQualificationOutcome | None,
+    run_id: str,
     uncertain_policy: str,
 ) -> QualifiedResource:
     ai_qualification = ai_outcome.qualification if ai_outcome else None
@@ -85,9 +95,14 @@ def _qualify_single_media(
 
     provenance_summary = ProvenanceSummary(
         source_name=media_asset.source_name,
+        source_observation_key=serialize_source_external_key(
+            (observation.source_name, observation.source_observation_id)
+        ),
+        source_media_key=serialize_source_external_key(source_external_key_for_media(media_asset)),
         source_observation_id=observation.source_observation_id,
         source_media_id=media_asset.source_media_id,
         raw_payload_ref=media_asset.raw_payload_ref,
+        run_id=run_id,
         observation_license=observation.source_quality.observation_license,
         media_license=media_asset.license,
         qualification_method=qualification_method(
@@ -95,6 +110,9 @@ def _qualify_single_media(
             ai_outcome=ai_outcome,
         ),
         ai_model=ai_qualification.model_name if ai_qualification else None,
+        ai_prompt_version=ai_outcome.prompt_version if ai_outcome else None,
+        ai_task_name="qualification",
+        ai_status=ai_outcome.status if ai_outcome else "rules_only",
     )
     notes = build_notes(qualification_flags, ai_qualification, ai_outcome)
     export_eligible = (

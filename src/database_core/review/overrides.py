@@ -36,6 +36,11 @@ def load_review_override_file(path: Path | None, *, snapshot_id: str) -> ReviewO
     if path is None or not path.exists():
         return None
     payload = ReviewOverrideFile.model_validate_json(path.read_text(encoding="utf-8"))
+    if payload.override_version != REVIEW_OVERRIDE_VERSION:
+        raise ValueError(
+            "Review overrides version mismatch: expected "
+            f"{REVIEW_OVERRIDE_VERSION}, got {payload.override_version}"
+        )
     if payload.snapshot_id != snapshot_id:
         raise ValueError(
             f"Review overrides snapshot mismatch: expected {snapshot_id}, got {payload.snapshot_id}"

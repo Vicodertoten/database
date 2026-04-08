@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import UTC, datetime
 from pathlib import Path
 from uuid import uuid4
 
@@ -8,6 +9,9 @@ from database_core.adapters import (
     DEFAULT_INAT_SNAPSHOT_ROOT,
     load_fixture_dataset,
     load_snapshot_dataset,
+)
+from database_core.domain.canonical_reconciliation import (
+    reconcile_canonical_taxa_with_previous_state,
 )
 from database_core.domain.enums import TaxonStatus
 from database_core.enrichment import enrich_canonical_taxa
@@ -36,22 +40,25 @@ from database_core.review.overrides import (
     resolve_review_overrides_path,
 )
 from database_core.storage.sqlite import SQLiteRepository
-from database_core.versioning import ENRICHMENT_VERSION, EXPORT_VERSION
+from database_core.versioning import ENRICHMENT_VERSION, EXPORT_VERSION, LEGACY_EXPORT_VERSION
 
 DEFAULT_FIXTURE_PATH = Path("data/fixtures/birds_pilot.json")
 DEFAULT_DB_PATH = Path("data/database.sqlite")
 DEFAULT_NORMALIZED_PATH = Path("data/normalized/normalized_snapshot.json")
 DEFAULT_QUALIFIED_PATH = Path("data/qualified/qualification_snapshot.json")
 DEFAULT_EXPORT_PATH = Path("data/exports/qualified_resources_bundle.json")
+DEFAULT_LEGACY_EXPORT_SUFFIX = ".v2"
 DEFAULT_DATABASES_DIR = Path("data/databases")
 
 
 @dataclass(frozen=True)
 class PipelineResult:
+    run_id: str
     database_path: Path
     normalized_snapshot_path: Path
     qualification_snapshot_path: Path
     export_path: Path
+    legacy_export_path: Path | None
     qualified_resource_count: int
     exportable_resource_count: int
     review_queue_count: int
@@ -68,6 +75,8 @@ def run_pipeline(
     normalized_snapshot_path: Path = DEFAULT_NORMALIZED_PATH,
     qualification_snapshot_path: Path = DEFAULT_QUALIFIED_PATH,
     export_path: Path = DEFAULT_EXPORT_PATH,
+    export_v2_path: Path | None = None,
+    write_legacy_export_v2: bool = True,
     review_overrides_path: Path | None = None,
     apply_review_overrides: bool = False,
     qualifier_mode: str | None = None,
@@ -76,6 +85,7 @@ def run_pipeline(
     gemini_model: str = DEFAULT_GEMINI_MODEL,
     ai_qualifier: AIQualifier | None = None,
     allow_schema_reset: bool = False,
+    run_id: str | None = None,
 ) -> PipelineResult:
     dataset = _load_dataset(
         source_mode=source_mode,
@@ -103,6 +113,16 @@ def run_pipeline(
     qualification_snapshot_path = resolved_paths["qualification_snapshot_path"]
     export_path = resolved_paths["export_path"]
     resolved_snapshot_id = resolved_paths["snapshot_id"]
+    resolved_run_id = run_id or _generate_run_id()
+    resolved_export_v2_path = (
+        export_v2_path
+        if write_legacy_export_v2
+        else None
+    )
+    if write_legacy_export_v2 and resolved_export_v2_path is None:
+        resolved_export_v2_path = export_path.with_name(
+            f"{export_path.stem}{DEFAULT_LEGACY_EXPORT_SUFFIX}{export_path.suffix}"
+        )
     resolved_review_overrides_path = _resolve_review_overrides_path(
         apply_review_overrides=apply_review_overrides,
         source_mode=source_mode,
@@ -111,9 +131,14 @@ def run_pipeline(
     )
     repository = SQLiteRepository(db_path)
     repository.initialize(allow_schema_reset=allow_schema_reset)
+    previous_canonical_taxa = repository.fetch_latest_completed_canonical_taxa()
     enriched_taxa = enrich_canonical_taxa(
         dataset.canonical_taxa,
         taxon_payloads_by_canonical_taxon_id=dataset.taxon_payloads_by_canonical_taxon_id,
+    )
+    enriched_taxa = reconcile_canonical_taxa_with_previous_state(
+        current_taxa=enriched_taxa,
+        previous_taxa=previous_canonical_taxa,
     )
     taxon_status_by_id = {item.canonical_taxon_id: item.taxon_status for item in enriched_taxa}
     deprecated_media_asset_ids = sorted(
@@ -133,7 +158,7 @@ def run_pipeline(
         qualifier_mode=resolved_qualifier_mode,
         precomputed_ai_qualifications=dataset.ai_qualifications,
         precomputed_ai_outcomes=dataset.ai_qualification_outcomes,
-        cached_image_paths_by_source_media_id=dataset.cached_image_paths_by_source_media_id,
+        cached_image_paths_by_source_media_key=dataset.cached_image_paths_by_source_media_key,
         gemini_api_key=gemini_api_key,
         gemini_model=gemini_model,
         qualifier=ai_qualifier,
@@ -142,8 +167,9 @@ def run_pipeline(
         canonical_taxa=enriched_taxa,
         observations=dataset.observations,
         media_assets=dataset.media_assets,
-        ai_qualifications_by_source_media_id=ai_qualifications,
+        ai_qualifications_by_source_media_key=ai_qualifications,
         created_at=dataset.captured_at,
+        run_id=resolved_run_id,
         uncertain_policy=resolved_uncertain_policy,
     )
     override_file = (
@@ -178,32 +204,71 @@ def run_pipeline(
         generated_at=dataset.captured_at,
         canonical_taxa=enriched_taxa,
         qualified_resources=qualified_resources,
+        run_id=resolved_run_id,
+    )
+    legacy_export_bundle = (
+        build_export_bundle(
+            export_version=LEGACY_EXPORT_VERSION,
+            qualification_version=QUALIFICATION_VERSION,
+            enrichment_version=ENRICHMENT_VERSION,
+            generated_at=dataset.captured_at,
+            canonical_taxa=enriched_taxa,
+            qualified_resources=qualified_resources,
+        )
+        if resolved_export_v2_path is not None
+        else None
     )
 
     with repository.connect() as connection:
-        # Overwrite strategy: every run rebuilds pipeline output tables in one transaction.
-        # If any stage fails, rollback preserves previous consistent state.
-        repository.reset(connection=connection)
+        run_started_at = datetime.now(UTC)
+        repository.start_pipeline_run(
+            run_id=resolved_run_id,
+            source_mode=source_mode,
+            dataset_id=dataset.dataset_id,
+            snapshot_id=resolved_snapshot_id,
+            started_at=run_started_at,
+            connection=connection,
+        )
+        repository.reset_materialized_state(connection=connection)
         repository.save_canonical_taxa(enriched_taxa, connection=connection)
         repository.save_source_observations(dataset.observations, connection=connection)
         repository.save_media_assets(dataset.media_assets, connection=connection)
         repository.save_qualified_resources(qualified_resources, connection=connection)
         repository.save_review_items(review_items, connection=connection)
+        repository.append_run_history(
+            run_id=resolved_run_id,
+            governance_effective_at=dataset.captured_at,
+            canonical_taxa=enriched_taxa,
+            observations=dataset.observations,
+            media_assets=dataset.media_assets,
+            qualified_resources=qualified_resources,
+            review_items=review_items,
+            connection=connection,
+        )
         _write_pipeline_artifacts(
             normalized_snapshot_path=normalized_snapshot_path,
             qualification_snapshot_path=qualification_snapshot_path,
             export_path=export_path,
+            export_v2_path=resolved_export_v2_path,
             normalized_snapshot=normalized_snapshot,
             qualification_snapshot=qualification_snapshot,
             export_bundle=export_bundle,
+            legacy_export_bundle=legacy_export_bundle,
+        )
+        repository.complete_pipeline_run(
+            run_id=resolved_run_id,
+            completed_at=datetime.now(UTC),
+            connection=connection,
         )
 
     exportable_resource_count = len([item for item in qualified_resources if item.export_eligible])
     return PipelineResult(
+        run_id=resolved_run_id,
         database_path=db_path,
         normalized_snapshot_path=normalized_snapshot_path,
         qualification_snapshot_path=qualification_snapshot_path,
         export_path=export_path,
+        legacy_export_path=resolved_export_v2_path,
         qualified_resource_count=len(qualified_resources),
         exportable_resource_count=exportable_resource_count,
         review_queue_count=len(review_items),
@@ -327,21 +392,30 @@ def _write_pipeline_artifacts(
     normalized_snapshot_path: Path,
     qualification_snapshot_path: Path,
     export_path: Path,
+    export_v2_path: Path | None,
     normalized_snapshot: dict[str, object],
     qualification_snapshot: dict[str, object],
     export_bundle: dict[str, object],
+    legacy_export_bundle: dict[str, object] | None,
 ) -> None:
     temporary_normalized = _temporary_output_path(normalized_snapshot_path)
     temporary_qualification = _temporary_output_path(qualification_snapshot_path)
     temporary_export = _temporary_output_path(export_path)
+    temporary_export_v2 = _temporary_output_path(export_v2_path) if export_v2_path else None
     temporary_paths = [temporary_normalized, temporary_qualification, temporary_export]
+    if temporary_export_v2 is not None:
+        temporary_paths.append(temporary_export_v2)
     try:
         write_json(temporary_normalized, normalized_snapshot)
         write_json(temporary_qualification, qualification_snapshot)
         write_export_bundle(temporary_export, export_bundle)
+        if temporary_export_v2 is not None and legacy_export_bundle is not None and export_v2_path:
+            write_export_bundle(temporary_export_v2, legacy_export_bundle)
         temporary_normalized.replace(normalized_snapshot_path)
         temporary_qualification.replace(qualification_snapshot_path)
         temporary_export.replace(export_path)
+        if temporary_export_v2 is not None and export_v2_path:
+            temporary_export_v2.replace(export_v2_path)
     finally:
         for item in temporary_paths:
             item.unlink(missing_ok=True)
@@ -349,3 +423,8 @@ def _write_pipeline_artifacts(
 
 def _temporary_output_path(path: Path) -> Path:
     return path.with_name(f".{path.name}.tmp-{uuid4().hex}")
+
+
+def _generate_run_id() -> str:
+    timestamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
+    return f"run:{timestamp}:{uuid4().hex[:8]}"

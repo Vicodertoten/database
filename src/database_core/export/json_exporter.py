@@ -20,11 +20,16 @@ from database_core.domain.models import (
 )
 from database_core.versioning import (
     ENRICHMENT_VERSION,
+    EXPORT_VERSION,
+    LEGACY_EXPORT_VERSION,
     NORMALIZED_SNAPSHOT_VERSION,
     SCHEMA_VERSION_LABEL,
 )
 
 DEFAULT_EXPORT_SCHEMA_PATH = (
+    Path(__file__).resolve().parents[3] / "schemas" / "qualified_resources_bundle_v3.schema.json"
+)
+LEGACY_EXPORT_SCHEMA_PATH = (
     Path(__file__).resolve().parents[3] / "schemas" / "qualified_resources_bundle.schema.json"
 )
 
@@ -74,6 +79,7 @@ def build_export_bundle(
     generated_at: datetime,
     canonical_taxa: list[CanonicalTaxon],
     qualified_resources: list[QualifiedResource],
+    run_id: str | None = None,
 ) -> dict[str, object]:
     exportable_resources = [item for item in qualified_resources if item.export_eligible]
     _validate_exportable_resources_have_canonical_resolution(
@@ -84,6 +90,24 @@ def build_export_bundle(
     included_taxa = [
         item for item in canonical_taxa if item.canonical_taxon_id in canonical_taxon_ids
     ]
+    if export_version == LEGACY_EXPORT_VERSION:
+        return {
+            "schema_version": SCHEMA_VERSION_LABEL,
+            "export_version": export_version,
+            "qualification_version": qualification_version,
+            "enrichment_version": enrichment_version,
+            "generated_at": generated_at.isoformat(),
+            "canonical_taxa": [_serialize_export_taxon(item) for item in included_taxa],
+            "qualified_resources": [
+                _serialize_export_resource_v2(item) for item in exportable_resources
+            ],
+        }
+
+    if export_version != EXPORT_VERSION:
+        raise ValueError(f"Unsupported export_version: {export_version}")
+
+    if not run_id:
+        raise ValueError("run_id is required when export_version is export.bundle.v3")
     return {
         "schema_version": SCHEMA_VERSION_LABEL,
         "export_version": export_version,
@@ -91,7 +115,9 @@ def build_export_bundle(
         "enrichment_version": enrichment_version,
         "generated_at": generated_at.isoformat(),
         "canonical_taxa": [_serialize_export_taxon(item) for item in included_taxa],
-        "qualified_resources": [_serialize_export_resource(item) for item in exportable_resources],
+        "qualified_resources": [
+            _serialize_export_resource_v3(item, run_id=run_id) for item in exportable_resources
+        ],
     }
 
 
@@ -112,7 +138,7 @@ def write_export_bundle(
     path: Path,
     payload: dict[str, object],
     *,
-    schema_path: Path = DEFAULT_EXPORT_SCHEMA_PATH,
+    schema_path: Path | None = None,
 ) -> None:
     validate_export_bundle(payload, schema_path=schema_path)
     write_json(path, payload)
@@ -121,17 +147,27 @@ def write_export_bundle(
 def validate_export_bundle(
     payload: dict[str, object],
     *,
-    schema_path: Path = DEFAULT_EXPORT_SCHEMA_PATH,
+    schema_path: Path | None = None,
 ) -> None:
+    resolved_schema_path = schema_path or _schema_path_for_export_payload(payload)
     try:
         validate(
             instance=payload,
-            schema=_load_export_schema(schema_path),
+            schema=_load_export_schema(resolved_schema_path),
             format_checker=FormatChecker(),
         )
     except ValidationError as exc:
         location = ".".join(str(item) for item in exc.absolute_path) or "<root>"
         raise ValueError(f"Export bundle validation failed at {location}: {exc.message}") from exc
+
+
+def _schema_path_for_export_payload(payload: dict[str, object]) -> Path:
+    export_version = str(payload.get("export_version") or "")
+    if export_version == LEGACY_EXPORT_VERSION:
+        return LEGACY_EXPORT_SCHEMA_PATH
+    if export_version == EXPORT_VERSION:
+        return DEFAULT_EXPORT_SCHEMA_PATH
+    raise ValueError(f"Cannot resolve schema path for export_version={export_version!r}")
 
 
 def _serialize_export_taxon(taxon: CanonicalTaxon) -> dict[str, object]:
@@ -153,7 +189,7 @@ def _serialize_export_taxon(taxon: CanonicalTaxon) -> dict[str, object]:
     return payload
 
 
-def _serialize_export_resource(resource: QualifiedResource) -> dict[str, object]:
+def _serialize_export_resource_v2(resource: QualifiedResource) -> dict[str, object]:
     return {
         "qualified_resource_id": resource.qualified_resource_id,
         "canonical_taxon_id": resource.canonical_taxon_id,
@@ -172,7 +208,50 @@ def _serialize_export_resource(resource: QualifiedResource) -> dict[str, object]
     }
 
 
-@lru_cache(maxsize=1)
+def _serialize_export_resource_v3(
+    resource: QualifiedResource,
+    *,
+    run_id: str,
+) -> dict[str, object]:
+    provenance = resource.provenance_summary
+    return {
+        "qualified_resource_id": resource.qualified_resource_id,
+        "canonical_taxon_id": resource.canonical_taxon_id,
+        "media_asset_id": resource.media_asset_id,
+        "qualification_status": resource.qualification_status,
+        "qualification_version": resource.qualification_version,
+        "technical_quality": resource.technical_quality,
+        "pedagogical_quality": resource.pedagogical_quality,
+        "life_stage": resource.life_stage,
+        "sex": resource.sex,
+        "visible_parts": list(resource.visible_parts),
+        "view_angle": resource.view_angle,
+        "license_safety_result": resource.license_safety_result,
+        "export_eligible": resource.export_eligible,
+        "provenance": {
+            "run_id": run_id,
+            "source": {
+                "source_name": provenance.source_name,
+                "source_observation_key": provenance.source_observation_key,
+                "source_media_key": provenance.source_media_key,
+                "source_observation_id": provenance.source_observation_id,
+                "source_media_id": provenance.source_media_id,
+                "raw_payload_ref": provenance.raw_payload_ref,
+                "observation_license": provenance.observation_license,
+                "media_license": provenance.media_license,
+            },
+            "qualification_trace": {
+                "method": provenance.qualification_method,
+                "ai_model": provenance.ai_model,
+                "ai_prompt_version": provenance.ai_prompt_version,
+                "ai_task_name": provenance.ai_task_name,
+                "ai_status": provenance.ai_status,
+            },
+        },
+    }
+
+
+@lru_cache(maxsize=4)
 def _load_export_schema(schema_path: Path) -> dict[str, object]:
     return json.loads(schema_path.read_text(encoding="utf-8"))
 

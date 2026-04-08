@@ -7,7 +7,7 @@ from urllib.parse import urlparse
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-from database_core.adapters.common import SourceDataset
+from database_core.adapters.common import SourceDataset, source_external_key
 from database_core.domain.canonical_ids import next_canonical_taxon_id
 from database_core.domain.enums import CanonicalRank, SourceName, TaxonGroup, TaxonStatus
 from database_core.domain.models import (
@@ -18,7 +18,11 @@ from database_core.domain.models import (
     SourceObservation,
     SourceQualityMetadata,
 )
-from database_core.qualification.ai import AIQualificationOutcome, inspect_image_dimensions
+from database_core.qualification.ai import (
+    AIQualificationOutcome,
+    inspect_image_dimensions,
+    parse_source_external_key,
+)
 from database_core.qualification.rules import is_safe_license
 from database_core.versioning import SNAPSHOT_MANIFEST_VERSION
 
@@ -172,7 +176,13 @@ def load_snapshot_dataset(
     )
     observations: list[SourceObservation] = []
     media_assets: list[MediaAsset] = []
-    download_by_media_id = {item.source_media_id: item for item in manifest.media_downloads}
+    download_by_media_id = {
+        source_external_key(
+            source_name=manifest.source_name,
+            external_id=item.source_media_id,
+        ): item
+        for item in manifest.media_downloads
+    }
     taxon_payloads_by_canonical_taxon_id: dict[str, dict[str, object]] = {}
 
     for seed in manifest.taxon_seeds:
@@ -206,7 +216,12 @@ def load_snapshot_dataset(
                 _build_snapshot_media_asset(
                     observation=observation,
                     photo=primary_photo,
-                    download=download_by_media_id.get(str(primary_photo["id"])),
+                    download=download_by_media_id.get(
+                        source_external_key(
+                            source_name=manifest.source_name,
+                            external_id=str(primary_photo["id"]),
+                        )
+                    ),
                     response_path=seed.response_path,
                     raw_index=raw_index,
                     snapshot_dir=snapshot_dir,
@@ -220,11 +235,19 @@ def load_snapshot_dataset(
         observations=sorted(observations, key=lambda item: item.observation_uid),
         media_assets=sorted(media_assets, key=lambda item: item.media_id),
         ai_qualifications={},
-        cached_image_paths_by_source_media_id={
-            item.source_media_id: snapshot_dir / item.image_path
+        cached_image_paths_by_source_media_key={
+            source_external_key(
+                source_name=manifest.source_name,
+                external_id=item.source_media_id,
+            ): snapshot_dir
+            / item.image_path
             for item in manifest.media_downloads
         },
-        ai_qualification_outcomes=_load_ai_outputs(snapshot_dir, manifest.ai_outputs_path),
+        ai_qualification_outcomes=_load_ai_outputs(
+            snapshot_dir,
+            manifest.ai_outputs_path,
+            source_name=manifest.source_name,
+        ),
         taxon_payloads_by_canonical_taxon_id=taxon_payloads_by_canonical_taxon_id,
     )
 
@@ -263,7 +286,11 @@ def summarize_snapshot_manifest(
             if width < MIN_ACCEPTED_WIDTH or height < MIN_ACCEPTED_HEIGHT:
                 insufficient_resolution_images += 1
 
-    ai_outputs = _load_ai_outputs(snapshot_dir, manifest.ai_outputs_path)
+    ai_outputs = _load_ai_outputs(
+        snapshot_dir,
+        manifest.ai_outputs_path,
+        source_name=manifest.source_name,
+    )
     images_sent_to_gemini = len(
         [
             item
@@ -406,12 +433,17 @@ def _build_snapshot_media_asset(
 def _load_ai_outputs(
     snapshot_dir: Path,
     ai_outputs_path: str | None,
-) -> dict[str, AIQualificationOutcome]:
+    *,
+    source_name: SourceName,
+) -> dict[tuple[SourceName, str], AIQualificationOutcome]:
     if ai_outputs_path is None:
         return {}
     payload = json.loads((snapshot_dir / ai_outputs_path).read_text(encoding="utf-8"))
     return {
-        media_id: AIQualificationOutcome.from_snapshot_payload(item)
+        parse_source_external_key(
+            media_id,
+            default_source_name=source_name,
+        ): AIQualificationOutcome.from_snapshot_payload(item)
         for media_id, item in payload.items()
     }
 

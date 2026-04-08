@@ -12,6 +12,7 @@ from database_core.qualification.ai import (
     _normalize_gemini_candidate,
     build_prompt_bundle,
     collect_ai_qualification_outcomes,
+    source_external_key_for_media,
 )
 
 
@@ -198,7 +199,7 @@ def test_cached_ai_outputs_require_matching_prompt_version() -> None:
         [media_asset],
         qualifier_mode="cached",
         precomputed_ai_outcomes={
-            "cached-1": AIQualificationOutcome(
+            source_external_key_for_media(media_asset): AIQualificationOutcome(
                 status="ok",
                 prompt_version="legacy.prompt.v1",
                 qualified_at=datetime.now(UTC),
@@ -217,8 +218,26 @@ def test_cached_ai_outputs_require_matching_prompt_version() -> None:
         },
     )
 
-    assert outcomes["cached-1"].status == "cached_prompt_version_mismatch"
-    assert "cached_prompt_version_mismatch" in outcomes["cached-1"].flags
+    media_key = source_external_key_for_media(media_asset)
+    assert outcomes[media_key].status == "cached_prompt_version_mismatch"
+    assert "cached_prompt_version_mismatch" in outcomes[media_key].flags
+
+
+def test_normalize_gemini_candidate_does_not_map_female_to_mixed() -> None:
+    normalized = _normalize_gemini_candidate(
+        {
+            "technical_quality": "high",
+            "pedagogical_quality": "high",
+            "life_stage": "adult",
+            "sex": "female",
+            "visible_parts": ["full_body"],
+            "view_angle": "lateral",
+            "confidence": 0.8,
+            "notes": None,
+        }
+    )
+
+    assert normalized["sex"] == "female"
 
 
 def test_prompt_bundle_supports_multiple_tasks() -> None:

@@ -14,12 +14,15 @@ from urllib.error import HTTPError, URLError
 
 from PIL import Image, UnidentifiedImageError
 
-from database_core.domain.enums import TaxonGroup, ViewAngle
+from database_core.domain.enums import SourceName, TaxonGroup, ViewAngle
 from database_core.domain.models import AIQualification, MediaAsset
 
 DEFAULT_GEMINI_MODEL = "gemini-3.1-flash-lite-preview"
 MIN_AI_IMAGE_WIDTH = 512
 MIN_AI_IMAGE_HEIGHT = 512
+SOURCE_KEY_SEPARATOR = "::"
+
+SourceExternalKey = tuple[SourceName, str]
 
 PROMPT_BASE_TEXT = (
     "Return strict JSON only for biodiversity-learning dataset qualification. "
@@ -134,6 +137,62 @@ def build_prompt_bundle(
 DEFAULT_PROMPT_BUNDLE = build_prompt_bundle()
 DEFAULT_GEMINI_PROMPT_VERSION = DEFAULT_PROMPT_BUNDLE.version
 STRICT_GEMINI_PROMPT = DEFAULT_PROMPT_BUNDLE.text
+
+
+def source_external_key(*, source_name: SourceName, external_id: str) -> SourceExternalKey:
+    return (source_name, external_id.strip())
+
+
+def source_external_key_for_media(media_asset: MediaAsset) -> SourceExternalKey:
+    return source_external_key(
+        source_name=media_asset.source_name,
+        external_id=media_asset.source_media_id,
+    )
+
+
+def serialize_source_external_key(key: SourceExternalKey) -> str:
+    return f"{key[0]}{SOURCE_KEY_SEPARATOR}{key[1]}"
+
+
+def parse_source_external_key(
+    raw_key: str,
+    *,
+    default_source_name: SourceName | None = None,
+) -> SourceExternalKey:
+    if SOURCE_KEY_SEPARATOR in raw_key:
+        source_raw, external_id = raw_key.split(SOURCE_KEY_SEPARATOR, 1)
+        return source_external_key(
+            source_name=SourceName(source_raw),
+            external_id=external_id,
+        )
+    if default_source_name is None:
+        raise ValueError(f"Missing source segment in source key: {raw_key!r}")
+    return source_external_key(source_name=default_source_name, external_id=raw_key)
+
+
+class GeminiRequestError(RuntimeError):
+    def __init__(
+        self,
+        message: str,
+        *,
+        status_code: int | None = None,
+        retry_after_seconds: float | None = None,
+        retryable: bool = False,
+    ) -> None:
+        super().__init__(message)
+        self.status_code = status_code
+        self.retry_after_seconds = retry_after_seconds
+        self.retryable = retryable
+
+    @classmethod
+    def from_http_error(cls, exc: HTTPError) -> GeminiRequestError:
+        retry_after_seconds = _parse_retry_after_seconds(exc)
+        return cls(
+            _format_gemini_http_error(exc),
+            status_code=exc.code,
+            retry_after_seconds=retry_after_seconds,
+            retryable=exc.code in {408, 429, 500, 502, 503, 504},
+        )
 
 
 class AIQualifier(Protocol):
@@ -281,7 +340,7 @@ class GeminiVisionQualifier:
             with urllib.request.urlopen(request, timeout=30) as response:
                 response_payload = json.loads(response.read().decode("utf-8"))
         except HTTPError as exc:
-            raise RuntimeError(_format_gemini_http_error(exc)) from exc
+            raise GeminiRequestError.from_http_error(exc) from exc
 
         text = response_payload["candidates"][0]["content"]["parts"][0]["text"]
         candidate = _normalize_gemini_candidate(json.loads(text))
@@ -293,35 +352,40 @@ def collect_ai_qualification_outcomes(
     media_assets: Sequence[MediaAsset],
     *,
     qualifier_mode: str,
-    precomputed_ai_qualifications: Mapping[str, AIQualification] | None = None,
-    precomputed_ai_outcomes: Mapping[str, AIQualificationOutcome] | None = None,
-    cached_image_paths_by_source_media_id: Mapping[str, Path] | None = None,
+    precomputed_ai_qualifications: Mapping[SourceExternalKey, AIQualification] | None = None,
+    precomputed_ai_outcomes: Mapping[SourceExternalKey, AIQualificationOutcome] | None = None,
+    cached_image_paths_by_source_media_key: Mapping[SourceExternalKey, Path] | None = None,
     gemini_api_key: str | None = None,
     gemini_model: str = DEFAULT_GEMINI_MODEL,
     prompt_version: str = DEFAULT_GEMINI_PROMPT_VERSION,
     qualifier: AIQualifier | None = None,
     progress_callback: Callable[[int, int, MediaAsset, AIQualificationOutcome], None] | None = None,
-) -> dict[str, AIQualificationOutcome]:
+) -> dict[SourceExternalKey, AIQualificationOutcome]:
     if qualifier_mode == "rules":
         return {}
 
     if qualifier_mode == "fixture":
         precomputed = dict(precomputed_ai_qualifications or {})
         return {
-            media_asset.source_media_id: (
+            source_external_key_for_media(media_asset): (
                 AIQualificationOutcome(
                     status="ok",
-                    qualification=precomputed[media_asset.source_media_id],
-                    flags=_completeness_flags(precomputed[media_asset.source_media_id]),
-                    model_name=precomputed[media_asset.source_media_id].model_name,
+                    qualification=precomputed[source_external_key_for_media(media_asset)],
+                    flags=_completeness_flags(
+                        precomputed[source_external_key_for_media(media_asset)]
+                    ),
+                    model_name=precomputed[source_external_key_for_media(media_asset)].model_name,
                     prompt_version="fixture",
                 )
-                if media_asset.source_media_id in precomputed
+                if source_external_key_for_media(media_asset) in precomputed
                 else AIQualificationOutcome(
                     status="missing_fixture_ai_output",
                     qualification=None,
                     flags=("missing_fixture_ai_output",),
-                    note=f"no fixture ai output for {media_asset.source_media_id}",
+                    note=(
+                        "no fixture ai output for "
+                        f"{serialize_source_external_key(source_external_key_for_media(media_asset))}"
+                    ),
                     prompt_version="fixture",
                 )
             )
@@ -331,14 +395,17 @@ def collect_ai_qualification_outcomes(
     if qualifier_mode == "cached":
         precomputed = dict(precomputed_ai_outcomes or {})
         return {
-            media_asset.source_media_id: _validate_cached_outcome(
+            source_external_key_for_media(media_asset): _validate_cached_outcome(
                 precomputed.get(
-                    media_asset.source_media_id,
+                    source_external_key_for_media(media_asset),
                     AIQualificationOutcome(
                         status="missing_cached_ai_output",
                         qualification=None,
                         flags=("missing_cached_ai_output",),
-                        note=f"no cached ai output for {media_asset.source_media_id}",
+                        note=(
+                            "no cached ai output for "
+                            f"{serialize_source_external_key(source_external_key_for_media(media_asset))}"
+                        ),
                     ),
                 ),
                 expected_prompt_version=prompt_version,
@@ -358,29 +425,33 @@ def collect_ai_qualification_outcomes(
             prompt_bundle=DEFAULT_PROMPT_BUNDLE,
         )
 
-    image_paths = dict(cached_image_paths_by_source_media_id or {})
-    outcomes: dict[str, AIQualificationOutcome] = {}
+    image_paths = dict(cached_image_paths_by_source_media_key or {})
+    outcomes: dict[SourceExternalKey, AIQualificationOutcome] = {}
     total = len(media_assets)
     for index, media_asset in enumerate(media_assets, start=1):
+        media_key = source_external_key_for_media(media_asset)
         outcome = _collect_single_ai_outcome(
             media_asset=media_asset,
-            image_path=image_paths.get(media_asset.source_media_id),
+            image_path=image_paths.get(media_key),
             qualifier=qualifier,
             gemini_model=gemini_model,
             prompt_version=prompt_version,
         )
-        outcomes[media_asset.source_media_id] = outcome
+        outcomes[media_key] = outcome
         if progress_callback is not None:
             progress_callback(index, total, media_asset, outcome)
     return outcomes
 
 
 def build_ai_outputs_payload(
-    outcomes_by_source_media_id: Mapping[str, AIQualificationOutcome],
+    outcomes_by_source_media_key: Mapping[SourceExternalKey, AIQualificationOutcome],
 ) -> dict[str, object]:
     return {
-        source_media_id: outcome.to_snapshot_payload()
-        for source_media_id, outcome in sorted(outcomes_by_source_media_id.items())
+        serialize_source_external_key(source_key): outcome.to_snapshot_payload()
+        for source_key, outcome in sorted(
+            outcomes_by_source_media_key.items(),
+            key=lambda item: serialize_source_external_key(item[0]),
+        )
     }
 
 
@@ -588,6 +659,18 @@ def _format_gemini_http_error(exc: HTTPError) -> str:
     return f"Gemini API request failed with HTTP {exc.code}: {exc.reason}"
 
 
+def _parse_retry_after_seconds(exc: HTTPError) -> float | None:
+    if exc.headers is None:
+        return None
+    retry_after = exc.headers.get("Retry-After")
+    if retry_after is None:
+        return None
+    try:
+        return max(0.0, float(retry_after))
+    except ValueError:
+        return None
+
+
 def _normalize_quality(value: object) -> str:
     text = _normalize_text(value)
     if text in {"unknown", "low", "medium", "high"}:
@@ -612,11 +695,12 @@ def _normalize_life_stage(value: object) -> str:
 
 def _normalize_sex(value: object) -> str:
     text = _normalize_text(value)
-    if "male" in text and "female" in text:
+    tokens = set(re.findall(r"[a-z]+", text))
+    if {"male", "female"}.issubset(tokens):
         return "mixed"
-    if "female" in text:
+    if "female" in tokens:
         return "female"
-    if "male" in text:
+    if "male" in tokens:
         return "male"
     if any(
         token in text for token in ("unknown", "undetermined", "indeterminate", "cannot determine")

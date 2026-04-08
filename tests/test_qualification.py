@@ -8,7 +8,7 @@ from database_core.domain.models import (
     SourceObservation,
     SourceQualityMetadata,
 )
-from database_core.qualification.ai import AIQualificationOutcome
+from database_core.qualification.ai import AIQualificationOutcome, source_external_key_for_media
 from database_core.qualification.rules import qualify_media_assets
 
 
@@ -50,8 +50,9 @@ def test_qualified_resource_is_not_exportable_without_safe_media_license() -> No
     resources, review_items = qualify_media_assets(
         observations=[observation],
         media_assets=[media_asset],
-        ai_qualifications_by_source_media_id={},
+        ai_qualifications_by_source_media_key={},
         created_at=datetime.fromisoformat("2026-04-07T00:00:00+00:00"),
+        run_id="run:20260408T000000Z:aaaaaaaa",
     )
 
     assert len(resources) == 1
@@ -112,8 +113,11 @@ def test_uncertain_policy_reject_turns_incomplete_ai_result_into_rejected() -> N
     resources, review_items = qualify_media_assets(
         observations=[observation],
         media_assets=[media_asset],
-        ai_qualifications_by_source_media_id={media_asset.source_media_id: ai_outcome},
+        ai_qualifications_by_source_media_key={
+            source_external_key_for_media(media_asset): ai_outcome
+        },
         created_at=datetime.fromisoformat("2026-04-07T00:00:00+00:00"),
+        run_id="run:20260408T000000Z:aaaaaaaa",
         uncertain_policy="reject",
     )
 
@@ -173,8 +177,11 @@ def test_low_pedagogical_quality_no_longer_blocks_acceptance() -> None:
     resources, review_items = qualify_media_assets(
         observations=[observation],
         media_assets=[media_asset],
-        ai_qualifications_by_source_media_id={media_asset.source_media_id: ai_outcome},
+        ai_qualifications_by_source_media_key={
+            source_external_key_for_media(media_asset): ai_outcome
+        },
         created_at=datetime.fromisoformat("2026-04-07T00:00:00+00:00"),
+        run_id="run:20260408T000000Z:aaaaaaaa",
         uncertain_policy="reject",
     )
 
@@ -221,8 +228,9 @@ def test_review_policy_creates_structured_review_queue_item() -> None:
     resources, review_items = qualify_media_assets(
         observations=[observation],
         media_assets=[media_asset],
-        ai_qualifications_by_source_media_id={},
+        ai_qualifications_by_source_media_key={},
         created_at=datetime.fromisoformat("2026-04-07T00:00:00+00:00"),
+        run_id="run:20260408T000000Z:aaaaaaaa",
         uncertain_policy="review",
     )
 

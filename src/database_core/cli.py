@@ -19,6 +19,7 @@ from database_core.adapters import (
     qualify_inat_snapshot,
 )
 from database_core.inspect.summary import (
+    render_canonical_governance_review_queue,
     render_exportables,
     render_review_queue,
     render_snapshot_health,
@@ -63,6 +64,12 @@ def main() -> None:
     pipeline_parser.add_argument("--normalized-path", type=Path, default=DEFAULT_NORMALIZED_PATH)
     pipeline_parser.add_argument("--qualified-path", type=Path, default=DEFAULT_QUALIFIED_PATH)
     pipeline_parser.add_argument("--export-path", type=Path, default=DEFAULT_EXPORT_PATH)
+    pipeline_parser.add_argument("--export-v2-path", type=Path)
+    pipeline_parser.add_argument(
+        "--no-legacy-export-v2",
+        action="store_true",
+        help="disable transitional v2 export sidecar output",
+    )
     pipeline_parser.add_argument(
         "--allow-schema-reset",
         action="store_true",
@@ -102,7 +109,14 @@ def main() -> None:
 
     inspect_parser = subparsers.add_parser("inspect")
     inspect_parser.add_argument(
-        "view", choices=["summary", "review-queue", "exportables", "snapshot-health"]
+        "view",
+        choices=[
+            "summary",
+            "review-queue",
+            "canonical-governance-review-queue",
+            "exportables",
+            "snapshot-health",
+        ],
     )
     inspect_parser.add_argument("--db-path", type=Path, default=DEFAULT_DB_PATH)
     inspect_parser.add_argument("--snapshot-id", type=str)
@@ -112,6 +126,7 @@ def main() -> None:
     inspect_parser.add_argument("--review-status", type=str)
     inspect_parser.add_argument("--canonical-taxon-id", type=str)
     inspect_parser.add_argument("--priority", type=str)
+    inspect_parser.add_argument("--run-id", type=str)
 
     review_overrides_parser = subparsers.add_parser("review-overrides")
     review_overrides_subparsers = review_overrides_parser.add_subparsers(
@@ -138,6 +153,9 @@ def main() -> None:
     )
     review_overrides_upsert_parser.add_argument("--note", required=True)
 
+    migrate_parser = subparsers.add_parser("migrate")
+    migrate_parser.add_argument("--db-path", type=Path, default=DEFAULT_DB_PATH)
+
     args = parser.parse_args()
     if args.command == "run-pipeline":
         gemini_api_key = None
@@ -154,6 +172,8 @@ def main() -> None:
             normalized_snapshot_path=args.normalized_path,
             qualification_snapshot_path=args.qualified_path,
             export_path=args.export_path,
+            export_v2_path=args.export_v2_path,
+            write_legacy_export_v2=not args.no_legacy_export_v2,
             review_overrides_path=args.review_overrides_path,
             apply_review_overrides=args.apply_review_overrides,
             qualifier_mode=args.qualifier_mode,
@@ -164,6 +184,7 @@ def main() -> None:
         )
         print(
             "Pipeline complete | "
+            f"run_id={result.run_id} | "
             f"qualified={result.qualified_resource_count} | "
             f"exportable={result.exportable_resource_count} | "
             f"review={result.review_queue_count}"
@@ -211,6 +232,31 @@ def main() -> None:
             f"insufficient_resolution={result.insufficient_resolution_count} | "
             f"path={result.ai_outputs_path}"
         )
+        return
+
+    if args.command == "migrate":
+        repository = SQLiteRepository(args.db_path)
+        if not args.db_path.exists():
+            repository.initialize()
+            print(
+                "Database initialized at latest schema | "
+                f"db_path={args.db_path} | "
+                f"schema_version={repository.current_schema_version()}"
+            )
+            return
+        applied_versions = repository.migrate_to_latest()
+        if applied_versions:
+            print(
+                "Database migrated | "
+                f"db_path={args.db_path} | "
+                f"applied={','.join(str(item) for item in applied_versions)}"
+            )
+        else:
+            print(
+                "Database already up to date | "
+                f"db_path={args.db_path} | "
+                f"schema_version={repository.current_schema_version()}"
+            )
         return
 
     if args.command == "review-overrides":
@@ -287,6 +333,15 @@ def main() -> None:
                 priority=args.priority,
             )
         )
+    elif args.view == "canonical-governance-review-queue":
+        print(
+            render_canonical_governance_review_queue(
+                repository,
+                run_id=args.run_id,
+                reason_code=args.review_reason_code,
+                review_status=args.review_status,
+            )
+        )
     elif args.view == "snapshot-health":
         if not args.snapshot_id:
             raise SystemExit("--snapshot-id is required for snapshot-health")
@@ -323,6 +378,11 @@ def qualify_inat_snapshot_entrypoint() -> None:
 
 def review_overrides_entrypoint() -> None:
     sys.argv.insert(1, "review-overrides")
+    main()
+
+
+def migrate_entrypoint() -> None:
+    sys.argv.insert(1, "migrate")
     main()
 
 

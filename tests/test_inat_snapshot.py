@@ -12,9 +12,16 @@ from database_core.adapters.inaturalist_snapshot import (
     load_snapshot_manifest,
     summarize_snapshot_manifest,
 )
-from database_core.domain.enums import PedagogicalQuality, Sex, TechnicalQuality, ViewAngle
+from database_core.domain.enums import (
+    PedagogicalQuality,
+    Sex,
+    SourceName,
+    TechnicalQuality,
+    ViewAngle,
+)
 from database_core.domain.models import AIQualification
 from database_core.pipeline.runner import run_pipeline
+from database_core.qualification.ai import source_external_key
 from database_core.storage.sqlite import SQLiteRepository
 
 SNAPSHOT_MANIFEST = Path("tests/fixtures/inaturalist_snapshot_smoke/manifest.json")
@@ -52,8 +59,9 @@ def test_snapshot_loader_rebuilds_records_without_network() -> None:
     assert [item.width for item in dataset.media_assets] == [1600, 1400, 1280]
     assert [item.height for item in dataset.media_assets] == [1200, 1050, 960]
     assert dataset.observations[0].raw_payload_ref == "responses/taxon_birds_000014.json#/results/0"
-    assert dataset.cached_image_paths_by_source_media_id["810001"].name == "810001.jpg"
-    assert dataset.ai_qualification_outcomes["810001"].status == "ok"
+    media_key = source_external_key(source_name=SourceName.INATURALIST, external_id="810001")
+    assert dataset.cached_image_paths_by_source_media_key[media_key].name == "810001.jpg"
+    assert dataset.ai_qualification_outcomes[media_key].status == "ok"
     assert sorted(dataset.taxon_payloads_by_canonical_taxon_id) == [
         "taxon:birds:000004",
         "taxon:birds:000009",
@@ -89,6 +97,7 @@ def test_snapshot_manifest_unknown_version_is_rejected(tmp_path: Path) -> None:
 
 
 def test_snapshot_pipeline_is_reproducible_from_saved_snapshot(tmp_path: Path) -> None:
+    fixed_run_id = "run:20260408T000000Z:aaaaaaaa"
     first_result = run_pipeline(
         source_mode="inat_snapshot",
         snapshot_manifest_path=SNAPSHOT_MANIFEST,
@@ -96,6 +105,7 @@ def test_snapshot_pipeline_is_reproducible_from_saved_snapshot(tmp_path: Path) -
         normalized_snapshot_path=tmp_path / "first_normalized.json",
         qualification_snapshot_path=tmp_path / "first_qualified.json",
         export_path=tmp_path / "first_export.json",
+        run_id=fixed_run_id,
         qualifier_mode="cached",
         uncertain_policy="reject",
     )
@@ -106,6 +116,7 @@ def test_snapshot_pipeline_is_reproducible_from_saved_snapshot(tmp_path: Path) -
         normalized_snapshot_path=tmp_path / "second_normalized.json",
         qualification_snapshot_path=tmp_path / "second_qualified.json",
         export_path=tmp_path / "second_export.json",
+        run_id=fixed_run_id,
         qualifier_mode="cached",
         uncertain_policy="reject",
     )
@@ -281,8 +292,9 @@ def test_qualify_inat_snapshot_writes_replayable_ai_outputs(tmp_path: Path) -> N
     assert result.processed_media_count == 3
     assert result.ai_valid_output_count == 3
     assert updated_manifest["ai_outputs_path"] == "ai_outputs.json"
-    assert ai_outputs_payload["810001"]["status"] == "ok"
-    assert ai_outputs_payload["810001"]["prompt_version"] == "phase1.inat.image.v2"
+    serialized_key = "inaturalist::810001"
+    assert ai_outputs_payload[serialized_key]["status"] == "ok"
+    assert ai_outputs_payload[serialized_key]["prompt_version"] == "phase1.inat.image.v2"
 
 
 def test_qualify_inat_snapshot_prints_progress(tmp_path: Path) -> None:
@@ -317,7 +329,8 @@ def test_prompt_version_mismatch_rejects_cached_ai_outputs(tmp_path: Path) -> No
     shutil.copytree(SNAPSHOT_MANIFEST.parent, snapshot_dir)
     ai_outputs_path = snapshot_dir / "ai_outputs.json"
     ai_outputs_payload = json.loads(ai_outputs_path.read_text(encoding="utf-8"))
-    ai_outputs_payload["810001"]["prompt_version"] = "legacy.prompt.v1"
+    key = "inaturalist::810001" if "inaturalist::810001" in ai_outputs_payload else "810001"
+    ai_outputs_payload[key]["prompt_version"] = "legacy.prompt.v1"
     ai_outputs_path.write_text(
         json.dumps(ai_outputs_payload, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",

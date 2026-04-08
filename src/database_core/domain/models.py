@@ -9,6 +9,7 @@ from database_core.domain.canonical_ids import CANONICAL_TAXON_ID_PATTERN
 from database_core.domain.enums import (
     CanonicalChangeRelationType,
     CanonicalEventType,
+    CanonicalGovernanceDecisionStatus,
     CanonicalRank,
     EnrichmentStatus,
     LicenseSafetyResult,
@@ -206,6 +207,11 @@ class CanonicalTaxon(DomainModel):
             object.__setattr__(self, "replaced_by", None)
         if self.derived_from == self.canonical_taxon_id:
             object.__setattr__(self, "derived_from", None)
+        if (
+            self.taxon_status == TaxonStatus.ACTIVE
+            and (self.split_into or self.merged_into or self.replaced_by)
+        ):
+            object.__setattr__(self, "taxon_status", TaxonStatus.DEPRECATED)
         return self
 
 
@@ -277,13 +283,19 @@ class MediaAsset(DomainModel):
 
 class ProvenanceSummary(DomainModel):
     source_name: SourceName
+    source_observation_key: str
+    source_media_key: str
     source_observation_id: str
     source_media_id: str
     raw_payload_ref: str
+    run_id: str
     observation_license: str | None = None
     media_license: str | None = None
     qualification_method: str
     ai_model: str | None = None
+    ai_prompt_version: str | None = None
+    ai_task_name: str | None = None
+    ai_status: str | None = None
 
 
 class QualifiedResource(DomainModel):
@@ -334,6 +346,32 @@ class ReviewItem(DomainModel):
     priority: ReviewPriority = ReviewPriority.MEDIUM
     review_status: ReviewStatus = ReviewStatus.OPEN
     created_at: datetime
+
+
+class CanonicalGovernanceReviewItem(DomainModel):
+    governance_review_item_id: str
+    run_id: str
+    governance_event_id: str
+    canonical_taxon_id: str
+    decision_status: CanonicalGovernanceDecisionStatus
+    reason_code: str
+    review_note: str
+    review_status: ReviewStatus = ReviewStatus.OPEN
+    created_at: datetime
+
+    @field_validator(
+        "governance_review_item_id",
+        "run_id",
+        "governance_event_id",
+        "canonical_taxon_id",
+        "reason_code",
+        "review_note",
+    )
+    @classmethod
+    def validate_required_non_blank_fields(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("field must not be blank")
+        return value
 
 
 def _slugify_scientific_name(value: str) -> str:

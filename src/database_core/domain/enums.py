@@ -39,6 +39,12 @@ class CanonicalEventType(StrEnum):
     SPLIT = "split"
     MERGE = "merge"
     REPLACE = "replace"
+    MAPPING_CONFLICT = "mapping_conflict"
+
+
+class CanonicalGovernanceDecisionStatus(StrEnum):
+    AUTO_CLEAR = "auto_clear"
+    MANUAL_REVIEWED = "manual_reviewed"
 
 
 class EnrichmentStatus(StrEnum):

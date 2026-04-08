@@ -57,13 +57,15 @@ The pipeline is deliberately small, versioned, and reproducible.
 - keep unresolved external hints out of the public export bundle
 - fail on unresolved canonical taxon IDs in exportable resources
 - exclude `provisional` taxa from pedagogical export by default
-- validate the export against `schemas/qualified_resources_bundle.schema.json` before writing
+- validate the export against `schemas/qualified_resources_bundle_v3.schema.json` before writing
+- emit transitional legacy `export.bundle.v2` alongside `v3` during compatibility window
 
 ## Canonical governance guardrails
 
 - `canonical_taxon_id` is immutable and concept-based, not name-based
 - accepted scientific names and synonyms can evolve without ID changes
 - split/merge/replacement transitions are explicit and never silently rewrite history
+- ambiguous canonical transitions are routed into a dedicated operator queue
 - deprecated taxa are preserved for traceability and reject new asset attachment
 - canonical policy reference: `docs/06_charte_canonique_v1.md`
 

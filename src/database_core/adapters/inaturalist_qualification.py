@@ -19,6 +19,7 @@ from database_core.qualification.ai import (
     DEFAULT_GEMINI_MODEL,
     DEFAULT_GEMINI_PROMPT_VERSION,
     AIQualifier,
+    GeminiRequestError,
     GeminiVisionQualifier,
     build_ai_outputs_payload,
     collect_ai_qualification_outcomes,
@@ -92,7 +93,7 @@ def qualify_inat_snapshot(
     outcomes = collect_ai_qualification_outcomes(
         dataset.media_assets,
         qualifier_mode="gemini",
-        cached_image_paths_by_source_media_id=dataset.cached_image_paths_by_source_media_id,
+        cached_image_paths_by_source_media_key=dataset.cached_image_paths_by_source_media_key,
         gemini_api_key=gemini_api_key,
         gemini_model=gemini_model,
         prompt_version=prompt_version,
@@ -180,7 +181,7 @@ class PacingRetryQualifier:
             self._last_request_started_at = self._clock()
             try:
                 return self.base_qualifier.qualify(media_asset, image_bytes=image_bytes)
-            except (HTTPError, TimeoutError, URLError, OSError) as exc:
+            except (GeminiRequestError, HTTPError, TimeoutError, URLError, OSError) as exc:
                 if not _is_retryable_gemini_error(exc) or retry_count >= self.max_retries:
                     raise
                 self._sleep(_retry_delay_seconds(exc, backoff_seconds, self.max_backoff_seconds))
@@ -200,6 +201,10 @@ class PacingRetryQualifier:
 
 
 def _is_retryable_gemini_error(exc: Exception) -> bool:
+    if isinstance(exc, GeminiRequestError):
+        if exc.retryable:
+            return True
+        return exc.status_code in {408, 429, 500, 502, 503, 504}
     if isinstance(exc, HTTPError):
         return exc.code in {408, 429, 500, 502, 503, 504}
     return isinstance(exc, (TimeoutError, URLError))
@@ -217,6 +222,8 @@ def _retry_delay_seconds(
 
 
 def _parse_retry_after_seconds(exc: Exception) -> float | None:
+    if isinstance(exc, GeminiRequestError):
+        return exc.retry_after_seconds
     if not isinstance(exc, HTTPError) or exc.headers is None:
         return None
     retry_after = exc.headers.get("Retry-After")

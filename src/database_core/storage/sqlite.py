@@ -8,8 +8,15 @@ from contextlib import contextmanager
 from datetime import UTC, datetime
 from pathlib import Path
 
-from database_core.domain.enums import CanonicalChangeRelationType, CanonicalEventType
+from database_core.domain.canonical_governance import derive_canonical_governance_decisions
+from database_core.domain.enums import (
+    CanonicalChangeRelationType,
+    CanonicalEventType,
+    CanonicalGovernanceDecisionStatus,
+    ReviewStatus,
+)
 from database_core.domain.models import (
+    CanonicalGovernanceReviewItem,
     CanonicalTaxon,
     CanonicalTaxonEvent,
     CanonicalTaxonRelationship,
@@ -18,8 +25,15 @@ from database_core.domain.models import (
     ReviewItem,
     SourceObservation,
 )
+from database_core.storage.migrations import apply_migrations, has_user_tables, read_user_version
 from database_core.storage.schema import SCHEMA_SQL
-from database_core.versioning import SCHEMA_VERSION
+from database_core.versioning import (
+    ENRICHMENT_VERSION,
+    EXPORT_VERSION,
+    QUALIFICATION_VERSION,
+    SCHEMA_VERSION,
+    SCHEMA_VERSION_LABEL,
+)
 
 
 class RepositorySchemaVersionMismatchError(ValueError):
@@ -47,21 +61,69 @@ class SQLiteRepository:
             connection.close()
 
     def initialize(self, *, allow_schema_reset: bool = False) -> None:
-        if self._requires_schema_reset():
+        if self._requires_schema_migration():
             if not allow_schema_reset:
+                current_version = self.current_schema_version()
                 raise RepositorySchemaVersionMismatchError(
                     "Database schema version mismatch for "
-                    f"{self.db_path}. Expected user_version={SCHEMA_VERSION}. "
-                    "Use explicit local-dev reset (allow_schema_reset=True) to recreate."
+                    f"{self.db_path}. Expected user_version={SCHEMA_VERSION}, "
+                    f"got {current_version}. Run `database-core migrate --db-path {self.db_path}` "
+                    "or use explicit local-dev reset (allow_schema_reset=True)."
                 )
             self.db_path.unlink(missing_ok=True)
         with self.connect() as connection:
             connection.executescript(SCHEMA_SQL)
 
-    def reset(self, *, connection: sqlite3.Connection | None = None) -> None:
+    def migrate_to_latest(self) -> tuple[int, ...]:
+        with self.connect() as connection:
+            if not has_user_tables(connection):
+                connection.executescript(SCHEMA_SQL)
+                return (SCHEMA_VERSION,)
+            applied_versions = apply_migrations(connection, target_version=SCHEMA_VERSION)
+            if read_user_version(connection) != SCHEMA_VERSION:
+                raise RepositorySchemaVersionMismatchError(
+                    "Database migration did not reach expected schema version "
+                    f"{SCHEMA_VERSION} for {self.db_path}"
+                )
+        return applied_versions
+
+    def current_schema_version(self) -> int:
+        if not self.db_path.exists():
+            return 0
+        with self.connect() as connection:
+            return read_user_version(connection)
+
+    def fetch_latest_completed_canonical_taxa(self) -> list[CanonicalTaxon]:
+        with self.connect() as connection:
+            row = connection.execute(
+                """
+                SELECT run_id
+                FROM pipeline_runs
+                WHERE run_status = 'completed' AND completed_at IS NOT NULL
+                ORDER BY completed_at DESC
+                LIMIT 1
+                """
+            ).fetchone()
+            if row is None:
+                return []
+            payload_rows = connection.execute(
+                """
+                SELECT payload_json
+                FROM canonical_taxa_history
+                WHERE run_id = ?
+                ORDER BY canonical_taxon_id
+                """,
+                (str(row["run_id"]),),
+            ).fetchall()
+            return [
+                CanonicalTaxon(**json.loads(str(payload_row["payload_json"])))
+                for payload_row in payload_rows
+            ]
+
+    def reset_materialized_state(self, *, connection: sqlite3.Connection | None = None) -> None:
         if connection is None:
             with self.connect() as owned_connection:
-                self.reset(connection=owned_connection)
+                self.reset_materialized_state(connection=owned_connection)
             return
 
         connection.executescript(
@@ -75,6 +137,9 @@ class SQLiteRepository:
             DELETE FROM canonical_taxa;
             """
         )
+
+    def reset(self, *, connection: sqlite3.Connection | None = None) -> None:
+        self.reset_materialized_state(connection=connection)
 
     def save_canonical_taxa(
         self,
@@ -391,6 +456,283 @@ class SQLiteRepository:
             ],
         )
 
+    def start_pipeline_run(
+        self,
+        *,
+        run_id: str,
+        source_mode: str,
+        dataset_id: str,
+        snapshot_id: str | None,
+        started_at: datetime,
+        connection: sqlite3.Connection | None = None,
+    ) -> None:
+        if connection is None:
+            with self.connect() as owned_connection:
+                self.start_pipeline_run(
+                    run_id=run_id,
+                    source_mode=source_mode,
+                    dataset_id=dataset_id,
+                    snapshot_id=snapshot_id,
+                    started_at=started_at,
+                    connection=owned_connection,
+                )
+            return
+
+        connection.execute(
+            """
+            INSERT INTO pipeline_runs (
+                run_id,
+                source_mode,
+                dataset_id,
+                snapshot_id,
+                schema_version,
+                qualification_version,
+                enrichment_version,
+                export_version,
+                started_at,
+                completed_at,
+                run_status
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, 'running')
+            """,
+            (
+                run_id,
+                source_mode,
+                dataset_id,
+                snapshot_id,
+                SCHEMA_VERSION_LABEL,
+                QUALIFICATION_VERSION,
+                ENRICHMENT_VERSION,
+                EXPORT_VERSION,
+                started_at.isoformat(),
+            ),
+        )
+
+    def complete_pipeline_run(
+        self,
+        *,
+        run_id: str,
+        completed_at: datetime,
+        run_status: str = "completed",
+        connection: sqlite3.Connection | None = None,
+    ) -> None:
+        if connection is None:
+            with self.connect() as owned_connection:
+                self.complete_pipeline_run(
+                    run_id=run_id,
+                    completed_at=completed_at,
+                    run_status=run_status,
+                    connection=owned_connection,
+                )
+            return
+
+        connection.execute(
+            """
+            UPDATE pipeline_runs
+            SET completed_at = ?, run_status = ?
+            WHERE run_id = ?
+            """,
+            (completed_at.isoformat(), run_status, run_id),
+        )
+
+    def append_run_history(
+        self,
+        *,
+        run_id: str,
+        governance_effective_at: datetime,
+        canonical_taxa: Sequence[CanonicalTaxon],
+        observations: Sequence[SourceObservation],
+        media_assets: Sequence[MediaAsset],
+        qualified_resources: Sequence[QualifiedResource],
+        review_items: Sequence[ReviewItem],
+        connection: sqlite3.Connection | None = None,
+    ) -> None:
+        if connection is None:
+            with self.connect() as owned_connection:
+                self.append_run_history(
+                    run_id=run_id,
+                    governance_effective_at=governance_effective_at,
+                    canonical_taxa=canonical_taxa,
+                    observations=observations,
+                    media_assets=media_assets,
+                    qualified_resources=qualified_resources,
+                    review_items=review_items,
+                    connection=owned_connection,
+                )
+            return
+
+        connection.executemany(
+            """
+            INSERT INTO canonical_taxa_history (run_id, canonical_taxon_id, payload_json)
+            VALUES (?, ?, ?)
+            """,
+            [
+                (
+                    run_id,
+                    item.canonical_taxon_id,
+                    _json(item.model_dump(mode="json")),
+                )
+                for item in canonical_taxa
+            ],
+        )
+        connection.executemany(
+            """
+            INSERT INTO source_observations_history (
+                run_id,
+                observation_uid,
+                source_name,
+                source_observation_id,
+                payload_json
+            ) VALUES (?, ?, ?, ?, ?)
+            """,
+            [
+                (
+                    run_id,
+                    item.observation_uid,
+                    item.source_name,
+                    item.source_observation_id,
+                    _json(item.model_dump(mode="json")),
+                )
+                for item in observations
+            ],
+        )
+        connection.executemany(
+            """
+            INSERT INTO media_assets_history (
+                run_id,
+                media_id,
+                source_name,
+                source_media_id,
+                payload_json
+            ) VALUES (?, ?, ?, ?, ?)
+            """,
+            [
+                (
+                    run_id,
+                    item.media_id,
+                    item.source_name,
+                    item.source_media_id,
+                    _json(item.model_dump(mode="json")),
+                )
+                for item in media_assets
+            ],
+        )
+        connection.executemany(
+            """
+            INSERT INTO qualified_resources_history (run_id, qualified_resource_id, payload_json)
+            VALUES (?, ?, ?)
+            """,
+            [
+                (
+                    run_id,
+                    item.qualified_resource_id,
+                    _json(item.model_dump(mode="json")),
+                )
+                for item in qualified_resources
+            ],
+        )
+        connection.executemany(
+            """
+            INSERT INTO review_queue_history (run_id, review_item_id, payload_json)
+            VALUES (?, ?, ?)
+            """,
+            [
+                (
+                    run_id,
+                    item.review_item_id,
+                    _json(item.model_dump(mode="json")),
+                )
+                for item in review_items
+            ],
+        )
+
+        previous_canonical_taxa = self._load_latest_canonical_taxa_before_run(
+            run_id=run_id,
+            connection=connection,
+        )
+        governance_decisions = derive_canonical_governance_decisions(
+            previous_taxa=previous_canonical_taxa,
+            current_taxa=list(canonical_taxa),
+            effective_at=governance_effective_at,
+        )
+        connection.executemany(
+            """
+            INSERT INTO canonical_governance_events (
+                governance_event_id,
+                run_id,
+                canonical_taxon_id,
+                event_type,
+                source_name,
+                effective_at,
+                decision_status,
+                decision_reason,
+                payload_json,
+                created_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            [
+                (
+                    f"{run_id}:{decision.event.event_id}",
+                    run_id,
+                    decision.event.canonical_taxon_id,
+                    decision.event.event_type,
+                    decision.event.source_name,
+                    decision.event.effective_at.isoformat(),
+                    decision.decision_status,
+                    decision.decision_reason,
+                    _json(decision.event.payload),
+                    datetime.now(UTC).isoformat(),
+                )
+                for decision in governance_decisions
+            ],
+        )
+
+        governance_review_items = [
+            CanonicalGovernanceReviewItem(
+                governance_review_item_id=f"cgr:{run_id}:{decision.event.event_id}",
+                run_id=run_id,
+                governance_event_id=f"{run_id}:{decision.event.event_id}",
+                canonical_taxon_id=decision.event.canonical_taxon_id,
+                decision_status=decision.decision_status,
+                reason_code=decision.decision_reason,
+                review_note=(
+                    "requires operator validation for ambiguous canonical transition: "
+                    f"{decision.decision_reason}"
+                ),
+                review_status=ReviewStatus.OPEN,
+                created_at=datetime.now(UTC),
+            )
+            for decision in governance_decisions
+            if decision.decision_status == CanonicalGovernanceDecisionStatus.MANUAL_REVIEWED
+        ]
+        if governance_review_items:
+            connection.executemany(
+                """
+                INSERT INTO canonical_governance_review_queue (
+                    governance_review_item_id,
+                    run_id,
+                    governance_event_id,
+                    canonical_taxon_id,
+                    reason_code,
+                    review_note,
+                    review_status,
+                    created_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                [
+                    (
+                        item.governance_review_item_id,
+                        item.run_id,
+                        item.governance_event_id,
+                        item.canonical_taxon_id,
+                        item.reason_code,
+                        item.review_note,
+                        item.review_status,
+                        item.created_at.isoformat(),
+                    )
+                    for item in governance_review_items
+                ],
+            )
+
     def fetch_summary(self) -> dict[str, int]:
         with self.connect() as connection:
             tables = [
@@ -456,6 +798,46 @@ class SQLiteRepository:
                         ELSE 3
                     END,
                     review_item_id
+                """,
+                params,
+            ).fetchall()
+            return [dict(row) for row in rows]
+
+    def fetch_canonical_governance_review_queue(
+        self,
+        *,
+        run_id: str | None = None,
+        reason_code: str | None = None,
+        review_status: str | None = None,
+    ) -> list[dict[str, str]]:
+        with self.connect() as connection:
+            clauses: list[str] = []
+            params: list[str] = []
+            if run_id:
+                clauses.append("run_id = ?")
+                params.append(run_id)
+            if reason_code:
+                clauses.append("reason_code = ?")
+                params.append(reason_code)
+            if review_status:
+                clauses.append("review_status = ?")
+                params.append(review_status)
+
+            where_clause = f"WHERE {' AND '.join(clauses)}" if clauses else ""
+            rows = connection.execute(
+                f"""
+                SELECT
+                    governance_review_item_id,
+                    run_id,
+                    governance_event_id,
+                    canonical_taxon_id,
+                    reason_code,
+                    review_note,
+                    review_status,
+                    created_at
+                FROM canonical_governance_review_queue
+                {where_clause}
+                ORDER BY created_at DESC, governance_review_item_id
                 """,
                 params,
             ).fetchall()
@@ -530,19 +912,47 @@ class SQLiteRepository:
                 "ai_model_distribution": dict(sorted(ai_model_distribution.items())),
             }
 
-    def _requires_schema_reset(self) -> bool:
+    def _load_latest_canonical_taxa_before_run(
+        self,
+        *,
+        run_id: str,
+        connection: sqlite3.Connection,
+    ) -> list[CanonicalTaxon]:
+        row = connection.execute(
+            """
+            SELECT run_id
+            FROM pipeline_runs
+            WHERE run_id != ? AND run_status = 'completed' AND completed_at IS NOT NULL
+            ORDER BY completed_at DESC
+            LIMIT 1
+            """,
+            (run_id,),
+        ).fetchone()
+        if row is None:
+            return []
+
+        previous_run_id = str(row["run_id"])
+        payload_rows = connection.execute(
+            """
+            SELECT payload_json
+            FROM canonical_taxa_history
+            WHERE run_id = ?
+            ORDER BY canonical_taxon_id
+            """,
+            (previous_run_id,),
+        ).fetchall()
+        return [
+            CanonicalTaxon(**json.loads(str(payload_row["payload_json"])))
+            for payload_row in payload_rows
+        ]
+
+    def _requires_schema_migration(self) -> bool:
         if not self.db_path.exists():
             return False
         with self.connect() as connection:
-            current_version = connection.execute("PRAGMA user_version").fetchone()[0]
-            has_tables = connection.execute(
-                """
-                SELECT COUNT(*) AS count
-                FROM sqlite_master
-                WHERE type = 'table' AND name NOT LIKE 'sqlite_%'
-                """
-            ).fetchone()["count"]
-        return bool(has_tables) and current_version != SCHEMA_VERSION
+            current_version = read_user_version(connection)
+            has_tables_now = has_user_tables(connection)
+        return has_tables_now and current_version != SCHEMA_VERSION
 
 
 def _json(value: object) -> str:
@@ -582,6 +992,16 @@ def _build_canonical_relationships_and_events(
                     created_at=now,
                 )
             )
+            events.append(
+                CanonicalTaxonEvent(
+                    event_id=f"event:{taxon.canonical_taxon_id}:split_into:{target_id}",
+                    event_type=CanonicalEventType.SPLIT,
+                    canonical_taxon_id=taxon.canonical_taxon_id,
+                    source_name=taxon.authority_source,
+                    effective_at=now,
+                    payload={"target_canonical_taxon_id": target_id},
+                )
+            )
         if taxon.merged_into:
             relationships.append(
                 CanonicalTaxonRelationship(
@@ -592,6 +1012,16 @@ def _build_canonical_relationships_and_events(
                     created_at=now,
                 )
             )
+            events.append(
+                CanonicalTaxonEvent(
+                    event_id=f"event:{taxon.canonical_taxon_id}:merged_into:{taxon.merged_into}",
+                    event_type=CanonicalEventType.MERGE,
+                    canonical_taxon_id=taxon.canonical_taxon_id,
+                    source_name=taxon.authority_source,
+                    effective_at=now,
+                    payload={"target_canonical_taxon_id": taxon.merged_into},
+                )
+            )
         if taxon.replaced_by:
             relationships.append(
                 CanonicalTaxonRelationship(
@@ -600,6 +1030,16 @@ def _build_canonical_relationships_and_events(
                     target_canonical_taxon_id=taxon.replaced_by,
                     source_name=taxon.authority_source,
                     created_at=now,
+                )
+            )
+            events.append(
+                CanonicalTaxonEvent(
+                    event_id=f"event:{taxon.canonical_taxon_id}:replaced_by:{taxon.replaced_by}",
+                    event_type=CanonicalEventType.REPLACE,
+                    canonical_taxon_id=taxon.canonical_taxon_id,
+                    source_name=taxon.authority_source,
+                    effective_at=now,
+                    payload={"target_canonical_taxon_id": taxon.replaced_by},
                 )
             )
         if taxon.derived_from:
