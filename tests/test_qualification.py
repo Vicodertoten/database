@@ -190,6 +190,8 @@ def test_low_pedagogical_quality_no_longer_blocks_acceptance() -> None:
     assert resources[0].difficulty_level == "unknown"
     assert resources[0].media_role == "context"
     assert resources[0].confusion_relevance == "none"
+    assert resources[0].diagnostic_feature_visibility == "unknown"
+    assert resources[0].learning_suitability == "unknown"
     assert resources[0].uncertainty_reason == "none"
     assert resources[0].ai_confidence == 0.95
     assert review_items == []

@@ -105,6 +105,150 @@ def test_merge_to_provisional_target_is_manual_reviewed() -> None:
     assert merge_decision.decision_reason == "ambiguous_transition_target_provisional"
 
 
+def test_replace_to_active_target_is_auto_clear() -> None:
+    previous = [_taxon(canonical_taxon_id="taxon:birds:000001", name="Parus major")]
+    current = [
+        _taxon(
+            canonical_taxon_id="taxon:birds:000001",
+            name="Parus major",
+            replaced_by="taxon:birds:000002",
+        ),
+        _taxon(
+            canonical_taxon_id="taxon:birds:000002",
+            name="Parus major updated",
+        ),
+    ]
+
+    decisions = derive_canonical_governance_decisions(
+        previous_taxa=previous,
+        current_taxa=current,
+        effective_at=datetime(2026, 4, 8, 0, 0, tzinfo=UTC),
+    )
+    replace_decision = [item for item in decisions if item.event.event_type == "replace"][0]
+
+    assert replace_decision.decision_status == "auto_clear"
+    assert replace_decision.decision_reason == "weighted_transition_clear"
+
+
+def test_transition_decisions_always_include_source_delta() -> None:
+    previous = [
+        _taxon(
+            canonical_taxon_id="taxon:birds:000001",
+            name="Parus major",
+            authority_taxonomy_profile={
+                "source_taxon_id": "12716",
+                "name": "Parus major",
+                "is_active": True,
+                "provisional": False,
+                "parent_id": "1260",
+                "ancestor_ids": ["1", "2", "1260"],
+                "taxon_changes_count": 3,
+                "current_synonymous_taxon_ids": ["12716"],
+            },
+        )
+    ]
+    current = [
+        _taxon(
+            canonical_taxon_id="taxon:birds:000001",
+            name="Parus major",
+            split_into=["taxon:birds:000002"],
+            authority_taxonomy_profile={
+                "source_taxon_id": "12716",
+                "name": "Parus major",
+                "is_active": False,
+                "provisional": False,
+                "parent_id": "1260",
+                "ancestor_ids": ["1", "2", "1260"],
+                "taxon_changes_count": 4,
+                "current_synonymous_taxon_ids": ["12716", "99999"],
+            },
+        ),
+        _taxon(
+            canonical_taxon_id="taxon:birds:000002",
+            name="Parus minor",
+            derived_from="taxon:birds:000001",
+            authority_taxonomy_profile={
+                "source_taxon_id": "99999",
+                "ancestor_ids": ["1", "2", "1260", "12716"],
+                "is_active": True,
+                "provisional": False,
+            },
+        ),
+    ]
+    decisions = derive_canonical_governance_decisions(
+        previous_taxa=previous,
+        current_taxa=current,
+        effective_at=datetime(2026, 4, 8, 0, 0, tzinfo=UTC),
+    )
+    split_decision = [item for item in decisions if item.event.event_type == "split"][0]
+
+    payload = split_decision.source_delta.to_payload()
+    assert payload["source_taxon_id_previous"] == "12716"
+    assert payload["source_taxon_id_current"] == "12716"
+    assert payload["taxon_changes_count_previous"] == 3
+    assert payload["taxon_changes_count_current"] == 4
+    assert payload["current_synonymous_taxon_ids_current"] == ["12716", "99999"]
+
+
+def test_decision_matrix_is_deterministic() -> None:
+    previous = [
+        _taxon(
+            canonical_taxon_id="taxon:birds:000001",
+            name="Parus major",
+            authority_source="inaturalist",
+            external_source_mappings=[("inaturalist", "12716")],
+        )
+    ]
+    current = [
+        _taxon(
+            canonical_taxon_id="taxon:birds:000001",
+            name="Parus major",
+            split_into=["taxon:birds:000999"],
+            authority_source="inaturalist",
+            external_source_mappings=[("inaturalist", "12716")],
+        ),
+        _taxon(
+            canonical_taxon_id="taxon:birds:000002",
+            name="Parus major duplicate",
+            authority_source="inaturalist",
+            external_source_mappings=[("inaturalist", "12716")],
+        ),
+    ]
+
+    first = derive_canonical_governance_decisions(
+        previous_taxa=previous,
+        current_taxa=current,
+        effective_at=datetime(2026, 4, 8, 0, 0, tzinfo=UTC),
+    )
+    second = derive_canonical_governance_decisions(
+        previous_taxa=previous,
+        current_taxa=current,
+        effective_at=datetime(2026, 4, 8, 0, 0, tzinfo=UTC),
+    )
+
+    first_signature = [
+        (
+            item.event.event_id,
+            item.decision_status,
+            item.decision_reason,
+            item.signal_breakdown.to_payload(),
+            item.source_delta.to_payload(),
+        )
+        for item in first
+    ]
+    second_signature = [
+        (
+            item.event.event_id,
+            item.decision_status,
+            item.decision_reason,
+            item.signal_breakdown.to_payload(),
+            item.source_delta.to_payload(),
+        )
+        for item in second
+    ]
+    assert first_signature == second_signature
+
+
 def test_mapping_conflict_with_clear_source_priority_is_auto_clear() -> None:
     previous = [
         _taxon(
@@ -179,6 +323,8 @@ def _taxon(
     split_into: list[str] | None = None,
     merged_into: str | None = None,
     derived_from: str | None = None,
+    replaced_by: str | None = None,
+    authority_taxonomy_profile: dict[str, object] | None = None,
 ) -> CanonicalTaxon:
     return CanonicalTaxon(
         canonical_taxon_id=canonical_taxon_id,
@@ -202,6 +348,7 @@ def _taxon(
         similar_taxon_ids=[],
         split_into=split_into or [],
         merged_into=merged_into,
-        replaced_by=None,
+        replaced_by=replaced_by,
         derived_from=derived_from,
+        authority_taxonomy_profile=authority_taxonomy_profile or {},
     )

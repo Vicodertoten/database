@@ -14,7 +14,7 @@ Source de vérité: `scripts/generate_smoke_report.py` (`smoke.report.v1`)
 | KPI | Seuil | Mesure |
 |---|---|---|
 | `exportable_unresolved_or_provisional` | `0` | nombre de ressources exportables liées à un taxon absent/provisional ou non-accepted |
-| `governance_reason_and_signal_coverage` | `1.0` (100%) | couverture des événements de gouvernance avec `decision_reason` + `signal_breakdown` complet |
+| `governance_reason_and_signal_coverage` | `1.0` (100%) | couverture des événements de gouvernance avec `decision_reason` + `signal_breakdown` + `source_delta` complet |
 | `export_trace_flags_uncertainty_coverage` | `1.0` (100%) | couverture des ressources exportables avec trace qualification/IA + flags + incertitude typée |
 
 ## Commande standard
@@ -32,4 +32,3 @@ Sortie par défaut:
 
 - `overall_pass=true`: les 3 KPIs verrouillés sont atteints.
 - `overall_pass=false`: au moins un KPI est hors seuil; le run est bloqué pour promotion.
-

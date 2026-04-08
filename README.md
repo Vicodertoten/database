@@ -51,7 +51,8 @@ python scripts/inspect_database.py summary
 
 Installed entrypoints mirror the script wrappers:
 `database-run-pipeline`, `database-inspect`, `database-fetch-inat-snapshot`,
-`database-qualify-inat-snapshot`, `database-review-overrides`, and `database-migrate`.
+`database-qualify-inat-snapshot`, `database-review-overrides`,
+`database-governance-review`, and `database-migrate`.
 
 ## What works now
 
@@ -65,6 +66,7 @@ Installed entrypoints mirror the script wrappers:
 - staged qualification with license safety enforcement
 - persisted Gemini image qualification over cached media with prompt-version checks
 - structured review queue with stage, reason code, and priority
+- canonical governance review queue with close/resolve workflow metadata (`resolved_at`, `resolved_note`, `resolved_by`)
 - snapshot-scoped review overrides that can be replayed on rerun
 - versioned normalized, qualification, and export artifacts
 - JSON export bundles validated against versioned JSON Schemas before write
@@ -98,10 +100,13 @@ python scripts/run_pipeline.py --db-path data/pilot.sqlite --qualifier-mode rule
 python scripts/run_pipeline.py --source-mode inat_snapshot --snapshot-id inaturalist-birds-20260408T123456Z --qualifier-mode cached --uncertain-policy reject
 python scripts/run_pipeline.py --source-mode inat_snapshot --snapshot-id inaturalist-birds-20260408T123456Z --allow-schema-reset --qualifier-mode cached --uncertain-policy reject
 python scripts/run_pipeline.py --source-mode inat_snapshot --snapshot-id inaturalist-birds-20260408T123456Z --qualifier-mode cached --uncertain-policy reject --apply-review-overrides
+python scripts/run_pipeline.py --source-mode inat_snapshot --snapshot-id inaturalist-birds-20260408T123456Z --qualifier-mode cached --uncertain-policy reject --export-v3-sidecar
 python scripts/run_pipeline.py --source-mode inat_snapshot --snapshot-id inaturalist-birds-20260408T123456Z --qualifier-mode gemini --uncertain-policy reject
 python scripts/inspect_database.py summary
-python scripts/inspect_database.py run-metrics --snapshot-id inaturalist-birds-20260408T123456Z
+python scripts/inspect_database.py run-metrics --snapshot-id inaturalist-birds-20260408T123456Z --run-id run:20260408T123456Z:aaaaaaaa
 python scripts/inspect_database.py review-queue --review-reason-code human_override
+python scripts/inspect_database.py canonical-governance-review-queue --snapshot-id inaturalist-birds-20260408T123456Z --review-status open
+python scripts/governance_review.py resolve --snapshot-id inaturalist-birds-20260408T123456Z --governance-review-item-id cgr:run:20260408T123456Z:aaaaaaaa:event:taxon:birds:000001:split:demo --note "validated against source delta" --resolved-by operator:alice
 python scripts/inspect_database.py snapshot-health --snapshot-id inaturalist-birds-20260408T123456Z
 python scripts/review_overrides.py init --snapshot-id inaturalist-birds-20260408T123456Z
 python scripts/review_overrides.py upsert --snapshot-id inaturalist-birds-20260408T123456Z --media-asset-id media:inaturalist:810001 --status review_required --note "manual spot-check requested"
@@ -129,6 +134,17 @@ Recommended flow:
 Override files live by default in `data/review_overrides/<snapshot_id>.json`.
 They are snapshot-scoped, versioned, and never mutate raw snapshot artifacts.
 
+## Canonical governance operator workflow
+
+Canonical governance decisions with `manual_reviewed` status are pushed into
+`canonical_governance_review_queue`.
+
+Recommended flow:
+
+1. inspect open items with `python scripts/inspect_database.py canonical-governance-review-queue --snapshot-id <id> --review-status open`
+2. resolve one item with `python scripts/governance_review.py resolve --snapshot-id <id> --governance-review-item-id <item_id> --note "<mandatory note>" --resolved-by <operator>`
+3. re-inspect queue/backlog and verify closure metadata (`resolved_at`, `resolved_note`, `resolved_by`)
+
 ## Outputs
 
 Running the fixture pipeline writes:
@@ -144,6 +160,7 @@ In `inat_snapshot` mode, the default derived outputs become snapshot-scoped:
 - normalized: `data/normalized/<snapshot_id>.json`
 - qualified: `data/qualified/<snapshot_id>.json`
 - export: `data/exports/<snapshot_id>.json`
+- optional sidecar export (`v3`, opt-in only): `data/exports/<snapshot_id>.v3.json`
 
 Running `fetch_inat_snapshot.py` writes:
 
@@ -164,20 +181,20 @@ The manifest records which sort was requested and which one was actually used.
 
 The repository now writes explicit stage versions into generated artifacts:
 
-- schema version: `database.schema.v6`
+- schema version: `database.schema.v7`
 - snapshot manifest version: `inaturalist.snapshot.v3`
 - normalized snapshot version: `normalized.snapshot.v3`
 - canonical enrichment version: `canonical.enrichment.v2`
 - qualification version: `qualification.staged.v1`
 - export version: `export.bundle.v4`
-- sidecar export version: `export.bundle.v3` (two-release transition window)
+- sidecar export version: `export.bundle.v3` (transition mode, opt-in only)
 - review override version: `review.override.v1`
 
 Snapshot manifests without `manifest_version` are rejected.
 Unknown manifest versions are rejected explicitly.
 The primary export bundle (`v4`) is validated against
 `schemas/qualified_resources_bundle_v4.schema.json` before write.
-The optional sidecar (`v3`) is validated against
+The optional sidecar (`v3`) is generated only with `--export-v3-sidecar` and validated against
 `schemas/qualified_resources_bundle_v3.schema.json`.
 
 ## Canonical enrichment

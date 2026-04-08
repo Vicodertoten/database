@@ -2,7 +2,9 @@ from __future__ import annotations
 
 from database_core.domain.enums import (
     ConfusionRelevance,
+    DiagnosticFeatureVisibility,
     DifficultyLevel,
+    LearningSuitability,
     LicenseSafetyResult,
     MediaRole,
     PedagogicalQuality,
@@ -155,6 +157,20 @@ def resolve_confusion_relevance(ai_qualification: AIQualification | None) -> Con
     if ai_qualification and ai_qualification.confidence >= AI_CONFIDENCE_THRESHOLD:
         return ai_qualification.confusion_relevance
     return ConfusionRelevance.NONE
+
+
+def resolve_diagnostic_feature_visibility(
+    ai_qualification: AIQualification | None,
+) -> DiagnosticFeatureVisibility:
+    if ai_qualification and ai_qualification.confidence >= AI_CONFIDENCE_THRESHOLD:
+        return ai_qualification.diagnostic_feature_visibility
+    return DiagnosticFeatureVisibility.UNKNOWN
+
+
+def resolve_learning_suitability(ai_qualification: AIQualification | None) -> LearningSuitability:
+    if ai_qualification and ai_qualification.confidence >= AI_CONFIDENCE_THRESHOLD:
+        return ai_qualification.learning_suitability
+    return LearningSuitability.UNKNOWN
 
 
 def resolve_uncertainty_reason(ai_qualification: AIQualification | None) -> UncertaintyReason:

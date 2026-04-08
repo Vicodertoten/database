@@ -28,7 +28,7 @@ PROMPT_BASE_TEXT = (
     "Return strict JSON only for biodiversity-learning dataset qualification. "
     "Return exactly these keys: technical_quality, pedagogical_quality, life_stage, sex, "
     "visible_parts, view_angle, difficulty_level, media_role, confusion_relevance, "
-    "uncertainty_reason, confidence, notes. "
+    "diagnostic_feature_visibility, learning_suitability, uncertainty_reason, confidence, notes. "
     "technical_quality and pedagogical_quality must be one of: unknown, low, medium, high. "
     "sex must be one of: unknown, male, female, mixed. "
     "visible_parts must be a JSON array of short snake_case strings. "
@@ -36,6 +36,8 @@ PROMPT_BASE_TEXT = (
     "difficulty_level must be one of: unknown, easy, medium, hard. "
     "media_role must be one of: primary_id, context, distractor_risk, non_diagnostic. "
     "confusion_relevance must be one of: none, low, medium, high. "
+    "diagnostic_feature_visibility must be one of: unknown, low, medium, high. "
+    "learning_suitability must be one of: unknown, low, medium, high. "
     "uncertainty_reason must be one of: none, occlusion, angle, distance, motion, "
     "multiple_subjects, model_uncertain, taxonomy_ambiguous. "
     "confidence must be a number between 0.0 and 1.0. "
@@ -107,6 +109,16 @@ STRICT_GEMINI_RESPONSE_SCHEMA: dict[str, object] = {
             "enum": ["none", "low", "medium", "high"],
             "description": "How relevant this item is for confusion/differentiation training.",
         },
+        "diagnostic_feature_visibility": {
+            "type": "string",
+            "enum": ["unknown", "low", "medium", "high"],
+            "description": "Visibility level of diagnostic features used for identification.",
+        },
+        "learning_suitability": {
+            "type": "string",
+            "enum": ["unknown", "low", "medium", "high"],
+            "description": "Suitability of this image for learning objectives.",
+        },
         "uncertainty_reason": {
             "type": "string",
             "enum": [
@@ -142,6 +154,8 @@ STRICT_GEMINI_RESPONSE_SCHEMA: dict[str, object] = {
         "difficulty_level",
         "media_role",
         "confusion_relevance",
+        "diagnostic_feature_visibility",
+        "learning_suitability",
         "uncertainty_reason",
         "confidence",
         "notes",
@@ -674,6 +688,12 @@ def _normalize_gemini_candidate(candidate: Mapping[str, object]) -> dict[str, ob
         "difficulty_level": _normalize_difficulty_level(candidate.get("difficulty_level")),
         "media_role": _normalize_media_role(candidate.get("media_role")),
         "confusion_relevance": _normalize_confusion_relevance(candidate.get("confusion_relevance")),
+        "diagnostic_feature_visibility": _normalize_diagnostic_feature_visibility(
+            candidate.get("diagnostic_feature_visibility")
+        ),
+        "learning_suitability": _normalize_learning_suitability(
+            candidate.get("learning_suitability")
+        ),
         "uncertainty_reason": _normalize_uncertainty_reason(candidate.get("uncertainty_reason")),
         "confidence": _normalize_confidence(candidate.get("confidence")),
         "notes": str(notes).strip() if notes not in {None, ""} else None,
@@ -900,6 +920,32 @@ def _normalize_uncertainty_reason(value: object) -> str:
     if any(token in text for token in ("uncertain", "unsure", "low confidence")):
         return "model_uncertain"
     return "none"
+
+
+def _normalize_diagnostic_feature_visibility(value: object) -> str:
+    text = _normalize_text(value)
+    if text in {"unknown", "low", "medium", "high"}:
+        return text
+    if any(token in text for token in ("high", "clear", "very visible", "strong")):
+        return "high"
+    if any(token in text for token in ("medium", "moderate", "partially visible")):
+        return "medium"
+    if any(token in text for token in ("low", "weak", "poorly visible", "not visible")):
+        return "low"
+    return "unknown"
+
+
+def _normalize_learning_suitability(value: object) -> str:
+    text = _normalize_text(value)
+    if text in {"unknown", "low", "medium", "high"}:
+        return text
+    if any(token in text for token in ("high", "excellent", "ideal", "strong")):
+        return "high"
+    if any(token in text for token in ("medium", "moderate", "good")):
+        return "medium"
+    if any(token in text for token in ("low", "poor", "weak", "limited")):
+        return "low"
+    return "unknown"
 
 
 def _scale_confidence(value: float) -> float:

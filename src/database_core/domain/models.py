@@ -12,8 +12,10 @@ from database_core.domain.enums import (
     CanonicalGovernanceDecisionStatus,
     CanonicalRank,
     ConfusionRelevance,
+    DiagnosticFeatureVisibility,
     DifficultyLevel,
     EnrichmentStatus,
+    LearningSuitability,
     LicenseSafetyResult,
     MediaRole,
     MediaType,
@@ -73,6 +75,10 @@ class AIQualification(DomainModel):
     difficulty_level: DifficultyLevel = DifficultyLevel.UNKNOWN
     media_role: MediaRole = MediaRole.CONTEXT
     confusion_relevance: ConfusionRelevance = ConfusionRelevance.NONE
+    diagnostic_feature_visibility: DiagnosticFeatureVisibility = (
+        DiagnosticFeatureVisibility.UNKNOWN
+    )
+    learning_suitability: LearningSuitability = LearningSuitability.UNKNOWN
     uncertainty_reason: UncertaintyReason = UncertaintyReason.NONE
     confidence: float = 0.0
     model_name: str = "fixture-ai"
@@ -324,6 +330,10 @@ class QualifiedResource(DomainModel):
     difficulty_level: DifficultyLevel = DifficultyLevel.UNKNOWN
     media_role: MediaRole = MediaRole.CONTEXT
     confusion_relevance: ConfusionRelevance = ConfusionRelevance.NONE
+    diagnostic_feature_visibility: DiagnosticFeatureVisibility = (
+        DiagnosticFeatureVisibility.UNKNOWN
+    )
+    learning_suitability: LearningSuitability = LearningSuitability.UNKNOWN
     uncertainty_reason: UncertaintyReason = UncertaintyReason.NONE
     qualification_notes: str | None = None
     qualification_flags: list[str] = Field(default_factory=list)
@@ -381,6 +391,9 @@ class CanonicalGovernanceReviewItem(DomainModel):
     review_note: str
     review_status: ReviewStatus = ReviewStatus.OPEN
     created_at: datetime
+    resolved_at: datetime | None = None
+    resolved_note: str | None = None
+    resolved_by: str | None = None
 
     @field_validator(
         "governance_review_item_id",
@@ -395,6 +408,17 @@ class CanonicalGovernanceReviewItem(DomainModel):
         if not value.strip():
             raise ValueError("field must not be blank")
         return value
+
+    @model_validator(mode="after")
+    def validate_resolution_payload(self) -> Self:
+        if self.review_status == ReviewStatus.CLOSED:
+            if self.resolved_at is None:
+                raise ValueError("resolved_at is required when review_status=closed")
+            if not self.resolved_note or not self.resolved_note.strip():
+                raise ValueError("resolved_note is required when review_status=closed")
+            if not self.resolved_by or not self.resolved_by.strip():
+                raise ValueError("resolved_by is required when review_status=closed")
+        return self
 
 
 def _slugify_scientific_name(value: str) -> str:

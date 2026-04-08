@@ -69,6 +69,7 @@ def render_canonical_governance_review_queue(
     reason_code: str | None = None,
     review_status: str | None = None,
 ) -> str:
+    backlog = repository.fetch_canonical_governance_review_backlog(run_id=run_id)
     rows = repository.fetch_canonical_governance_review_queue(
         run_id=run_id,
         reason_code=reason_code,
@@ -76,15 +77,31 @@ def render_canonical_governance_review_queue(
     )
     if not rows:
         return "Canonical governance review queue is empty."
-    lines = ["Canonical governance review queue"]
+    lines = [
+        "Canonical governance review queue",
+        (
+            "backlog: "
+            f"open={backlog['open_count']} | "
+            f"resolved={backlog['resolved_count']} | "
+            f"avg_open_age_hours={backlog['avg_open_age_hours']}"
+        ),
+        f"open_by_reason: {backlog['open_by_reason']}",
+        f"resolved_by_reason: {backlog['resolved_by_reason']}",
+    ]
     for row in rows:
+        resolution = (
+            f"resolved_at={row['resolved_at']} | "
+            f"resolved_by={row['resolved_by']} | "
+            f"resolved_note={row['resolved_note']}"
+        )
         lines.append(
             f"{row['governance_review_item_id']} | "
             f"run={row['run_id']} | "
             f"{row['reason_code']} | "
             f"{row['canonical_taxon_id']} | "
             f"{row['review_status']} | "
-            f"{row['review_note']}"
+            f"{row['review_note']} | "
+            f"{resolution}"
         )
     return "\n".join(lines)
 
@@ -144,11 +161,16 @@ def render_canonical_governance_events(
     return "\n".join(lines)
 
 
-def render_run_metrics(repository: SQLiteRepository) -> str:
-    metrics = repository.fetch_run_level_metrics()
+def render_run_metrics(
+    repository: SQLiteRepository,
+    *,
+    run_id: str | None = None,
+) -> str:
+    metrics = repository.fetch_run_level_metrics(run_id=run_id)
     return "\n".join(
         [
             "Run metrics",
+            f"run_id: {metrics['run_id']}",
             f"volume: {metrics['volume']}",
             f"quality: {metrics['quality']}",
             f"governance: {metrics['governance']}",

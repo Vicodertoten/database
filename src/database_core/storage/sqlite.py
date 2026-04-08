@@ -128,7 +128,6 @@ class SQLiteRepository:
 
         connection.executescript(
             """
-            DELETE FROM canonical_taxon_events;
             DELETE FROM canonical_taxon_relationships;
             DELETE FROM review_queue;
             DELETE FROM qualified_resources;
@@ -217,7 +216,6 @@ class SQLiteRepository:
         )
         relationships, state_events = _build_canonical_relationships_and_state_events(taxa)
         connection.execute("DELETE FROM canonical_taxon_relationships")
-        connection.execute("DELETE FROM canonical_taxon_events")
         connection.executemany(
             """
             INSERT INTO canonical_taxon_relationships (
@@ -393,6 +391,8 @@ class SQLiteRepository:
                 difficulty_level,
                 media_role,
                 confusion_relevance,
+                diagnostic_feature_visibility,
+                learning_suitability,
                 uncertainty_reason,
                 qualification_notes,
                 qualification_flags_json,
@@ -400,7 +400,7 @@ class SQLiteRepository:
                 license_safety_result,
                 export_eligible,
                 ai_confidence
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             [
                 (
@@ -420,6 +420,8 @@ class SQLiteRepository:
                     item.difficulty_level,
                     item.media_role,
                     item.confusion_relevance,
+                    item.diagnostic_feature_visibility,
+                    item.learning_suitability,
                     item.uncertainty_reason,
                     item.qualification_notes,
                     _json(item.qualification_flags),
@@ -699,6 +701,7 @@ class SQLiteRepository:
                             **decision.event.payload,
                             "signal_breakdown": decision.signal_breakdown.to_payload(),
                             "decision_reason": decision.decision_reason,
+                            "source_delta": decision.source_delta.to_payload(),
                         }
                     ),
                     datetime.now(UTC).isoformat(),
@@ -735,6 +738,7 @@ class SQLiteRepository:
                         {
                             **decision.event.payload,
                             "signal_breakdown": decision.signal_breakdown.to_payload(),
+                            "source_delta": decision.source_delta.to_payload(),
                         }
                     ),
                     datetime.now(UTC).isoformat(),
@@ -772,8 +776,11 @@ class SQLiteRepository:
                     reason_code,
                     review_note,
                     review_status,
-                    created_at
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                    created_at,
+                    resolved_at,
+                    resolved_note,
+                    resolved_by
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 [
                     (
@@ -785,13 +792,32 @@ class SQLiteRepository:
                         item.review_note,
                         item.review_status,
                         item.created_at.isoformat(),
+                        item.resolved_at.isoformat() if item.resolved_at else None,
+                        item.resolved_note,
+                        item.resolved_by,
                     )
                     for item in governance_review_items
                 ],
             )
 
-    def fetch_summary(self) -> dict[str, int]:
+    def fetch_summary(self, *, run_id: str | None = None) -> dict[str, int]:
         with self.connect() as connection:
+            if run_id:
+                table_mapping = {
+                    "canonical_taxa": "canonical_taxa_history",
+                    "source_observations": "source_observations_history",
+                    "media_assets": "media_assets_history",
+                    "qualified_resources": "qualified_resources_history",
+                    "review_queue": "review_queue_history",
+                }
+                return {
+                    key: connection.execute(
+                        f"SELECT COUNT(*) AS count FROM {table_name} WHERE run_id = ?",
+                        (run_id,),
+                    ).fetchone()["count"]
+                    for key, table_name in table_mapping.items()
+                }
+
             tables = [
                 "canonical_taxa",
                 "source_observations",
@@ -866,7 +892,7 @@ class SQLiteRepository:
         run_id: str | None = None,
         reason_code: str | None = None,
         review_status: str | None = None,
-    ) -> list[dict[str, str]]:
+    ) -> list[dict[str, object]]:
         with self.connect() as connection:
             clauses: list[str] = []
             params: list[str] = []
@@ -891,7 +917,10 @@ class SQLiteRepository:
                     reason_code,
                     review_note,
                     review_status,
-                    created_at
+                    created_at,
+                    resolved_at,
+                    resolved_note,
+                    resolved_by
                 FROM canonical_governance_review_queue
                 {where_clause}
                 ORDER BY created_at DESC, governance_review_item_id
@@ -899,6 +928,163 @@ class SQLiteRepository:
                 params,
             ).fetchall()
             return [dict(row) for row in rows]
+
+    def resolve_canonical_governance_review_item(
+        self,
+        *,
+        governance_review_item_id: str,
+        resolved_note: str,
+        resolved_by: str,
+        resolved_at: datetime | None = None,
+    ) -> dict[str, object]:
+        if not governance_review_item_id.strip():
+            raise ValueError("governance_review_item_id must not be blank")
+        if not resolved_note.strip():
+            raise ValueError("resolved_note must not be blank")
+        if not resolved_by.strip():
+            raise ValueError("resolved_by must not be blank")
+
+        resolved_timestamp = resolved_at or datetime.now(UTC)
+        with self.connect() as connection:
+            current_row = connection.execute(
+                """
+                SELECT
+                    governance_review_item_id,
+                    run_id,
+                    governance_event_id,
+                    canonical_taxon_id,
+                    reason_code,
+                    review_note,
+                    review_status,
+                    created_at,
+                    resolved_at,
+                    resolved_note,
+                    resolved_by
+                FROM canonical_governance_review_queue
+                WHERE governance_review_item_id = ?
+                """,
+                (governance_review_item_id,),
+            ).fetchone()
+            if current_row is None:
+                raise ValueError(
+                    "Unknown canonical governance review item: "
+                    f"{governance_review_item_id}"
+                )
+            if current_row["review_status"] == ReviewStatus.CLOSED:
+                raise ValueError(
+                    "Canonical governance review item already closed: "
+                    f"{governance_review_item_id}"
+                )
+
+            connection.execute(
+                """
+                UPDATE canonical_governance_review_queue
+                SET
+                    review_status = ?,
+                    resolved_at = ?,
+                    resolved_note = ?,
+                    resolved_by = ?
+                WHERE governance_review_item_id = ?
+                """,
+                (
+                    ReviewStatus.CLOSED,
+                    resolved_timestamp.isoformat(),
+                    resolved_note,
+                    resolved_by,
+                    governance_review_item_id,
+                ),
+            )
+
+            updated_row = connection.execute(
+                """
+                SELECT
+                    governance_review_item_id,
+                    run_id,
+                    governance_event_id,
+                    canonical_taxon_id,
+                    reason_code,
+                    review_note,
+                    review_status,
+                    created_at,
+                    resolved_at,
+                    resolved_note,
+                    resolved_by
+                FROM canonical_governance_review_queue
+                WHERE governance_review_item_id = ?
+                """,
+                (governance_review_item_id,),
+            ).fetchone()
+            if updated_row is None:  # pragma: no cover - protected by primary key update.
+                raise ValueError(
+                    "Failed to load updated canonical governance review item: "
+                    f"{governance_review_item_id}"
+                )
+            return dict(updated_row)
+
+    def fetch_canonical_governance_review_backlog(
+        self,
+        *,
+        run_id: str | None = None,
+    ) -> dict[str, object]:
+        with self.connect() as connection:
+            clauses: list[str] = []
+            params: list[str] = []
+            if run_id:
+                clauses.append("run_id = ?")
+                params.append(run_id)
+            where_clause = f"WHERE {' AND '.join(clauses)}" if clauses else ""
+            open_clause = (
+                f"{where_clause} AND review_status = 'open'"
+                if where_clause
+                else "WHERE review_status = 'open'"
+            )
+
+            review_rows = connection.execute(
+                f"""
+                SELECT review_status, reason_code, COUNT(*) AS count
+                FROM canonical_governance_review_queue
+                {where_clause}
+                GROUP BY review_status, reason_code
+                ORDER BY review_status, reason_code
+                """,
+                params,
+            ).fetchall()
+            open_age_row = connection.execute(
+                f"""
+                SELECT
+                    ROUND(
+                        AVG((julianday('now') - julianday(created_at)) * 24.0),
+                        2
+                    ) AS avg_age_hours
+                FROM canonical_governance_review_queue
+                {open_clause}
+                """,
+                params,
+            ).fetchone()
+
+        open_count = 0
+        resolved_count = 0
+        open_by_reason: Counter[str] = Counter()
+        resolved_by_reason: Counter[str] = Counter()
+        for row in review_rows:
+            count = int(row["count"])
+            reason_code = str(row["reason_code"])
+            if row["review_status"] == ReviewStatus.OPEN:
+                open_count += count
+                open_by_reason[reason_code] += count
+            elif row["review_status"] == ReviewStatus.CLOSED:
+                resolved_count += count
+                resolved_by_reason[reason_code] += count
+
+        return {
+            "open_count": open_count,
+            "resolved_count": resolved_count,
+            "avg_open_age_hours": (
+                float(open_age_row["avg_age_hours"]) if open_age_row["avg_age_hours"] else 0.0
+            ),
+            "open_by_reason": dict(sorted(open_by_reason.items())),
+            "resolved_by_reason": dict(sorted(resolved_by_reason.items())),
+        }
 
     def fetch_canonical_state_events(
         self,
@@ -1058,19 +1244,43 @@ class SQLiteRepository:
             ).fetchall()
             return [dict(row) for row in rows]
 
-    def fetch_qualification_metrics(self) -> dict[str, object]:
+    def fetch_qualification_metrics(self, *, run_id: str | None = None) -> dict[str, object]:
         with self.connect() as connection:
-            rows = connection.execute(
-                """
-                SELECT
-                    qualification_status,
-                    provenance_summary_json,
-                    qualification_flags_json,
-                    license_safety_result,
-                    export_eligible
-                FROM qualified_resources
-                """
-            ).fetchall()
+            if run_id:
+                rows = connection.execute(
+                    """
+                    SELECT payload_json
+                    FROM qualified_resources_history
+                    WHERE run_id = ?
+                    """,
+                    (run_id,),
+                ).fetchall()
+                payloads = [
+                    json.loads(str(row["payload_json"]))
+                    for row in rows
+                ]
+            else:
+                rows = connection.execute(
+                    """
+                    SELECT
+                        qualification_status,
+                        provenance_summary_json,
+                        qualification_flags_json,
+                        license_safety_result,
+                        export_eligible
+                    FROM qualified_resources
+                    """
+                ).fetchall()
+                payloads = [
+                    {
+                        "qualification_status": row["qualification_status"],
+                        "provenance_summary": json.loads(str(row["provenance_summary_json"])),
+                        "qualification_flags": json.loads(str(row["qualification_flags_json"])),
+                        "license_safety_result": row["license_safety_result"],
+                        "export_eligible": bool(row["export_eligible"]),
+                    }
+                    for row in rows
+                ]
             accepted_resources = 0
             rejected_resources = 0
             review_required_resources = 0
@@ -1079,26 +1289,42 @@ class SQLiteRepository:
             flag_counts: Counter[str] = Counter()
             license_distribution: Counter[str] = Counter()
             ai_model_distribution: Counter[str] = Counter()
-            for row in rows:
-                if row["qualification_status"] == "accepted":
+            for payload in payloads:
+                qualification_status = str(payload.get("qualification_status", ""))
+                if qualification_status == "accepted":
                     accepted_resources += 1
-                elif row["qualification_status"] == "rejected":
+                elif qualification_status == "rejected":
                     rejected_resources += 1
-                elif row["qualification_status"] == "review_required":
+                elif qualification_status == "review_required":
                     review_required_resources += 1
-                provenance = json.loads(row["provenance_summary_json"])
+                provenance = payload.get("provenance_summary")
+                if not isinstance(provenance, dict):
+                    provenance = {}
                 if provenance.get("ai_model"):
                     ai_qualified_images += 1
                     ai_model_distribution[str(provenance["ai_model"])] += 1
-                if row["export_eligible"]:
+                if bool(payload.get("export_eligible")):
                     exportable_resources += 1
-                license_distribution[row["license_safety_result"]] += 1
-                for flag in json.loads(row["qualification_flags_json"]):
+                license_distribution[str(payload.get("license_safety_result", "unknown"))] += 1
+                qualification_flags = payload.get("qualification_flags")
+                if not isinstance(qualification_flags, list):
+                    qualification_flags = []
+                for flag in qualification_flags:
                     flag_counts[flag] += 1
 
-            review_queue_count = connection.execute(
-                "SELECT COUNT(*) AS count FROM review_queue"
-            ).fetchone()["count"]
+            if run_id:
+                review_queue_count = connection.execute(
+                    """
+                    SELECT COUNT(*) AS count
+                    FROM review_queue_history
+                    WHERE run_id = ?
+                    """,
+                    (run_id,),
+                ).fetchone()["count"]
+            else:
+                review_queue_count = connection.execute(
+                    "SELECT COUNT(*) AS count FROM review_queue"
+                ).fetchone()["count"]
             return {
                 "accepted_resources": accepted_resources,
                 "rejected_resources": rejected_resources,
@@ -1111,47 +1337,90 @@ class SQLiteRepository:
                 "ai_model_distribution": dict(sorted(ai_model_distribution.items())),
             }
 
-    def fetch_run_level_metrics(self) -> dict[str, object]:
-        summary = self.fetch_summary()
-        qualification = self.fetch_qualification_metrics()
+    def fetch_run_level_metrics(self, *, run_id: str | None = None) -> dict[str, object]:
+        summary = self.fetch_summary(run_id=run_id)
+        qualification = self.fetch_qualification_metrics(run_id=run_id)
         with self.connect() as connection:
+            governance_where_clause = "WHERE run_id = ?" if run_id else ""
+            governance_params: tuple[object, ...] = (run_id,) if run_id else ()
             governance_rows = connection.execute(
-                """
+                f"""
                 SELECT decision_status, decision_reason, COUNT(*) AS count
                 FROM canonical_governance_events
+                {governance_where_clause}
                 GROUP BY decision_status, decision_reason
                 ORDER BY decision_status, decision_reason
-                """
+                """,
+                governance_params,
             ).fetchall()
-            review_age_row = connection.execute(
-                """
-                SELECT
-                    COUNT(*) AS open_count,
-                    ROUND(
-                        AVG((julianday('now') - julianday(created_at)) * 24.0),
-                        2
-                    ) AS avg_age_hours
-                FROM review_queue
-                WHERE review_status = 'open'
-                """
-            ).fetchone()
-            governance_review_open_count = connection.execute(
-                """
-                SELECT COUNT(*) AS count
-                FROM canonical_governance_review_queue
-                WHERE review_status = 'open'
-                """
-            ).fetchone()["count"]
+            if run_id:
+                review_rows = connection.execute(
+                    """
+                    SELECT payload_json
+                    FROM review_queue_history
+                    WHERE run_id = ?
+                    """,
+                    (run_id,),
+                ).fetchall()
+                review_payloads = [json.loads(str(row["payload_json"])) for row in review_rows]
+                open_review_items = [
+                    item
+                    for item in review_payloads
+                    if str(item.get("review_status") or "") == "open"
+                ]
+                open_review_count = len(open_review_items)
+                if open_review_items:
+                    age_hours_values: list[float] = []
+                    now = datetime.now(UTC)
+                    for payload in open_review_items:
+                        created_at_raw = payload.get("created_at")
+                        if not isinstance(created_at_raw, str):
+                            continue
+                        try:
+                            created_at = datetime.fromisoformat(created_at_raw)
+                        except ValueError:
+                            continue
+                        if created_at.tzinfo is None:
+                            created_at = created_at.replace(tzinfo=UTC)
+                        age_hours_values.append((now - created_at).total_seconds() / 3600.0)
+                    avg_review_age_hours = (
+                        round(sum(age_hours_values) / len(age_hours_values), 2)
+                        if age_hours_values
+                        else 0.0
+                    )
+                else:
+                    avg_review_age_hours = 0.0
+            else:
+                review_age_row = connection.execute(
+                    """
+                    SELECT
+                        COUNT(*) AS open_count,
+                        ROUND(
+                            AVG((julianday('now') - julianday(created_at)) * 24.0),
+                            2
+                        ) AS avg_age_hours
+                    FROM review_queue
+                    WHERE review_status = 'open'
+                    """
+                ).fetchone()
+                open_review_count = int(review_age_row["open_count"] or 0)
+                avg_review_age_hours = (
+                    float(review_age_row["avg_age_hours"])
+                    if review_age_row["avg_age_hours"] is not None
+                    else 0.0
+                )
 
         governance_status_counts: Counter[str] = Counter()
         governance_reason_counts: Counter[str] = Counter()
         for row in governance_rows:
             governance_status_counts[str(row["decision_status"])] += int(row["count"])
             governance_reason_counts[str(row["decision_reason"])] += int(row["count"])
+        governance_backlog = self.fetch_canonical_governance_review_backlog(run_id=run_id)
 
         ai_qualified_images = int(qualification["ai_qualified_images"])
         estimated_ai_cost_eur = round(ai_qualified_images * 0.0012, 4)
         return {
+            "run_id": run_id,
             "volume": {
                 "canonical_taxa": summary["canonical_taxa"],
                 "source_observations": summary["source_observations"],
@@ -1168,15 +1437,15 @@ class SQLiteRepository:
             "governance": {
                 "decision_status_counts": dict(sorted(governance_status_counts.items())),
                 "decision_reason_counts": dict(sorted(governance_reason_counts.items())),
-                "open_governance_review_items": governance_review_open_count,
+                "open_governance_review_items": governance_backlog["open_count"],
+                "resolved_governance_review_items": governance_backlog["resolved_count"],
+                "avg_open_governance_review_age_hours": governance_backlog["avg_open_age_hours"],
+                "open_governance_backlog_by_reason": governance_backlog["open_by_reason"],
+                "resolved_governance_backlog_by_reason": governance_backlog["resolved_by_reason"],
             },
             "review_load": {
-                "open_review_queue_items": int(review_age_row["open_count"] or 0),
-                "avg_open_review_age_hours": (
-                    float(review_age_row["avg_age_hours"])
-                    if review_age_row["avg_age_hours"] is not None
-                    else 0.0
-                ),
+                "open_review_queue_items": open_review_count,
+                "avg_open_review_age_hours": avg_review_age_hours,
             },
             "cost": {
                 "ai_qualified_images": ai_qualified_images,

@@ -149,6 +149,21 @@ _MIGRATION_SQL: dict[int, str] = {
 
     PRAGMA user_version = 6;
     """,
+    7: """
+    CREATE INDEX IF NOT EXISTS idx_canonical_governance_events_run
+        ON canonical_governance_events (run_id, decision_status, decision_reason);
+
+    CREATE INDEX IF NOT EXISTS idx_pipeline_runs_started_at
+        ON pipeline_runs (started_at DESC);
+
+    CREATE INDEX IF NOT EXISTS idx_canonical_change_events_created_at
+        ON canonical_change_events (created_at DESC);
+
+    CREATE INDEX IF NOT EXISTS idx_canonical_governance_review_queue_reason
+        ON canonical_governance_review_queue (reason_code, review_status, created_at);
+
+    PRAGMA user_version = 7;
+    """,
 }
 
 
@@ -182,6 +197,8 @@ def apply_migrations(
     for version in range(current_version + 1, target_version + 1):
         if version == 6:
             _apply_migration_v6(connection)
+        elif version == 7:
+            _apply_migration_v7(connection)
         else:
             migration_sql = _MIGRATION_SQL.get(version)
             if migration_sql is None:
@@ -236,6 +253,58 @@ def _apply_migration_v6(connection: sqlite3.Connection) -> None:
         )
 
     connection.executescript(_MIGRATION_SQL[6])
+
+
+def _apply_migration_v7(connection: sqlite3.Connection) -> None:
+    connection.execute("DROP TABLE IF EXISTS canonical_taxon_events")
+
+    if not _column_exists(
+        connection,
+        table="qualified_resources",
+        column="diagnostic_feature_visibility",
+    ):
+        connection.execute(
+            "ALTER TABLE qualified_resources "
+            "ADD COLUMN diagnostic_feature_visibility TEXT NOT NULL DEFAULT 'unknown'"
+        )
+    if not _column_exists(
+        connection,
+        table="qualified_resources",
+        column="learning_suitability",
+    ):
+        connection.execute(
+            "ALTER TABLE qualified_resources "
+            "ADD COLUMN learning_suitability TEXT NOT NULL DEFAULT 'unknown'"
+        )
+    if not _column_exists(
+        connection,
+        table="canonical_governance_review_queue",
+        column="resolved_at",
+    ):
+        connection.execute(
+            "ALTER TABLE canonical_governance_review_queue "
+            "ADD COLUMN resolved_at TEXT"
+        )
+    if not _column_exists(
+        connection,
+        table="canonical_governance_review_queue",
+        column="resolved_note",
+    ):
+        connection.execute(
+            "ALTER TABLE canonical_governance_review_queue "
+            "ADD COLUMN resolved_note TEXT"
+        )
+    if not _column_exists(
+        connection,
+        table="canonical_governance_review_queue",
+        column="resolved_by",
+    ):
+        connection.execute(
+            "ALTER TABLE canonical_governance_review_queue "
+            "ADD COLUMN resolved_by TEXT"
+        )
+
+    connection.executescript(_MIGRATION_SQL[7])
 
 
 def migrate_database_file(

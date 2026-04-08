@@ -30,5 +30,14 @@ def test_generate_smoke_report_includes_locked_kpis(tmp_path: Path) -> None:
     }
     assert kpis["exportable_unresolved_or_provisional"]["actual"] == 0
     assert kpis["governance_reason_and_signal_coverage"]["actual"] == 1.0
+    assert (
+        kpis["governance_reason_and_signal_coverage"]["stats"]["missing_source_delta"] == 0
+    )
     assert kpis["export_trace_flags_uncertainty_coverage"]["actual"] == 1.0
-
+    assert set(report["governance_review_alerts"].keys()) == {
+        "open_backlog",
+        "avg_open_age_hours",
+        "thresholds",
+        "open_backlog_alert",
+        "avg_open_age_alert",
+    }

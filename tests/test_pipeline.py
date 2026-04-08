@@ -47,7 +47,7 @@ def test_pipeline_produces_reproducible_output(tmp_path: Path) -> None:
         normalized_snapshot_path=second_normalized,
         qualification_snapshot_path=second_qualified,
         export_path=second_export,
-        legacy_export_path=second_export.with_name(f"{second_export.stem}.v3{second_export.suffix}"),
+        legacy_export_path=None,
         qualified_resource_count=4,
         exportable_resource_count=2,
         review_queue_count=1,
@@ -65,14 +65,8 @@ def test_pipeline_produces_reproducible_output(tmp_path: Path) -> None:
         Path("schemas/qualified_resources_bundle_v4.schema.json").read_text(encoding="utf-8")
     )
     validate(instance=export_payload, schema=export_schema)
-    legacy_export_path = first_export.with_name(f"{first_export.stem}.v3{first_export.suffix}")
-    legacy_export_payload = json.loads(legacy_export_path.read_text(encoding="utf-8"))
-    legacy_schema = json.loads(
-        Path("schemas/qualified_resources_bundle_v3.schema.json").read_text(encoding="utf-8")
-    )
-    validate(instance=legacy_export_payload, schema=legacy_schema)
 
-    assert export_payload["schema_version"] == "database.schema.v6"
+    assert export_payload["schema_version"] == "database.schema.v7"
     assert export_payload["export_version"] == "export.bundle.v4"
     assert export_payload["qualification_version"] == "qualification.staged.v1"
     assert export_payload["enrichment_version"] == "canonical.enrichment.v2"
@@ -90,19 +84,58 @@ def test_pipeline_produces_reproducible_output(tmp_path: Path) -> None:
     assert "uncertainty" in export_payload["qualified_resources"][0]
     assert "review_context" in export_payload["qualified_resources"][0]
     assert export_payload["qualified_resources"][0]["provenance"]["run_id"] == fixed_run_id
-    assert legacy_export_payload["export_version"] == "export.bundle.v3"
 
     normalized_payload = json.loads(first_normalized.read_text(encoding="utf-8"))
-    assert normalized_payload["schema_version"] == "database.schema.v6"
+    assert normalized_payload["schema_version"] == "database.schema.v7"
     assert normalized_payload["normalized_snapshot_version"] == "normalized.snapshot.v3"
     assert normalized_payload["enrichment_version"] == "canonical.enrichment.v2"
+    assert not first_export.with_name(f"{first_export.stem}.v3{first_export.suffix}").exists()
+
+
+def test_pipeline_can_emit_v3_sidecar_when_opted_in(tmp_path: Path) -> None:
+    export_path = tmp_path / "optin_export.json"
+    run_pipeline(
+        fixture_path=Path("data/fixtures/birds_pilot.json"),
+        db_path=tmp_path / "optin.sqlite",
+        normalized_snapshot_path=tmp_path / "optin_normalized.json",
+        qualification_snapshot_path=tmp_path / "optin_qualified.json",
+        export_path=export_path,
+        write_sidecar_export_v3=True,
+    )
+
+    legacy_export_path = export_path.with_name(f"{export_path.stem}.v3{export_path.suffix}")
+    legacy_export_payload = json.loads(legacy_export_path.read_text(encoding="utf-8"))
+    legacy_schema = json.loads(
+        Path("schemas/qualified_resources_bundle_v3.schema.json").read_text(encoding="utf-8")
+    )
+    validate(instance=legacy_export_payload, schema=legacy_schema)
+    assert legacy_export_payload["export_version"] == "export.bundle.v3"
+
+
+def test_export_v4_matches_internal_golden_snapshot(tmp_path: Path) -> None:
+    export_path = tmp_path / "golden_export.json"
+    run_pipeline(
+        fixture_path=Path("data/fixtures/birds_pilot.json"),
+        db_path=tmp_path / "golden.sqlite",
+        normalized_snapshot_path=tmp_path / "golden_normalized.json",
+        qualification_snapshot_path=tmp_path / "golden_qualified.json",
+        export_path=export_path,
+        run_id="run:20260408T000000Z:aaaaaaaa",
+        write_sidecar_export_v3=False,
+    )
+
+    payload = json.loads(export_path.read_text(encoding="utf-8"))
+    golden_payload = json.loads(
+        Path("tests/fixtures/export_bundle_v4.golden.json").read_text(encoding="utf-8")
+    )
+    assert payload == golden_payload
 
 
 def test_pipeline_rejects_invalid_export_bundle(monkeypatch, tmp_path: Path) -> None:
     def fake_build_export_bundle(**kwargs):
         del kwargs
         return {
-            "schema_version": "database.schema.v6",
+            "schema_version": "database.schema.v7",
             "export_version": "export.bundle.v4",
         }
 
@@ -162,6 +195,41 @@ def test_pipeline_overwrites_previous_run_outputs_on_same_database(tmp_path: Pat
         ).fetchone()["count"]
     assert run_count == 2
     assert governance_count > 0
+
+
+def test_run_metrics_support_run_scope(tmp_path: Path) -> None:
+    db_path = tmp_path / "metrics.sqlite"
+    first_run_id = "run:20260408T000000Z:aaaaaaaa"
+    second_run_id = "run:20260408T000100Z:bbbbbbbb"
+
+    run_pipeline(
+        fixture_path=Path("data/fixtures/birds_pilot.json"),
+        db_path=db_path,
+        normalized_snapshot_path=tmp_path / "metrics_1.normalized.json",
+        qualification_snapshot_path=tmp_path / "metrics_1.qualified.json",
+        export_path=tmp_path / "metrics_1.export.json",
+        uncertain_policy="review",
+        run_id=first_run_id,
+    )
+    run_pipeline(
+        fixture_path=Path("data/fixtures/birds_pilot.json"),
+        db_path=db_path,
+        normalized_snapshot_path=tmp_path / "metrics_2.normalized.json",
+        qualification_snapshot_path=tmp_path / "metrics_2.qualified.json",
+        export_path=tmp_path / "metrics_2.export.json",
+        uncertain_policy="reject",
+        run_id=second_run_id,
+    )
+
+    repository = SQLiteRepository(db_path)
+    repository.initialize()
+    first_metrics = repository.fetch_run_level_metrics(run_id=first_run_id)
+    second_metrics = repository.fetch_run_level_metrics(run_id=second_run_id)
+
+    assert first_metrics["run_id"] == first_run_id
+    assert second_metrics["run_id"] == second_run_id
+    assert first_metrics["quality"]["review_required_resources"] == 1
+    assert second_metrics["quality"]["review_required_resources"] == 0
 
 
 def test_pipeline_rolls_back_database_on_artifact_write_failure(

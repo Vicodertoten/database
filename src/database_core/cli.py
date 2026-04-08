@@ -70,9 +70,9 @@ def main() -> None:
     pipeline_parser.add_argument("--export-path", type=Path, default=DEFAULT_EXPORT_PATH)
     pipeline_parser.add_argument("--export-v3-path", type=Path)
     pipeline_parser.add_argument(
-        "--no-export-v3-sidecar",
+        "--export-v3-sidecar",
         action="store_true",
-        help="disable transitional v3 export sidecar output",
+        help="enable transitional v3 export sidecar output (disabled by default)",
     )
     pipeline_parser.add_argument(
         "--allow-schema-reset",
@@ -162,6 +162,24 @@ def main() -> None:
     )
     review_overrides_upsert_parser.add_argument("--note", required=True)
 
+    governance_review_parser = subparsers.add_parser("governance-review")
+    governance_review_subparsers = governance_review_parser.add_subparsers(
+        dest="governance_review_command", required=True
+    )
+    governance_review_resolve_parser = governance_review_subparsers.add_parser("resolve")
+    governance_review_resolve_parser.add_argument(
+        "--governance-review-item-id",
+        required=True,
+    )
+    governance_review_resolve_parser.add_argument(
+        "--note",
+        required=True,
+        help="mandatory operator closure note",
+    )
+    governance_review_resolve_parser.add_argument("--resolved-by", default="operator")
+    governance_review_resolve_parser.add_argument("--db-path", type=Path, default=DEFAULT_DB_PATH)
+    governance_review_resolve_parser.add_argument("--snapshot-id", type=str)
+
     migrate_parser = subparsers.add_parser("migrate")
     migrate_parser.add_argument("--db-path", type=Path, default=DEFAULT_DB_PATH)
 
@@ -182,7 +200,7 @@ def main() -> None:
             qualification_snapshot_path=args.qualified_path,
             export_path=args.export_path,
             export_v3_path=args.export_v3_path,
-            write_sidecar_export_v3=not args.no_export_v3_sidecar,
+            write_sidecar_export_v3=args.export_v3_sidecar,
             review_overrides_path=args.review_overrides_path,
             apply_review_overrides=args.apply_review_overrides,
             qualifier_mode=args.qualifier_mode,
@@ -327,6 +345,33 @@ def main() -> None:
         )
         return
 
+    if args.command == "governance-review":
+        if args.governance_review_command != "resolve":
+            raise SystemExit(
+                f"Unsupported governance-review command: {args.governance_review_command}"
+            )
+        repository = SQLiteRepository(
+            _resolve_inspect_db_path(args.db_path, args.snapshot_id)
+        )
+        repository.initialize()
+        try:
+            updated = repository.resolve_canonical_governance_review_item(
+                governance_review_item_id=args.governance_review_item_id,
+                resolved_note=args.note,
+                resolved_by=args.resolved_by,
+            )
+        except ValueError as exc:
+            raise SystemExit(str(exc)) from exc
+        print(
+            "Canonical governance review item resolved | "
+            f"id={updated['governance_review_item_id']} | "
+            f"run_id={updated['run_id']} | "
+            f"reason_code={updated['reason_code']} | "
+            f"resolved_by={updated['resolved_by']} | "
+            f"resolved_at={updated['resolved_at']}"
+        )
+        return
+
     repository = SQLiteRepository(_resolve_inspect_db_path(args.db_path, args.snapshot_id))
     repository.initialize()
     if args.view == "summary":
@@ -386,7 +431,7 @@ def main() -> None:
             )
         )
     elif args.view == "run-metrics":
-        print(render_run_metrics(repository))
+        print(render_run_metrics(repository, run_id=args.run_id))
     else:
         print(render_exportables(repository))
 
@@ -413,6 +458,11 @@ def qualify_inat_snapshot_entrypoint() -> None:
 
 def review_overrides_entrypoint() -> None:
     sys.argv.insert(1, "review-overrides")
+    main()
+
+
+def governance_review_entrypoint() -> None:
+    sys.argv.insert(1, "governance-review")
     main()
 
 

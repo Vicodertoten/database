@@ -1,0 +1,148 @@
+{
+  "canonical_taxa": [
+    {
+      "accepted_scientific_name": "Passer domesticus",
+      "canonical_rank": "species",
+      "canonical_taxon_id": "taxon:birds:000009",
+      "common_names": [
+        "House Sparrow"
+      ],
+      "taxon_group": "birds",
+      "taxon_status": "active"
+    },
+    {
+      "accepted_scientific_name": "Turdus merula",
+      "canonical_rank": "species",
+      "canonical_taxon_id": "taxon:birds:000014",
+      "common_names": [
+        "Common Blackbird",
+        "Eurasian Blackbird"
+      ],
+      "taxon_group": "birds",
+      "taxon_status": "active"
+    }
+  ],
+  "enrichment_version": "canonical.enrichment.v2",
+  "export_version": "export.bundle.v4",
+  "generated_at": "2026-04-07T00:00:00+00:00",
+  "qualification_version": "qualification.staged.v1",
+  "qualified_resources": [
+    {
+      "canonical_taxon_id": "taxon:birds:000014",
+      "export_eligible": true,
+      "license_safety_result": "safe",
+      "life_stage": "adult",
+      "media_asset_id": "media:inaturalist:fixture-media-blackbird-001",
+      "pedagogical_quality": "high",
+      "pedagogy": {
+        "confusion_relevance": "none",
+        "difficulty_level": "unknown",
+        "media_role": "context",
+        "uncertainty_reason": "none"
+      },
+      "provenance": {
+        "qualification_trace": {
+          "ai_model": "gemini-2.5-flash-fixture",
+          "ai_prompt_version": "fixture",
+          "ai_status": "ok",
+          "ai_task_name": "qualification",
+          "method": "gemini_plus_rules"
+        },
+        "run_id": "run:20260408T000000Z:aaaaaaaa",
+        "source": {
+          "media_license": "CC-BY",
+          "observation_license": "CC-BY",
+          "raw_payload_ref": "data/fixtures/birds_pilot.json#/observations/0/media/0",
+          "source_media_id": "fixture-media-blackbird-001",
+          "source_media_key": "inaturalist::fixture-media-blackbird-001",
+          "source_name": "inaturalist",
+          "source_observation_id": "fixture-obs-blackbird-001",
+          "source_observation_key": "inaturalist::fixture-obs-blackbird-001"
+        }
+      },
+      "qualification_flags": [],
+      "qualification_notes": "Clear lateral view with diagnostic plumage. | pedagogy:difficulty=unknown;media_role=context;confusion_relevance=none;diagnostic_feature_visibility=unknown;learning_suitability=unknown;uncertainty_reason=none",
+      "qualification_status": "accepted",
+      "qualification_version": "qualification.staged.v1",
+      "qualified_resource_id": "qr:media:inaturalist:fixture-media-blackbird-001",
+      "review_context": {
+        "override_applied": false,
+        "reason_code": null,
+        "status": "not_required"
+      },
+      "sex": "male",
+      "technical_quality": "high",
+      "uncertainty": {
+        "confidence": 0.94,
+        "rationale": "Clear lateral view with diagnostic plumage. | pedagogy:difficulty=unknown;media_role=context;confusion_relevance=none;diagnostic_feature_visibility=unknown;learning_suitability=unknown;uncertainty_reason=none",
+        "type": "none"
+      },
+      "view_angle": "lateral",
+      "visible_parts": [
+        "full_body",
+        "head",
+        "beak",
+        "wing"
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000009",
+      "export_eligible": true,
+      "license_safety_result": "safe",
+      "life_stage": "adult",
+      "media_asset_id": "media:inaturalist:fixture-media-sparrow-001",
+      "pedagogical_quality": "high",
+      "pedagogy": {
+        "confusion_relevance": "none",
+        "difficulty_level": "unknown",
+        "media_role": "context",
+        "uncertainty_reason": "none"
+      },
+      "provenance": {
+        "qualification_trace": {
+          "ai_model": "gemini-2.5-flash-fixture",
+          "ai_prompt_version": "fixture",
+          "ai_status": "ok",
+          "ai_task_name": "qualification",
+          "method": "gemini_plus_rules"
+        },
+        "run_id": "run:20260408T000000Z:aaaaaaaa",
+        "source": {
+          "media_license": "CC-BY-SA",
+          "observation_license": "CC0",
+          "raw_payload_ref": "data/fixtures/birds_pilot.json#/observations/1/media/0",
+          "source_media_id": "fixture-media-sparrow-001",
+          "source_media_key": "inaturalist::fixture-media-sparrow-001",
+          "source_name": "inaturalist",
+          "source_observation_id": "fixture-obs-sparrow-001",
+          "source_observation_key": "inaturalist::fixture-obs-sparrow-001"
+        }
+      },
+      "qualification_flags": [],
+      "qualification_notes": "Strong frontal pose with useful field marks. | pedagogy:difficulty=unknown;media_role=context;confusion_relevance=none;diagnostic_feature_visibility=unknown;learning_suitability=unknown;uncertainty_reason=none",
+      "qualification_status": "accepted",
+      "qualification_version": "qualification.staged.v1",
+      "qualified_resource_id": "qr:media:inaturalist:fixture-media-sparrow-001",
+      "review_context": {
+        "override_applied": false,
+        "reason_code": null,
+        "status": "not_required"
+      },
+      "sex": "male",
+      "technical_quality": "high",
+      "uncertainty": {
+        "confidence": 0.88,
+        "rationale": "Strong frontal pose with useful field marks. | pedagogy:difficulty=unknown;media_role=context;confusion_relevance=none;diagnostic_feature_visibility=unknown;learning_suitability=unknown;uncertainty_reason=none",
+        "type": "none"
+      },
+      "view_angle": "frontal",
+      "visible_parts": [
+        "full_body",
+        "head",
+        "beak",
+        "breast"
+      ]
+    }
+  ],
+  "schema_version": "database.schema.v7"
+}

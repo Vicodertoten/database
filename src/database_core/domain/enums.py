@@ -107,6 +107,20 @@ class ConfusionRelevance(StrEnum):
     HIGH = "high"
 
 
+class DiagnosticFeatureVisibility(StrEnum):
+    UNKNOWN = "unknown"
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"
+
+
+class LearningSuitability(StrEnum):
+    UNKNOWN = "unknown"
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"
+
+
 class UncertaintyReason(StrEnum):
     NONE = "none"
     OCCLUSION = "occlusion"

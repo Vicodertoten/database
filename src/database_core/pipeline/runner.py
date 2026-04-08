@@ -14,6 +14,13 @@ from database_core.domain.canonical_reconciliation import (
     reconcile_canonical_taxa_with_previous_state,
 )
 from database_core.domain.enums import TaxonStatus
+from database_core.domain.models import (
+    CanonicalTaxon,
+    MediaAsset,
+    QualifiedResource,
+    ReviewItem,
+    SourceObservation,
+)
 from database_core.enrichment import enrich_canonical_taxa
 from database_core.export.json_exporter import (
     build_export_bundle,
@@ -64,6 +71,19 @@ class PipelineResult:
     review_queue_count: int
 
 
+@dataclass(frozen=True)
+class PreparedPipelineState:
+    canonical_taxa: list[CanonicalTaxon]
+    observations: list[SourceObservation]
+    media_assets: list[MediaAsset]
+    qualified_resources: list[QualifiedResource]
+    review_items: list[ReviewItem]
+    normalized_snapshot: dict[str, object]
+    qualification_snapshot: dict[str, object]
+    export_bundle: dict[str, object]
+    sidecar_export_bundle: dict[str, object] | None
+
+
 def run_pipeline(
     *,
     source_mode: str = "fixture",
@@ -76,7 +96,7 @@ def run_pipeline(
     qualification_snapshot_path: Path = DEFAULT_QUALIFIED_PATH,
     export_path: Path = DEFAULT_EXPORT_PATH,
     export_v3_path: Path | None = None,
-    write_sidecar_export_v3: bool = True,
+    write_sidecar_export_v3: bool = False,
     review_overrides_path: Path | None = None,
     apply_review_overrides: bool = False,
     qualifier_mode: str | None = None,
@@ -132,92 +152,18 @@ def run_pipeline(
     repository = SQLiteRepository(db_path)
     repository.initialize(allow_schema_reset=allow_schema_reset)
     previous_canonical_taxa = repository.fetch_latest_completed_canonical_taxa()
-    enriched_taxa = enrich_canonical_taxa(
-        dataset.canonical_taxa,
-        taxon_payloads_by_canonical_taxon_id=dataset.taxon_payloads_by_canonical_taxon_id,
-    )
-    enriched_taxa = reconcile_canonical_taxa_with_previous_state(
-        current_taxa=enriched_taxa,
-        previous_taxa=previous_canonical_taxa,
-    )
-    taxon_status_by_id = {item.canonical_taxon_id: item.taxon_status for item in enriched_taxa}
-    deprecated_media_asset_ids = sorted(
-        [
-            item.media_id
-            for item in dataset.media_assets
-            if taxon_status_by_id.get(item.canonical_taxon_id or "") == TaxonStatus.DEPRECATED
-        ]
-    )
-    if deprecated_media_asset_ids:
-        raise ValueError(
-            "Canonical integrity failure: deprecated taxa cannot receive new media assets "
-            f"(media_asset_ids={','.join(deprecated_media_asset_ids)})"
-        )
-    ai_qualifications = collect_ai_qualification_outcomes(
-        dataset.media_assets,
+    prepared_state = _prepare_pipeline_state(
+        dataset=dataset,
+        previous_canonical_taxa=previous_canonical_taxa,
+        run_id=resolved_run_id,
         qualifier_mode=resolved_qualifier_mode,
-        precomputed_ai_qualifications=dataset.ai_qualifications,
-        precomputed_ai_outcomes=dataset.ai_qualification_outcomes,
-        cached_image_paths_by_source_media_key=dataset.cached_image_paths_by_source_media_key,
+        uncertain_policy=resolved_uncertain_policy,
         gemini_api_key=gemini_api_key,
         gemini_model=gemini_model,
-        qualifier=ai_qualifier,
-    )
-    qualified_resources, review_items = qualify_media_assets(
-        canonical_taxa=enriched_taxa,
-        observations=dataset.observations,
-        media_assets=dataset.media_assets,
-        ai_qualifications_by_source_media_key=ai_qualifications,
-        created_at=dataset.captured_at,
-        run_id=resolved_run_id,
-        uncertain_policy=resolved_uncertain_policy,
-    )
-    override_file = (
-        load_review_override_file(resolved_review_overrides_path, snapshot_id=resolved_snapshot_id)
-        if resolved_review_overrides_path is not None and resolved_snapshot_id is not None
-        else None
-    )
-    qualified_resources = apply_review_overrides_to_resources(
-        qualified_resources,
-        override_file=override_file,
-    )
-    review_items = build_review_items(qualified_resources, created_at=dataset.captured_at)
-
-    normalized_snapshot = build_normalized_snapshot(
-        dataset_id=dataset.dataset_id,
-        captured_at=dataset.captured_at,
-        enrichment_version=ENRICHMENT_VERSION,
-        canonical_taxa=enriched_taxa,
-        observations=dataset.observations,
-        media_assets=dataset.media_assets,
-    )
-    qualification_snapshot = build_qualification_snapshot(
-        qualification_version=QUALIFICATION_VERSION,
-        generated_at=dataset.captured_at,
-        qualified_resources=qualified_resources,
-        review_items=review_items,
-    )
-    export_bundle = build_export_bundle(
-        export_version=EXPORT_VERSION,
-        qualification_version=QUALIFICATION_VERSION,
-        enrichment_version=ENRICHMENT_VERSION,
-        generated_at=dataset.captured_at,
-        canonical_taxa=enriched_taxa,
-        qualified_resources=qualified_resources,
-        run_id=resolved_run_id,
-    )
-    sidecar_export_bundle = (
-        build_export_bundle(
-            export_version=LEGACY_EXPORT_VERSION,
-            qualification_version=QUALIFICATION_VERSION,
-            enrichment_version=ENRICHMENT_VERSION,
-            generated_at=dataset.captured_at,
-            canonical_taxa=enriched_taxa,
-            qualified_resources=qualified_resources,
-            run_id=resolved_run_id,
-        )
-        if resolved_export_v3_path is not None
-        else None
+        ai_qualifier=ai_qualifier,
+        review_overrides_path=resolved_review_overrides_path,
+        snapshot_id=resolved_snapshot_id,
+        write_sidecar_export_v3=resolved_export_v3_path is not None,
     )
 
     with repository.connect() as connection:
@@ -232,22 +178,25 @@ def run_pipeline(
         )
         repository.reset_materialized_state(connection=connection)
         repository.save_canonical_taxa(
-            enriched_taxa,
+            prepared_state.canonical_taxa,
             run_id=resolved_run_id,
             connection=connection,
         )
-        repository.save_source_observations(dataset.observations, connection=connection)
-        repository.save_media_assets(dataset.media_assets, connection=connection)
-        repository.save_qualified_resources(qualified_resources, connection=connection)
-        repository.save_review_items(review_items, connection=connection)
+        repository.save_source_observations(prepared_state.observations, connection=connection)
+        repository.save_media_assets(prepared_state.media_assets, connection=connection)
+        repository.save_qualified_resources(
+            prepared_state.qualified_resources,
+            connection=connection,
+        )
+        repository.save_review_items(prepared_state.review_items, connection=connection)
         repository.append_run_history(
             run_id=resolved_run_id,
             governance_effective_at=dataset.captured_at,
-            canonical_taxa=enriched_taxa,
-            observations=dataset.observations,
-            media_assets=dataset.media_assets,
-            qualified_resources=qualified_resources,
-            review_items=review_items,
+            canonical_taxa=prepared_state.canonical_taxa,
+            observations=prepared_state.observations,
+            media_assets=prepared_state.media_assets,
+            qualified_resources=prepared_state.qualified_resources,
+            review_items=prepared_state.review_items,
             connection=connection,
         )
         _write_pipeline_artifacts(
@@ -255,10 +204,10 @@ def run_pipeline(
             qualification_snapshot_path=qualification_snapshot_path,
             export_path=export_path,
             export_v3_path=resolved_export_v3_path,
-            normalized_snapshot=normalized_snapshot,
-            qualification_snapshot=qualification_snapshot,
-            export_bundle=export_bundle,
-            sidecar_export_bundle=sidecar_export_bundle,
+            normalized_snapshot=prepared_state.normalized_snapshot,
+            qualification_snapshot=prepared_state.qualification_snapshot,
+            export_bundle=prepared_state.export_bundle,
+            sidecar_export_bundle=prepared_state.sidecar_export_bundle,
         )
         repository.complete_pipeline_run(
             run_id=resolved_run_id,
@@ -266,7 +215,9 @@ def run_pipeline(
             connection=connection,
         )
 
-    exportable_resource_count = len([item for item in qualified_resources if item.export_eligible])
+    exportable_resource_count = len(
+        [item for item in prepared_state.qualified_resources if item.export_eligible]
+    )
     return PipelineResult(
         run_id=resolved_run_id,
         database_path=db_path,
@@ -274,9 +225,124 @@ def run_pipeline(
         qualification_snapshot_path=qualification_snapshot_path,
         export_path=export_path,
         legacy_export_path=resolved_export_v3_path,
-        qualified_resource_count=len(qualified_resources),
+        qualified_resource_count=len(prepared_state.qualified_resources),
         exportable_resource_count=exportable_resource_count,
-        review_queue_count=len(review_items),
+        review_queue_count=len(prepared_state.review_items),
+    )
+
+
+def _prepare_pipeline_state(
+    *,
+    dataset,
+    previous_canonical_taxa: list[CanonicalTaxon],
+    run_id: str,
+    qualifier_mode: str,
+    uncertain_policy: str,
+    gemini_api_key: str | None,
+    gemini_model: str,
+    ai_qualifier: AIQualifier | None,
+    review_overrides_path: Path | None,
+    snapshot_id: str | None,
+    write_sidecar_export_v3: bool,
+) -> PreparedPipelineState:
+    canonical_taxa = enrich_canonical_taxa(
+        dataset.canonical_taxa,
+        taxon_payloads_by_canonical_taxon_id=dataset.taxon_payloads_by_canonical_taxon_id,
+    )
+    canonical_taxa = reconcile_canonical_taxa_with_previous_state(
+        current_taxa=canonical_taxa,
+        previous_taxa=previous_canonical_taxa,
+    )
+    taxon_status_by_id = {item.canonical_taxon_id: item.taxon_status for item in canonical_taxa}
+    deprecated_media_asset_ids = sorted(
+        [
+            item.media_id
+            for item in dataset.media_assets
+            if taxon_status_by_id.get(item.canonical_taxon_id or "") == TaxonStatus.DEPRECATED
+        ]
+    )
+    if deprecated_media_asset_ids:
+        raise ValueError(
+            "Canonical integrity failure: deprecated taxa cannot receive new media assets "
+            f"(media_asset_ids={','.join(deprecated_media_asset_ids)})"
+        )
+
+    ai_qualifications = collect_ai_qualification_outcomes(
+        dataset.media_assets,
+        qualifier_mode=qualifier_mode,
+        precomputed_ai_qualifications=dataset.ai_qualifications,
+        precomputed_ai_outcomes=dataset.ai_qualification_outcomes,
+        cached_image_paths_by_source_media_key=dataset.cached_image_paths_by_source_media_key,
+        gemini_api_key=gemini_api_key,
+        gemini_model=gemini_model,
+        qualifier=ai_qualifier,
+    )
+    qualified_resources, review_items = qualify_media_assets(
+        canonical_taxa=canonical_taxa,
+        observations=dataset.observations,
+        media_assets=dataset.media_assets,
+        ai_qualifications_by_source_media_key=ai_qualifications,
+        created_at=dataset.captured_at,
+        run_id=run_id,
+        uncertain_policy=uncertain_policy,
+    )
+    override_file = (
+        load_review_override_file(review_overrides_path, snapshot_id=snapshot_id)
+        if review_overrides_path is not None and snapshot_id is not None
+        else None
+    )
+    qualified_resources = apply_review_overrides_to_resources(
+        qualified_resources,
+        override_file=override_file,
+    )
+    review_items = build_review_items(qualified_resources, created_at=dataset.captured_at)
+
+    normalized_snapshot = build_normalized_snapshot(
+        dataset_id=dataset.dataset_id,
+        captured_at=dataset.captured_at,
+        enrichment_version=ENRICHMENT_VERSION,
+        canonical_taxa=canonical_taxa,
+        observations=dataset.observations,
+        media_assets=dataset.media_assets,
+    )
+    qualification_snapshot = build_qualification_snapshot(
+        qualification_version=QUALIFICATION_VERSION,
+        generated_at=dataset.captured_at,
+        qualified_resources=qualified_resources,
+        review_items=review_items,
+    )
+    export_bundle = build_export_bundle(
+        export_version=EXPORT_VERSION,
+        qualification_version=QUALIFICATION_VERSION,
+        enrichment_version=ENRICHMENT_VERSION,
+        generated_at=dataset.captured_at,
+        canonical_taxa=canonical_taxa,
+        qualified_resources=qualified_resources,
+        run_id=run_id,
+    )
+    sidecar_export_bundle = (
+        build_export_bundle(
+            export_version=LEGACY_EXPORT_VERSION,
+            qualification_version=QUALIFICATION_VERSION,
+            enrichment_version=ENRICHMENT_VERSION,
+            generated_at=dataset.captured_at,
+            canonical_taxa=canonical_taxa,
+            qualified_resources=qualified_resources,
+            run_id=run_id,
+        )
+        if write_sidecar_export_v3
+        else None
+    )
+    return PreparedPipelineState(
+        canonical_taxa=canonical_taxa,
+        observations=list(dataset.observations),
+        media_assets=list(dataset.media_assets),
+        qualified_resources=qualified_resources,
+        review_items=review_items,
+        normalized_snapshot=normalized_snapshot,
+        qualification_snapshot=qualification_snapshot,
+        export_bundle=export_bundle,
+        sidecar_export_bundle=sidecar_export_bundle,
     )
 
 

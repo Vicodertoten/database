@@ -120,6 +120,8 @@ def _qualify_single_media(
         f"difficulty={expert.difficulty_level};"
         f"media_role={expert.media_role};"
         f"confusion_relevance={expert.confusion_relevance};"
+        f"diagnostic_feature_visibility={expert.diagnostic_feature_visibility};"
+        f"learning_suitability={expert.learning_suitability};"
         f"uncertainty_reason={expert.uncertainty_reason}"
     )
     notes = " | ".join(item for item in [notes, pedagogy_note] if item)
@@ -146,6 +148,8 @@ def _qualify_single_media(
         difficulty_level=expert.difficulty_level,
         media_role=expert.media_role,
         confusion_relevance=expert.confusion_relevance,
+        diagnostic_feature_visibility=expert.diagnostic_feature_visibility,
+        learning_suitability=expert.learning_suitability,
         uncertainty_reason=expert.uncertainty_reason,
         qualification_notes=notes,
         qualification_flags=qualification_flags,

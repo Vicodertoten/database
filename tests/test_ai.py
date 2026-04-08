@@ -44,6 +44,8 @@ def test_normalize_gemini_candidate_recovers_common_schema_drift() -> None:
     assert qualification.difficulty_level == "unknown"
     assert qualification.media_role == "context"
     assert qualification.confusion_relevance == "none"
+    assert qualification.diagnostic_feature_visibility == "unknown"
+    assert qualification.learning_suitability == "unknown"
     assert qualification.uncertainty_reason == "none"
 
 

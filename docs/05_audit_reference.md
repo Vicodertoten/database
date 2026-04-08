@@ -22,9 +22,9 @@ Objectif de ce document: transformer cette base solide en trajectoire opération
 ### État réel (2026-04-08)
 
 - persistence hybride implémentée: historique append-only (`pipeline_runs` + tables `*_history`) et tables matérialisées `latest`.
-- schéma applicatif actuel: `database.schema.v6`.
+- schéma applicatif actuel: `database.schema.v7`.
 - export principal actuel: `export.bundle.v4`.
-- export de transition maintenu: `export.bundle.v3` (fenêtre courte de compatibilité).
+- export de transition maintenu en mode opt-in: `export.bundle.v3` (désactivé par défaut).
 - version d’overrides opérateur: `review.override.v1` (validation stricte à la lecture).
 
 ### Cible (prochaine étape)
@@ -39,9 +39,9 @@ Objectif de ce document: transformer cette base solide en trajectoire opération
 
 | Domaine | Acté implémenté | Acté cible |
 |---|---|---|
-| Canonique | politique `auto_clear équilibrée` + `reason_code` + `signal_breakdown` persistés | enrichir la détection amont avec signaux taxonomiques source plus riches |
+| Canonique | politique `auto_clear équilibrée` + `reason_code` + `signal_breakdown` + `source_delta` persistés | enrichir la détection amont avec signaux taxonomiques source plus riches |
 | Événements | séparation effective `state_event_log` / `canonical_change_log` / `governance_decision_log` | améliorer les vues opérateur avancées et indexation d’inspection |
-| Qualification | champs V1 intégrés (`difficulty_level`, `media_role`, `confusion_relevance`, `uncertainty_reason`) | étendre vers une ontologie pédagogique plus fine (diagnostic visibility, learning suitability) |
+| Qualification | champs V1+ intégrés (`difficulty_level`, `media_role`, `confusion_relevance`, `diagnostic_feature_visibility`, `learning_suitability`, `uncertainty_reason`) | étendre vers une ontologie pédagogique plus fine (learning sequencing, distractor planning) |
 | Export | `export.bundle.v4` principal + sidecar `v3` transition 2 releases | retrait planifié du sidecar `v3` après fenêtre de transition |
 | Ops | métriques run-level standardisées + `smoke.report.v1` | seuils opérationnels avancés (SLA review, alerting automatique) |
 
@@ -162,7 +162,7 @@ Points solides:
 | ID | Constat | Impact | Priorité |
 |---|---|---|---|
 | A1 | Orchestrateur pipeline trop centralisé | complexité croissante à chaque nouveau flux | P1 |
-| A2 | table legacy `canonical_taxon_events` encore présente pour compatibilité | dette de simplification du schéma, confusion potentielle | P2 |
+| A2 | table legacy `canonical_taxon_events` retirée du flux standard (drop en migration `v7`) | dette résiduelle: compatibilité des DB hors migration contrôlée | P3 |
 | A3 | Exceptions larges (`except Exception`) sur couche infrastructure | diagnostic moins précis en incident | P1 |
 | A4 | Canonical fallback `"unresolved"` | affaiblit l’autorité canonique | P1 |
 | A5 | Schéma SQLite sans index métier | dette de performance à l’échelle | P2 |

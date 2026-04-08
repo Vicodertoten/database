@@ -68,15 +68,8 @@ CREATE TABLE IF NOT EXISTS canonical_change_events (
 CREATE INDEX IF NOT EXISTS idx_canonical_change_events_run
     ON canonical_change_events (run_id, canonical_taxon_id, event_type);
 
-CREATE TABLE IF NOT EXISTS canonical_taxon_events (
-    event_id TEXT PRIMARY KEY,
-    event_type TEXT NOT NULL,
-    canonical_taxon_id TEXT NOT NULL,
-    source_name TEXT NOT NULL,
-    effective_at TEXT NOT NULL,
-    payload_json TEXT NOT NULL,
-    FOREIGN KEY (canonical_taxon_id) REFERENCES canonical_taxa (canonical_taxon_id)
-);
+CREATE INDEX IF NOT EXISTS idx_canonical_change_events_created_at
+    ON canonical_change_events (created_at DESC);
 
 CREATE TABLE IF NOT EXISTS pipeline_runs (
     run_id TEXT PRIMARY KEY,
@@ -91,6 +84,9 @@ CREATE TABLE IF NOT EXISTS pipeline_runs (
     completed_at TEXT,
     run_status TEXT NOT NULL
 );
+
+CREATE INDEX IF NOT EXISTS idx_pipeline_runs_started_at
+    ON pipeline_runs (started_at DESC);
 
 CREATE TABLE IF NOT EXISTS canonical_taxa_history (
     run_id TEXT NOT NULL,
@@ -150,6 +146,9 @@ CREATE TABLE IF NOT EXISTS canonical_governance_events (
     FOREIGN KEY (run_id) REFERENCES pipeline_runs (run_id)
 );
 
+CREATE INDEX IF NOT EXISTS idx_canonical_governance_events_run
+    ON canonical_governance_events (run_id, decision_status, decision_reason);
+
 CREATE TABLE IF NOT EXISTS canonical_governance_review_queue (
     governance_review_item_id TEXT PRIMARY KEY,
     run_id TEXT NOT NULL,
@@ -159,12 +158,18 @@ CREATE TABLE IF NOT EXISTS canonical_governance_review_queue (
     review_note TEXT NOT NULL,
     review_status TEXT NOT NULL,
     created_at TEXT NOT NULL,
+    resolved_at TEXT,
+    resolved_note TEXT,
+    resolved_by TEXT,
     FOREIGN KEY (run_id) REFERENCES pipeline_runs (run_id),
     FOREIGN KEY (governance_event_id) REFERENCES canonical_governance_events (governance_event_id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_canonical_governance_review_queue_status
     ON canonical_governance_review_queue (review_status, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_canonical_governance_review_queue_reason
+    ON canonical_governance_review_queue (reason_code, review_status, created_at);
 
 CREATE TABLE IF NOT EXISTS source_observations (
     observation_uid TEXT PRIMARY KEY,
@@ -223,6 +228,8 @@ CREATE TABLE IF NOT EXISTS qualified_resources (
     difficulty_level TEXT NOT NULL,
     media_role TEXT NOT NULL,
     confusion_relevance TEXT NOT NULL,
+    diagnostic_feature_visibility TEXT NOT NULL,
+    learning_suitability TEXT NOT NULL,
     uncertainty_reason TEXT NOT NULL,
     qualification_notes TEXT,
     qualification_flags_json TEXT NOT NULL,

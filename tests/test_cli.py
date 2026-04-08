@@ -224,4 +224,115 @@ def test_migrate_cli_applies_pending_schema_migration(monkeypatch, tmp_path: Pat
         cli.main()
 
     assert "Database migrated" in buffer.getvalue()
-    assert repository.current_schema_version() == 6
+    assert repository.current_schema_version() == 7
+
+
+def test_governance_review_cli_resolves_item(monkeypatch, tmp_path: Path) -> None:
+    db_path = tmp_path / "governance-review.sqlite"
+    repository = SQLiteRepository(db_path)
+    repository.initialize()
+
+    run_id = "run:20260408T000000Z:aaaaaaaa"
+    governance_event_id = f"{run_id}:event:taxon:birds:000001:split:demo"
+    review_item_id = f"cgr:{governance_event_id}"
+    started_at = real_datetime.fromisoformat("2026-04-08T00:00:00+00:00")
+
+    with repository.connect() as connection:
+        repository.start_pipeline_run(
+            run_id=run_id,
+            source_mode="fixture",
+            dataset_id="fixture:governance-review",
+            snapshot_id=None,
+            started_at=started_at,
+            connection=connection,
+        )
+        repository.complete_pipeline_run(
+            run_id=run_id,
+            completed_at=started_at,
+            connection=connection,
+        )
+        connection.execute(
+            """
+            INSERT INTO canonical_governance_events (
+                governance_event_id,
+                run_id,
+                canonical_taxon_id,
+                event_type,
+                source_name,
+                effective_at,
+                decision_status,
+                decision_reason,
+                payload_json,
+                created_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                governance_event_id,
+                run_id,
+                "taxon:birds:000001",
+                "split",
+                "inaturalist",
+                started_at.isoformat(),
+                "manual_reviewed",
+                "ambiguous_transition_missing_target",
+                "{}",
+                started_at.isoformat(),
+            ),
+        )
+        connection.execute(
+            """
+            INSERT INTO canonical_governance_review_queue (
+                governance_review_item_id,
+                run_id,
+                governance_event_id,
+                canonical_taxon_id,
+                reason_code,
+                review_note,
+                review_status,
+                created_at,
+                resolved_at,
+                resolved_note,
+                resolved_by
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NULL, NULL, NULL)
+            """,
+            (
+                review_item_id,
+                run_id,
+                governance_event_id,
+                "taxon:birds:000001",
+                "ambiguous_transition_missing_target",
+                "requires operator validation",
+                "open",
+                started_at.isoformat(),
+            ),
+        )
+
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "database-core",
+            "governance-review",
+            "resolve",
+            "--db-path",
+            str(db_path),
+            "--governance-review-item-id",
+            review_item_id,
+            "--note",
+            "validated against source taxonomy delta",
+            "--resolved-by",
+            "operator:test",
+        ],
+    )
+
+    buffer = io.StringIO()
+    with redirect_stdout(buffer):
+        cli.main()
+
+    output = buffer.getvalue()
+    assert "Canonical governance review item resolved" in output
+
+    rows = repository.fetch_canonical_governance_review_queue(run_id=run_id)
+    assert rows[0]["review_status"] == "closed"
+    assert rows[0]["resolved_note"] == "validated against source taxonomy delta"
+    assert rows[0]["resolved_by"] == "operator:test"

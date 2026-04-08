@@ -25,6 +25,8 @@ _TYPED_UNCERTAINTY_VALUES = {
     "model_uncertain",
     "taxonomy_ambiguous",
 }
+_GOVERNANCE_OPEN_BACKLOG_ALERT_THRESHOLD = 25
+_GOVERNANCE_AVG_AGE_HOURS_ALERT_THRESHOLD = 72.0
 
 
 def generate_smoke_report(
@@ -89,6 +91,21 @@ def generate_smoke_report(
         "export_trace_flags_uncertainty_coverage": kpi_export_trace_flags_uncertainty,
     }
     overall_pass = all(bool(item["pass"]) for item in kpis.values())
+    governance_metrics = run_metrics.get("governance", {})
+    governance_open_backlog = int(governance_metrics.get("open_governance_review_items", 0))
+    governance_avg_age = float(
+        governance_metrics.get("avg_open_governance_review_age_hours", 0.0)
+    )
+    governance_review_alerts = {
+        "open_backlog": governance_open_backlog,
+        "avg_open_age_hours": governance_avg_age,
+        "thresholds": {
+            "open_backlog": _GOVERNANCE_OPEN_BACKLOG_ALERT_THRESHOLD,
+            "avg_open_age_hours": _GOVERNANCE_AVG_AGE_HOURS_ALERT_THRESHOLD,
+        },
+        "open_backlog_alert": governance_open_backlog > _GOVERNANCE_OPEN_BACKLOG_ALERT_THRESHOLD,
+        "avg_open_age_alert": governance_avg_age > _GOVERNANCE_AVG_AGE_HOURS_ALERT_THRESHOLD,
+    }
 
     return {
         "report_version": _REPORT_VERSION,
@@ -106,6 +123,7 @@ def generate_smoke_report(
             else None
         ),
         "run_metrics": run_metrics,
+        "governance_review_alerts": governance_review_alerts,
         "kpis": kpis,
         "overall_pass": overall_pass,
     }
@@ -125,24 +143,30 @@ def _governance_reason_signal_coverage(*, connection) -> dict[str, object]:
             "coverage_ratio": 1.0,
             "missing_reason": 0,
             "missing_signal_breakdown": 0,
+            "missing_source_delta": 0,
         }
 
     covered = 0
     missing_reason = 0
     missing_signal_breakdown = 0
+    missing_source_delta = 0
     for row in rows:
         reason = str(row["decision_reason"] or "").strip()
         payload = _safe_load_json(row["payload_json"])
         signal_breakdown = payload.get("signal_breakdown") if isinstance(payload, dict) else None
+        source_delta = payload.get("source_delta") if isinstance(payload, dict) else None
         has_reason = bool(reason)
         has_signal_breakdown = _valid_signal_breakdown(signal_breakdown)
-        if has_reason and has_signal_breakdown:
+        has_source_delta = _valid_source_delta(source_delta)
+        if has_reason and has_signal_breakdown and has_source_delta:
             covered += 1
             continue
         if not has_reason:
             missing_reason += 1
         if not has_signal_breakdown:
             missing_signal_breakdown += 1
+        if not has_source_delta:
+            missing_source_delta += 1
 
     total = len(rows)
     return {
@@ -151,6 +175,7 @@ def _governance_reason_signal_coverage(*, connection) -> dict[str, object]:
         "coverage_ratio": round(covered / total, 6),
         "missing_reason": missing_reason,
         "missing_signal_breakdown": missing_signal_breakdown,
+        "missing_source_delta": missing_source_delta,
     }
 
 
@@ -233,3 +258,36 @@ def _safe_load_json(raw_value: object) -> object:
     except json.JSONDecodeError:
         return None
 
+
+def _valid_source_delta(source_delta: object) -> bool:
+    if not isinstance(source_delta, dict):
+        return False
+    required = {
+        "source_taxon_id_previous",
+        "source_taxon_id_current",
+        "name_previous",
+        "name_current",
+        "is_active_previous",
+        "is_active_current",
+        "provisional_previous",
+        "provisional_current",
+        "parent_id_previous",
+        "parent_id_current",
+        "ancestor_ids_previous",
+        "ancestor_ids_current",
+        "taxon_changes_count_previous",
+        "taxon_changes_count_current",
+        "current_synonymous_taxon_ids_previous",
+        "current_synonymous_taxon_ids_current",
+    }
+    if not required.issubset(source_delta.keys()):
+        return False
+    for list_key in (
+        "ancestor_ids_previous",
+        "ancestor_ids_current",
+        "current_synonymous_taxon_ids_previous",
+        "current_synonymous_taxon_ids_current",
+    ):
+        if not isinstance(source_delta[list_key], list):
+            return False
+    return True

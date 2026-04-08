@@ -133,7 +133,7 @@ Colonnes minimales:
 - `created_at`
 - contrainte d’unicité `(source_canonical_taxon_id, relationship_type, target_canonical_taxon_id)`
 
-### Table `canonical_taxon_events` (nouvelle)
+### Table `canonical_taxon_events` (nouvelle, historique)
 
 Colonnes minimales:
 
@@ -145,6 +145,13 @@ Colonnes minimales:
 - `payload_json`
 
 Objectif: audit trail explicite non destructif.
+
+Note d'évolution (`2026-04-08`, schema `v7`):
+- cette table a été remplacée par les journaux séparés
+  `canonical_state_events`, `canonical_change_events`,
+  `canonical_governance_events`,
+- puis retirée du schéma standard (drop en migration `v7`) pour éviter
+  la redondance sémantique.
 
 ## Plan de migration
 
