@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
+from uuid import uuid4
 
 from database_core.adapters import (
     DEFAULT_INAT_SNAPSHOT_ROOT,
@@ -74,6 +75,8 @@ def run_pipeline(
     gemini_api_key: str | None = None,
     gemini_model: str = DEFAULT_GEMINI_MODEL,
     ai_qualifier: AIQualifier | None = None,
+    reset_db: bool = False,
+    allow_schema_reset: bool = False,
 ) -> PipelineResult:
     dataset = _load_dataset(
         source_mode=source_mode,
@@ -108,8 +111,9 @@ def run_pipeline(
         snapshot_id=resolved_snapshot_id,
     )
     repository = SQLiteRepository(db_path)
-    repository.initialize()
-    repository.reset()
+    repository.initialize(allow_schema_reset=allow_schema_reset)
+    if reset_db:
+        repository.reset()
     enriched_taxa = enrich_canonical_taxa(
         dataset.canonical_taxa,
         taxon_payloads_by_canonical_taxon_id=dataset.taxon_payloads_by_canonical_taxon_id,
@@ -127,10 +131,6 @@ def run_pipeline(
             "Canonical integrity failure: deprecated taxa cannot receive new media assets "
             f"(media_asset_ids={','.join(deprecated_media_asset_ids)})"
         )
-    repository.save_canonical_taxa(enriched_taxa)
-    repository.save_source_observations(dataset.observations)
-    repository.save_media_assets(dataset.media_assets)
-
     ai_qualifications = collect_ai_qualification_outcomes(
         dataset.media_assets,
         qualifier_mode=resolved_qualifier_mode,
@@ -159,8 +159,6 @@ def run_pipeline(
         override_file=override_file,
     )
     review_items = build_review_items(qualified_resources, created_at=dataset.captured_at)
-    repository.save_qualified_resources(qualified_resources)
-    repository.save_review_items(review_items)
 
     normalized_snapshot = build_normalized_snapshot(
         dataset_id=dataset.dataset_id,
@@ -185,9 +183,20 @@ def run_pipeline(
         qualified_resources=qualified_resources,
     )
 
-    write_json(normalized_snapshot_path, normalized_snapshot)
-    write_json(qualification_snapshot_path, qualification_snapshot)
-    write_export_bundle(export_path, export_bundle)
+    with repository.connect() as connection:
+        repository.save_canonical_taxa(enriched_taxa, connection=connection)
+        repository.save_source_observations(dataset.observations, connection=connection)
+        repository.save_media_assets(dataset.media_assets, connection=connection)
+        repository.save_qualified_resources(qualified_resources, connection=connection)
+        repository.save_review_items(review_items, connection=connection)
+        _write_pipeline_artifacts(
+            normalized_snapshot_path=normalized_snapshot_path,
+            qualification_snapshot_path=qualification_snapshot_path,
+            export_path=export_path,
+            normalized_snapshot=normalized_snapshot,
+            qualification_snapshot=qualification_snapshot,
+            export_bundle=export_bundle,
+        )
 
     exportable_resource_count = len([item for item in qualified_resources if item.export_eligible])
     return PipelineResult(
@@ -311,3 +320,32 @@ def _resolve_review_overrides_path(
     if review_overrides_path is not None:
         return review_overrides_path
     return resolve_review_overrides_path(snapshot_id)
+
+
+def _write_pipeline_artifacts(
+    *,
+    normalized_snapshot_path: Path,
+    qualification_snapshot_path: Path,
+    export_path: Path,
+    normalized_snapshot: dict[str, object],
+    qualification_snapshot: dict[str, object],
+    export_bundle: dict[str, object],
+) -> None:
+    temporary_normalized = _temporary_output_path(normalized_snapshot_path)
+    temporary_qualification = _temporary_output_path(qualification_snapshot_path)
+    temporary_export = _temporary_output_path(export_path)
+    temporary_paths = [temporary_normalized, temporary_qualification, temporary_export]
+    try:
+        write_json(temporary_normalized, normalized_snapshot)
+        write_json(temporary_qualification, qualification_snapshot)
+        write_export_bundle(temporary_export, export_bundle)
+        temporary_normalized.replace(normalized_snapshot_path)
+        temporary_qualification.replace(qualification_snapshot_path)
+        temporary_export.replace(export_path)
+    finally:
+        for item in temporary_paths:
+            item.unlink(missing_ok=True)
+
+
+def _temporary_output_path(path: Path) -> Path:
+    return path.with_name(f".{path.name}.tmp-{uuid4().hex}")

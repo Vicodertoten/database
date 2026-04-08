@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+from urllib.error import URLError
 
 from database_core.adapters.inaturalist_harvest import DownloadedPhoto, fetch_inat_snapshot
 from database_core.adapters.inaturalist_snapshot import PilotTaxonSeed
@@ -36,7 +37,7 @@ def test_fetch_inat_snapshot_uses_safe_filters_and_votes_fallback(
             }
         requested_params.append(dict(params))
         if params["order_by"] == "votes":
-            raise RuntimeError("votes unsupported in fake test")
+            raise URLError("votes unsupported in fake test")
         return {
             "results": [
                 {

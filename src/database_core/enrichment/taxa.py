@@ -5,6 +5,12 @@ from collections.abc import Mapping, Sequence
 from database_core.domain.enums import EnrichmentStatus, SimilarityRelationType, SourceName
 from database_core.domain.models import CanonicalTaxon, ExternalSimilarityHint, SimilarTaxon
 
+MALFORMED_ENRICHMENT_PAYLOAD_ERRORS = (
+    KeyError,
+    TypeError,
+    ValueError,
+)
+
 
 def enrich_canonical_taxa(
     canonical_taxa: Sequence[CanonicalTaxon],
@@ -65,7 +71,7 @@ def _enrich_single_taxon(
                 "source_enrichment_status": source_enrichment_status,
             }
         )
-    except Exception:  # noqa: BLE001
+    except MALFORMED_ENRICHMENT_PAYLOAD_ERRORS:
         return CanonicalTaxon.model_validate(
             {
                 **taxon.model_dump(mode="python"),

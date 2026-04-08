@@ -6,6 +6,7 @@ import json
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
+from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode, urlparse
 from urllib.request import Request, urlopen
 
@@ -28,6 +29,14 @@ INAT_OBSERVATIONS_API = "https://api.inaturalist.org/v1/observations"
 INAT_TAXA_API = "https://api.inaturalist.org/v1/taxa"
 USER_AGENT = "database-core/0.1"
 INAT_SAFE_LICENSE_FILTER = "cc0,cc-by,cc-by-sa"
+RECOVERABLE_HARVEST_ERRORS = (
+    HTTPError,
+    URLError,
+    TimeoutError,
+    OSError,
+    ValueError,
+    json.JSONDecodeError,
+)
 
 
 @dataclass(frozen=True)
@@ -145,7 +154,7 @@ def fetch_inat_snapshot(
                 file_size_bytes = len(downloaded.image_bytes)
                 image_url = downloaded.source_url
                 downloaded_image_count += 1
-            except Exception as exc:  # noqa: BLE001
+            except RECOVERABLE_HARVEST_ERRORS as exc:
                 download_status = f"error:{type(exc).__name__}"
 
             media_downloads.append(
@@ -193,7 +202,7 @@ def _write_taxon_payload(
             params={},
             timeout_seconds=timeout_seconds,
         )
-    except Exception:  # noqa: BLE001
+    except RECOVERABLE_HARVEST_ERRORS:
         return None
 
     payload_path = Path("taxa") / f"{_slugify_filename(canonical_taxon_id)}.json"
@@ -233,7 +242,7 @@ def _fetch_seed_payload(
             INAT_OBSERVATIONS_API, params=first_params, timeout_seconds=timeout_seconds
         )
         return payload, requested_order_by, requested_order_by, False, first_params
-    except Exception:  # noqa: BLE001
+    except RECOVERABLE_HARVEST_ERRORS:
         fallback_order_by = "observed_on"
         fallback_params = {**base_params, "order_by": fallback_order_by}
         payload = _fetch_json(
@@ -301,7 +310,7 @@ def _download_best_candidate(
                 width=width,
                 height=height,
             )
-        except Exception as exc:  # noqa: BLE001
+        except RECOVERABLE_HARVEST_ERRORS as exc:
             last_error = exc
     if last_error is not None:
         raise last_error

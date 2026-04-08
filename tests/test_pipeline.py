@@ -5,6 +5,7 @@ import pytest
 from jsonschema import validate
 
 from database_core.pipeline.runner import run_pipeline
+from database_core.storage.sqlite import SQLiteRepository
 
 
 def test_pipeline_produces_reproducible_output(tmp_path: Path) -> None:
@@ -103,3 +104,72 @@ def test_pipeline_rejects_invalid_export_bundle(monkeypatch, tmp_path: Path) -> 
         )
 
     assert not export_path.exists()
+
+
+def test_pipeline_does_not_reset_storage_unless_requested(
+    monkeypatch, tmp_path: Path
+) -> None:
+    reset_calls: list[bool] = []
+
+    def fake_reset(self) -> None:  # noqa: ANN001
+        del self
+        reset_calls.append(True)
+
+    monkeypatch.setattr("database_core.pipeline.runner.SQLiteRepository.reset", fake_reset)
+
+    run_pipeline(
+        fixture_path=Path("data/fixtures/birds_pilot.json"),
+        db_path=tmp_path / "no-reset.sqlite",
+        normalized_snapshot_path=tmp_path / "no-reset.normalized.json",
+        qualification_snapshot_path=tmp_path / "no-reset.qualified.json",
+        export_path=tmp_path / "no-reset.export.json",
+    )
+    assert reset_calls == []
+
+    run_pipeline(
+        fixture_path=Path("data/fixtures/birds_pilot.json"),
+        db_path=tmp_path / "with-reset.sqlite",
+        normalized_snapshot_path=tmp_path / "with-reset.normalized.json",
+        qualification_snapshot_path=tmp_path / "with-reset.qualified.json",
+        export_path=tmp_path / "with-reset.export.json",
+        reset_db=True,
+    )
+    assert reset_calls == [True]
+
+
+def test_pipeline_rolls_back_database_on_artifact_write_failure(
+    monkeypatch, tmp_path: Path
+) -> None:
+    db_path = tmp_path / "rollback.sqlite"
+
+    def fail_export_write(path, payload):  # noqa: ANN001
+        del path, payload
+        raise RuntimeError("synthetic export write failure")
+
+    monkeypatch.setattr(
+        "database_core.pipeline.runner.write_export_bundle",
+        fail_export_write,
+    )
+
+    with pytest.raises(RuntimeError, match="synthetic export write failure"):
+        run_pipeline(
+            fixture_path=Path("data/fixtures/birds_pilot.json"),
+            db_path=db_path,
+            normalized_snapshot_path=tmp_path / "rollback.normalized.json",
+            qualification_snapshot_path=tmp_path / "rollback.qualified.json",
+            export_path=tmp_path / "rollback.export.json",
+        )
+
+    repository = SQLiteRepository(db_path)
+    repository.initialize()
+    summary = repository.fetch_summary()
+    assert summary == {
+        "canonical_taxa": 0,
+        "source_observations": 0,
+        "media_assets": 0,
+        "qualified_resources": 0,
+        "review_queue": 0,
+    }
+    assert not (tmp_path / "rollback.normalized.json").exists()
+    assert not (tmp_path / "rollback.qualified.json").exists()
+    assert not (tmp_path / "rollback.export.json").exists()

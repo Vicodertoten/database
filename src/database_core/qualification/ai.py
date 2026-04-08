@@ -10,7 +10,7 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Protocol
-from urllib.error import HTTPError
+from urllib.error import HTTPError, URLError
 
 from PIL import Image, UnidentifiedImageError
 
@@ -485,7 +485,7 @@ def _collect_single_ai_outcome(
             image_width=image_width,
             image_height=image_height,
         )
-    except Exception as exc:  # noqa: BLE001
+    except (HTTPError, URLError, TimeoutError, OSError, RuntimeError, ValueError) as exc:
         return AIQualificationOutcome(
             status="gemini_error",
             qualification=None,

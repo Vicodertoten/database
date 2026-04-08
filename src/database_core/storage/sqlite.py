@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 import sqlite3
 from collections import Counter
-from collections.abc import Sequence
+from collections.abc import Iterator, Sequence
 from contextlib import contextmanager
 from datetime import UTC, datetime
 from pathlib import Path
@@ -22,314 +22,378 @@ from database_core.storage.schema import SCHEMA_SQL
 from database_core.versioning import SCHEMA_VERSION
 
 
+class RepositorySchemaVersionMismatchError(ValueError):
+    """Raised when an existing SQLite file has a schema version mismatch."""
+
+
 class SQLiteRepository:
     def __init__(self, db_path: Path) -> None:
         self.db_path = db_path
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
 
     @contextmanager
-    def connect(self) -> sqlite3.Connection:
+    def connect(self) -> Iterator[sqlite3.Connection]:
         connection = sqlite3.connect(self.db_path)
+        connection.row_factory = sqlite3.Row
+        connection.execute("PRAGMA foreign_keys = ON")
         try:
-            connection.row_factory = sqlite3.Row
-            connection.execute("PRAGMA foreign_keys = ON")
             yield connection
+        except Exception:  # pragma: no cover - rollback path is validated in integration tests.
+            connection.rollback()
+            raise
+        else:
             connection.commit()
         finally:
             connection.close()
 
-    def initialize(self) -> None:
+    def initialize(self, *, allow_schema_reset: bool = False) -> None:
         if self._requires_schema_reset():
+            if not allow_schema_reset:
+                raise RepositorySchemaVersionMismatchError(
+                    "Database schema version mismatch for "
+                    f"{self.db_path}. Expected user_version={SCHEMA_VERSION}. "
+                    "Use explicit local-dev reset (allow_schema_reset=True) to recreate."
+                )
             self.db_path.unlink(missing_ok=True)
         with self.connect() as connection:
             connection.executescript(SCHEMA_SQL)
 
-    def reset(self) -> None:
-        with self.connect() as connection:
-            connection.executescript(
-                """
-                DELETE FROM canonical_taxon_events;
-                DELETE FROM canonical_taxon_relationships;
-                DELETE FROM review_queue;
-                DELETE FROM qualified_resources;
-                DELETE FROM media_assets;
-                DELETE FROM source_observations;
-                DELETE FROM canonical_taxa;
-                """
-            )
+    def reset_database_file(self) -> None:
+        self.db_path.unlink(missing_ok=True)
+        self.initialize()
 
-    def save_canonical_taxa(self, taxa: Sequence[CanonicalTaxon]) -> None:
-        with self.connect() as connection:
-            connection.executemany(
-                """
-                INSERT OR REPLACE INTO canonical_taxa (
-                    canonical_taxon_id,
-                    accepted_scientific_name,
-                    canonical_rank,
-                    taxon_group,
-                    taxon_status,
-                    authority_source,
-                    display_slug,
-                    synonyms_json,
-                    common_names_json,
-                    key_identification_features_json,
-                    source_enrichment_status,
-                    bird_scope_compatible,
-                    external_source_mappings_json,
-                    external_similarity_hints_json,
-                    similar_taxa_json,
-                    similar_taxon_ids_json,
-                    split_into_json,
-                    merged_into,
-                    replaced_by,
-                    derived_from
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """,
-                [
-                    (
-                        item.canonical_taxon_id,
-                        item.accepted_scientific_name,
-                        item.canonical_rank,
-                        item.taxon_group,
-                        item.taxon_status,
-                        item.authority_source,
-                        item.display_slug,
-                        _json(item.synonyms),
-                        _json(item.common_names),
-                        _json(item.key_identification_features),
-                        item.source_enrichment_status,
-                        int(item.bird_scope_compatible),
-                        _json(
-                            [
-                                mapping.model_dump(mode="json")
-                                for mapping in item.external_source_mappings
-                            ]
-                        ),
-                        _json(
-                            [
-                                hint.model_dump(mode="json")
-                                for hint in item.external_similarity_hints
-                            ]
-                        ),
-                        _json([relation.model_dump(mode="json") for relation in item.similar_taxa]),
-                        _json(item.similar_taxon_ids),
-                        _json(item.split_into),
-                        item.merged_into,
-                        item.replaced_by,
-                        item.derived_from,
-                    )
-                    for item in taxa
-                ],
-            )
-            relationships, events = _build_canonical_relationships_and_events(taxa)
-            connection.execute("DELETE FROM canonical_taxon_relationships")
-            connection.execute("DELETE FROM canonical_taxon_events")
-            connection.executemany(
-                """
-                INSERT INTO canonical_taxon_relationships (
-                    source_canonical_taxon_id,
-                    relationship_type,
-                    target_canonical_taxon_id,
-                    source_name,
-                    created_at
-                ) VALUES (?, ?, ?, ?, ?)
-                """,
-                [
-                    (
-                        item.source_canonical_taxon_id,
-                        item.relationship_type,
-                        item.target_canonical_taxon_id,
-                        item.source_name,
-                        item.created_at.isoformat(),
-                    )
-                    for item in relationships
-                ],
-            )
-            connection.executemany(
-                """
-                INSERT INTO canonical_taxon_events (
-                    event_id,
-                    event_type,
-                    canonical_taxon_id,
-                    source_name,
-                    effective_at,
-                    payload_json
-                ) VALUES (?, ?, ?, ?, ?, ?)
-                """,
-                [
-                    (
-                        item.event_id,
-                        item.event_type,
-                        item.canonical_taxon_id,
-                        item.source_name,
-                        item.effective_at.isoformat(),
-                        _json(item.payload),
-                    )
-                    for item in events
-                ],
-            )
+    def reset(self, *, connection: sqlite3.Connection | None = None) -> None:
+        if connection is None:
+            with self.connect() as owned_connection:
+                self.reset(connection=owned_connection)
+            return
 
-    def save_source_observations(self, observations: Sequence[SourceObservation]) -> None:
-        with self.connect() as connection:
-            connection.executemany(
-                """
-                INSERT OR REPLACE INTO source_observations (
-                    observation_uid,
-                    source_name,
-                    source_observation_id,
-                    source_taxon_id,
-                    observed_at,
-                    location_json,
-                    source_quality_json,
-                    raw_payload_ref,
-                    canonical_taxon_id
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """,
-                [
-                    (
-                        item.observation_uid,
-                        item.source_name,
-                        item.source_observation_id,
-                        item.source_taxon_id,
-                        item.observed_at.isoformat() if item.observed_at else None,
-                        _json(item.location.model_dump(mode="json")),
-                        _json(item.source_quality.model_dump(mode="json")),
-                        item.raw_payload_ref,
-                        item.canonical_taxon_id,
-                    )
-                    for item in observations
-                ],
-            )
+        connection.executescript(
+            """
+            DELETE FROM canonical_taxon_events;
+            DELETE FROM canonical_taxon_relationships;
+            DELETE FROM review_queue;
+            DELETE FROM qualified_resources;
+            DELETE FROM media_assets;
+            DELETE FROM source_observations;
+            DELETE FROM canonical_taxa;
+            """
+        )
 
-    def save_media_assets(self, media_assets: Sequence[MediaAsset]) -> None:
-        with self.connect() as connection:
-            connection.executemany(
-                """
-                INSERT OR REPLACE INTO media_assets (
-                    media_id,
-                    source_name,
-                    source_media_id,
-                    media_type,
-                    source_url,
-                    attribution,
-                    author,
-                    license,
-                    mime_type,
-                    file_extension,
-                    width,
-                    height,
-                    checksum,
-                    source_observation_uid,
-                    canonical_taxon_id,
-                    raw_payload_ref
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """,
-                [
-                    (
-                        item.media_id,
-                        item.source_name,
-                        item.source_media_id,
-                        item.media_type,
-                        item.source_url,
-                        item.attribution,
-                        item.author,
-                        item.license,
-                        item.mime_type,
-                        item.file_extension,
-                        item.width,
-                        item.height,
-                        item.checksum,
-                        item.source_observation_uid,
-                        item.canonical_taxon_id,
-                        item.raw_payload_ref,
-                    )
-                    for item in media_assets
-                ],
-            )
+    def save_canonical_taxa(
+        self,
+        taxa: Sequence[CanonicalTaxon],
+        *,
+        connection: sqlite3.Connection | None = None,
+    ) -> None:
+        if connection is None:
+            with self.connect() as owned_connection:
+                self.save_canonical_taxa(taxa, connection=owned_connection)
+            return
 
-    def save_qualified_resources(self, resources: Sequence[QualifiedResource]) -> None:
-        with self.connect() as connection:
-            connection.executemany(
-                """
-                INSERT OR REPLACE INTO qualified_resources (
-                    qualified_resource_id,
-                    canonical_taxon_id,
-                    source_observation_uid,
-                    source_observation_id,
-                    media_asset_id,
-                    qualification_status,
-                    qualification_version,
-                    technical_quality,
-                    pedagogical_quality,
-                    life_stage,
-                    sex,
-                    visible_parts_json,
-                    view_angle,
-                    qualification_notes,
-                    qualification_flags_json,
-                    provenance_summary_json,
-                    license_safety_result,
-                    export_eligible
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """,
-                [
-                    (
-                        item.qualified_resource_id,
-                        item.canonical_taxon_id,
-                        item.source_observation_uid,
-                        item.source_observation_id,
-                        item.media_asset_id,
-                        item.qualification_status,
-                        item.qualification_version,
-                        item.technical_quality,
-                        item.pedagogical_quality,
-                        item.life_stage,
-                        item.sex,
-                        _json(item.visible_parts),
-                        item.view_angle,
-                        item.qualification_notes,
-                        _json(item.qualification_flags),
-                        _json(item.provenance_summary.model_dump(mode="json")),
-                        item.license_safety_result,
-                        int(item.export_eligible),
-                    )
-                    for item in resources
-                ],
-            )
+        connection.executemany(
+            """
+            INSERT OR REPLACE INTO canonical_taxa (
+                canonical_taxon_id,
+                accepted_scientific_name,
+                canonical_rank,
+                taxon_group,
+                taxon_status,
+                authority_source,
+                display_slug,
+                synonyms_json,
+                common_names_json,
+                key_identification_features_json,
+                source_enrichment_status,
+                bird_scope_compatible,
+                external_source_mappings_json,
+                external_similarity_hints_json,
+                similar_taxa_json,
+                similar_taxon_ids_json,
+                split_into_json,
+                merged_into,
+                replaced_by,
+                derived_from
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            [
+                (
+                    item.canonical_taxon_id,
+                    item.accepted_scientific_name,
+                    item.canonical_rank,
+                    item.taxon_group,
+                    item.taxon_status,
+                    item.authority_source,
+                    item.display_slug,
+                    _json(item.synonyms),
+                    _json(item.common_names),
+                    _json(item.key_identification_features),
+                    item.source_enrichment_status,
+                    int(item.bird_scope_compatible),
+                    _json(
+                        [
+                            mapping.model_dump(mode="json")
+                            for mapping in item.external_source_mappings
+                        ]
+                    ),
+                    _json(
+                        [hint.model_dump(mode="json") for hint in item.external_similarity_hints]
+                    ),
+                    _json([relation.model_dump(mode="json") for relation in item.similar_taxa]),
+                    _json(item.similar_taxon_ids),
+                    _json(item.split_into),
+                    item.merged_into,
+                    item.replaced_by,
+                    item.derived_from,
+                )
+                for item in taxa
+            ],
+        )
+        relationships, events = _build_canonical_relationships_and_events(taxa)
+        connection.execute("DELETE FROM canonical_taxon_relationships")
+        connection.execute("DELETE FROM canonical_taxon_events")
+        connection.executemany(
+            """
+            INSERT INTO canonical_taxon_relationships (
+                source_canonical_taxon_id,
+                relationship_type,
+                target_canonical_taxon_id,
+                source_name,
+                created_at
+            ) VALUES (?, ?, ?, ?, ?)
+            """,
+            [
+                (
+                    item.source_canonical_taxon_id,
+                    item.relationship_type,
+                    item.target_canonical_taxon_id,
+                    item.source_name,
+                    item.created_at.isoformat(),
+                )
+                for item in relationships
+            ],
+        )
+        connection.executemany(
+            """
+            INSERT INTO canonical_taxon_events (
+                event_id,
+                event_type,
+                canonical_taxon_id,
+                source_name,
+                effective_at,
+                payload_json
+            ) VALUES (?, ?, ?, ?, ?, ?)
+            """,
+            [
+                (
+                    item.event_id,
+                    item.event_type,
+                    item.canonical_taxon_id,
+                    item.source_name,
+                    item.effective_at.isoformat(),
+                    _json(item.payload),
+                )
+                for item in events
+            ],
+        )
 
-    def save_review_items(self, review_items: Sequence[ReviewItem]) -> None:
-        with self.connect() as connection:
-            connection.executemany(
-                """
-                INSERT OR REPLACE INTO review_queue (
-                    review_item_id,
-                    media_asset_id,
-                    canonical_taxon_id,
-                    review_reason,
-                    review_reason_code,
-                    review_note,
-                    stage_name,
-                    priority,
-                    review_status,
-                    created_at
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """,
-                [
-                    (
-                        item.review_item_id,
-                        item.media_asset_id,
-                        item.canonical_taxon_id,
-                        item.review_reason,
-                        item.review_reason_code,
-                        item.review_note,
-                        item.stage_name,
-                        item.priority,
-                        item.review_status,
-                        item.created_at.isoformat(),
-                    )
-                    for item in review_items
-                ],
-            )
+    def save_source_observations(
+        self,
+        observations: Sequence[SourceObservation],
+        *,
+        connection: sqlite3.Connection | None = None,
+    ) -> None:
+        if connection is None:
+            with self.connect() as owned_connection:
+                self.save_source_observations(observations, connection=owned_connection)
+            return
+
+        connection.executemany(
+            """
+            INSERT OR REPLACE INTO source_observations (
+                observation_uid,
+                source_name,
+                source_observation_id,
+                source_taxon_id,
+                observed_at,
+                location_json,
+                source_quality_json,
+                raw_payload_ref,
+                canonical_taxon_id
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            [
+                (
+                    item.observation_uid,
+                    item.source_name,
+                    item.source_observation_id,
+                    item.source_taxon_id,
+                    item.observed_at.isoformat() if item.observed_at else None,
+                    _json(item.location.model_dump(mode="json")),
+                    _json(item.source_quality.model_dump(mode="json")),
+                    item.raw_payload_ref,
+                    item.canonical_taxon_id,
+                )
+                for item in observations
+            ],
+        )
+
+    def save_media_assets(
+        self,
+        media_assets: Sequence[MediaAsset],
+        *,
+        connection: sqlite3.Connection | None = None,
+    ) -> None:
+        if connection is None:
+            with self.connect() as owned_connection:
+                self.save_media_assets(media_assets, connection=owned_connection)
+            return
+
+        connection.executemany(
+            """
+            INSERT OR REPLACE INTO media_assets (
+                media_id,
+                source_name,
+                source_media_id,
+                media_type,
+                source_url,
+                attribution,
+                author,
+                license,
+                mime_type,
+                file_extension,
+                width,
+                height,
+                checksum,
+                source_observation_uid,
+                canonical_taxon_id,
+                raw_payload_ref
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            [
+                (
+                    item.media_id,
+                    item.source_name,
+                    item.source_media_id,
+                    item.media_type,
+                    item.source_url,
+                    item.attribution,
+                    item.author,
+                    item.license,
+                    item.mime_type,
+                    item.file_extension,
+                    item.width,
+                    item.height,
+                    item.checksum,
+                    item.source_observation_uid,
+                    item.canonical_taxon_id,
+                    item.raw_payload_ref,
+                )
+                for item in media_assets
+            ],
+        )
+
+    def save_qualified_resources(
+        self,
+        resources: Sequence[QualifiedResource],
+        *,
+        connection: sqlite3.Connection | None = None,
+    ) -> None:
+        if connection is None:
+            with self.connect() as owned_connection:
+                self.save_qualified_resources(resources, connection=owned_connection)
+            return
+
+        connection.executemany(
+            """
+            INSERT OR REPLACE INTO qualified_resources (
+                qualified_resource_id,
+                canonical_taxon_id,
+                source_observation_uid,
+                source_observation_id,
+                media_asset_id,
+                qualification_status,
+                qualification_version,
+                technical_quality,
+                pedagogical_quality,
+                life_stage,
+                sex,
+                visible_parts_json,
+                view_angle,
+                qualification_notes,
+                qualification_flags_json,
+                provenance_summary_json,
+                license_safety_result,
+                export_eligible
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            [
+                (
+                    item.qualified_resource_id,
+                    item.canonical_taxon_id,
+                    item.source_observation_uid,
+                    item.source_observation_id,
+                    item.media_asset_id,
+                    item.qualification_status,
+                    item.qualification_version,
+                    item.technical_quality,
+                    item.pedagogical_quality,
+                    item.life_stage,
+                    item.sex,
+                    _json(item.visible_parts),
+                    item.view_angle,
+                    item.qualification_notes,
+                    _json(item.qualification_flags),
+                    _json(item.provenance_summary.model_dump(mode="json")),
+                    item.license_safety_result,
+                    int(item.export_eligible),
+                )
+                for item in resources
+            ],
+        )
+
+    def save_review_items(
+        self,
+        review_items: Sequence[ReviewItem],
+        *,
+        connection: sqlite3.Connection | None = None,
+    ) -> None:
+        if connection is None:
+            with self.connect() as owned_connection:
+                self.save_review_items(review_items, connection=owned_connection)
+            return
+
+        connection.executemany(
+            """
+            INSERT OR REPLACE INTO review_queue (
+                review_item_id,
+                media_asset_id,
+                canonical_taxon_id,
+                review_reason,
+                review_reason_code,
+                review_note,
+                stage_name,
+                priority,
+                review_status,
+                created_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            [
+                (
+                    item.review_item_id,
+                    item.media_asset_id,
+                    item.canonical_taxon_id,
+                    item.review_reason,
+                    item.review_reason_code,
+                    item.review_note,
+                    item.stage_name,
+                    item.priority,
+                    item.review_status,
+                    item.created_at.isoformat(),
+                )
+                for item in review_items
+            ],
+        )
 
     def fetch_summary(self) -> dict[str, int]:
         with self.connect() as connection:

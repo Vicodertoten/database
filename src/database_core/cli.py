@@ -63,6 +63,12 @@ def main() -> None:
     pipeline_parser.add_argument("--normalized-path", type=Path, default=DEFAULT_NORMALIZED_PATH)
     pipeline_parser.add_argument("--qualified-path", type=Path, default=DEFAULT_QUALIFIED_PATH)
     pipeline_parser.add_argument("--export-path", type=Path, default=DEFAULT_EXPORT_PATH)
+    pipeline_parser.add_argument("--reset-db", action="store_true")
+    pipeline_parser.add_argument(
+        "--allow-schema-reset",
+        action="store_true",
+        help="local-dev only: recreate DB file when schema version mismatches",
+    )
     pipeline_parser.add_argument("--apply-review-overrides", action="store_true")
     pipeline_parser.add_argument("--review-overrides-path", type=Path)
     pipeline_parser.add_argument(
@@ -155,6 +161,8 @@ def main() -> None:
             uncertain_policy=args.uncertain_policy,
             gemini_api_key=gemini_api_key,
             gemini_model=args.gemini_model,
+            reset_db=args.reset_db,
+            allow_schema_reset=args.allow_schema_reset,
         )
         print(
             "Pipeline complete | "

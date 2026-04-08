@@ -180,7 +180,7 @@ class PacingRetryQualifier:
             self._last_request_started_at = self._clock()
             try:
                 return self.base_qualifier.qualify(media_asset, image_bytes=image_bytes)
-            except Exception as exc:  # noqa: BLE001
+            except (HTTPError, TimeoutError, URLError, OSError) as exc:
                 if not _is_retryable_gemini_error(exc) or retry_count >= self.max_retries:
                     raise
                 self._sleep(_retry_delay_seconds(exc, backoff_seconds, self.max_backoff_seconds))
