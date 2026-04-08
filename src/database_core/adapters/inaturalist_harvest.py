@@ -4,7 +4,7 @@ import hashlib
 import io
 import json
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from urllib.parse import urlencode, urlparse
 from urllib.request import Request, urlopen
@@ -25,6 +25,7 @@ from database_core.adapters.inaturalist_snapshot import (
 from database_core.export.json_exporter import write_json
 
 INAT_OBSERVATIONS_API = "https://api.inaturalist.org/v1/observations"
+INAT_TAXA_API = "https://api.inaturalist.org/v1/taxa"
 USER_AGENT = "database-core/0.1"
 INAT_SAFE_LICENSE_FILTER = "cc0,cc-by,cc-by-sa"
 
@@ -58,8 +59,10 @@ def fetch_inat_snapshot(
     snapshot_dir = resolve_snapshot_dir(snapshot_id, snapshot_root)
     responses_dir = snapshot_dir / "responses"
     images_dir = snapshot_dir / "images"
+    taxa_dir = snapshot_dir / "taxa"
     responses_dir.mkdir(parents=True, exist_ok=True)
     images_dir.mkdir(parents=True, exist_ok=True)
+    taxa_dir.mkdir(parents=True, exist_ok=True)
 
     manifest_taxa: list[SnapshotTaxonSeed] = []
     media_downloads: list[SnapshotMediaDownload] = []
@@ -67,12 +70,16 @@ def fetch_inat_snapshot(
     downloaded_image_count = 0
 
     for seed in load_pilot_taxa(pilot_taxa_path):
-        response_payload, requested_order_by, effective_order_by, fallback_applied, effective_params = (
-            _fetch_seed_payload(
-                source_taxon_id=seed.source_taxon_id,
-                max_observations_per_taxon=max_observations_per_taxon,
-                timeout_seconds=timeout_seconds,
-            )
+        (
+            response_payload,
+            requested_order_by,
+            effective_order_by,
+            fallback_applied,
+            effective_params,
+        ) = _fetch_seed_payload(
+            source_taxon_id=seed.source_taxon_id,
+            max_observations_per_taxon=max_observations_per_taxon,
+            timeout_seconds=timeout_seconds,
         )
         candidate_results = [
             item
@@ -80,6 +87,12 @@ def fetch_inat_snapshot(
             if is_supported_observation_result(item, seed.source_taxon_id)
         ][:max_observations_per_taxon]
         response_payload["results"] = candidate_results
+        taxon_payload_path = _write_taxon_payload(
+            snapshot_dir=snapshot_dir,
+            source_taxon_id=seed.source_taxon_id,
+            canonical_taxon_id=seed.canonical_taxon_id,
+            timeout_seconds=timeout_seconds,
+        )
 
         response_path = Path("responses") / f"{_slugify_filename(seed.canonical_taxon_id)}.json"
         write_json(snapshot_dir / response_path, response_payload)
@@ -88,15 +101,16 @@ def fetch_inat_snapshot(
                 canonical_taxon_id=seed.canonical_taxon_id,
                 scientific_name=seed.scientific_name,
                 canonical_rank=seed.canonical_rank,
-                    common_names=seed.common_names,
-                    source_taxon_id=seed.source_taxon_id,
-                    query_params=effective_params,
-                    response_path=response_path.as_posix(),
-                    requested_order_by=requested_order_by,
-                    effective_order_by=effective_order_by,
-                    fallback_applied=fallback_applied,
-                )
+                common_names=seed.common_names,
+                source_taxon_id=seed.source_taxon_id,
+                query_params=effective_params,
+                response_path=response_path.as_posix(),
+                taxon_payload_path=taxon_payload_path.as_posix() if taxon_payload_path else None,
+                requested_order_by=requested_order_by,
+                effective_order_by=effective_order_by,
+                fallback_applied=fallback_applied,
             )
+        )
 
         for result in candidate_results:
             harvested_observation_count += 1
@@ -113,7 +127,9 @@ def fetch_inat_snapshot(
             file_size_bytes = None
 
             try:
-                downloaded = _download_best_candidate(candidate_urls, timeout_seconds=timeout_seconds)
+                downloaded = _download_best_candidate(
+                    candidate_urls, timeout_seconds=timeout_seconds
+                )
                 image_path = Path("images") / (
                     f"{photo['id']}.{_guess_extension(downloaded.source_url) or extension}"
                 )
@@ -146,7 +162,7 @@ def fetch_inat_snapshot(
 
     manifest = InaturalistSnapshotManifest(
         snapshot_id=snapshot_id,
-        created_at=datetime.now(timezone.utc),
+        created_at=datetime.now(UTC),
         taxon_seeds=manifest_taxa,
         media_downloads=media_downloads,
         ai_outputs_path=None,
@@ -158,6 +174,27 @@ def fetch_inat_snapshot(
         harvested_observation_count=harvested_observation_count,
         downloaded_image_count=downloaded_image_count,
     )
+
+
+def _write_taxon_payload(
+    *,
+    snapshot_dir: Path,
+    source_taxon_id: str,
+    canonical_taxon_id: str,
+    timeout_seconds: int,
+) -> Path | None:
+    try:
+        payload = _fetch_json(
+            f"{INAT_TAXA_API}/{source_taxon_id}",
+            params={},
+            timeout_seconds=timeout_seconds,
+        )
+    except Exception:  # noqa: BLE001
+        return None
+
+    payload_path = Path("taxa") / f"{_slugify_filename(canonical_taxon_id)}.json"
+    write_json(snapshot_dir / payload_path, payload)
+    return payload_path
 
 
 def _fetch_json(url: str, *, params: dict[str, str], timeout_seconds: int) -> dict[str, object]:
@@ -188,12 +225,16 @@ def _fetch_seed_payload(
     requested_order_by = "votes"
     first_params = {**base_params, "order_by": requested_order_by}
     try:
-        payload = _fetch_json(INAT_OBSERVATIONS_API, params=first_params, timeout_seconds=timeout_seconds)
+        payload = _fetch_json(
+            INAT_OBSERVATIONS_API, params=first_params, timeout_seconds=timeout_seconds
+        )
         return payload, requested_order_by, requested_order_by, False, first_params
     except Exception:  # noqa: BLE001
         fallback_order_by = "observed_on"
         fallback_params = {**base_params, "order_by": fallback_order_by}
-        payload = _fetch_json(INAT_OBSERVATIONS_API, params=fallback_params, timeout_seconds=timeout_seconds)
+        payload = _fetch_json(
+            INAT_OBSERVATIONS_API, params=fallback_params, timeout_seconds=timeout_seconds
+        )
         return payload, requested_order_by, fallback_order_by, True, fallback_params
 
 

@@ -19,6 +19,7 @@ from database_core.domain.models import (
 )
 from database_core.qualification.ai import AIQualificationOutcome, inspect_image_dimensions
 from database_core.qualification.rules import is_safe_license
+from database_core.versioning import SNAPSHOT_MANIFEST_VERSION
 
 DEFAULT_INAT_SNAPSHOT_ROOT = Path("data/raw/inaturalist")
 DEFAULT_PILOT_TAXA_PATH = Path("data/fixtures/inaturalist_pilot_taxa.json")
@@ -53,6 +54,7 @@ class SnapshotTaxonSeed(SnapshotModel):
     source_taxon_id: str
     query_params: dict[str, str]
     response_path: str
+    taxon_payload_path: str | None = None
     requested_order_by: str | None = None
     effective_order_by: str | None = None
     fallback_applied: bool = False
@@ -73,6 +75,7 @@ class SnapshotMediaDownload(SnapshotModel):
 
 
 class InaturalistSnapshotManifest(SnapshotModel):
+    manifest_version: str = SNAPSHOT_MANIFEST_VERSION
     snapshot_id: str
     source_name: SourceName = SourceName.INATURALIST
     created_at: datetime
@@ -104,7 +107,15 @@ def load_snapshot_manifest(
             raise ValueError("snapshot_id or manifest_path is required for inat_snapshot mode")
         manifest_path = resolve_snapshot_dir(snapshot_id, snapshot_root) / "manifest.json"
 
-    manifest = InaturalistSnapshotManifest.model_validate_json(manifest_path.read_text(encoding="utf-8"))
+    payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest_version = payload.get("manifest_version")
+    if manifest_version is not None and manifest_version != SNAPSHOT_MANIFEST_VERSION:
+        raise ValueError(
+            "Unsupported snapshot manifest_version "
+            f"{manifest_version!r} in {manifest_path}. Expected {SNAPSHOT_MANIFEST_VERSION!r} "
+            "or a legacy manifest without manifest_version."
+        )
+    manifest = InaturalistSnapshotManifest.model_validate(payload)
     return manifest, manifest_path.parent
 
 
@@ -134,6 +145,17 @@ def load_snapshot_dataset(
     observations: list[SourceObservation] = []
     media_assets: list[MediaAsset] = []
     download_by_media_id = {item.source_media_id: item for item in manifest.media_downloads}
+    taxon_payloads_by_canonical_taxon_id: dict[str, dict[str, object]] = {}
+
+    for seed in manifest.taxon_seeds:
+        if not seed.taxon_payload_path:
+            continue
+        payload_path = snapshot_dir / seed.taxon_payload_path
+        if not payload_path.exists():
+            continue
+        taxon_payloads_by_canonical_taxon_id[seed.canonical_taxon_id] = json.loads(
+            payload_path.read_text(encoding="utf-8")
+        )
 
     for seed in sorted(manifest.taxon_seeds, key=lambda item: item.canonical_taxon_id):
         payload = json.loads((snapshot_dir / seed.response_path).read_text(encoding="utf-8"))
@@ -171,9 +193,11 @@ def load_snapshot_dataset(
         media_assets=sorted(media_assets, key=lambda item: item.media_id),
         ai_qualifications={},
         cached_image_paths_by_source_media_id={
-            item.source_media_id: snapshot_dir / item.image_path for item in manifest.media_downloads
+            item.source_media_id: snapshot_dir / item.image_path
+            for item in manifest.media_downloads
         },
         ai_qualification_outcomes=_load_ai_outputs(snapshot_dir, manifest.ai_outputs_path),
+        taxon_payloads_by_canonical_taxon_id=taxon_payloads_by_canonical_taxon_id,
     )
 
 
@@ -216,7 +240,8 @@ def summarize_snapshot_manifest(
         [
             item
             for item in ai_outputs.values()
-            if item.status not in {"missing_cached_image", "insufficient_resolution", "missing_cached_ai_output"}
+            if item.status
+            not in {"missing_cached_image", "insufficient_resolution", "missing_cached_ai_output"}
         ]
     )
     ai_valid_outputs = len([item for item in ai_outputs.values() if item.status == "ok"])
@@ -333,7 +358,9 @@ def _build_snapshot_media_asset(
         attribution=str(photo.get("attribution") or "unknown attribution"),
         author=str(photo.get("attribution_name")) if photo.get("attribution_name") else None,
         license=str(photo.get("license_code")) if photo.get("license_code") else None,
-        mime_type=download.mime_type if download and download.mime_type else _guess_mime_type(str(source_url)),
+        mime_type=download.mime_type
+        if download and download.mime_type
+        else _guess_mime_type(str(source_url)),
         file_extension=_guess_extension(str(source_url)),
         width=width,
         height=height,

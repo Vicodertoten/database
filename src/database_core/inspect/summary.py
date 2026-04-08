@@ -20,15 +20,31 @@ def render_summary(repository: SQLiteRepository) -> str:
     )
 
 
-def render_review_queue(repository: SQLiteRepository) -> str:
-    rows = repository.fetch_review_queue()
+def render_review_queue(
+    repository: SQLiteRepository,
+    *,
+    review_reason_code: str | None = None,
+    stage_name: str | None = None,
+    review_status: str | None = None,
+    canonical_taxon_id: str | None = None,
+    priority: str | None = None,
+) -> str:
+    rows = repository.fetch_review_queue(
+        review_reason_code=review_reason_code,
+        stage_name=stage_name,
+        review_status=review_status,
+        canonical_taxon_id=canonical_taxon_id,
+        priority=priority,
+    )
     if not rows:
         return "Review queue is empty."
     lines = ["Review queue"]
     for row in rows:
         lines.append(
-            f"{row['review_item_id']} | {row['canonical_taxon_id']} | {row['media_asset_id']} | "
-            f"{row['review_status']} | {row['review_reason']}"
+            f"{row['review_item_id']} | {row['priority']} | {row['stage_name']} | "
+            f"{row['review_reason_code']} | "
+            f"{row['canonical_taxon_id']} | {row['media_asset_id']} | "
+            f"{row['review_status']} | {row['review_note'] or row['review_reason']}"
         )
     return "\n".join(lines)
 
@@ -40,7 +56,8 @@ def render_exportables(repository: SQLiteRepository) -> str:
     lines = ["Exportable resources"]
     for row in rows:
         lines.append(
-            f"{row['qualified_resource_id']} | {row['canonical_taxon_id']} | {row['media_asset_id']}"
+            f"{row['qualified_resource_id']} | "
+            f"{row['canonical_taxon_id']} | {row['media_asset_id']}"
         )
     return "\n".join(lines)
 

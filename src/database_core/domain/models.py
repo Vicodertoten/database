@@ -7,13 +7,18 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator, model_valida
 
 from database_core.domain.enums import (
     CanonicalRank,
+    EnrichmentStatus,
     LicenseSafetyResult,
     MediaType,
     PedagogicalQuality,
+    QualificationStage,
     QualificationStatus,
+    ReviewPriority,
     ReviewStatus,
     Sex,
+    SimilarityRelationType,
     SourceName,
+    TaxonGroup,
     TechnicalQuality,
     ViewAngle,
 )
@@ -68,13 +73,69 @@ class AIQualification(DomainModel):
         return value
 
 
+class ExternalSimilarityHint(DomainModel):
+    source_name: SourceName
+    external_taxon_id: str
+    relation_type: SimilarityRelationType = SimilarityRelationType.SIMILAR_SPECIES
+    scientific_name: str | None = None
+    common_name: str | None = None
+    confidence: float | None = None
+    note: str | None = None
+
+    @field_validator("external_taxon_id")
+    @classmethod
+    def validate_external_taxon_id(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("external_taxon_id must not be blank")
+        return value
+
+    @field_validator("confidence")
+    @classmethod
+    def validate_optional_confidence(cls, value: float | None) -> float | None:
+        if value is None:
+            return value
+        if not 0.0 <= value <= 1.0:
+            raise ValueError("confidence must be between 0.0 and 1.0")
+        return value
+
+
+class SimilarTaxon(DomainModel):
+    target_canonical_taxon_id: str
+    source_name: SourceName
+    relation_type: SimilarityRelationType = SimilarityRelationType.SIMILAR_SPECIES
+    confidence: float | None = None
+    note: str | None = None
+
+    @field_validator("target_canonical_taxon_id")
+    @classmethod
+    def validate_target_canonical_taxon_id(cls, value: str) -> str:
+        normalized = value.strip()
+        if not normalized:
+            raise ValueError("target_canonical_taxon_id must not be blank")
+        return normalized
+
+    @field_validator("confidence")
+    @classmethod
+    def validate_similarity_confidence(cls, value: float | None) -> float | None:
+        if value is None:
+            return value
+        if not 0.0 <= value <= 1.0:
+            raise ValueError("confidence must be between 0.0 and 1.0")
+        return value
+
+
 class CanonicalTaxon(DomainModel):
     canonical_taxon_id: str
     scientific_name: str
     canonical_rank: CanonicalRank
     common_names: list[str] = Field(default_factory=list)
+    taxon_group: TaxonGroup = TaxonGroup.BIRDS
+    key_identification_features: list[str] = Field(default_factory=list)
+    source_enrichment_status: EnrichmentStatus = EnrichmentStatus.SEEDED
     bird_scope_compatible: bool = True
     external_source_mappings: list[ExternalMapping] = Field(default_factory=list)
+    external_similarity_hints: list[ExternalSimilarityHint] = Field(default_factory=list)
+    similar_taxa: list[SimilarTaxon] = Field(default_factory=list)
     similar_taxon_ids: list[str] = Field(default_factory=list)
 
     @field_validator("canonical_taxon_id")
@@ -94,6 +155,19 @@ class CanonicalTaxon(DomainModel):
             raise ValueError("scientific_name must not be blank")
         return value
 
+    @model_validator(mode="after")
+    def derive_similar_taxon_ids(self) -> Self:
+        derived_ids = sorted(
+            {
+                item.target_canonical_taxon_id
+                for item in self.similar_taxa
+                if item.target_canonical_taxon_id != self.canonical_taxon_id
+            }
+        )
+        if derived_ids != self.similar_taxon_ids:
+            object.__setattr__(self, "similar_taxon_ids", derived_ids)
+        return self
+
 
 class SourceObservation(DomainModel):
     observation_uid: str
@@ -106,7 +180,9 @@ class SourceObservation(DomainModel):
     raw_payload_ref: str
     canonical_taxon_id: str | None = None
 
-    @field_validator("observation_uid", "source_observation_id", "source_taxon_id", "raw_payload_ref")
+    @field_validator(
+        "observation_uid", "source_observation_id", "source_taxon_id", "raw_payload_ref"
+    )
     @classmethod
     def validate_required_strings(cls, value: str) -> str:
         if not value.strip():
@@ -132,7 +208,9 @@ class MediaAsset(DomainModel):
     canonical_taxon_id: str | None = None
     raw_payload_ref: str
 
-    @field_validator("media_id", "source_media_id", "source_url", "source_observation_uid", "raw_payload_ref")
+    @field_validator(
+        "media_id", "source_media_id", "source_url", "source_observation_uid", "raw_payload_ref"
+    )
     @classmethod
     def validate_media_strings(cls, value: str) -> str:
         if not value.strip():
@@ -193,5 +271,9 @@ class ReviewItem(DomainModel):
     media_asset_id: str
     canonical_taxon_id: str
     review_reason: str
+    review_reason_code: str
+    review_note: str | None = None
+    stage_name: QualificationStage
+    priority: ReviewPriority = ReviewPriority.MEDIUM
     review_status: ReviewStatus = ReviewStatus.OPEN
     created_at: datetime

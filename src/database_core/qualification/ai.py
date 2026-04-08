@@ -4,26 +4,27 @@ import base64
 import io
 import json
 import re
-from dataclasses import dataclass
-from datetime import datetime, timezone
-from pathlib import Path
 import urllib.request
-from collections.abc import Mapping, Sequence
+from collections.abc import Callable, Mapping, Sequence
+from dataclasses import dataclass
+from datetime import UTC, datetime
+from pathlib import Path
 from typing import Protocol
+from urllib.error import HTTPError
 
 from PIL import Image, UnidentifiedImageError
 
-from database_core.domain.enums import ViewAngle
+from database_core.domain.enums import TaxonGroup, ViewAngle
 from database_core.domain.models import AIQualification, MediaAsset
 
 DEFAULT_GEMINI_MODEL = "gemini-3.1-flash-lite-preview"
-DEFAULT_GEMINI_PROMPT_VERSION = "phase1.inat.image.v2"
 MIN_AI_IMAGE_WIDTH = 512
 MIN_AI_IMAGE_HEIGHT = 512
-STRICT_GEMINI_PROMPT = (
-    "Classify this bird image for a biodiversity learning dataset. "
-    "Return strict JSON only, with exactly these keys: technical_quality, pedagogical_quality, "
-    "life_stage, sex, visible_parts, view_angle, confidence, notes. "
+
+PROMPT_BASE_TEXT = (
+    "Return strict JSON only for biodiversity-learning dataset qualification. "
+    "Return exactly these keys: technical_quality, pedagogical_quality, life_stage, sex, "
+    "visible_parts, view_angle, confidence, notes. "
     "technical_quality and pedagogical_quality must be one of: unknown, low, medium, high. "
     "sex must be one of: unknown, male, female, mixed. "
     "visible_parts must be a JSON array of short snake_case strings. "
@@ -31,6 +32,25 @@ STRICT_GEMINI_PROMPT = (
     "confidence must be a number between 0.0 and 1.0. "
     "Do not return prose outside the JSON object."
 )
+PROMPT_TAXON_GROUP_SUPPLEMENTS = {
+    TaxonGroup.BIRDS: (
+        "The subject is a bird and the assessment should focus on bird identification utility."
+    )
+}
+PROMPT_TASKS = {
+    "screening": {
+        "version": "phase1.inat.screening.v1",
+        "instruction": "Perform a fast screening-style assessment only.",
+    },
+    "qualification": {
+        "version": "phase1.inat.image.v2",
+        "instruction": "Classify this bird image for a biodiversity learning dataset.",
+    },
+    "feature_visibility": {
+        "version": "phase1.inat.feature_visibility.v1",
+        "instruction": "Focus on visibility of field marks and identification features.",
+    },
+}
 STRICT_GEMINI_RESPONSE_SCHEMA: dict[str, object] = {
     "type": "object",
     "properties": {
@@ -88,9 +108,38 @@ STRICT_GEMINI_RESPONSE_SCHEMA: dict[str, object] = {
 }
 
 
+@dataclass(frozen=True)
+class PromptBundle:
+    task_name: str
+    taxon_group: TaxonGroup
+    version: str
+    text: str
+
+
+def build_prompt_bundle(
+    *,
+    task_name: str = "qualification",
+    taxon_group: TaxonGroup = TaxonGroup.BIRDS,
+) -> PromptBundle:
+    task_config = PROMPT_TASKS[task_name]
+    supplement = PROMPT_TAXON_GROUP_SUPPLEMENTS[taxon_group]
+    return PromptBundle(
+        task_name=task_name,
+        taxon_group=taxon_group,
+        version=str(task_config["version"]),
+        text=" ".join([str(task_config["instruction"]), supplement, PROMPT_BASE_TEXT]),
+    )
+
+
+DEFAULT_PROMPT_BUNDLE = build_prompt_bundle()
+DEFAULT_GEMINI_PROMPT_VERSION = DEFAULT_PROMPT_BUNDLE.version
+STRICT_GEMINI_PROMPT = DEFAULT_PROMPT_BUNDLE.text
+
+
 class AIQualifier(Protocol):
-    def qualify(self, media_asset: MediaAsset, *, image_bytes: bytes | None = None) -> AIQualification | None:
-        ...
+    def qualify(
+        self, media_asset: MediaAsset, *, image_bytes: bytes | None = None
+    ) -> AIQualification | None: ...
 
 
 @dataclass(frozen=True)
@@ -109,7 +158,9 @@ class AIQualificationOutcome:
         return {
             "status": self.status,
             "qualification": (
-                self.qualification.model_dump(mode="json") if self.qualification is not None else None
+                self.qualification.model_dump(mode="json")
+                if self.qualification is not None
+                else None
             ),
             "flags": list(self.flags),
             "note": self.note,
@@ -147,7 +198,9 @@ class AIQualificationOutcome:
             model_name=(
                 str(payload["model_name"])
                 if payload.get("model_name") is not None
-                else qualification.model_name if qualification is not None else None
+                else qualification.model_name
+                if qualification is not None
+                else None
             ),
             prompt_version=(
                 str(payload["prompt_version"])
@@ -155,8 +208,12 @@ class AIQualificationOutcome:
                 else None
             ),
             qualified_at=qualified_at,
-            image_width=int(payload["image_width"]) if payload.get("image_width") is not None else None,
-            image_height=int(payload["image_height"]) if payload.get("image_height") is not None else None,
+            image_width=int(payload["image_width"])
+            if payload.get("image_width") is not None
+            else None,
+            image_height=int(payload["image_height"])
+            if payload.get("image_height") is not None
+            else None,
         )
 
 
@@ -164,17 +221,27 @@ class FixtureAIQualifier:
     def __init__(self, qualifications_by_source_media_id: Mapping[str, AIQualification]) -> None:
         self.qualifications_by_source_media_id = dict(qualifications_by_source_media_id)
 
-    def qualify(self, media_asset: MediaAsset, *, image_bytes: bytes | None = None) -> AIQualification | None:
+    def qualify(
+        self, media_asset: MediaAsset, *, image_bytes: bytes | None = None
+    ) -> AIQualification | None:
         del image_bytes
         return self.qualifications_by_source_media_id.get(media_asset.source_media_id)
 
 
 class GeminiVisionQualifier:
-    def __init__(self, api_key: str, model_name: str = DEFAULT_GEMINI_MODEL) -> None:
+    def __init__(
+        self,
+        api_key: str,
+        model_name: str = DEFAULT_GEMINI_MODEL,
+        prompt_bundle: PromptBundle | None = None,
+    ) -> None:
         self.api_key = api_key
         self.model_name = model_name
+        self.prompt_bundle = prompt_bundle or DEFAULT_PROMPT_BUNDLE
 
-    def qualify(self, media_asset: MediaAsset, *, image_bytes: bytes | None = None) -> AIQualification | None:
+    def qualify(
+        self, media_asset: MediaAsset, *, image_bytes: bytes | None = None
+    ) -> AIQualification | None:
         if image_bytes is None or media_asset.mime_type is None:
             return None
 
@@ -182,9 +249,7 @@ class GeminiVisionQualifier:
             "contents": [
                 {
                     "parts": [
-                        {
-                            "text": STRICT_GEMINI_PROMPT
-                        },
+                        {"text": self.prompt_bundle.text},
                         {
                             "inline_data": {
                                 "mime_type": media_asset.mime_type,
@@ -203,14 +268,20 @@ class GeminiVisionQualifier:
         request = urllib.request.Request(
             url=(
                 "https://generativelanguage.googleapis.com/v1beta/models/"
-                f"{self.model_name}:generateContent?key={self.api_key}"
+                f"{self.model_name}:generateContent"
             ),
             data=json.dumps(payload).encode("utf-8"),
-            headers={"Content-Type": "application/json"},
+            headers={
+                "Content-Type": "application/json",
+                "x-goog-api-key": self.api_key,
+            },
             method="POST",
         )
-        with urllib.request.urlopen(request, timeout=30) as response:
-            response_payload = json.loads(response.read().decode("utf-8"))
+        try:
+            with urllib.request.urlopen(request, timeout=30) as response:
+                response_payload = json.loads(response.read().decode("utf-8"))
+        except HTTPError as exc:
+            raise RuntimeError(_format_gemini_http_error(exc)) from exc
 
         text = response_payload["candidates"][0]["content"]["parts"][0]["text"]
         candidate = _normalize_gemini_candidate(json.loads(text))
@@ -229,6 +300,7 @@ def collect_ai_qualification_outcomes(
     gemini_model: str = DEFAULT_GEMINI_MODEL,
     prompt_version: str = DEFAULT_GEMINI_PROMPT_VERSION,
     qualifier: AIQualifier | None = None,
+    progress_callback: Callable[[int, int, MediaAsset, AIQualificationOutcome], None] | None = None,
 ) -> dict[str, AIQualificationOutcome]:
     if qualifier_mode == "rules":
         return {}
@@ -259,14 +331,17 @@ def collect_ai_qualification_outcomes(
     if qualifier_mode == "cached":
         precomputed = dict(precomputed_ai_outcomes or {})
         return {
-            media_asset.source_media_id: precomputed.get(
-                media_asset.source_media_id,
-                AIQualificationOutcome(
-                    status="missing_cached_ai_output",
-                    qualification=None,
-                    flags=("missing_cached_ai_output",),
-                    note=f"no cached ai output for {media_asset.source_media_id}",
+            media_asset.source_media_id: _validate_cached_outcome(
+                precomputed.get(
+                    media_asset.source_media_id,
+                    AIQualificationOutcome(
+                        status="missing_cached_ai_output",
+                        qualification=None,
+                        flags=("missing_cached_ai_output",),
+                        note=f"no cached ai output for {media_asset.source_media_id}",
+                    ),
                 ),
+                expected_prompt_version=prompt_version,
             )
             for media_asset in media_assets
         }
@@ -277,18 +352,26 @@ def collect_ai_qualification_outcomes(
     if qualifier is None:
         if not gemini_api_key:
             raise ValueError("gemini_api_key is required when qualifier_mode='gemini'")
-        qualifier = GeminiVisionQualifier(api_key=gemini_api_key, model_name=gemini_model)
+        qualifier = GeminiVisionQualifier(
+            api_key=gemini_api_key,
+            model_name=gemini_model,
+            prompt_bundle=DEFAULT_PROMPT_BUNDLE,
+        )
 
     image_paths = dict(cached_image_paths_by_source_media_id or {})
     outcomes: dict[str, AIQualificationOutcome] = {}
-    for media_asset in media_assets:
-        outcomes[media_asset.source_media_id] = _collect_single_ai_outcome(
+    total = len(media_assets)
+    for index, media_asset in enumerate(media_assets, start=1):
+        outcome = _collect_single_ai_outcome(
             media_asset=media_asset,
             image_path=image_paths.get(media_asset.source_media_id),
             qualifier=qualifier,
             gemini_model=gemini_model,
             prompt_version=prompt_version,
         )
+        outcomes[media_asset.source_media_id] = outcome
+        if progress_callback is not None:
+            progress_callback(index, total, media_asset, outcome)
     return outcomes
 
 
@@ -299,6 +382,30 @@ def build_ai_outputs_payload(
         source_media_id: outcome.to_snapshot_payload()
         for source_media_id, outcome in sorted(outcomes_by_source_media_id.items())
     }
+
+
+def _validate_cached_outcome(
+    outcome: AIQualificationOutcome,
+    *,
+    expected_prompt_version: str,
+) -> AIQualificationOutcome:
+    if outcome.status != "ok":
+        return outcome
+    if outcome.prompt_version == expected_prompt_version:
+        return outcome
+    expected = expected_prompt_version
+    actual = outcome.prompt_version or "missing"
+    return AIQualificationOutcome(
+        status="cached_prompt_version_mismatch",
+        qualification=None,
+        flags=("cached_prompt_version_mismatch",),
+        note=f"cached ai output prompt version mismatch: expected {expected}, got {actual}",
+        model_name=outcome.model_name,
+        prompt_version=outcome.prompt_version,
+        qualified_at=outcome.qualified_at,
+        image_width=outcome.image_width,
+        image_height=outcome.image_height,
+    )
 
 
 def inspect_image_dimensions(path: Path) -> tuple[int | None, int | None]:
@@ -317,7 +424,7 @@ def _collect_single_ai_outcome(
     gemini_model: str,
     prompt_version: str,
 ) -> AIQualificationOutcome:
-    qualified_at = datetime.now(timezone.utc)
+    qualified_at = datetime.now(UTC)
 
     if image_path is None or not image_path.exists():
         return AIQualificationOutcome(
@@ -459,6 +566,28 @@ def _normalize_gemini_candidate(candidate: Mapping[str, object]) -> dict[str, ob
     }
 
 
+def _format_gemini_http_error(exc: HTTPError) -> str:
+    detail = None
+    try:
+        payload = exc.read().decode("utf-8", errors="replace")
+    except OSError:
+        payload = ""
+
+    if payload:
+        try:
+            parsed = json.loads(payload)
+        except json.JSONDecodeError:
+            detail = payload.strip()
+        else:
+            error_payload = parsed.get("error")
+            if isinstance(error_payload, Mapping) and error_payload.get("message") is not None:
+                detail = str(error_payload["message"]).strip()
+
+    if detail:
+        return f"Gemini API request failed with HTTP {exc.code}: {detail}"
+    return f"Gemini API request failed with HTTP {exc.code}: {exc.reason}"
+
+
 def _normalize_quality(value: object) -> str:
     text = _normalize_text(value)
     if text in {"unknown", "low", "medium", "high"}:
@@ -489,7 +618,9 @@ def _normalize_sex(value: object) -> str:
         return "female"
     if "male" in text:
         return "male"
-    if any(token in text for token in ("unknown", "undetermined", "indeterminate", "cannot determine")):
+    if any(
+        token in text for token in ("unknown", "undetermined", "indeterminate", "cannot determine")
+    ):
         return "unknown"
     return "unknown"
 
@@ -501,11 +632,7 @@ def _normalize_visible_parts(value: object) -> list[str]:
     if isinstance(value, Sequence) and not isinstance(value, str):
         raw_items = [str(item) for item in value if str(item).strip()]
     else:
-        raw_items = [
-            item.strip()
-            for item in re.split(r"[,;/]", str(value))
-            if item.strip()
-        ]
+        raw_items = [item.strip() for item in re.split(r"[,;/]", str(value)) if item.strip()]
 
     normalized_parts: list[str] = []
     for raw_item in raw_items:

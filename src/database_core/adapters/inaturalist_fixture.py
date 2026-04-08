@@ -10,8 +10,10 @@ from database_core.domain.models import (
     AIQualification,
     CanonicalTaxon,
     ExternalMapping,
+    ExternalSimilarityHint,
     LocationMetadata,
     MediaAsset,
+    SimilarTaxon,
     SourceObservation,
     SourceQualityMetadata,
 )
@@ -59,6 +61,9 @@ def _build_taxon(payload: dict[str, object]) -> CanonicalTaxon:
         scientific_name=str(payload["scientific_name"]),
         canonical_rank=payload["canonical_rank"],
         common_names=list(payload.get("common_names", [])),
+        taxon_group=payload.get("taxon_group", "birds"),
+        key_identification_features=list(payload.get("key_identification_features", [])),
+        source_enrichment_status=payload.get("source_enrichment_status", "seeded"),
         bird_scope_compatible=bool(payload.get("bird_scope_compatible", True)),
         external_source_mappings=[
             ExternalMapping(
@@ -67,6 +72,10 @@ def _build_taxon(payload: dict[str, object]) -> CanonicalTaxon:
             )
             for mapping in payload.get("external_source_mappings", [])
         ],
+        external_similarity_hints=[
+            ExternalSimilarityHint(**hint) for hint in payload.get("external_similarity_hints", [])
+        ],
+        similar_taxa=[SimilarTaxon(**relation) for relation in payload.get("similar_taxa", [])],
         similar_taxon_ids=list(payload.get("similar_taxon_ids", [])),
     )
 
@@ -83,7 +92,9 @@ def _build_observation(payload: dict[str, object]) -> SourceObservation:
         location=LocationMetadata(**payload.get("location", {})),
         source_quality=SourceQualityMetadata(**payload["source_quality"]),
         raw_payload_ref=str(payload["raw_payload_ref"]),
-        canonical_taxon_id=str(payload["canonical_taxon_id"]) if payload.get("canonical_taxon_id") else None,
+        canonical_taxon_id=str(payload["canonical_taxon_id"])
+        if payload.get("canonical_taxon_id")
+        else None,
     )
 
 
@@ -104,7 +115,9 @@ def _build_media_asset(
         author=str(media_payload["author"]) if media_payload.get("author") else None,
         license=str(media_payload["license"]) if media_payload.get("license") else None,
         mime_type=str(media_payload["mime_type"]) if media_payload.get("mime_type") else None,
-        file_extension=str(media_payload["file_extension"]) if media_payload.get("file_extension") else None,
+        file_extension=str(media_payload["file_extension"])
+        if media_payload.get("file_extension")
+        else None,
         width=int(media_payload["width"]) if media_payload.get("width") is not None else None,
         height=int(media_payload["height"]) if media_payload.get("height") is not None else None,
         checksum=str(media_payload["checksum"]) if media_payload.get("checksum") else None,

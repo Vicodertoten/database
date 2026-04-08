@@ -1,13 +1,23 @@
 # Scope
 
-This repository proves a minimal knowledge-core MVP for birds.
+database is the knowledge core of a future biodiversity learning product.
+It builds an internal canonical reference of living taxa, ingests traceable real-world naturalist data, and qualifies media for pedagogical reuse.
+External sources feed the system, but do not define its internal identity.
+Raw observations and images are not yet learning resources; they become usable only after qualification.
+Qualification is evidence- and pedagogy-driven: what is visible, what can be learned, and what is reliable enough to reuse.
+The system is designed to automate most of this work while keeping uncertain cases reviewable.
+Its job is to turn observed reality into a canonical, traceable, exportable corpus for future learning experiences.
+The current implementation is an intentionally narrow pilot: birds-only, iNaturalist-first, image-only.
+That narrow scope is a proving ground for a structure meant to scale toward a broader multi-taxa knowledge core.
 
 Current scope:
 
 - internal canonical bird taxonomy objects
 - traceable upstream-shaped observation and media records
 - cached real-world iNaturalist snapshots
+- explicit canonical enrichment from cached taxon payloads
 - qualification for pedagogical reuse
+- structured review queue plus snapshot-scoped review overrides
 - export of only qualified resources
 - local SQLite storage and CLI inspection
 
@@ -27,6 +37,7 @@ Phase 1 stays intentionally small:
 - image-only media qualification
 - research-grade source quality only
 - commercial-safe export only
-- optional review queue for audit only
+- pilot seed list of 15 bird taxa
 
-The first fixture dataset is a tiny pilot seed. It exists to validate the data model and pipeline before live harvesting is expanded.
+The first fixture dataset remains tiny on purpose.
+It validates the data model, enrichment flow, qualification stages, review workflow, and export contract before live harvesting is expanded further.

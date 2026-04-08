@@ -3,17 +3,17 @@ from __future__ import annotations
 import argparse
 import os
 import sys
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 from dotenv import load_dotenv
 
 from database_core.adapters import (
     DEFAULT_INAT_SNAPSHOT_ROOT,
-    DEFAULT_PILOT_TAXA_PATH,
     DEFAULT_INITIAL_BACKOFF_SECONDS,
     DEFAULT_MAX_BACKOFF_SECONDS,
     DEFAULT_MAX_RETRIES,
+    DEFAULT_PILOT_TAXA_PATH,
     DEFAULT_REQUEST_INTERVAL_SECONDS,
     fetch_inat_snapshot,
     qualify_inat_snapshot,
@@ -25,8 +25,8 @@ from database_core.inspect.summary import (
     render_summary,
 )
 from database_core.pipeline.runner import (
-    DEFAULT_DB_PATH,
     DEFAULT_DATABASES_DIR,
+    DEFAULT_DB_PATH,
     DEFAULT_EXPORT_PATH,
     DEFAULT_FIXTURE_PATH,
     DEFAULT_NORMALIZED_PATH,
@@ -34,7 +34,17 @@ from database_core.pipeline.runner import (
     run_pipeline,
 )
 from database_core.qualification.ai import DEFAULT_GEMINI_MODEL
+from database_core.review.overrides import (
+    initialize_review_override_file,
+    load_review_override_file,
+    resolve_review_overrides_path,
+    upsert_review_override,
+)
 from database_core.storage.sqlite import SQLiteRepository
+
+
+def default_snapshot_id(*, prefix: str = "inaturalist-birds") -> str:
+    return f"{prefix}-{datetime.now(UTC).strftime('%Y%m%dT%H%M%SZ')}"
 
 
 def main() -> None:
@@ -44,14 +54,20 @@ def main() -> None:
 
     pipeline_parser = subparsers.add_parser("run-pipeline")
     pipeline_parser.add_argument("--fixture-path", type=Path, default=DEFAULT_FIXTURE_PATH)
-    pipeline_parser.add_argument("--source-mode", choices=["fixture", "inat_snapshot"], default="fixture")
+    pipeline_parser.add_argument(
+        "--source-mode", choices=["fixture", "inat_snapshot"], default="fixture"
+    )
     pipeline_parser.add_argument("--snapshot-id", type=str)
     pipeline_parser.add_argument("--snapshot-root", type=Path, default=DEFAULT_INAT_SNAPSHOT_ROOT)
     pipeline_parser.add_argument("--db-path", type=Path, default=DEFAULT_DB_PATH)
     pipeline_parser.add_argument("--normalized-path", type=Path, default=DEFAULT_NORMALIZED_PATH)
     pipeline_parser.add_argument("--qualified-path", type=Path, default=DEFAULT_QUALIFIED_PATH)
     pipeline_parser.add_argument("--export-path", type=Path, default=DEFAULT_EXPORT_PATH)
-    pipeline_parser.add_argument("--qualifier-mode", choices=["fixture", "rules", "cached", "gemini"])
+    pipeline_parser.add_argument("--apply-review-overrides", action="store_true")
+    pipeline_parser.add_argument("--review-overrides-path", type=Path)
+    pipeline_parser.add_argument(
+        "--qualifier-mode", choices=["fixture", "rules", "cached", "gemini"]
+    )
     pipeline_parser.add_argument("--uncertain-policy", choices=["review", "reject"])
     pipeline_parser.add_argument("--gemini-api-key-env", default="GEMINI_API_KEY")
     pipeline_parser.add_argument("--gemini-model", default=DEFAULT_GEMINI_MODEL)
@@ -68,16 +84,54 @@ def main() -> None:
     qualify_parser.add_argument("--snapshot-root", type=Path, default=DEFAULT_INAT_SNAPSHOT_ROOT)
     qualify_parser.add_argument("--gemini-api-key-env", default="GEMINI_API_KEY")
     qualify_parser.add_argument("--gemini-model", default=DEFAULT_GEMINI_MODEL)
-    qualify_parser.add_argument("--request-interval-seconds", type=float, default=DEFAULT_REQUEST_INTERVAL_SECONDS)
+    qualify_parser.add_argument(
+        "--request-interval-seconds", type=float, default=DEFAULT_REQUEST_INTERVAL_SECONDS
+    )
     qualify_parser.add_argument("--max-retries", type=int, default=DEFAULT_MAX_RETRIES)
-    qualify_parser.add_argument("--initial-backoff-seconds", type=float, default=DEFAULT_INITIAL_BACKOFF_SECONDS)
-    qualify_parser.add_argument("--max-backoff-seconds", type=float, default=DEFAULT_MAX_BACKOFF_SECONDS)
+    qualify_parser.add_argument(
+        "--initial-backoff-seconds", type=float, default=DEFAULT_INITIAL_BACKOFF_SECONDS
+    )
+    qualify_parser.add_argument(
+        "--max-backoff-seconds", type=float, default=DEFAULT_MAX_BACKOFF_SECONDS
+    )
 
     inspect_parser = subparsers.add_parser("inspect")
-    inspect_parser.add_argument("view", choices=["summary", "review-queue", "exportables", "snapshot-health"])
+    inspect_parser.add_argument(
+        "view", choices=["summary", "review-queue", "exportables", "snapshot-health"]
+    )
     inspect_parser.add_argument("--db-path", type=Path, default=DEFAULT_DB_PATH)
     inspect_parser.add_argument("--snapshot-id", type=str)
     inspect_parser.add_argument("--snapshot-root", type=Path, default=DEFAULT_INAT_SNAPSHOT_ROOT)
+    inspect_parser.add_argument("--review-reason-code", type=str)
+    inspect_parser.add_argument("--stage-name", type=str)
+    inspect_parser.add_argument("--review-status", type=str)
+    inspect_parser.add_argument("--canonical-taxon-id", type=str)
+    inspect_parser.add_argument("--priority", type=str)
+
+    review_overrides_parser = subparsers.add_parser("review-overrides")
+    review_overrides_subparsers = review_overrides_parser.add_subparsers(
+        dest="review_overrides_command", required=True
+    )
+
+    review_overrides_init_parser = review_overrides_subparsers.add_parser("init")
+    review_overrides_init_parser.add_argument("--snapshot-id", required=True)
+    review_overrides_init_parser.add_argument("--path", type=Path)
+    review_overrides_init_parser.add_argument("--force", action="store_true")
+
+    review_overrides_list_parser = review_overrides_subparsers.add_parser("list")
+    review_overrides_list_parser.add_argument("--snapshot-id", required=True)
+    review_overrides_list_parser.add_argument("--path", type=Path)
+
+    review_overrides_upsert_parser = review_overrides_subparsers.add_parser("upsert")
+    review_overrides_upsert_parser.add_argument("--snapshot-id", required=True)
+    review_overrides_upsert_parser.add_argument("--path", type=Path)
+    review_overrides_upsert_parser.add_argument("--media-asset-id", required=True)
+    review_overrides_upsert_parser.add_argument(
+        "--status",
+        required=True,
+        choices=["accepted", "review_required", "rejected"],
+    )
+    review_overrides_upsert_parser.add_argument("--note", required=True)
 
     args = parser.parse_args()
     if args.command == "run-pipeline":
@@ -95,6 +149,8 @@ def main() -> None:
             normalized_snapshot_path=args.normalized_path,
             qualification_snapshot_path=args.qualified_path,
             export_path=args.export_path,
+            review_overrides_path=args.review_overrides_path,
+            apply_review_overrides=args.apply_review_overrides,
             qualifier_mode=args.qualifier_mode,
             uncertain_policy=args.uncertain_policy,
             gemini_api_key=gemini_api_key,
@@ -109,7 +165,7 @@ def main() -> None:
         return
 
     if args.command == "fetch-inat-snapshot":
-        snapshot_id = args.snapshot_id or datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+        snapshot_id = args.snapshot_id or default_snapshot_id()
         result = fetch_inat_snapshot(
             snapshot_id=snapshot_id,
             snapshot_root=args.snapshot_root,
@@ -151,12 +207,80 @@ def main() -> None:
         )
         return
 
+    if args.command == "review-overrides":
+        override_path = resolve_review_overrides_path(args.snapshot_id, args.path)
+        if args.review_overrides_command == "init":
+            try:
+                override_file = initialize_review_override_file(
+                    override_path,
+                    snapshot_id=args.snapshot_id,
+                    force=args.force,
+                )
+            except FileExistsError as exc:
+                raise SystemExit(str(exc)) from exc
+            print(
+                "Review overrides initialized | "
+                f"snapshot_id={override_file.snapshot_id} | "
+                f"count={len(override_file.overrides)} | "
+                f"path={override_path}"
+            )
+            return
+
+        if args.review_overrides_command == "list":
+            override_file = load_review_override_file(override_path, snapshot_id=args.snapshot_id)
+            if override_file is None:
+                print(
+                    "Review overrides | "
+                    f"snapshot_id={args.snapshot_id} | "
+                    f"count=0 | path={override_path} | file=missing"
+                )
+                return
+            print(
+                "Review overrides | "
+                f"snapshot_id={override_file.snapshot_id} | "
+                f"count={len(override_file.overrides)} | "
+                f"path={override_path}"
+            )
+            for item in override_file.overrides:
+                print(
+                    f"- media_asset_id={item.media_asset_id} | "
+                    f"status={item.qualification_status} | note={item.note}"
+                )
+            return
+
+        try:
+            override_file = upsert_review_override(
+                override_path,
+                snapshot_id=args.snapshot_id,
+                media_asset_id=args.media_asset_id,
+                qualification_status=args.status,
+                note=args.note,
+            )
+        except FileNotFoundError as exc:
+            raise SystemExit(f"{exc}. Run `review-overrides init` first.") from exc
+        print(
+            "Review override upserted | "
+            f"snapshot_id={override_file.snapshot_id} | "
+            f"count={len(override_file.overrides)} | "
+            f"path={override_path}"
+        )
+        return
+
     repository = SQLiteRepository(_resolve_inspect_db_path(args.db_path, args.snapshot_id))
     repository.initialize()
     if args.view == "summary":
         print(render_summary(repository))
     elif args.view == "review-queue":
-        print(render_review_queue(repository))
+        print(
+            render_review_queue(
+                repository,
+                review_reason_code=args.review_reason_code,
+                stage_name=args.stage_name,
+                review_status=args.review_status,
+                canonical_taxon_id=args.canonical_taxon_id,
+                priority=args.priority,
+            )
+        )
     elif args.view == "snapshot-health":
         if not args.snapshot_id:
             raise SystemExit("--snapshot-id is required for snapshot-health")
@@ -188,6 +312,11 @@ def fetch_inat_snapshot_entrypoint() -> None:
 
 def qualify_inat_snapshot_entrypoint() -> None:
     sys.argv.insert(1, "qualify-inat-snapshot")
+    main()
+
+
+def review_overrides_entrypoint() -> None:
+    sys.argv.insert(1, "review-overrides")
     main()
 
 

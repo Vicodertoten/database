@@ -1,6 +1,7 @@
 {
   "ai_outputs_path": "ai_outputs.json",
   "created_at": "2026-04-07T00:00:00+00:00",
+  "manifest_version": "inaturalist.snapshot.v2",
   "media_downloads": [
     {
       "download_status": "downloaded",
@@ -68,7 +69,8 @@
       "response_path": "responses/bird_turdus_merula.json",
       "requested_order_by": "votes",
       "scientific_name": "Turdus merula",
-      "source_taxon_id": "12716"
+      "source_taxon_id": "12716",
+      "taxon_payload_path": "taxa/bird_turdus_merula.json"
     },
     {
       "canonical_rank": "species",
@@ -92,7 +94,8 @@
       "response_path": "responses/bird_passer_domesticus.json",
       "requested_order_by": "votes",
       "scientific_name": "Passer domesticus",
-      "source_taxon_id": "13858"
+      "source_taxon_id": "13858",
+      "taxon_payload_path": "taxa/bird_passer_domesticus.json"
     },
     {
       "canonical_rank": "species",
@@ -116,7 +119,8 @@
       "response_path": "responses/bird_erithacus_rubecula.json",
       "requested_order_by": "votes",
       "scientific_name": "Erithacus rubecula",
-      "source_taxon_id": "13094"
+      "source_taxon_id": "13094",
+      "taxon_payload_path": "taxa/bird_erithacus_rubecula.json"
     }
   ]
 }

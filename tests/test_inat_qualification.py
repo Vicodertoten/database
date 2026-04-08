@@ -91,7 +91,7 @@ def test_pacing_retry_qualifier_enforces_min_interval_between_requests() -> None
     base_qualifier = SuccessfulQualifier()
     qualifier = PacingRetryQualifier(
         base_qualifier=base_qualifier,
-        request_interval_seconds=4.5,
+        request_interval_seconds=0.5,
         max_retries=0,
         initial_backoff_seconds=1.0,
         max_backoff_seconds=10.0,
@@ -103,7 +103,7 @@ def test_pacing_retry_qualifier_enforces_min_interval_between_requests() -> None
     qualifier.qualify(_media_asset(), image_bytes=b"image")
 
     assert base_qualifier.calls == 2
-    assert clock.sleep_calls == [4.5]
+    assert clock.sleep_calls == [0.5]
 
 
 def _media_asset() -> MediaAsset:

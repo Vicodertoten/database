@@ -8,6 +8,7 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
+*.egg-info/
 *.sqlite
 *.sqlite3
 
@@ -21,3 +22,5 @@ data/qualified/*
 !data/qualified/.gitkeep
 data/exports/*
 !data/exports/.gitkeep
+data/review_overrides/*
+!data/review_overrides/.gitkeep

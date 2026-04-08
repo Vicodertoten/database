@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+import sys
+import time
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
-import time
-from typing import Protocol
+from typing import Protocol, TextIO
 from urllib.error import HTTPError, URLError
 
 from database_core.adapters.inaturalist_snapshot import (
@@ -14,18 +16,18 @@ from database_core.adapters.inaturalist_snapshot import (
 )
 from database_core.export.json_exporter import write_json
 from database_core.qualification.ai import (
-    AIQualifier,
     DEFAULT_GEMINI_MODEL,
     DEFAULT_GEMINI_PROMPT_VERSION,
+    AIQualifier,
     GeminiVisionQualifier,
     build_ai_outputs_payload,
     collect_ai_qualification_outcomes,
 )
 
-DEFAULT_REQUEST_INTERVAL_SECONDS = 4.5
-DEFAULT_MAX_RETRIES = 4
-DEFAULT_INITIAL_BACKOFF_SECONDS = 5.0
-DEFAULT_MAX_BACKOFF_SECONDS = 60.0
+DEFAULT_REQUEST_INTERVAL_SECONDS = 0.5
+DEFAULT_MAX_RETRIES = 2
+DEFAULT_INITIAL_BACKOFF_SECONDS = 1.0
+DEFAULT_MAX_BACKOFF_SECONDS = 8.0
 
 
 class SleepFunc(Protocol):
@@ -59,8 +61,12 @@ def qualify_inat_snapshot(
     initial_backoff_seconds: float = DEFAULT_INITIAL_BACKOFF_SECONDS,
     max_backoff_seconds: float = DEFAULT_MAX_BACKOFF_SECONDS,
     qualifier: AIQualifier | None = None,
+    progress_stream: TextIO | None = None,
 ) -> SnapshotQualificationResult:
-    manifest, snapshot_dir = load_snapshot_manifest(snapshot_id=snapshot_id, snapshot_root=snapshot_root)
+    manifest, snapshot_dir = load_snapshot_manifest(
+        snapshot_id=snapshot_id,
+        snapshot_root=snapshot_root,
+    )
     dataset = load_snapshot_dataset(snapshot_id=snapshot_id, snapshot_root=snapshot_root)
     if qualifier is None:
         qualifier = PacingRetryQualifier(
@@ -71,6 +77,18 @@ def qualify_inat_snapshot(
             max_backoff_seconds=max_backoff_seconds,
         )
 
+    resolved_progress_stream = sys.stdout if progress_stream is None else progress_stream
+
+    if resolved_progress_stream is not None:
+        print(
+            "Starting Gemini qualification | "
+            f"snapshot_id={manifest.snapshot_id} | "
+            f"media={len(dataset.media_assets)} | "
+            f"request_interval_seconds={request_interval_seconds}",
+            file=resolved_progress_stream,
+            flush=True,
+        )
+
     outcomes = collect_ai_qualification_outcomes(
         dataset.media_assets,
         qualifier_mode="gemini",
@@ -79,6 +97,7 @@ def qualify_inat_snapshot(
         gemini_model=gemini_model,
         prompt_version=prompt_version,
         qualifier=qualifier,
+        progress_callback=_build_progress_callback(resolved_progress_stream),
     )
 
     ai_outputs_path = snapshot_dir / "ai_outputs.json"
@@ -109,6 +128,26 @@ def qualify_inat_snapshot(
         ai_valid_output_count=ai_valid_output_count,
         insufficient_resolution_count=insufficient_resolution_count,
     )
+
+
+def _build_progress_callback(
+    progress_stream: TextIO | None,
+) -> Callable[[int, int, object, object], None] | None:
+    if progress_stream is None:
+        return None
+
+    def log_progress(index: int, total: int, media_asset, outcome) -> None:
+        note = f" | note={outcome.note}" if getattr(outcome, "note", None) else ""
+        print(
+            "Gemini qualification progress | "
+            f"{index}/{total} | "
+            f"source_media_id={media_asset.source_media_id} | "
+            f"status={outcome.status}{note}",
+            file=progress_stream,
+            flush=True,
+        )
+
+    return log_progress
 
 
 class PacingRetryQualifier:
@@ -145,7 +184,10 @@ class PacingRetryQualifier:
                 if not _is_retryable_gemini_error(exc) or retry_count >= self.max_retries:
                     raise
                 self._sleep(_retry_delay_seconds(exc, backoff_seconds, self.max_backoff_seconds))
-                backoff_seconds = min(max(backoff_seconds * 2, self.initial_backoff_seconds), self.max_backoff_seconds)
+                backoff_seconds = min(
+                    max(backoff_seconds * 2, self.initial_backoff_seconds),
+                    self.max_backoff_seconds,
+                )
                 retry_count += 1
 
     def _sleep_for_pacing(self) -> None:
@@ -163,7 +205,11 @@ def _is_retryable_gemini_error(exc: Exception) -> bool:
     return isinstance(exc, (TimeoutError, URLError))
 
 
-def _retry_delay_seconds(exc: Exception, fallback_seconds: float, max_backoff_seconds: float) -> float:
+def _retry_delay_seconds(
+    exc: Exception,
+    fallback_seconds: float,
+    max_backoff_seconds: float,
+) -> float:
     retry_after_seconds = _parse_retry_after_seconds(exc)
     if retry_after_seconds is not None:
         return min(retry_after_seconds, max_backoff_seconds)

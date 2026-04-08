@@ -181,3 +181,52 @@ def test_low_pedagogical_quality_no_longer_blocks_acceptance() -> None:
     assert resources[0].qualification_status == "accepted"
     assert "incomplete_required_tags" not in resources[0].qualification_flags
     assert review_items == []
+
+
+def test_review_policy_creates_structured_review_queue_item() -> None:
+    observation = SourceObservation(
+        observation_uid="obs:inaturalist:fixture-4",
+        source_name=SourceName.INATURALIST,
+        source_observation_id="fixture-4",
+        source_taxon_id="12716",
+        observed_at=datetime.fromisoformat("2025-04-18T07:31:00+00:00"),
+        location=LocationMetadata(place_name="Brussels, BE"),
+        source_quality=SourceQualityMetadata(
+            quality_grade="research",
+            research_grade=True,
+            observation_license="CC-BY",
+            captive=False,
+        ),
+        raw_payload_ref="data/fixtures/birds_pilot.json#/observations/0",
+        canonical_taxon_id="bird:turdus-merula",
+    )
+    media_asset = MediaAsset(
+        media_id="media:inaturalist:fixture-4",
+        source_name=SourceName.INATURALIST,
+        source_media_id="fixture-media-4",
+        media_type=MediaType.IMAGE,
+        source_url="fixture://inaturalist/media/fixture-media-4",
+        attribution="(c) observer, some rights reserved (CC BY)",
+        author="observer",
+        license="CC-BY",
+        mime_type="image/jpeg",
+        file_extension="jpg",
+        width=900,
+        height=700,
+        source_observation_uid=observation.observation_uid,
+        canonical_taxon_id="bird:turdus-merula",
+        raw_payload_ref="data/fixtures/birds_pilot.json#/observations/0/media/0",
+    )
+
+    resources, review_items = qualify_media_assets(
+        observations=[observation],
+        media_assets=[media_asset],
+        ai_qualifications_by_source_media_id={},
+        created_at=datetime.fromisoformat("2026-04-07T00:00:00+00:00"),
+        uncertain_policy="review",
+    )
+
+    assert resources[0].qualification_status == "review_required"
+    assert review_items[0].review_reason_code == "insufficient_resolution"
+    assert review_items[0].stage_name == "fast_semantic_screening"
+    assert review_items[0].priority == "medium"

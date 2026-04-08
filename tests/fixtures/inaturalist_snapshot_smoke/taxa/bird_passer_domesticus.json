@@ -1,0 +1,22 @@
+{
+  "results": [
+    {
+      "id": 13858,
+      "name": "Passer domesticus",
+      "preferred_common_name": "House Sparrow",
+      "key_identification_features": [
+        "chunky conical bill",
+        "grey crown in male"
+      ],
+      "similar_species": [
+        {
+          "id": "203153",
+          "name": "Parus major",
+          "preferred_common_name": "Great Tit",
+          "confidence": 0.24,
+          "note": "Unresolved in smoke fixture but useful to preserve as an external hint."
+        }
+      ]
+    }
+  ]
+}

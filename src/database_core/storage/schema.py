@@ -1,4 +1,6 @@
-SCHEMA_SQL = """
+from database_core.versioning import SCHEMA_VERSION
+
+SCHEMA_SQL = f"""
 PRAGMA foreign_keys = ON;
 
 CREATE TABLE IF NOT EXISTS canonical_taxa (
@@ -6,8 +8,13 @@ CREATE TABLE IF NOT EXISTS canonical_taxa (
     scientific_name TEXT NOT NULL,
     canonical_rank TEXT NOT NULL,
     common_names_json TEXT NOT NULL,
+    taxon_group TEXT NOT NULL,
+    key_identification_features_json TEXT NOT NULL,
+    source_enrichment_status TEXT NOT NULL,
     bird_scope_compatible INTEGER NOT NULL,
     external_source_mappings_json TEXT NOT NULL,
+    external_similarity_hints_json TEXT NOT NULL,
+    similar_taxa_json TEXT NOT NULL,
     similar_taxon_ids_json TEXT NOT NULL
 );
 
@@ -74,10 +81,15 @@ CREATE TABLE IF NOT EXISTS review_queue (
     media_asset_id TEXT NOT NULL,
     canonical_taxon_id TEXT NOT NULL,
     review_reason TEXT NOT NULL,
+    review_reason_code TEXT NOT NULL,
+    review_note TEXT,
+    stage_name TEXT NOT NULL,
+    priority TEXT NOT NULL,
     review_status TEXT NOT NULL,
     created_at TEXT NOT NULL,
     FOREIGN KEY (media_asset_id) REFERENCES media_assets (media_id),
     FOREIGN KEY (canonical_taxon_id) REFERENCES canonical_taxa (canonical_taxon_id)
 );
-"""
 
+PRAGMA user_version = {SCHEMA_VERSION};
+"""

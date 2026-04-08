@@ -7,8 +7,15 @@ from collections.abc import Sequence
 from contextlib import contextmanager
 from pathlib import Path
 
-from database_core.domain.models import CanonicalTaxon, MediaAsset, QualifiedResource, ReviewItem, SourceObservation
+from database_core.domain.models import (
+    CanonicalTaxon,
+    MediaAsset,
+    QualifiedResource,
+    ReviewItem,
+    SourceObservation,
+)
 from database_core.storage.schema import SCHEMA_SQL
+from database_core.versioning import SCHEMA_VERSION
 
 
 class SQLiteRepository:
@@ -28,6 +35,8 @@ class SQLiteRepository:
             connection.close()
 
     def initialize(self) -> None:
+        if self._requires_schema_reset():
+            self.db_path.unlink(missing_ok=True)
         with self.connect() as connection:
             connection.executescript(SCHEMA_SQL)
 
@@ -52,10 +61,15 @@ class SQLiteRepository:
                     scientific_name,
                     canonical_rank,
                     common_names_json,
+                    taxon_group,
+                    key_identification_features_json,
+                    source_enrichment_status,
                     bird_scope_compatible,
                     external_source_mappings_json,
+                    external_similarity_hints_json,
+                    similar_taxa_json,
                     similar_taxon_ids_json
-                ) VALUES (?, ?, ?, ?, ?, ?, ?)
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 [
                     (
@@ -63,8 +77,23 @@ class SQLiteRepository:
                         item.scientific_name,
                         item.canonical_rank,
                         _json(item.common_names),
+                        item.taxon_group,
+                        _json(item.key_identification_features),
+                        item.source_enrichment_status,
                         int(item.bird_scope_compatible),
-                        _json([mapping.model_dump(mode="json") for mapping in item.external_source_mappings]),
+                        _json(
+                            [
+                                mapping.model_dump(mode="json")
+                                for mapping in item.external_source_mappings
+                            ]
+                        ),
+                        _json(
+                            [
+                                hint.model_dump(mode="json")
+                                for hint in item.external_similarity_hints
+                            ]
+                        ),
+                        _json([relation.model_dump(mode="json") for relation in item.similar_taxa]),
                         _json(item.similar_taxon_ids),
                     )
                     for item in taxa
@@ -208,9 +237,13 @@ class SQLiteRepository:
                     media_asset_id,
                     canonical_taxon_id,
                     review_reason,
+                    review_reason_code,
+                    review_note,
+                    stage_name,
+                    priority,
                     review_status,
                     created_at
-                ) VALUES (?, ?, ?, ?, ?, ?)
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 [
                     (
@@ -218,6 +251,10 @@ class SQLiteRepository:
                         item.media_asset_id,
                         item.canonical_taxon_id,
                         item.review_reason,
+                        item.review_reason_code,
+                        item.review_note,
+                        item.stage_name,
+                        item.priority,
                         item.review_status,
                         item.created_at.isoformat(),
                     )
@@ -235,18 +272,63 @@ class SQLiteRepository:
                 "review_queue",
             ]
             return {
-                table: connection.execute(f"SELECT COUNT(*) AS count FROM {table}").fetchone()["count"]
+                table: connection.execute(f"SELECT COUNT(*) AS count FROM {table}").fetchone()[
+                    "count"
+                ]
                 for table in tables
             }
 
-    def fetch_review_queue(self) -> list[dict[str, str]]:
+    def fetch_review_queue(
+        self,
+        *,
+        review_reason_code: str | None = None,
+        stage_name: str | None = None,
+        review_status: str | None = None,
+        canonical_taxon_id: str | None = None,
+        priority: str | None = None,
+    ) -> list[dict[str, str]]:
         with self.connect() as connection:
+            clauses: list[str] = []
+            params: list[str] = []
+            if review_reason_code:
+                clauses.append("review_reason_code = ?")
+                params.append(review_reason_code)
+            if stage_name:
+                clauses.append("stage_name = ?")
+                params.append(stage_name)
+            if review_status:
+                clauses.append("review_status = ?")
+                params.append(review_status)
+            if canonical_taxon_id:
+                clauses.append("canonical_taxon_id = ?")
+                params.append(canonical_taxon_id)
+            if priority:
+                clauses.append("priority = ?")
+                params.append(priority)
+            where_clause = f"WHERE {' AND '.join(clauses)}" if clauses else ""
             rows = connection.execute(
-                """
-                SELECT review_item_id, media_asset_id, canonical_taxon_id, review_reason, review_status
+                f"""
+                SELECT
+                    review_item_id,
+                    media_asset_id,
+                    canonical_taxon_id,
+                    review_reason,
+                    review_reason_code,
+                    review_note,
+                    stage_name,
+                    priority,
+                    review_status
                 FROM review_queue
-                ORDER BY review_item_id
-                """
+                {where_clause}
+                ORDER BY
+                    CASE priority
+                        WHEN 'high' THEN 1
+                        WHEN 'medium' THEN 2
+                        ELSE 3
+                    END,
+                    review_item_id
+                """,
+                params,
             ).fetchall()
             return [dict(row) for row in rows]
 
@@ -254,7 +336,11 @@ class SQLiteRepository:
         with self.connect() as connection:
             rows = connection.execute(
                 """
-                SELECT qualified_resource_id, canonical_taxon_id, media_asset_id, qualification_status
+                SELECT
+                    qualified_resource_id,
+                    canonical_taxon_id,
+                    media_asset_id,
+                    qualification_status
                 FROM qualified_resources
                 WHERE export_eligible = 1
                 ORDER BY qualified_resource_id
@@ -314,6 +400,20 @@ class SQLiteRepository:
                 "license_distribution": dict(sorted(license_distribution.items())),
                 "ai_model_distribution": dict(sorted(ai_model_distribution.items())),
             }
+
+    def _requires_schema_reset(self) -> bool:
+        if not self.db_path.exists():
+            return False
+        with self.connect() as connection:
+            current_version = connection.execute("PRAGMA user_version").fetchone()[0]
+            has_tables = connection.execute(
+                """
+                SELECT COUNT(*) AS count
+                FROM sqlite_master
+                WHERE type = 'table' AND name NOT LIKE 'sqlite_%'
+                """
+            ).fetchone()["count"]
+        return bool(has_tables) and current_version != SCHEMA_VERSION
 
 
 def _json(value: object) -> str:

@@ -1,7 +1,7 @@
 from pydantic import ValidationError
 
-from database_core.domain.enums import CanonicalRank, MediaType, SourceName
-from database_core.domain.models import CanonicalTaxon, ExternalMapping, MediaAsset
+from database_core.domain.enums import CanonicalRank, MediaType, SimilarityRelationType, SourceName
+from database_core.domain.models import CanonicalTaxon, ExternalMapping, MediaAsset, SimilarTaxon
 
 
 def test_canonical_taxon_requires_stable_lowercase_identifier() -> None:
@@ -43,3 +43,20 @@ def test_external_mapping_uses_non_blank_identifier() -> None:
     mapping = ExternalMapping(source_name=SourceName.INATURALIST, external_id="12716")
     assert mapping.external_id == "12716"
 
+
+def test_canonical_taxon_derives_similar_taxon_ids_from_similarity_graph() -> None:
+    taxon = CanonicalTaxon(
+        canonical_taxon_id="bird:turdus-merula",
+        scientific_name="Turdus merula",
+        canonical_rank=CanonicalRank.SPECIES,
+        similar_taxa=[
+            SimilarTaxon(
+                target_canonical_taxon_id="bird:erithacus-rubecula",
+                source_name=SourceName.INATURALIST,
+                relation_type=SimilarityRelationType.SIMILAR_SPECIES,
+                confidence=0.71,
+            )
+        ],
+    )
+
+    assert taxon.similar_taxon_ids == ["bird:erithacus-rubecula"]

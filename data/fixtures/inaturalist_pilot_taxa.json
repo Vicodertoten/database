@@ -40,5 +40,68 @@
     "canonical_rank": "species",
     "common_names": ["Eurasian Magpie"],
     "source_taxon_id": "891696"
+  },
+  {
+    "canonical_taxon_id": "bird:fringilla-coelebs",
+    "scientific_name": "Fringilla coelebs",
+    "canonical_rank": "species",
+    "common_names": ["Common Chaffinch"],
+    "source_taxon_id": "10070"
+  },
+  {
+    "canonical_taxon_id": "bird:columba-palumbus",
+    "scientific_name": "Columba palumbus",
+    "canonical_rank": "species",
+    "common_names": ["Common Wood-Pigeon"],
+    "source_taxon_id": "3048"
+  },
+  {
+    "canonical_taxon_id": "bird:sturnus-vulgaris",
+    "scientific_name": "Sturnus vulgaris",
+    "canonical_rank": "species",
+    "common_names": ["European Starling"],
+    "source_taxon_id": "14850"
+  },
+  {
+    "canonical_taxon_id": "bird:turdus-philomelos",
+    "scientific_name": "Turdus philomelos",
+    "canonical_rank": "species",
+    "common_names": ["Song Thrush"],
+    "source_taxon_id": "12748"
+  },
+  {
+    "canonical_taxon_id": "bird:sylvia-atricapilla",
+    "scientific_name": "Sylvia atricapilla",
+    "canonical_rank": "species",
+    "common_names": ["Eurasian Blackcap"],
+    "source_taxon_id": "15282"
+  },
+  {
+    "canonical_taxon_id": "bird:motacilla-alba",
+    "scientific_name": "Motacilla alba",
+    "canonical_rank": "species",
+    "common_names": ["White Wagtail"],
+    "source_taxon_id": "13695"
+  },
+  {
+    "canonical_taxon_id": "bird:garrulus-glandarius",
+    "scientific_name": "Garrulus glandarius",
+    "canonical_rank": "species",
+    "common_names": ["Eurasian Jay"],
+    "source_taxon_id": "8088"
+  },
+  {
+    "canonical_taxon_id": "bird:corvus-corone",
+    "scientific_name": "Corvus corone",
+    "canonical_rank": "species",
+    "common_names": ["Carrion Crow"],
+    "source_taxon_id": "204496"
+  },
+  {
+    "canonical_taxon_id": "bird:troglodytes-troglodytes",
+    "scientific_name": "Troglodytes troglodytes",
+    "canonical_rank": "species",
+    "common_names": ["Eurasian Wren"],
+    "source_taxon_id": "145363"
   }
 ]

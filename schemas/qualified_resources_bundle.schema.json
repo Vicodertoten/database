@@ -4,13 +4,25 @@
   "title": "QualifiedResourcesBundle",
   "type": "object",
   "required": [
+    "schema_version",
     "export_version",
+    "qualification_version",
+    "enrichment_version",
     "generated_at",
     "canonical_taxa",
     "qualified_resources"
   ],
   "properties": {
+    "schema_version": {
+      "type": "string"
+    },
     "export_version": {
+      "type": "string"
+    },
+    "qualification_version": {
+      "type": "string"
+    },
+    "enrichment_version": {
       "type": "string"
     },
     "generated_at": {
@@ -26,7 +38,16 @@
           "canonical_taxon_id": {"type": "string"},
           "scientific_name": {"type": "string"},
           "canonical_rank": {"type": "string"},
+          "taxon_group": {"type": "string"},
           "common_names": {
+            "type": "array",
+            "items": {"type": "string"}
+          },
+          "key_identification_features": {
+            "type": "array",
+            "items": {"type": "string"}
+          },
+          "similar_taxon_ids": {
             "type": "array",
             "items": {"type": "string"}
           }
@@ -40,16 +61,35 @@
         "required": [
           "qualified_resource_id",
           "canonical_taxon_id",
+          "source_observation_id",
           "media_asset_id",
           "qualification_status",
+          "qualification_version",
+          "technical_quality",
+          "pedagogical_quality",
+          "life_stage",
+          "sex",
+          "visible_parts",
+          "view_angle",
           "license_safety_result",
           "export_eligible"
         ],
         "properties": {
           "qualified_resource_id": {"type": "string"},
           "canonical_taxon_id": {"type": "string"},
+          "source_observation_id": {"type": "string"},
           "media_asset_id": {"type": "string"},
           "qualification_status": {"type": "string"},
+          "qualification_version": {"type": "string"},
+          "technical_quality": {"type": "string"},
+          "pedagogical_quality": {"type": "string"},
+          "life_stage": {"type": "string"},
+          "sex": {"type": "string"},
+          "visible_parts": {
+            "type": "array",
+            "items": {"type": "string"}
+          },
+          "view_angle": {"type": "string"},
           "license_safety_result": {"type": "string"},
           "export_eligible": {"type": "boolean"}
         }
@@ -57,4 +97,3 @@
     }
   }
 }
-

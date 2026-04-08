@@ -1,0 +1,30 @@
+{
+  "results": [
+    {
+      "id": 12716,
+      "name": "Turdus merula",
+      "preferred_common_name": "Eurasian Blackbird",
+      "key_identification_features": [
+        "dark plumage",
+        "yellow eye_ring",
+        "yellow bill in adult male"
+      ],
+      "similar_species": [
+        {
+          "id": "13094",
+          "name": "Erithacus rubecula",
+          "preferred_common_name": "European Robin",
+          "confidence": 0.71,
+          "note": "Small passerine silhouettes can be confused in low-detail crops."
+        },
+        {
+          "id": "999999",
+          "name": "Turdus philomelos",
+          "preferred_common_name": "Song Thrush",
+          "confidence": 0.66,
+          "note": "Brown thrush-like silhouettes remain unresolved in the pilot canon."
+        }
+      ]
+    }
+  ]
+}

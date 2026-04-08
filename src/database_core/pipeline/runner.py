@@ -8,20 +8,33 @@ from database_core.adapters import (
     load_fixture_dataset,
     load_snapshot_dataset,
 )
+from database_core.enrichment import enrich_canonical_taxa
 from database_core.export.json_exporter import (
     build_export_bundle,
     build_normalized_snapshot,
     build_qualification_snapshot,
+    write_export_bundle,
     write_json,
 )
 from database_core.qualification.ai import (
-    AIQualifier,
     DEFAULT_GEMINI_MODEL,
+    AIQualifier,
     collect_ai_qualification_outcomes,
 )
-from database_core.qualification.rules import QUALIFICATION_VERSION, qualify_media_assets
+from database_core.qualification.rules import (
+    QUALIFICATION_VERSION,
+    build_review_items,
+    qualify_media_assets,
+)
+from database_core.review.overrides import (
+    apply_review_overrides as apply_review_overrides_to_resources,
+)
+from database_core.review.overrides import (
+    load_review_override_file,
+    resolve_review_overrides_path,
+)
 from database_core.storage.sqlite import SQLiteRepository
-
+from database_core.versioning import ENRICHMENT_VERSION, EXPORT_VERSION
 
 DEFAULT_FIXTURE_PATH = Path("data/fixtures/birds_pilot.json")
 DEFAULT_DB_PATH = Path("data/database.sqlite")
@@ -53,6 +66,8 @@ def run_pipeline(
     normalized_snapshot_path: Path = DEFAULT_NORMALIZED_PATH,
     qualification_snapshot_path: Path = DEFAULT_QUALIFIED_PATH,
     export_path: Path = DEFAULT_EXPORT_PATH,
+    review_overrides_path: Path | None = None,
+    apply_review_overrides: bool = False,
     qualifier_mode: str | None = None,
     uncertain_policy: str | None = None,
     gemini_api_key: str | None = None,
@@ -66,11 +81,14 @@ def run_pipeline(
         snapshot_root=snapshot_root,
         snapshot_manifest_path=snapshot_manifest_path,
     )
+    resolved_snapshot_id_input = snapshot_id
+    if source_mode == "inat_snapshot" and resolved_snapshot_id_input is None:
+        resolved_snapshot_id_input = _infer_snapshot_id_from_dataset(dataset.dataset_id)
     resolved_qualifier_mode = qualifier_mode or _default_qualifier_mode(source_mode)
     resolved_uncertain_policy = uncertain_policy or _default_uncertain_policy(source_mode)
     resolved_paths = _resolve_output_paths(
         source_mode=source_mode,
-        snapshot_id=snapshot_id,
+        snapshot_id=resolved_snapshot_id_input,
         snapshot_manifest_path=snapshot_manifest_path,
         db_path=db_path,
         normalized_snapshot_path=normalized_snapshot_path,
@@ -81,10 +99,21 @@ def run_pipeline(
     normalized_snapshot_path = resolved_paths["normalized_snapshot_path"]
     qualification_snapshot_path = resolved_paths["qualification_snapshot_path"]
     export_path = resolved_paths["export_path"]
+    resolved_snapshot_id = resolved_paths["snapshot_id"]
+    resolved_review_overrides_path = _resolve_review_overrides_path(
+        apply_review_overrides=apply_review_overrides,
+        source_mode=source_mode,
+        review_overrides_path=review_overrides_path,
+        snapshot_id=resolved_snapshot_id,
+    )
     repository = SQLiteRepository(db_path)
     repository.initialize()
     repository.reset()
-    repository.save_canonical_taxa(dataset.canonical_taxa)
+    enriched_taxa = enrich_canonical_taxa(
+        dataset.canonical_taxa,
+        taxon_payloads_by_canonical_taxon_id=dataset.taxon_payloads_by_canonical_taxon_id,
+    )
+    repository.save_canonical_taxa(enriched_taxa)
     repository.save_source_observations(dataset.observations)
     repository.save_media_assets(dataset.media_assets)
 
@@ -105,13 +134,24 @@ def run_pipeline(
         created_at=dataset.captured_at,
         uncertain_policy=resolved_uncertain_policy,
     )
+    override_file = (
+        load_review_override_file(resolved_review_overrides_path, snapshot_id=resolved_snapshot_id)
+        if resolved_review_overrides_path is not None and resolved_snapshot_id is not None
+        else None
+    )
+    qualified_resources = apply_review_overrides_to_resources(
+        qualified_resources,
+        override_file=override_file,
+    )
+    review_items = build_review_items(qualified_resources, created_at=dataset.captured_at)
     repository.save_qualified_resources(qualified_resources)
     repository.save_review_items(review_items)
 
     normalized_snapshot = build_normalized_snapshot(
         dataset_id=dataset.dataset_id,
         captured_at=dataset.captured_at,
-        canonical_taxa=dataset.canonical_taxa,
+        enrichment_version=ENRICHMENT_VERSION,
+        canonical_taxa=enriched_taxa,
         observations=dataset.observations,
         media_assets=dataset.media_assets,
     )
@@ -122,15 +162,17 @@ def run_pipeline(
         review_items=review_items,
     )
     export_bundle = build_export_bundle(
-        export_version=QUALIFICATION_VERSION,
+        export_version=EXPORT_VERSION,
+        qualification_version=QUALIFICATION_VERSION,
+        enrichment_version=ENRICHMENT_VERSION,
         generated_at=dataset.captured_at,
-        canonical_taxa=dataset.canonical_taxa,
+        canonical_taxa=enriched_taxa,
         qualified_resources=qualified_resources,
     )
 
     write_json(normalized_snapshot_path, normalized_snapshot)
     write_json(qualification_snapshot_path, qualification_snapshot)
-    write_json(export_path, export_bundle)
+    write_export_bundle(export_path, export_bundle)
 
     exportable_resource_count = len([item for item in qualified_resources if item.export_eligible])
     return PipelineResult(
@@ -175,6 +217,13 @@ def _default_uncertain_policy(source_mode: str) -> str:
     return "review"
 
 
+def _infer_snapshot_id_from_dataset(dataset_id: str) -> str | None:
+    prefix = "inaturalist:"
+    if not dataset_id.startswith(prefix):
+        return None
+    return dataset_id.removeprefix(prefix)
+
+
 def _resolve_output_paths(
     *,
     source_mode: str,
@@ -184,13 +233,14 @@ def _resolve_output_paths(
     normalized_snapshot_path: Path,
     qualification_snapshot_path: Path,
     export_path: Path,
-) -> dict[str, Path]:
+) -> dict[str, Path | str | None]:
     if source_mode != "inat_snapshot":
         return {
             "db_path": db_path,
             "normalized_snapshot_path": normalized_snapshot_path,
             "qualification_snapshot_path": qualification_snapshot_path,
             "export_path": export_path,
+            "snapshot_id": None,
         }
 
     resolved_snapshot_id = snapshot_id or (
@@ -202,6 +252,7 @@ def _resolve_output_paths(
             "normalized_snapshot_path": normalized_snapshot_path,
             "qualification_snapshot_path": qualification_snapshot_path,
             "export_path": export_path,
+            "snapshot_id": None,
         }
 
     return {
@@ -225,4 +276,23 @@ def _resolve_output_paths(
             if export_path == DEFAULT_EXPORT_PATH
             else export_path
         ),
+        "snapshot_id": resolved_snapshot_id,
     }
+
+
+def _resolve_review_overrides_path(
+    *,
+    apply_review_overrides: bool,
+    source_mode: str,
+    review_overrides_path: Path | None,
+    snapshot_id: str | None,
+) -> Path | None:
+    if not apply_review_overrides:
+        return None
+    if source_mode != "inat_snapshot" or not snapshot_id:
+        raise ValueError(
+            "Review overrides are only supported for snapshot-scoped inat_snapshot runs"
+        )
+    if review_overrides_path is not None:
+        return review_overrides_path
+    return resolve_review_overrides_path(snapshot_id)

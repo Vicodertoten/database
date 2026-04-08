@@ -15,6 +15,21 @@ class CanonicalRank(StrEnum):
     FAMILY = "family"
 
 
+class TaxonGroup(StrEnum):
+    BIRDS = "birds"
+
+
+class EnrichmentStatus(StrEnum):
+    SEEDED = "seeded"
+    PARTIAL = "partial"
+    COMPLETE = "complete"
+    FAILED = "failed"
+
+
+class SimilarityRelationType(StrEnum):
+    SIMILAR_SPECIES = "similar_species"
+
+
 class MediaType(StrEnum):
     IMAGE = "image"
     AUDIO = "audio"
@@ -64,7 +79,19 @@ class LicenseSafetyResult(StrEnum):
     UNSAFE = "unsafe"
 
 
+class QualificationStage(StrEnum):
+    COMPLIANCE_SCREENING = "compliance_screening"
+    FAST_SEMANTIC_SCREENING = "fast_semantic_screening"
+    EXPERT_QUALIFICATION = "expert_qualification"
+    REVIEW_QUEUE_ASSEMBLY = "review_queue_assembly"
+
+
 class ReviewStatus(StrEnum):
     OPEN = "open"
     CLOSED = "closed"
 
+
+class ReviewPriority(StrEnum):
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"
