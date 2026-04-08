@@ -8,6 +8,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 from urllib.parse import urlparse
 
+from dotenv import load_dotenv
+
 from database_core.adapters.inaturalist_qualification import (
     DEFAULT_INITIAL_BACKOFF_SECONDS,
     DEFAULT_MAX_BACKOFF_SECONDS,
@@ -33,6 +35,7 @@ DEFAULT_PILOT_TAXA_PATH = Path("data/fixtures/inaturalist_pilot_taxa.json")
 
 
 def main() -> int:
+    load_dotenv(dotenv_path=Path(".env"))
     parser = argparse.ArgumentParser(
         description="Run full live pipeline on goldset (Gemini qualification + pipeline export)."
     )
