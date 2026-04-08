@@ -7,6 +7,8 @@ from pathlib import Path
 
 from jsonschema import FormatChecker, ValidationError, validate
 
+from database_core.domain.canonical_policy import is_resolved_canonical_taxon_id
+from database_core.domain.enums import TaxonStatus
 from database_core.domain.models import (
     CanonicalTaxon,
     MediaAsset,
@@ -72,6 +74,10 @@ def build_export_bundle(
     qualified_resources: list[QualifiedResource],
 ) -> dict[str, object]:
     exportable_resources = [item for item in qualified_resources if item.export_eligible]
+    _validate_exportable_resources_have_canonical_resolution(
+        exportable_resources=exportable_resources,
+        canonical_taxa=canonical_taxa,
+    )
     canonical_taxon_ids = {item.canonical_taxon_id for item in exportable_resources}
     included_taxa = [
         item for item in canonical_taxa if item.canonical_taxon_id in canonical_taxon_ids
@@ -121,10 +127,13 @@ def validate_export_bundle(
 def _serialize_export_taxon(taxon: CanonicalTaxon) -> dict[str, object]:
     payload = {
         "canonical_taxon_id": taxon.canonical_taxon_id,
-        "scientific_name": taxon.scientific_name,
+        "accepted_scientific_name": taxon.accepted_scientific_name,
         "canonical_rank": taxon.canonical_rank,
         "taxon_group": taxon.taxon_group,
+        "taxon_status": taxon.taxon_status,
     }
+    if taxon.synonyms:
+        payload["synonyms"] = list(taxon.synonyms)
     if taxon.common_names:
         payload["common_names"] = list(taxon.common_names)
     if taxon.key_identification_features:
@@ -156,3 +165,49 @@ def _serialize_export_resource(resource: QualifiedResource) -> dict[str, object]
 @lru_cache(maxsize=1)
 def _load_export_schema(schema_path: Path) -> dict[str, object]:
     return json.loads(schema_path.read_text(encoding="utf-8"))
+
+
+def _validate_exportable_resources_have_canonical_resolution(
+    *,
+    exportable_resources: list[QualifiedResource],
+    canonical_taxa: list[CanonicalTaxon],
+) -> None:
+    if not exportable_resources:
+        return
+
+    canonical_taxa_by_id = {item.canonical_taxon_id: item for item in canonical_taxa}
+    unresolved_media_asset_ids = [
+        item.media_asset_id
+        for item in exportable_resources
+        if not is_resolved_canonical_taxon_id(item.canonical_taxon_id)
+    ]
+    if unresolved_media_asset_ids:
+        raise ValueError(
+            "Export bundle integrity failure: exportable resources include unresolved "
+            "canonical_taxon_id "
+            f"(media_asset_ids={','.join(sorted(unresolved_media_asset_ids))})"
+        )
+
+    missing_canonical_media_asset_ids = [
+        item.media_asset_id
+        for item in exportable_resources
+        if item.canonical_taxon_id not in canonical_taxa_by_id
+    ]
+    if missing_canonical_media_asset_ids:
+        raise ValueError(
+            "Export bundle integrity failure: exportable resources reference missing "
+            "canonical taxa "
+            f"(media_asset_ids={','.join(sorted(missing_canonical_media_asset_ids))})"
+        )
+
+    provisional_media_asset_ids = [
+        item.media_asset_id
+        for item in exportable_resources
+        if canonical_taxa_by_id[item.canonical_taxon_id].taxon_status == TaxonStatus.PROVISIONAL
+    ]
+    if provisional_media_asset_ids:
+        raise ValueError(
+            "Export bundle integrity failure: exportable resources reference provisional "
+            "canonical taxa "
+            f"(media_asset_ids={','.join(sorted(provisional_media_asset_ids))})"
+        )

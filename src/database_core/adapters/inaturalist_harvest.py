@@ -99,8 +99,12 @@ def fetch_inat_snapshot(
         manifest_taxa.append(
             SnapshotTaxonSeed(
                 canonical_taxon_id=seed.canonical_taxon_id,
-                scientific_name=seed.scientific_name,
+                accepted_scientific_name=seed.accepted_scientific_name,
                 canonical_rank=seed.canonical_rank,
+                taxon_status=seed.taxon_status,
+                authority_source=seed.authority_source,
+                display_slug=seed.display_slug,
+                synonyms=seed.synonyms,
                 common_names=seed.common_names,
                 source_taxon_id=seed.source_taxon_id,
                 query_params=effective_params,

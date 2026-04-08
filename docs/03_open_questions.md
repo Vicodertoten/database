@@ -1,7 +1,19 @@
 # Open Questions
 
-- Internal taxon IDs are stable slugs in this MVP. A stricter long-term governance rule is still needed for future taxonomic splits, merges, and synonym management.
-- `key_identification_features` now exists in the canonical model, but the long-term source of truth is still open. The next decision is whether these features remain manually curated, source-assisted, or partly AI-assisted with review.
-- The review override workflow is now explicit and replayable, but the right operational thresholds are still unknown. A larger live smoke is needed to understand whether the current reject-first policy yields enough accepted resources.
-- Canonical similarity is now represented cleanly, but the future relation taxonomy is still open. The next extension may need to distinguish look-alike distractors, educational confusions, and taxonomy-neighbor relations instead of only `similar_species`.
-- The repo is still birds-only. The multi-group prompt supplements and canonical field policy for future taxa remain open until the birds pipeline is exercised on a wider live sample.
+Last update: `2026-04-08`
+
+Questions closed by canonical charter v1:
+
+- canonical identity is no longer slug-based; it is now governed by immutable concept IDs (`taxon:<group>:<padded_integer>`)
+- `key_identification_features` is now explicitly non-identitary enrichment with required provenance
+- canonical similarity taxonomy is now defined (`taxonomic_neighbor`, `visual_lookalike`, `educational_confusion`)
+- canonical authority is now explicit for phase 1 birds (`iNaturalist`)
+- AI canonical governance scope is now explicit (AI enriches, AI does not govern)
+- canonical ID migration hard cutover is complete (mapping in `docs/07_canonical_id_migration_v1.md`)
+- no transitional legacy-read window is maintained in v1
+
+Active open questions:
+
+- Exact operational signals used to classify iNaturalist taxonomic changes as "clear" versus "ambiguous" for automatic `deprecated` vs `provisional`.
+- Operator thresholds for promoting `provisional` taxa to `active` or `deprecated` after manual review.
+- Multi-group rollout guardrails (after birds): sequence, acceptance criteria, and required updates to prompt supplements and canonical mappings.

@@ -8,10 +8,13 @@ The pipeline is deliberately small, versioned, and reproducible.
 - for live harvesting, cache raw observation API responses, taxon detail payloads, and one candidate image per observation
 - preserve raw payload references as local artifact paths
 - write a versioned snapshot manifest
+- apply authority scope for phase 1: iNaturalist is the only auto-creation source for canonical taxa
 
 ## 2. Normalize
 
 - resolve source taxon mappings to canonical taxa
+- create a new canonical taxon only when an unknown iNaturalist taxon enters scope
+- do not auto-create canonical taxa from secondary unresolved hints
 - assign stable internal media IDs
 - persist normalized objects in SQLite
 - write a normalized JSON snapshot
@@ -24,6 +27,7 @@ The pipeline is deliberately small, versioned, and reproducible.
 - extract source-side similarity hints when available
 - resolve similarity into internal `similar_taxa` only when the target taxon already exists in the canonical seed
 - keep unresolved source hints separate from canonical relationships
+- never let AI or source hints mutate canonical identity fields directly
 
 ## 4. Qualify
 
@@ -51,7 +55,17 @@ The pipeline is deliberately small, versioned, and reproducible.
 - export only `QualifiedResource` records with `export_eligible = true`
 - include only canonical taxa needed by downstream consumers
 - keep unresolved external hints out of the public export bundle
+- fail on unresolved canonical taxon IDs in exportable resources
+- exclude `provisional` taxa from pedagogical export by default
 - validate the export against `schemas/qualified_resources_bundle.schema.json` before writing
+
+## Canonical governance guardrails
+
+- `canonical_taxon_id` is immutable and concept-based, not name-based
+- accepted scientific names and synonyms can evolve without ID changes
+- split/merge/replacement transitions are explicit and never silently rewrite history
+- deprecated taxa are preserved for traceability and reject new asset attachment
+- canonical policy reference: `docs/06_charte_canonique_v1.md`
 
 ## 7. Inspect
 
@@ -71,6 +85,6 @@ Generated artifacts carry explicit stage versions:
 - `qualification_version`
 - `export_version`
 
-The current writers always emit snapshot manifests as `inaturalist.snapshot.v2`.
-Legacy manifests without `manifest_version` remain readable.
+The current writers always emit snapshot manifests as `inaturalist.snapshot.v3`.
+Legacy manifests without `manifest_version` are rejected.
 Unknown manifest versions are rejected explicitly.

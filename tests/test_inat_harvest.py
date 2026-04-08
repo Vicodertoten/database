@@ -14,8 +14,8 @@ def test_fetch_inat_snapshot_uses_safe_filters_and_votes_fallback(
         del path
         return [
             PilotTaxonSeed(
-                canonical_taxon_id="bird:turdus-merula",
-                scientific_name="Turdus merula",
+                canonical_taxon_id="taxon:birds:000014",
+                accepted_scientific_name="Turdus merula",
                 source_taxon_id="12716",
                 common_names=["Common Blackbird"],
             )
@@ -30,7 +30,7 @@ def test_fetch_inat_snapshot_uses_safe_filters_and_votes_fallback(
                         "id": 12716,
                         "name": "Turdus merula",
                         "preferred_common_name": "Eurasian Blackbird",
-                        "similar_species": [],
+                        "similar_taxa": [],
                     }
                 ]
             }
@@ -96,4 +96,4 @@ def test_fetch_inat_snapshot_uses_safe_filters_and_votes_fallback(
     assert seed["effective_order_by"] == "observed_on"
     assert seed["fallback_applied"] is True
     assert seed["query_params"]["order_by"] == "observed_on"
-    assert seed["taxon_payload_path"] == "taxa/bird_turdus_merula.json"
+    assert seed["taxon_payload_path"] == "taxa/taxon_birds_000014.json"

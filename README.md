@@ -28,6 +28,13 @@ The current pilot stays narrow on purpose:
 
 The repository is not the quiz app, frontend, or product runtime.
 
+## Reference docs
+
+- Living audit reference: `docs/05_audit_reference.md`
+- Stable canonical charter v1: `docs/06_charte_canonique_v1.md`
+- Canonical implementation ADR: `docs/adr/0001-charte-canonique-v1.md`
+- Canonical ID migration table: `docs/07_canonical_id_migration_v1.md`
+
 ## Quickstart
 
 ```bash

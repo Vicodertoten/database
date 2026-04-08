@@ -27,7 +27,7 @@ def test_qualified_resource_is_not_exportable_without_safe_media_license() -> No
             captive=False,
         ),
         raw_payload_ref="data/fixtures/birds_pilot.json#/observations/0",
-        canonical_taxon_id="bird:turdus-merula",
+        canonical_taxon_id="taxon:birds:000014",
     )
     media_asset = MediaAsset(
         media_id="media:inaturalist:fixture-1",
@@ -43,7 +43,7 @@ def test_qualified_resource_is_not_exportable_without_safe_media_license() -> No
         width=1400,
         height=1000,
         source_observation_uid=observation.observation_uid,
-        canonical_taxon_id="bird:turdus-merula",
+        canonical_taxon_id="taxon:birds:000014",
         raw_payload_ref="data/fixtures/birds_pilot.json#/observations/0/media/0",
     )
 
@@ -75,7 +75,7 @@ def test_uncertain_policy_reject_turns_incomplete_ai_result_into_rejected() -> N
             captive=False,
         ),
         raw_payload_ref="data/fixtures/birds_pilot.json#/observations/0",
-        canonical_taxon_id="bird:turdus-merula",
+        canonical_taxon_id="taxon:birds:000014",
     )
     media_asset = MediaAsset(
         media_id="media:inaturalist:fixture-2",
@@ -91,7 +91,7 @@ def test_uncertain_policy_reject_turns_incomplete_ai_result_into_rejected() -> N
         width=1400,
         height=1000,
         source_observation_uid=observation.observation_uid,
-        canonical_taxon_id="bird:turdus-merula",
+        canonical_taxon_id="taxon:birds:000014",
         raw_payload_ref="data/fixtures/birds_pilot.json#/observations/0/media/0",
     )
     ai_outcome = AIQualificationOutcome(
@@ -136,7 +136,7 @@ def test_low_pedagogical_quality_no_longer_blocks_acceptance() -> None:
             captive=None,
         ),
         raw_payload_ref="data/fixtures/birds_pilot.json#/observations/0",
-        canonical_taxon_id="bird:turdus-merula",
+        canonical_taxon_id="taxon:birds:000014",
     )
     media_asset = MediaAsset(
         media_id="media:inaturalist:fixture-3",
@@ -152,7 +152,7 @@ def test_low_pedagogical_quality_no_longer_blocks_acceptance() -> None:
         width=1600,
         height=1200,
         source_observation_uid=observation.observation_uid,
-        canonical_taxon_id="bird:turdus-merula",
+        canonical_taxon_id="taxon:birds:000014",
         raw_payload_ref="data/fixtures/birds_pilot.json#/observations/0/media/0",
     )
     ai_outcome = AIQualificationOutcome(
@@ -198,7 +198,7 @@ def test_review_policy_creates_structured_review_queue_item() -> None:
             captive=False,
         ),
         raw_payload_ref="data/fixtures/birds_pilot.json#/observations/0",
-        canonical_taxon_id="bird:turdus-merula",
+        canonical_taxon_id="taxon:birds:000014",
     )
     media_asset = MediaAsset(
         media_id="media:inaturalist:fixture-4",
@@ -214,7 +214,7 @@ def test_review_policy_creates_structured_review_queue_item() -> None:
         width=900,
         height=700,
         source_observation_uid=observation.observation_uid,
-        canonical_taxon_id="bird:turdus-merula",
+        canonical_taxon_id="taxon:birds:000014",
         raw_payload_ref="data/fixtures/birds_pilot.json#/observations/0/media/0",
     )
 

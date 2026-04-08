@@ -8,7 +8,7 @@ def test_canonical_taxon_requires_stable_lowercase_identifier() -> None:
     try:
         CanonicalTaxon(
             canonical_taxon_id="Bird:Turdus-merula",
-            scientific_name="Turdus merula",
+            accepted_scientific_name="Turdus merula",
             canonical_rank=CanonicalRank.SPECIES,
         )
     except ValidationError:
@@ -30,7 +30,7 @@ def test_media_asset_preserves_provenance_fields() -> None:
         mime_type="image/jpeg",
         file_extension="jpg",
         source_observation_uid="obs:inaturalist:fixture-1",
-        canonical_taxon_id="bird:turdus-merula",
+        canonical_taxon_id="taxon:birds:000014",
         raw_payload_ref="data/fixtures/birds_pilot.json#/observations/0/media/0",
     )
 
@@ -46,17 +46,17 @@ def test_external_mapping_uses_non_blank_identifier() -> None:
 
 def test_canonical_taxon_derives_similar_taxon_ids_from_similarity_graph() -> None:
     taxon = CanonicalTaxon(
-        canonical_taxon_id="bird:turdus-merula",
-        scientific_name="Turdus merula",
+        canonical_taxon_id="taxon:birds:000014",
+        accepted_scientific_name="Turdus merula",
         canonical_rank=CanonicalRank.SPECIES,
         similar_taxa=[
             SimilarTaxon(
-                target_canonical_taxon_id="bird:erithacus-rubecula",
+                target_canonical_taxon_id="taxon:birds:000004",
                 source_name=SourceName.INATURALIST,
-                relation_type=SimilarityRelationType.SIMILAR_SPECIES,
+                relation_type=SimilarityRelationType.VISUAL_LOOKALIKE,
                 confidence=0.71,
             )
         ],
     )
 
-    assert taxon.similar_taxon_ids == ["bird:erithacus-rubecula"]
+    assert taxon.similar_taxon_ids == ["taxon:birds:000004"]

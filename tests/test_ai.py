@@ -106,7 +106,7 @@ def test_gemini_vision_qualifier_uses_structured_output_and_high_media_resolutio
             width=1600,
             height=1200,
             source_observation_uid="obs:fixture:1",
-            canonical_taxon_id="bird:turdus-merula",
+            canonical_taxon_id="taxon:birds:000014",
             raw_payload_ref="fixture.json#/media/1",
         ),
         image_bytes=io.BytesIO(b"fake-image").getvalue(),
@@ -162,7 +162,7 @@ def test_gemini_vision_qualifier_surfaces_http_error_details(monkeypatch) -> Non
                 width=1600,
                 height=1200,
                 source_observation_uid="obs:fixture:1",
-                canonical_taxon_id="bird:turdus-merula",
+                canonical_taxon_id="taxon:birds:000014",
                 raw_payload_ref="fixture.json#/media/1",
             ),
             image_bytes=io.BytesIO(b"fake-image").getvalue(),
@@ -190,7 +190,7 @@ def test_cached_ai_outputs_require_matching_prompt_version() -> None:
         width=1600,
         height=1200,
         source_observation_uid="obs:fixture:1",
-        canonical_taxon_id="bird:turdus-merula",
+        canonical_taxon_id="taxon:birds:000014",
         raw_payload_ref="fixture.json#/media/cached-1",
     )
 

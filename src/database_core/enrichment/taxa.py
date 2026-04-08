@@ -108,7 +108,7 @@ def _extract_key_identification_features(record: Mapping[str, object]) -> list[s
 
 
 def _extract_similarity_hints(record: Mapping[str, object]) -> list[ExternalSimilarityHint]:
-    raw_hints = record.get("similar_species") or record.get("similar_taxa") or []
+    raw_hints = record.get("similar_taxa") or []
     if not isinstance(raw_hints, Sequence) or isinstance(raw_hints, str):
         return []
 
@@ -125,12 +125,12 @@ def _extract_similarity_hints(record: Mapping[str, object]) -> list[ExternalSimi
             ExternalSimilarityHint(
                 source_name=SourceName.INATURALIST,
                 external_taxon_id=str(external_taxon_id),
-                relation_type=SimilarityRelationType.SIMILAR_SPECIES,
-                scientific_name=(
+                relation_type=_coerce_similarity_relation_type(item.get("relation_type")),
+                accepted_scientific_name=(
                     str(item.get("name"))
                     if item.get("name") is not None
-                    else str(item.get("scientific_name"))
-                    if item.get("scientific_name") is not None
+                    else str(item.get("accepted_scientific_name"))
+                    if item.get("accepted_scientific_name") is not None
                     else None
                 ),
                 common_name=(
@@ -169,7 +169,7 @@ def _resolve_similarity_hints(
                 source_name=hint.source_name,
                 relation_type=hint.relation_type,
                 confidence=hint.confidence,
-                note=hint.note or hint.scientific_name or hint.common_name,
+                note=hint.note or hint.accepted_scientific_name or hint.common_name,
             )
         )
     return _merge_similar_taxa([], resolved), unresolved
@@ -219,3 +219,12 @@ def _dedupe_preserve_order(values: Sequence[str] | object) -> list[str]:
         seen.add(text)
         deduped.append(text)
     return deduped
+
+
+def _coerce_similarity_relation_type(raw_value: object) -> SimilarityRelationType:
+    if raw_value is None:
+        return SimilarityRelationType.VISUAL_LOOKALIKE
+    try:
+        return SimilarityRelationType(str(raw_value))
+    except ValueError:
+        return SimilarityRelationType.VISUAL_LOOKALIKE

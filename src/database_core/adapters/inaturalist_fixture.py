@@ -58,8 +58,12 @@ def load_fixture_dataset(path: Path) -> SourceDataset:
 def _build_taxon(payload: dict[str, object]) -> CanonicalTaxon:
     return CanonicalTaxon(
         canonical_taxon_id=str(payload["canonical_taxon_id"]),
-        scientific_name=str(payload["scientific_name"]),
+        accepted_scientific_name=str(payload["accepted_scientific_name"]),
         canonical_rank=payload["canonical_rank"],
+        taxon_status=payload.get("taxon_status", "active"),
+        authority_source=payload.get("authority_source", "inaturalist"),
+        display_slug=payload.get("display_slug"),
+        synonyms=list(payload.get("synonyms", [])),
         common_names=list(payload.get("common_names", [])),
         taxon_group=payload.get("taxon_group", "birds"),
         key_identification_features=list(payload.get("key_identification_features", [])),
@@ -77,6 +81,10 @@ def _build_taxon(payload: dict[str, object]) -> CanonicalTaxon:
         ],
         similar_taxa=[SimilarTaxon(**relation) for relation in payload.get("similar_taxa", [])],
         similar_taxon_ids=list(payload.get("similar_taxon_ids", [])),
+        split_into=list(payload.get("split_into", [])),
+        merged_into=payload.get("merged_into"),
+        replaced_by=payload.get("replaced_by"),
+        derived_from=payload.get("derived_from"),
     )
 
 

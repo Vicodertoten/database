@@ -5,7 +5,10 @@ from typing import Self
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
+from database_core.domain.canonical_ids import CANONICAL_TAXON_ID_PATTERN
 from database_core.domain.enums import (
+    CanonicalChangeRelationType,
+    CanonicalEventType,
     CanonicalRank,
     EnrichmentStatus,
     LicenseSafetyResult,
@@ -19,6 +22,7 @@ from database_core.domain.enums import (
     SimilarityRelationType,
     SourceName,
     TaxonGroup,
+    TaxonStatus,
     TechnicalQuality,
     ViewAngle,
 )
@@ -76,8 +80,8 @@ class AIQualification(DomainModel):
 class ExternalSimilarityHint(DomainModel):
     source_name: SourceName
     external_taxon_id: str
-    relation_type: SimilarityRelationType = SimilarityRelationType.SIMILAR_SPECIES
-    scientific_name: str | None = None
+    relation_type: SimilarityRelationType = SimilarityRelationType.VISUAL_LOOKALIKE
+    accepted_scientific_name: str | None = None
     common_name: str | None = None
     confidence: float | None = None
     note: str | None = None
@@ -102,7 +106,7 @@ class ExternalSimilarityHint(DomainModel):
 class SimilarTaxon(DomainModel):
     target_canonical_taxon_id: str
     source_name: SourceName
-    relation_type: SimilarityRelationType = SimilarityRelationType.SIMILAR_SPECIES
+    relation_type: SimilarityRelationType = SimilarityRelationType.VISUAL_LOOKALIKE
     confidence: float | None = None
     note: str | None = None
 
@@ -126,10 +130,14 @@ class SimilarTaxon(DomainModel):
 
 class CanonicalTaxon(DomainModel):
     canonical_taxon_id: str
-    scientific_name: str
+    accepted_scientific_name: str
     canonical_rank: CanonicalRank
-    common_names: list[str] = Field(default_factory=list)
     taxon_group: TaxonGroup = TaxonGroup.BIRDS
+    taxon_status: TaxonStatus = TaxonStatus.ACTIVE
+    authority_source: SourceName = SourceName.INATURALIST
+    display_slug: str | None = None
+    synonyms: list[str] = Field(default_factory=list)
+    common_names: list[str] = Field(default_factory=list)
     key_identification_features: list[str] = Field(default_factory=list)
     source_enrichment_status: EnrichmentStatus = EnrichmentStatus.SEEDED
     bird_scope_compatible: bool = True
@@ -137,6 +145,10 @@ class CanonicalTaxon(DomainModel):
     external_similarity_hints: list[ExternalSimilarityHint] = Field(default_factory=list)
     similar_taxa: list[SimilarTaxon] = Field(default_factory=list)
     similar_taxon_ids: list[str] = Field(default_factory=list)
+    split_into: list[str] = Field(default_factory=list)
+    merged_into: str | None = None
+    replaced_by: str | None = None
+    derived_from: str | None = None
 
     @field_validator("canonical_taxon_id")
     @classmethod
@@ -144,19 +156,34 @@ class CanonicalTaxon(DomainModel):
         normalized = value.strip()
         if not normalized:
             raise ValueError("canonical_taxon_id must not be blank")
-        if normalized != normalized.lower():
-            raise ValueError("canonical_taxon_id must be lowercase for stability")
+        match = CANONICAL_TAXON_ID_PATTERN.fullmatch(normalized)
+        if match is None:
+            raise ValueError(
+                "canonical_taxon_id must match 'taxon:<group>:<6-digit integer>'"
+            )
         return normalized
 
-    @field_validator("scientific_name")
+    @field_validator("accepted_scientific_name")
     @classmethod
-    def validate_scientific_name(cls, value: str) -> str:
+    def validate_accepted_scientific_name(cls, value: str) -> str:
         if not value.strip():
-            raise ValueError("scientific_name must not be blank")
+            raise ValueError("accepted_scientific_name must not be blank")
         return value
 
     @model_validator(mode="after")
-    def derive_similar_taxon_ids(self) -> Self:
+    def normalize_canonical_fields(self) -> Self:
+        match = CANONICAL_TAXON_ID_PATTERN.fullmatch(self.canonical_taxon_id)
+        if match is not None and match.group("group") != self.taxon_group:
+            raise ValueError(
+                "canonical_taxon_id group segment must match taxon_group"
+            )
+        if not self.display_slug or not self.display_slug.strip():
+            object.__setattr__(
+                self,
+                "display_slug",
+                _slugify_scientific_name(self.accepted_scientific_name),
+            )
+
         derived_ids = sorted(
             {
                 item.target_canonical_taxon_id
@@ -166,7 +193,37 @@ class CanonicalTaxon(DomainModel):
         )
         if derived_ids != self.similar_taxon_ids:
             object.__setattr__(self, "similar_taxon_ids", derived_ids)
+
+        split_targets = sorted(
+            {item for item in self.split_into if item != self.canonical_taxon_id}
+        )
+        if split_targets != self.split_into:
+            object.__setattr__(self, "split_into", split_targets)
+
+        if self.merged_into == self.canonical_taxon_id:
+            object.__setattr__(self, "merged_into", None)
+        if self.replaced_by == self.canonical_taxon_id:
+            object.__setattr__(self, "replaced_by", None)
+        if self.derived_from == self.canonical_taxon_id:
+            object.__setattr__(self, "derived_from", None)
         return self
+
+
+class CanonicalTaxonRelationship(DomainModel):
+    source_canonical_taxon_id: str
+    relationship_type: CanonicalChangeRelationType
+    target_canonical_taxon_id: str
+    source_name: SourceName
+    created_at: datetime
+
+
+class CanonicalTaxonEvent(DomainModel):
+    event_id: str
+    event_type: CanonicalEventType
+    canonical_taxon_id: str
+    source_name: SourceName
+    effective_at: datetime
+    payload: dict[str, object] = Field(default_factory=dict)
 
 
 class SourceObservation(DomainModel):
@@ -277,3 +334,7 @@ class ReviewItem(DomainModel):
     priority: ReviewPriority = ReviewPriority.MEDIUM
     review_status: ReviewStatus = ReviewStatus.OPEN
     created_at: datetime
+
+
+def _slugify_scientific_name(value: str) -> str:
+    return "-".join(part.strip().lower() for part in value.split() if part.strip())

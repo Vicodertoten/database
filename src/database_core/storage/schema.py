@@ -5,17 +5,46 @@ PRAGMA foreign_keys = ON;
 
 CREATE TABLE IF NOT EXISTS canonical_taxa (
     canonical_taxon_id TEXT PRIMARY KEY,
-    scientific_name TEXT NOT NULL,
+    accepted_scientific_name TEXT NOT NULL,
     canonical_rank TEXT NOT NULL,
-    common_names_json TEXT NOT NULL,
     taxon_group TEXT NOT NULL,
+    taxon_status TEXT NOT NULL,
+    authority_source TEXT NOT NULL,
+    display_slug TEXT NOT NULL,
+    synonyms_json TEXT NOT NULL,
+    common_names_json TEXT NOT NULL,
     key_identification_features_json TEXT NOT NULL,
     source_enrichment_status TEXT NOT NULL,
     bird_scope_compatible INTEGER NOT NULL,
     external_source_mappings_json TEXT NOT NULL,
     external_similarity_hints_json TEXT NOT NULL,
     similar_taxa_json TEXT NOT NULL,
-    similar_taxon_ids_json TEXT NOT NULL
+    similar_taxon_ids_json TEXT NOT NULL,
+    split_into_json TEXT NOT NULL,
+    merged_into TEXT,
+    replaced_by TEXT,
+    derived_from TEXT
+);
+
+CREATE TABLE IF NOT EXISTS canonical_taxon_relationships (
+    source_canonical_taxon_id TEXT NOT NULL,
+    relationship_type TEXT NOT NULL,
+    target_canonical_taxon_id TEXT NOT NULL,
+    source_name TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    PRIMARY KEY (source_canonical_taxon_id, relationship_type, target_canonical_taxon_id),
+    FOREIGN KEY (source_canonical_taxon_id) REFERENCES canonical_taxa (canonical_taxon_id),
+    FOREIGN KEY (target_canonical_taxon_id) REFERENCES canonical_taxa (canonical_taxon_id)
+);
+
+CREATE TABLE IF NOT EXISTS canonical_taxon_events (
+    event_id TEXT PRIMARY KEY,
+    event_type TEXT NOT NULL,
+    canonical_taxon_id TEXT NOT NULL,
+    source_name TEXT NOT NULL,
+    effective_at TEXT NOT NULL,
+    payload_json TEXT NOT NULL,
+    FOREIGN KEY (canonical_taxon_id) REFERENCES canonical_taxa (canonical_taxon_id)
 );
 
 CREATE TABLE IF NOT EXISTS source_observations (

@@ -1,4 +1,7 @@
+from database_core.domain.canonical_policy import is_resolved_canonical_taxon_id
 from database_core.domain.enums import (
+    CanonicalChangeRelationType,
+    CanonicalEventType,
     CanonicalRank,
     EnrichmentStatus,
     LicenseSafetyResult,
@@ -12,12 +15,15 @@ from database_core.domain.enums import (
     SimilarityRelationType,
     SourceName,
     TaxonGroup,
+    TaxonStatus,
     TechnicalQuality,
     ViewAngle,
 )
 from database_core.domain.models import (
     AIQualification,
     CanonicalTaxon,
+    CanonicalTaxonEvent,
+    CanonicalTaxonRelationship,
     ExternalMapping,
     ExternalSimilarityHint,
     LocationMetadata,
@@ -32,8 +38,12 @@ from database_core.domain.models import (
 
 __all__ = [
     "AIQualification",
+    "CanonicalChangeRelationType",
+    "CanonicalEventType",
     "CanonicalRank",
     "CanonicalTaxon",
+    "CanonicalTaxonEvent",
+    "CanonicalTaxonRelationship",
     "EnrichmentStatus",
     "ExternalMapping",
     "ExternalSimilarityHint",
@@ -56,6 +66,8 @@ __all__ = [
     "SourceObservation",
     "SourceQualityMetadata",
     "TaxonGroup",
+    "TaxonStatus",
     "TechnicalQuality",
     "ViewAngle",
+    "is_resolved_canonical_taxon_id",
 ]

@@ -24,4 +24,4 @@ def test_initialize_resets_legacy_schema_version(tmp_path: Path) -> None:
         user_version = connection.execute("PRAGMA user_version").fetchone()[0]
 
     assert "legacy_table" not in table_names
-    assert user_version == 2
+    assert user_version == 3

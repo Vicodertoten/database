@@ -8,6 +8,7 @@ from database_core.adapters import (
     load_fixture_dataset,
     load_snapshot_dataset,
 )
+from database_core.domain.enums import TaxonStatus
 from database_core.enrichment import enrich_canonical_taxa
 from database_core.export.json_exporter import (
     build_export_bundle,
@@ -113,6 +114,19 @@ def run_pipeline(
         dataset.canonical_taxa,
         taxon_payloads_by_canonical_taxon_id=dataset.taxon_payloads_by_canonical_taxon_id,
     )
+    taxon_status_by_id = {item.canonical_taxon_id: item.taxon_status for item in enriched_taxa}
+    deprecated_media_asset_ids = sorted(
+        [
+            item.media_id
+            for item in dataset.media_assets
+            if taxon_status_by_id.get(item.canonical_taxon_id or "") == TaxonStatus.DEPRECATED
+        ]
+    )
+    if deprecated_media_asset_ids:
+        raise ValueError(
+            "Canonical integrity failure: deprecated taxa cannot receive new media assets "
+            f"(media_asset_ids={','.join(deprecated_media_asset_ids)})"
+        )
     repository.save_canonical_taxa(enriched_taxa)
     repository.save_source_observations(dataset.observations)
     repository.save_media_assets(dataset.media_assets)
@@ -128,6 +142,7 @@ def run_pipeline(
         qualifier=ai_qualifier,
     )
     qualified_resources, review_items = qualify_media_assets(
+        canonical_taxa=enriched_taxa,
         observations=dataset.observations,
         media_assets=dataset.media_assets,
         ai_qualifications_by_source_media_id=ai_qualifications,

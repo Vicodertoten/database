@@ -9,6 +9,7 @@ The system is designed to automate most of this work while keeping uncertain cas
 Its job is to turn observed reality into a canonical, traceable, exportable corpus for future learning experiences.
 The current implementation is an intentionally narrow pilot: birds-only, iNaturalist-first, image-only.
 That narrow scope is a proving ground for a structure meant to scale toward a broader multi-taxa knowledge core.
+Canonical governance for phase 1 is defined in `docs/06_charte_canonique_v1.md`.
 
 Current scope:
 

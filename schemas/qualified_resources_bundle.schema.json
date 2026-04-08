@@ -33,12 +33,22 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["canonical_taxon_id", "scientific_name", "canonical_rank"],
+        "required": [
+          "canonical_taxon_id",
+          "accepted_scientific_name",
+          "canonical_rank",
+          "taxon_status"
+        ],
         "properties": {
           "canonical_taxon_id": {"type": "string"},
-          "scientific_name": {"type": "string"},
+          "accepted_scientific_name": {"type": "string"},
           "canonical_rank": {"type": "string"},
           "taxon_group": {"type": "string"},
+          "taxon_status": {"type": "string"},
+          "synonyms": {
+            "type": "array",
+            "items": {"type": "string"}
+          },
           "common_names": {
             "type": "array",
             "items": {"type": "string"}

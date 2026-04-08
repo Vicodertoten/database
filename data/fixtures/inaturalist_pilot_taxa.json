@@ -1,105 +1,105 @@
 [
   {
-    "canonical_taxon_id": "bird:turdus-merula",
-    "scientific_name": "Turdus merula",
+    "canonical_taxon_id": "taxon:birds:000014",
+    "accepted_scientific_name": "Turdus merula",
     "canonical_rank": "species",
     "common_names": ["Common Blackbird", "Eurasian Blackbird"],
     "source_taxon_id": "12716"
   },
   {
-    "canonical_taxon_id": "bird:erithacus-rubecula",
-    "scientific_name": "Erithacus rubecula",
+    "canonical_taxon_id": "taxon:birds:000004",
+    "accepted_scientific_name": "Erithacus rubecula",
     "canonical_rank": "species",
     "common_names": ["European Robin"],
     "source_taxon_id": "13094"
   },
   {
-    "canonical_taxon_id": "bird:passer-domesticus",
-    "scientific_name": "Passer domesticus",
+    "canonical_taxon_id": "taxon:birds:000009",
+    "accepted_scientific_name": "Passer domesticus",
     "canonical_rank": "species",
     "common_names": ["House Sparrow"],
     "source_taxon_id": "13858"
   },
   {
-    "canonical_taxon_id": "bird:cyanistes-caeruleus",
-    "scientific_name": "Cyanistes caeruleus",
+    "canonical_taxon_id": "taxon:birds:000003",
+    "accepted_scientific_name": "Cyanistes caeruleus",
     "canonical_rank": "species",
     "common_names": ["Eurasian Blue Tit"],
     "source_taxon_id": "144849"
   },
   {
-    "canonical_taxon_id": "bird:parus-major",
-    "scientific_name": "Parus major",
+    "canonical_taxon_id": "taxon:birds:000008",
+    "accepted_scientific_name": "Parus major",
     "canonical_rank": "species",
     "common_names": ["Great Tit"],
     "source_taxon_id": "203153"
   },
   {
-    "canonical_taxon_id": "bird:pica-pica",
-    "scientific_name": "Pica pica",
+    "canonical_taxon_id": "taxon:birds:000010",
+    "accepted_scientific_name": "Pica pica",
     "canonical_rank": "species",
     "common_names": ["Eurasian Magpie"],
     "source_taxon_id": "891696"
   },
   {
-    "canonical_taxon_id": "bird:fringilla-coelebs",
-    "scientific_name": "Fringilla coelebs",
+    "canonical_taxon_id": "taxon:birds:000005",
+    "accepted_scientific_name": "Fringilla coelebs",
     "canonical_rank": "species",
     "common_names": ["Common Chaffinch"],
     "source_taxon_id": "10070"
   },
   {
-    "canonical_taxon_id": "bird:columba-palumbus",
-    "scientific_name": "Columba palumbus",
+    "canonical_taxon_id": "taxon:birds:000001",
+    "accepted_scientific_name": "Columba palumbus",
     "canonical_rank": "species",
     "common_names": ["Common Wood-Pigeon"],
     "source_taxon_id": "3048"
   },
   {
-    "canonical_taxon_id": "bird:sturnus-vulgaris",
-    "scientific_name": "Sturnus vulgaris",
+    "canonical_taxon_id": "taxon:birds:000011",
+    "accepted_scientific_name": "Sturnus vulgaris",
     "canonical_rank": "species",
     "common_names": ["European Starling"],
     "source_taxon_id": "14850"
   },
   {
-    "canonical_taxon_id": "bird:turdus-philomelos",
-    "scientific_name": "Turdus philomelos",
+    "canonical_taxon_id": "taxon:birds:000015",
+    "accepted_scientific_name": "Turdus philomelos",
     "canonical_rank": "species",
     "common_names": ["Song Thrush"],
     "source_taxon_id": "12748"
   },
   {
-    "canonical_taxon_id": "bird:sylvia-atricapilla",
-    "scientific_name": "Sylvia atricapilla",
+    "canonical_taxon_id": "taxon:birds:000012",
+    "accepted_scientific_name": "Sylvia atricapilla",
     "canonical_rank": "species",
     "common_names": ["Eurasian Blackcap"],
     "source_taxon_id": "15282"
   },
   {
-    "canonical_taxon_id": "bird:motacilla-alba",
-    "scientific_name": "Motacilla alba",
+    "canonical_taxon_id": "taxon:birds:000007",
+    "accepted_scientific_name": "Motacilla alba",
     "canonical_rank": "species",
     "common_names": ["White Wagtail"],
     "source_taxon_id": "13695"
   },
   {
-    "canonical_taxon_id": "bird:garrulus-glandarius",
-    "scientific_name": "Garrulus glandarius",
+    "canonical_taxon_id": "taxon:birds:000006",
+    "accepted_scientific_name": "Garrulus glandarius",
     "canonical_rank": "species",
     "common_names": ["Eurasian Jay"],
     "source_taxon_id": "8088"
   },
   {
-    "canonical_taxon_id": "bird:corvus-corone",
-    "scientific_name": "Corvus corone",
+    "canonical_taxon_id": "taxon:birds:000002",
+    "accepted_scientific_name": "Corvus corone",
     "canonical_rank": "species",
     "common_names": ["Carrion Crow"],
     "source_taxon_id": "204496"
   },
   {
-    "canonical_taxon_id": "bird:troglodytes-troglodytes",
-    "scientific_name": "Troglodytes troglodytes",
+    "canonical_taxon_id": "taxon:birds:000013",
+    "accepted_scientific_name": "Troglodytes troglodytes",
     "canonical_rank": "species",
     "common_names": ["Eurasian Wren"],
     "source_taxon_id": "145363"

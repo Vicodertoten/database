@@ -60,13 +60,13 @@ def test_pipeline_produces_reproducible_output(tmp_path: Path) -> None:
     )
     validate(instance=export_payload, schema=export_schema)
 
-    assert export_payload["schema_version"] == "database.schema.v2"
-    assert export_payload["export_version"] == "export.bundle.v1"
+    assert export_payload["schema_version"] == "database.schema.v3"
+    assert export_payload["export_version"] == "export.bundle.v2"
     assert export_payload["qualification_version"] == "qualification.staged.v1"
-    assert export_payload["enrichment_version"] == "canonical.enrichment.v1"
+    assert export_payload["enrichment_version"] == "canonical.enrichment.v2"
     assert [item["canonical_taxon_id"] for item in export_payload["canonical_taxa"]] == [
-        "bird:passer-domesticus",
-        "bird:turdus-merula",
+        "taxon:birds:000009",
+        "taxon:birds:000014",
     ]
     assert export_payload["canonical_taxa"][0]["taxon_group"] == "birds"
     assert [item["media_asset_id"] for item in export_payload["qualified_resources"]] == [
@@ -75,17 +75,17 @@ def test_pipeline_produces_reproducible_output(tmp_path: Path) -> None:
     ]
 
     normalized_payload = json.loads(first_normalized.read_text(encoding="utf-8"))
-    assert normalized_payload["schema_version"] == "database.schema.v2"
-    assert normalized_payload["normalized_snapshot_version"] == "normalized.snapshot.v2"
-    assert normalized_payload["enrichment_version"] == "canonical.enrichment.v1"
+    assert normalized_payload["schema_version"] == "database.schema.v3"
+    assert normalized_payload["normalized_snapshot_version"] == "normalized.snapshot.v3"
+    assert normalized_payload["enrichment_version"] == "canonical.enrichment.v2"
 
 
 def test_pipeline_rejects_invalid_export_bundle(monkeypatch, tmp_path: Path) -> None:
     def fake_build_export_bundle(**kwargs):
         del kwargs
         return {
-            "schema_version": "database.schema.v2",
-            "export_version": "export.bundle.v1",
+            "schema_version": "database.schema.v3",
+            "export_version": "export.bundle.v2",
         }
 
     monkeypatch.setattr(

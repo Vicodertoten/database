@@ -6,6 +6,7 @@ from datetime import datetime
 from database_core.domain.enums import LicenseSafetyResult, QualificationStatus
 from database_core.domain.models import (
     AIQualification,
+    CanonicalTaxon,
     MediaAsset,
     ProvenanceSummary,
     QualifiedResource,
@@ -27,6 +28,7 @@ from database_core.versioning import QUALIFICATION_VERSION
 
 def qualify_media_assets(
     *,
+    canonical_taxa: Iterable[CanonicalTaxon] | None = None,
     observations: Iterable[SourceObservation],
     media_assets: Iterable[MediaAsset],
     ai_qualifications_by_source_media_id: dict[str, AIQualification | AIQualificationOutcome],
@@ -34,6 +36,9 @@ def qualify_media_assets(
     uncertain_policy: str = "review",
 ) -> tuple[list[QualifiedResource], list[ReviewItem]]:
     observations_by_uid = {item.observation_uid: item for item in observations}
+    taxon_status_by_id = {
+        item.canonical_taxon_id: item.taxon_status for item in (canonical_taxa or [])
+    }
     qualified_resources: list[QualifiedResource] = []
 
     for media_asset in sorted(media_assets, key=lambda item: item.media_id):
@@ -45,6 +50,7 @@ def qualify_media_assets(
             _qualify_single_media(
                 media_asset=media_asset,
                 observation=observation,
+                taxon_status_by_id=taxon_status_by_id,
                 ai_outcome=ai_outcome,
                 uncertain_policy=uncertain_policy,
             )
@@ -56,6 +62,7 @@ def _qualify_single_media(
     *,
     media_asset: MediaAsset,
     observation: SourceObservation,
+    taxon_status_by_id: dict[str, str],
     ai_outcome: AIQualificationOutcome | None,
     uncertain_policy: str,
 ) -> QualifiedResource:
@@ -68,8 +75,13 @@ def _qualify_single_media(
     qualification_flags.extend(compliance.flags)
     qualification_flags.extend(semantic.flags)
     qualification_flags.extend(expert.flags)
+    canonical_taxon_status = taxon_status_by_id.get(media_asset.canonical_taxon_id or "")
+    if canonical_taxon_status == "deprecated":
+        qualification_flags.append("deprecated_canonical_taxon")
     qualification_flags = list(dict.fromkeys(qualification_flags))
     status = resolve_qualification_status(qualification_flags, uncertain_policy=uncertain_policy)
+    if canonical_taxon_status == "deprecated":
+        status = QualificationStatus.REJECTED
 
     provenance_summary = ProvenanceSummary(
         source_name=media_asset.source_name,
@@ -88,6 +100,7 @@ def _qualify_single_media(
     export_eligible = (
         status == QualificationStatus.ACCEPTED
         and compliance.license_safety_result == LicenseSafetyResult.SAFE
+        and canonical_taxon_status != "provisional"
     )
 
     return QualifiedResource(

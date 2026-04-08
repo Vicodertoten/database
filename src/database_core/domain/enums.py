@@ -19,6 +19,28 @@ class TaxonGroup(StrEnum):
     BIRDS = "birds"
 
 
+class TaxonStatus(StrEnum):
+    ACTIVE = "active"
+    DEPRECATED = "deprecated"
+    PROVISIONAL = "provisional"
+
+
+class CanonicalChangeRelationType(StrEnum):
+    SPLIT_INTO = "split_into"
+    MERGED_INTO = "merged_into"
+    REPLACED_BY = "replaced_by"
+    DERIVED_FROM = "derived_from"
+
+
+class CanonicalEventType(StrEnum):
+    CREATE = "create"
+    NAME_UPDATE = "name_update"
+    STATUS_CHANGE = "status_change"
+    SPLIT = "split"
+    MERGE = "merge"
+    REPLACE = "replace"
+
+
 class EnrichmentStatus(StrEnum):
     SEEDED = "seeded"
     PARTIAL = "partial"
@@ -27,7 +49,9 @@ class EnrichmentStatus(StrEnum):
 
 
 class SimilarityRelationType(StrEnum):
-    SIMILAR_SPECIES = "similar_species"
+    TAXONOMIC_NEIGHBOR = "taxonomic_neighbor"
+    VISUAL_LOOKALIKE = "visual_lookalike"
+    EDUCATIONAL_CONFUSION = "educational_confusion"
 
 
 class MediaType(StrEnum):

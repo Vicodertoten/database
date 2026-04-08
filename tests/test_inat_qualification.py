@@ -121,6 +121,6 @@ def _media_asset() -> MediaAsset:
         width=1600,
         height=1200,
         source_observation_uid="obs:fixture:retry",
-        canonical_taxon_id="bird:turdus-merula",
+        canonical_taxon_id="taxon:birds:000014",
         raw_payload_ref="fixture.json#/media/retry",
     )

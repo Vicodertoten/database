@@ -8,7 +8,8 @@ from urllib.parse import urlparse
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from database_core.adapters.common import SourceDataset
-from database_core.domain.enums import CanonicalRank, SourceName
+from database_core.domain.canonical_ids import next_canonical_taxon_id
+from database_core.domain.enums import CanonicalRank, SourceName, TaxonGroup, TaxonStatus
 from database_core.domain.models import (
     CanonicalTaxon,
     ExternalMapping,
@@ -32,9 +33,13 @@ class SnapshotModel(BaseModel):
 
 
 class PilotTaxonSeed(SnapshotModel):
-    canonical_taxon_id: str
-    scientific_name: str
+    canonical_taxon_id: str | None = None
+    accepted_scientific_name: str
     canonical_rank: CanonicalRank = CanonicalRank.SPECIES
+    taxon_status: TaxonStatus = TaxonStatus.ACTIVE
+    authority_source: SourceName = SourceName.INATURALIST
+    display_slug: str | None = None
+    synonyms: list[str] = Field(default_factory=list)
     common_names: list[str] = Field(default_factory=list)
     source_taxon_id: str
 
@@ -48,8 +53,12 @@ class PilotTaxonSeed(SnapshotModel):
 
 class SnapshotTaxonSeed(SnapshotModel):
     canonical_taxon_id: str
-    scientific_name: str
+    accepted_scientific_name: str
     canonical_rank: CanonicalRank = CanonicalRank.SPECIES
+    taxon_status: TaxonStatus = TaxonStatus.ACTIVE
+    authority_source: SourceName = SourceName.INATURALIST
+    display_slug: str | None = None
+    synonyms: list[str] = Field(default_factory=list)
     common_names: list[str] = Field(default_factory=list)
     source_taxon_id: str
     query_params: dict[str, str]
@@ -86,7 +95,17 @@ class InaturalistSnapshotManifest(SnapshotModel):
 
 def load_pilot_taxa(path: Path = DEFAULT_PILOT_TAXA_PATH) -> list[PilotTaxonSeed]:
     payload = json.loads(path.read_text(encoding="utf-8"))
-    return [PilotTaxonSeed(**item) for item in payload]
+    seeds = [
+        PilotTaxonSeed(**item)
+        for item in payload
+    ]
+    validated = _assign_missing_canonical_taxon_ids(seeds)
+    for seed in validated:
+        if seed.authority_source != SourceName.INATURALIST:
+            raise ValueError(
+                "Pilot taxon seed has unsupported authority_source for phase1 birds."
+            )
+    return validated
 
 
 def resolve_snapshot_dir(
@@ -109,11 +128,11 @@ def load_snapshot_manifest(
 
     payload = json.loads(manifest_path.read_text(encoding="utf-8"))
     manifest_version = payload.get("manifest_version")
-    if manifest_version is not None and manifest_version != SNAPSHOT_MANIFEST_VERSION:
+    if manifest_version != SNAPSHOT_MANIFEST_VERSION:
         raise ValueError(
             "Unsupported snapshot manifest_version "
             f"{manifest_version!r} in {manifest_path}. Expected {SNAPSHOT_MANIFEST_VERSION!r} "
-            "or a legacy manifest without manifest_version."
+            "for canonical v1 hard-cutover."
         )
     manifest = InaturalistSnapshotManifest.model_validate(payload)
     return manifest, manifest_path.parent
@@ -138,6 +157,15 @@ def load_snapshot_dataset(
         snapshot_root=snapshot_root,
         manifest_path=manifest_path,
     )
+    if manifest.source_name != SourceName.INATURALIST:
+        raise ValueError(
+            "Canonical auto-creation authority for phase1 birds is inaturalist only."
+        )
+    for seed in manifest.taxon_seeds:
+        if seed.authority_source != SourceName.INATURALIST:
+            raise ValueError(
+                "Snapshot taxon seed has unsupported authority_source for phase1 birds."
+            )
     canonical_taxa = sorted(
         [_build_canonical_taxon(seed) for seed in manifest.taxon_seeds],
         key=lambda item: item.canonical_taxon_id,
@@ -260,8 +288,12 @@ def summarize_snapshot_manifest(
 def _build_canonical_taxon(seed: SnapshotTaxonSeed) -> CanonicalTaxon:
     return CanonicalTaxon(
         canonical_taxon_id=seed.canonical_taxon_id,
-        scientific_name=seed.scientific_name,
+        accepted_scientific_name=seed.accepted_scientific_name,
         canonical_rank=seed.canonical_rank,
+        taxon_status=seed.taxon_status,
+        authority_source=seed.authority_source,
+        display_slug=seed.display_slug,
+        synonyms=seed.synonyms,
         common_names=seed.common_names,
         bird_scope_compatible=True,
         external_source_mappings=[
@@ -420,3 +452,30 @@ def _guess_mime_type(url: str) -> str | None:
     if extension == "webp":
         return "image/webp"
     return None
+
+
+def _assign_missing_canonical_taxon_ids(seeds: list[PilotTaxonSeed]) -> list[PilotTaxonSeed]:
+    if all(seed.canonical_taxon_id for seed in seeds):
+        return seeds
+
+    existing_ids = [seed.canonical_taxon_id for seed in seeds if seed.canonical_taxon_id]
+    updated: list[PilotTaxonSeed] = []
+    missing = sorted(
+        [seed for seed in seeds if not seed.canonical_taxon_id],
+        key=lambda item: item.source_taxon_id,
+    )
+    assigned_by_source_taxon_id: dict[str, str] = {}
+    for seed in missing:
+        canonical_taxon_id = next_canonical_taxon_id(
+            existing_ids=existing_ids,
+            group=TaxonGroup.BIRDS,
+        )
+        assigned_by_source_taxon_id[seed.source_taxon_id] = canonical_taxon_id
+        existing_ids.append(canonical_taxon_id)
+
+    for seed in seeds:
+        canonical_taxon_id = seed.canonical_taxon_id or assigned_by_source_taxon_id[
+            seed.source_taxon_id
+        ]
+        updated.append(seed.model_copy(update={"canonical_taxon_id": canonical_taxon_id}))
+    return updated

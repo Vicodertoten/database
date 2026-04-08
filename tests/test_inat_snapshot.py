@@ -39,9 +39,9 @@ def test_snapshot_loader_rebuilds_records_without_network() -> None:
     dataset = load_snapshot_dataset(manifest_path=SNAPSHOT_MANIFEST)
 
     assert [item.canonical_taxon_id for item in dataset.canonical_taxa] == [
-        "bird:erithacus-rubecula",
-        "bird:passer-domesticus",
-        "bird:turdus-merula",
+        "taxon:birds:000004",
+        "taxon:birds:000009",
+        "taxon:birds:000014",
     ]
     assert [item.source_observation_id for item in dataset.observations] == [
         "910001",
@@ -51,32 +51,31 @@ def test_snapshot_loader_rebuilds_records_without_network() -> None:
     assert [item.source_media_id for item in dataset.media_assets] == ["810001", "810002", "810003"]
     assert [item.width for item in dataset.media_assets] == [1600, 1400, 1280]
     assert [item.height for item in dataset.media_assets] == [1200, 1050, 960]
-    assert dataset.observations[0].raw_payload_ref == "responses/bird_turdus_merula.json#/results/0"
+    assert dataset.observations[0].raw_payload_ref == "responses/taxon_birds_000014.json#/results/0"
     assert dataset.cached_image_paths_by_source_media_id["810001"].name == "810001.jpg"
     assert dataset.ai_qualification_outcomes["810001"].status == "ok"
     assert sorted(dataset.taxon_payloads_by_canonical_taxon_id) == [
-        "bird:erithacus-rubecula",
-        "bird:passer-domesticus",
-        "bird:turdus-merula",
+        "taxon:birds:000004",
+        "taxon:birds:000009",
+        "taxon:birds:000014",
     ]
 
 
 def test_snapshot_manifest_v2_is_accepted() -> None:
     manifest, snapshot_dir = load_snapshot_manifest(manifest_path=SNAPSHOT_MANIFEST)
 
-    assert manifest.manifest_version == "inaturalist.snapshot.v2"
+    assert manifest.manifest_version == "inaturalist.snapshot.v3"
     assert snapshot_dir == SNAPSHOT_MANIFEST.parent
 
 
-def test_snapshot_manifest_without_version_is_accepted(tmp_path: Path) -> None:
+def test_snapshot_manifest_without_version_is_rejected(tmp_path: Path) -> None:
     manifest_path = tmp_path / "manifest.json"
     payload = json.loads(SNAPSHOT_MANIFEST.read_text(encoding="utf-8"))
     payload.pop("manifest_version", None)
     manifest_path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
-    manifest, _ = load_snapshot_manifest(manifest_path=manifest_path)
-
-    assert manifest.manifest_version == "inaturalist.snapshot.v2"
+    with pytest.raises(ValueError, match="Unsupported snapshot manifest_version"):
+        load_snapshot_manifest(manifest_path=manifest_path)
 
 
 def test_snapshot_manifest_unknown_version_is_rejected(tmp_path: Path) -> None:
@@ -146,12 +145,12 @@ def test_snapshot_pipeline_enriches_canonical_taxa_from_cached_taxon_payloads(
         (tmp_path / "enriched_normalized.json").read_text(encoding="utf-8")
     )
     taxa_by_id = {item["canonical_taxon_id"]: item for item in normalized_payload["canonical_taxa"]}
-    blackbird = taxa_by_id["bird:turdus-merula"]
+    blackbird = taxa_by_id["taxon:birds:000014"]
 
-    assert normalized_payload["enrichment_version"] == "canonical.enrichment.v1"
+    assert normalized_payload["enrichment_version"] == "canonical.enrichment.v2"
     assert blackbird["source_enrichment_status"] == "partial"
-    assert blackbird["similar_taxon_ids"] == ["bird:erithacus-rubecula"]
-    assert blackbird["similar_taxa"][0]["target_canonical_taxon_id"] == "bird:erithacus-rubecula"
+    assert blackbird["similar_taxon_ids"] == ["taxon:birds:000004"]
+    assert blackbird["similar_taxa"][0]["target_canonical_taxon_id"] == "taxon:birds:000004"
     assert len(blackbird["external_similarity_hints"]) == 2
     assert "yellow eye_ring" in blackbird["key_identification_features"]
 
@@ -445,7 +444,7 @@ def test_review_overrides_are_not_applied_without_flag(tmp_path: Path, monkeypat
 def test_snapshot_loader_rejects_captive_true_but_accepts_null_or_absent(tmp_path: Path) -> None:
     snapshot_dir = tmp_path / "snapshot"
     shutil.copytree(SNAPSHOT_MANIFEST.parent, snapshot_dir)
-    response_path = snapshot_dir / "responses/bird_turdus_merula.json"
+    response_path = snapshot_dir / "responses/taxon_birds_000014.json"
     payload = json.loads(response_path.read_text(encoding="utf-8"))
     payload["results"][0]["captive"] = True
     response_path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
@@ -476,7 +475,7 @@ def test_snapshot_loader_rejects_captive_true_but_accepts_null_or_absent(tmp_pat
 def test_snapshot_loader_rejects_unsafe_observation_or_photo_license(tmp_path: Path) -> None:
     snapshot_dir = tmp_path / "snapshot"
     shutil.copytree(SNAPSHOT_MANIFEST.parent, snapshot_dir)
-    response_path = snapshot_dir / "responses/bird_turdus_merula.json"
+    response_path = snapshot_dir / "responses/taxon_birds_000014.json"
     payload = json.loads(response_path.read_text(encoding="utf-8"))
     payload["results"][0]["license_code"] = "cc-by-nc"
     response_path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
@@ -500,9 +499,9 @@ def test_snapshot_manifest_summary_includes_taxon_breakdown() -> None:
     assert summary["harvested_observations"] == 3
     assert summary["taxa_with_results"] == 3
     assert summary["harvested_per_taxon"] == {
-        "bird:erithacus-rubecula": 1,
-        "bird:passer-domesticus": 1,
-        "bird:turdus-merula": 1,
+        "taxon:birds:000004": 1,
+        "taxon:birds:000009": 1,
+        "taxon:birds:000014": 1,
     }
 
 

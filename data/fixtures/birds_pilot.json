@@ -3,8 +3,8 @@
   "captured_at": "2026-04-07T00:00:00Z",
   "canonical_taxa": [
     {
-      "canonical_taxon_id": "bird:turdus-merula",
-      "scientific_name": "Turdus merula",
+      "canonical_taxon_id": "taxon:birds:000014",
+      "accepted_scientific_name": "Turdus merula",
       "canonical_rank": "species",
       "common_names": ["Common Blackbird", "Eurasian Blackbird"],
       "bird_scope_compatible": true,
@@ -14,8 +14,8 @@
       "similar_taxon_ids": []
     },
     {
-      "canonical_taxon_id": "bird:erithacus-rubecula",
-      "scientific_name": "Erithacus rubecula",
+      "canonical_taxon_id": "taxon:birds:000004",
+      "accepted_scientific_name": "Erithacus rubecula",
       "canonical_rank": "species",
       "common_names": ["European Robin"],
       "bird_scope_compatible": true,
@@ -25,8 +25,8 @@
       "similar_taxon_ids": []
     },
     {
-      "canonical_taxon_id": "bird:passer-domesticus",
-      "scientific_name": "Passer domesticus",
+      "canonical_taxon_id": "taxon:birds:000009",
+      "accepted_scientific_name": "Passer domesticus",
       "canonical_rank": "species",
       "common_names": ["House Sparrow"],
       "bird_scope_compatible": true,
@@ -41,7 +41,7 @@
       "source_name": "inaturalist",
       "source_observation_id": "fixture-obs-blackbird-001",
       "source_taxon_id": "12716",
-      "canonical_taxon_id": "bird:turdus-merula",
+      "canonical_taxon_id": "taxon:birds:000014",
       "observed_at": "2025-04-18T07:31:00Z",
       "location": {
         "place_name": "Brussels, BE",
@@ -89,7 +89,7 @@
       "source_name": "inaturalist",
       "source_observation_id": "fixture-obs-sparrow-001",
       "source_taxon_id": "13858",
-      "canonical_taxon_id": "bird:passer-domesticus",
+      "canonical_taxon_id": "taxon:birds:000009",
       "observed_at": "2025-03-28T10:15:00Z",
       "location": {
         "place_name": "Leuven, BE",
@@ -124,7 +124,7 @@
       "source_name": "inaturalist",
       "source_observation_id": "fixture-obs-robin-001",
       "source_taxon_id": "13094",
-      "canonical_taxon_id": "bird:erithacus-rubecula",
+      "canonical_taxon_id": "taxon:birds:000004",
       "observed_at": "2025-02-12T08:05:00Z",
       "location": {
         "place_name": "Namur, BE",

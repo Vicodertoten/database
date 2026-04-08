@@ -5,10 +5,14 @@ import sqlite3
 from collections import Counter
 from collections.abc import Sequence
 from contextlib import contextmanager
+from datetime import UTC, datetime
 from pathlib import Path
 
+from database_core.domain.enums import CanonicalChangeRelationType, CanonicalEventType
 from database_core.domain.models import (
     CanonicalTaxon,
+    CanonicalTaxonEvent,
+    CanonicalTaxonRelationship,
     MediaAsset,
     QualifiedResource,
     ReviewItem,
@@ -44,6 +48,8 @@ class SQLiteRepository:
         with self.connect() as connection:
             connection.executescript(
                 """
+                DELETE FROM canonical_taxon_events;
+                DELETE FROM canonical_taxon_relationships;
                 DELETE FROM review_queue;
                 DELETE FROM qualified_resources;
                 DELETE FROM media_assets;
@@ -58,26 +64,38 @@ class SQLiteRepository:
                 """
                 INSERT OR REPLACE INTO canonical_taxa (
                     canonical_taxon_id,
-                    scientific_name,
+                    accepted_scientific_name,
                     canonical_rank,
-                    common_names_json,
                     taxon_group,
+                    taxon_status,
+                    authority_source,
+                    display_slug,
+                    synonyms_json,
+                    common_names_json,
                     key_identification_features_json,
                     source_enrichment_status,
                     bird_scope_compatible,
                     external_source_mappings_json,
                     external_similarity_hints_json,
                     similar_taxa_json,
-                    similar_taxon_ids_json
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    similar_taxon_ids_json,
+                    split_into_json,
+                    merged_into,
+                    replaced_by,
+                    derived_from
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 [
                     (
                         item.canonical_taxon_id,
-                        item.scientific_name,
+                        item.accepted_scientific_name,
                         item.canonical_rank,
-                        _json(item.common_names),
                         item.taxon_group,
+                        item.taxon_status,
+                        item.authority_source,
+                        item.display_slug,
+                        _json(item.synonyms),
+                        _json(item.common_names),
                         _json(item.key_identification_features),
                         item.source_enrichment_status,
                         int(item.bird_scope_compatible),
@@ -95,8 +113,59 @@ class SQLiteRepository:
                         ),
                         _json([relation.model_dump(mode="json") for relation in item.similar_taxa]),
                         _json(item.similar_taxon_ids),
+                        _json(item.split_into),
+                        item.merged_into,
+                        item.replaced_by,
+                        item.derived_from,
                     )
                     for item in taxa
+                ],
+            )
+            relationships, events = _build_canonical_relationships_and_events(taxa)
+            connection.execute("DELETE FROM canonical_taxon_relationships")
+            connection.execute("DELETE FROM canonical_taxon_events")
+            connection.executemany(
+                """
+                INSERT INTO canonical_taxon_relationships (
+                    source_canonical_taxon_id,
+                    relationship_type,
+                    target_canonical_taxon_id,
+                    source_name,
+                    created_at
+                ) VALUES (?, ?, ?, ?, ?)
+                """,
+                [
+                    (
+                        item.source_canonical_taxon_id,
+                        item.relationship_type,
+                        item.target_canonical_taxon_id,
+                        item.source_name,
+                        item.created_at.isoformat(),
+                    )
+                    for item in relationships
+                ],
+            )
+            connection.executemany(
+                """
+                INSERT INTO canonical_taxon_events (
+                    event_id,
+                    event_type,
+                    canonical_taxon_id,
+                    source_name,
+                    effective_at,
+                    payload_json
+                ) VALUES (?, ?, ?, ?, ?, ?)
+                """,
+                [
+                    (
+                        item.event_id,
+                        item.event_type,
+                        item.canonical_taxon_id,
+                        item.source_name,
+                        item.effective_at.isoformat(),
+                        _json(item.payload),
+                    )
+                    for item in events
                 ],
             )
 
@@ -418,3 +487,87 @@ class SQLiteRepository:
 
 def _json(value: object) -> str:
     return json.dumps(value, sort_keys=True, ensure_ascii=True)
+
+
+def _build_canonical_relationships_and_events(
+    taxa: Sequence[CanonicalTaxon],
+) -> tuple[list[CanonicalTaxonRelationship], list[CanonicalTaxonEvent]]:
+    now = datetime.now(UTC)
+    relationships: list[CanonicalTaxonRelationship] = []
+    events: list[CanonicalTaxonEvent] = []
+
+    for taxon in sorted(taxa, key=lambda item: item.canonical_taxon_id):
+        events.append(
+            CanonicalTaxonEvent(
+                event_id=f"event:{taxon.canonical_taxon_id}:upsert",
+                event_type=CanonicalEventType.CREATE,
+                canonical_taxon_id=taxon.canonical_taxon_id,
+                source_name=taxon.authority_source,
+                effective_at=now,
+                payload={
+                    "accepted_scientific_name": taxon.accepted_scientific_name,
+                    "taxon_status": taxon.taxon_status,
+                    "display_slug": taxon.display_slug,
+                },
+            )
+        )
+
+        for target_id in taxon.split_into:
+            relationships.append(
+                CanonicalTaxonRelationship(
+                    source_canonical_taxon_id=taxon.canonical_taxon_id,
+                    relationship_type=CanonicalChangeRelationType.SPLIT_INTO,
+                    target_canonical_taxon_id=target_id,
+                    source_name=taxon.authority_source,
+                    created_at=now,
+                )
+            )
+        if taxon.merged_into:
+            relationships.append(
+                CanonicalTaxonRelationship(
+                    source_canonical_taxon_id=taxon.canonical_taxon_id,
+                    relationship_type=CanonicalChangeRelationType.MERGED_INTO,
+                    target_canonical_taxon_id=taxon.merged_into,
+                    source_name=taxon.authority_source,
+                    created_at=now,
+                )
+            )
+        if taxon.replaced_by:
+            relationships.append(
+                CanonicalTaxonRelationship(
+                    source_canonical_taxon_id=taxon.canonical_taxon_id,
+                    relationship_type=CanonicalChangeRelationType.REPLACED_BY,
+                    target_canonical_taxon_id=taxon.replaced_by,
+                    source_name=taxon.authority_source,
+                    created_at=now,
+                )
+            )
+        if taxon.derived_from:
+            relationships.append(
+                CanonicalTaxonRelationship(
+                    source_canonical_taxon_id=taxon.canonical_taxon_id,
+                    relationship_type=CanonicalChangeRelationType.DERIVED_FROM,
+                    target_canonical_taxon_id=taxon.derived_from,
+                    source_name=taxon.authority_source,
+                    created_at=now,
+                )
+            )
+
+    deduped_relationships = sorted(
+        {
+            (
+                item.source_canonical_taxon_id,
+                item.relationship_type,
+                item.target_canonical_taxon_id,
+                item.source_name,
+            ): item
+            for item in relationships
+        }.values(),
+        key=lambda item: (
+            item.source_canonical_taxon_id,
+            item.relationship_type,
+            item.target_canonical_taxon_id,
+            item.source_name,
+        ),
+    )
+    return deduped_relationships, events
