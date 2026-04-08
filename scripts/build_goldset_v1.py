@@ -4,6 +4,7 @@ import argparse
 import hashlib
 import io
 import json
+import shutil
 import time
 from dataclasses import dataclass
 from datetime import UTC, datetime
@@ -22,6 +23,8 @@ DEFAULT_OUTPUT_ROOT = Path("data/goldset/birds_v1")
 DEFAULT_TARGET_IMAGES_PER_TAXON = 5
 DEFAULT_TIMEOUT_SECONDS = 30
 DEFAULT_API_REQUEST_INTERVAL_SECONDS = 1.1
+DEFAULT_MIN_WIDTH = 512
+DEFAULT_MIN_HEIGHT = 512
 
 
 @dataclass(frozen=True)
@@ -84,12 +87,21 @@ def main() -> int:
         type=float,
         default=DEFAULT_API_REQUEST_INTERVAL_SECONDS,
     )
+    parser.add_argument("--minimum-width", type=int, default=DEFAULT_MIN_WIDTH)
+    parser.add_argument("--minimum-height", type=int, default=DEFAULT_MIN_HEIGHT)
+    parser.add_argument(
+        "--clean",
+        action="store_true",
+        help="remove output root before rebuilding",
+    )
     args = parser.parse_args()
 
     if args.images_per_taxon <= 0:
         raise SystemExit("--images-per-taxon must be positive")
 
     output_root: Path = args.output_root
+    if args.clean and output_root.exists():
+        shutil.rmtree(output_root)
     images_root = output_root / "images"
     output_root.mkdir(parents=True, exist_ok=True)
     images_root.mkdir(parents=True, exist_ok=True)
@@ -106,6 +118,8 @@ def main() -> int:
             images_root=images_root,
             globally_selected_media_ids=selected_media_ids,
             limiter=limiter,
+            minimum_width=args.minimum_width,
+            minimum_height=args.minimum_height,
         )
         manifest_taxa.append(taxon_payload)
         print(
@@ -143,6 +157,8 @@ def _collect_taxon_examples(
     images_root: Path,
     globally_selected_media_ids: set[str],
     limiter: APIRateLimiter,
+    minimum_width: int,
+    minimum_height: int,
 ) -> dict[str, object]:
     payload, requested_order_by, effective_order_by = _fetch_observations_with_fallback(
         source_taxon_id=target.source_taxon_id,
@@ -192,6 +208,14 @@ def _collect_taxon_examples(
                 image_bytes=image_bytes,
                 source_url=source_url,
             )
+            width, height = _inspect_image_dimensions(image_bytes)
+            if (
+                width is None
+                or height is None
+                or width < minimum_width
+                or height < minimum_height
+            ):
+                continue
             observation_id = str(observation.get("id") or "").strip()
             image_path = (
                 images_root
@@ -208,8 +232,8 @@ def _collect_taxon_examples(
                 "license_code": observation_license,
                 "photo_license_code": photo_license,
                 "downloaded_variant": variant,
-                "downloaded_width": photo.get("width"),
-                "downloaded_height": photo.get("height"),
+                "downloaded_width": width,
+                "downloaded_height": height,
                 "observed_on": observation.get("observed_on"),
                 "sha256": f"sha256:{hashlib.sha256(image_bytes).hexdigest()}",
             }
@@ -306,7 +330,7 @@ def _candidate_photo_urls(photo: dict[str, object]) -> list[tuple[str, str]]:
     candidates: list[tuple[str, str]] = []
     seen: set[str] = set()
 
-    for variant in ("medium", "large", "original"):
+    for variant in ("large", "original", "medium"):
         value = str(photo.get(f"{variant}_url") or "").strip()
         if value and value not in seen:
             candidates.append((variant, value))
@@ -314,7 +338,7 @@ def _candidate_photo_urls(photo: dict[str, object]) -> list[tuple[str, str]]:
 
     square_url = str(photo.get("url") or "").strip()
     if square_url:
-        for variant in ("medium", "large", "original"):
+        for variant in ("large", "original", "medium"):
             if "/square." not in square_url:
                 continue
             value = square_url.replace("/square.", f"/{variant}.", 1)
@@ -343,6 +367,14 @@ def _normalize_downloaded_image(*, image_bytes: bytes, source_url: str) -> tuple
             return buffer.getvalue(), "jpg"
     except (OSError, UnidentifiedImageError):
         return image_bytes, extension
+
+
+def _inspect_image_dimensions(image_bytes: bytes) -> tuple[int | None, int | None]:
+    try:
+        with Image.open(io.BytesIO(image_bytes)) as image:
+            return image.width, image.height
+    except (OSError, UnidentifiedImageError):
+        return None, None
 
 
 if __name__ == "__main__":

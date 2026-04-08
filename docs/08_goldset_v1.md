@@ -34,10 +34,11 @@ Le manifest contient par taxon:
 Commande:
 
 ```bash
-python scripts/build_goldset_v1.py
+python scripts/build_goldset_v1.py --clean
 ```
 
 Le script applique une limite API explicite (`--api-request-interval-seconds`, défaut `1.1s`) pour rester sous 60 req/min côté iNaturalist.
+Il sélectionne uniquement des images qui satisfont le minimum Gemini (`512x512` par défaut).
 
 ## Vérification
 
@@ -79,3 +80,6 @@ Le script:
 - lance la qualification Gemini en live
 - exécute `run_pipeline` en `inat_snapshot` avec `qualifier_mode=cached`
 - imprime les métriques clés (`processed`, `ai_ok`, `qualified`, `exportable`, `review`)
+
+Le script échoue explicitement si des images du snapshot sont sous `512x512`
+(option de contournement: `--allow-insufficient-resolution`).

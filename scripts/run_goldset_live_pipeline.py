@@ -27,7 +27,12 @@ from database_core.adapters.inaturalist_snapshot import (
 from database_core.domain.canonical_ids import next_canonical_taxon_id
 from database_core.domain.enums import CanonicalRank, SourceName, TaxonGroup, TaxonStatus
 from database_core.pipeline.runner import run_pipeline
-from database_core.qualification.ai import DEFAULT_GEMINI_MODEL
+from database_core.qualification.ai import (
+    DEFAULT_GEMINI_MODEL,
+    MIN_AI_IMAGE_HEIGHT,
+    MIN_AI_IMAGE_WIDTH,
+    inspect_image_dimensions,
+)
 from database_core.storage.sqlite import SQLiteRepository
 
 DEFAULT_GOLDSET_MANIFEST_PATH = Path("data/goldset/birds_v1/manifest.json")
@@ -57,6 +62,11 @@ def main() -> int:
     )
     parser.add_argument("--max-backoff-seconds", type=float, default=DEFAULT_MAX_BACKOFF_SECONDS)
     parser.add_argument("--uncertain-policy", choices=["review", "reject"], default="reject")
+    parser.add_argument(
+        "--allow-insufficient-resolution",
+        action="store_true",
+        help="continue even if snapshot contains images below Gemini minimum resolution",
+    )
     parser.add_argument("--force", action="store_true")
     args = parser.parse_args()
 
@@ -200,6 +210,19 @@ def main() -> int:
     )
     write_snapshot_manifest(snapshot_dir, manifest)
 
+    low_resolution_images = _find_low_resolution_images(
+        media_downloads=manifest.media_downloads,
+        snapshot_dir=snapshot_dir,
+    )
+    if low_resolution_images and not args.allow_insufficient_resolution:
+        preview = ", ".join(low_resolution_images[:5])
+        raise SystemExit(
+            "Goldset snapshot has images below Gemini minimum resolution "
+            f"({MIN_AI_IMAGE_WIDTH}x{MIN_AI_IMAGE_HEIGHT}). "
+            f"count={len(low_resolution_images)}; samples={preview}. "
+            "Rebuild goldset at higher resolution or rerun with --allow-insufficient-resolution."
+        )
+
     qualification_result = qualify_inat_snapshot(
         snapshot_id=snapshot_id,
         snapshot_root=args.snapshot_root,
@@ -318,6 +341,27 @@ def _guess_mime_type(url: str) -> str | None:
 
 def _slugify_filename(value: str) -> str:
     return value.replace(":", "_").replace("-", "_")
+
+
+def _find_low_resolution_images(
+    *,
+    media_downloads: list[SnapshotMediaDownload],
+    snapshot_dir: Path,
+) -> list[str]:
+    low_resolution_media_ids: list[str] = []
+    for item in media_downloads:
+        width = item.downloaded_width
+        height = item.downloaded_height
+        if width is None or height is None:
+            width, height = inspect_image_dimensions(snapshot_dir / item.image_path)
+        if (
+            width is None
+            or height is None
+            or width < MIN_AI_IMAGE_WIDTH
+            or height < MIN_AI_IMAGE_HEIGHT
+        ):
+            low_resolution_media_ids.append(item.source_media_id)
+    return low_resolution_media_ids
 
 
 if __name__ == "__main__":

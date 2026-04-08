@@ -102,7 +102,7 @@ python scripts/inspect_database.py snapshot-health --snapshot-id inaturalist-bir
 python scripts/review_overrides.py init --snapshot-id inaturalist-birds-20260408T123456Z
 python scripts/review_overrides.py upsert --snapshot-id inaturalist-birds-20260408T123456Z --media-asset-id media:inaturalist:810001 --status review_required --note "manual spot-check requested"
 python scripts/review_overrides.py list --snapshot-id inaturalist-birds-20260408T123456Z
-python scripts/build_goldset_v1.py
+python scripts/build_goldset_v1.py --clean
 python scripts/optimize_goldset_media.py
 python scripts/verify_goldset_v1.py
 python scripts/run_goldset_live_pipeline.py --snapshot-id goldset-birds-v1-live-$(date -u +%Y%m%dT%H%M%SZ)
@@ -243,6 +243,8 @@ python scripts/run_goldset_live_pipeline.py \
 The command creates a snapshot-like workspace under `data/raw/inaturalist/<snapshot_id>/`,
 runs `qualify_inat_snapshot` with Gemini, then runs the full pipeline in `inat_snapshot` mode
 using cached outputs.
+It fails fast if any image is below Gemini minimum resolution (512x512), unless
+`--allow-insufficient-resolution` is provided.
 
 It runs, in order:
 
