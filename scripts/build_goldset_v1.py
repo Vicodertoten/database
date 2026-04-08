@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import io
 import json
 import time
 from dataclasses import dataclass
@@ -10,6 +11,8 @@ from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode, urlparse
 from urllib.request import Request, urlopen
+
+from PIL import Image, UnidentifiedImageError
 
 INAT_OBSERVATIONS_API = "https://api.inaturalist.org/v1/observations"
 USER_AGENT = "database-core/0.1"
@@ -185,7 +188,10 @@ def _collect_taxon_examples(
                 image_bytes = _fetch_bytes(source_url, timeout_seconds=timeout_seconds)
             except RECOVERABLE_NETWORK_ERRORS:
                 continue
-            extension = _guess_extension(source_url) or "jpg"
+            image_bytes, extension = _normalize_downloaded_image(
+                image_bytes=image_bytes,
+                source_url=source_url,
+            )
             observation_id = str(observation.get("id") or "").strip()
             image_path = (
                 images_root
@@ -323,6 +329,20 @@ def _guess_extension(url: str) -> str | None:
     if "." not in path:
         return None
     return path.rsplit(".", 1)[-1].lower()
+
+
+def _normalize_downloaded_image(*, image_bytes: bytes, source_url: str) -> tuple[bytes, str]:
+    extension = (_guess_extension(source_url) or "jpg").lower()
+    if extension != "gif":
+        return image_bytes, extension
+    try:
+        with Image.open(io.BytesIO(image_bytes)) as image:
+            first_frame = image.convert("RGB")
+            buffer = io.BytesIO()
+            first_frame.save(buffer, format="JPEG", quality=82, optimize=True, progressive=True)
+            return buffer.getvalue(), "jpg"
+    except (OSError, UnidentifiedImageError):
+        return image_bytes, extension
 
 
 if __name__ == "__main__":

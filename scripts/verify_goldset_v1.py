@@ -37,7 +37,8 @@ def main() -> int:
             continue
         if len(images) != args.expected_images_per_taxon:
             errors.append(
-                f"{scientific_name}: expected {args.expected_images_per_taxon} images, got {len(images)}"
+                f"{scientific_name}: expected {args.expected_images_per_taxon} images, "
+                f"got {len(images)}"
             )
         for image in images:
             source_media_id = str(image.get("source_media_id") or "").strip()
@@ -61,13 +62,18 @@ def main() -> int:
     declared_total_images = int(payload.get("total_images") or 0)
     if declared_total_images != expected_total_images:
         errors.append(
-            f"manifest total_images mismatch: expected {expected_total_images}, got {declared_total_images}"
+            "manifest total_images mismatch: "
+            f"expected {expected_total_images}, got {declared_total_images}"
         )
     if image_count != expected_total_images:
-        errors.append(f"materialized image count mismatch: expected {expected_total_images}, got {image_count}")
+        errors.append(
+            "materialized image count mismatch: "
+            f"expected {expected_total_images}, got {image_count}"
+        )
     if len(unique_media_ids) != expected_total_images:
         errors.append(
-            f"unique media count mismatch: expected {expected_total_images}, got {len(unique_media_ids)}"
+            "unique media count mismatch: "
+            f"expected {expected_total_images}, got {len(unique_media_ids)}"
         )
 
     if errors:

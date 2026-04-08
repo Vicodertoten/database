@@ -53,3 +53,29 @@ Contrôles:
 - unicité `source_media_id`
 - existence physique des fichiers image
 - cohérence du `total_images` déclaré dans le manifest
+
+## Optimisation media
+
+Pour convertir les GIF restants en JPEG plus légers:
+
+```bash
+python scripts/optimize_goldset_media.py
+python scripts/verify_goldset_v1.py
+```
+
+## Test live E2E sur pipeline complète
+
+Commande:
+
+```bash
+python scripts/run_goldset_live_pipeline.py \
+  --snapshot-id goldset-birds-v1-live-$(date -u +%Y%m%dT%H%M%SZ) \
+  --uncertain-policy reject
+```
+
+Le script:
+
+- matérialise un snapshot iNaturalist compatible pipeline depuis le manifest goldset
+- lance la qualification Gemini en live
+- exécute `run_pipeline` en `inat_snapshot` avec `qualifier_mode=cached`
+- imprime les métriques clés (`processed`, `ai_ok`, `qualified`, `exportable`, `review`)
