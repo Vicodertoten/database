@@ -152,15 +152,15 @@ The manifest records which sort was requested and which one was actually used.
 
 The repository now writes explicit stage versions into generated artifacts:
 
-- schema version: `database.schema.v2`
-- snapshot manifest version: `inaturalist.snapshot.v2`
-- normalized snapshot version: `normalized.snapshot.v2`
-- canonical enrichment version: `canonical.enrichment.v1`
+- schema version: `database.schema.v3`
+- snapshot manifest version: `inaturalist.snapshot.v3`
+- normalized snapshot version: `normalized.snapshot.v3`
+- canonical enrichment version: `canonical.enrichment.v2`
 - qualification version: `qualification.staged.v1`
-- export version: `export.bundle.v1`
+- export version: `export.bundle.v2`
 - review override version: `review.override.v1`
 
-Legacy snapshot manifests without `manifest_version` remain readable for compatibility.
+Snapshot manifests without `manifest_version` are rejected.
 Unknown manifest versions are rejected explicitly.
 The export bundle is validated against `schemas/qualified_resources_bundle.schema.json` before it is written.
 
