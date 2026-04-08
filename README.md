@@ -30,11 +30,10 @@ The repository is not the quiz app, frontend, or product runtime.
 
 ## Reference docs
 
+- Documentation index: `docs/README.md`
 - Living audit reference: `docs/05_audit_reference.md`
 - Stable canonical charter v1: `docs/06_charte_canonique_v1.md`
 - Canonical implementation ADR: `docs/adr/0001-charte-canonique-v1.md`
-- Canonical ID migration table: `docs/07_canonical_id_migration_v1.md`
-- Gold set IA V1: `docs/08_goldset_v1.md`
 
 ## Quickstart
 
@@ -43,13 +42,14 @@ python -m venv .venv
 source .venv/bin/activate
 pip install -e ".[dev]"
 python scripts/verify_repo.py
+python scripts/migrate_database.py --db-path data/database.sqlite
 python scripts/run_pipeline.py
 python scripts/inspect_database.py summary
 ```
 
 Installed entrypoints mirror the script wrappers:
 `database-run-pipeline`, `database-inspect`, `database-fetch-inat-snapshot`,
-`database-qualify-inat-snapshot`, and `database-review-overrides`.
+`database-qualify-inat-snapshot`, `database-review-overrides`, and `database-migrate`.
 
 ## What works now
 
@@ -65,7 +65,7 @@ Installed entrypoints mirror the script wrappers:
 - structured review queue with stage, reason code, and priority
 - snapshot-scoped review overrides that can be replayed on rerun
 - versioned normalized, qualification, and export artifacts
-- JSON export bundle validated against a JSON Schema before write
+- JSON export bundles validated against versioned JSON Schemas before write
 - lightweight inspection CLI
 
 ## AI-assisted qualification
@@ -90,6 +90,7 @@ Cached AI outputs are version-governed through a prompt bundle version, so stale
 python scripts/fetch_inat_snapshot.py --snapshot-id inaturalist-birds-20260408T123456Z --max-observations-per-taxon 1
 python scripts/qualify_inat_snapshot.py --snapshot-id inaturalist-birds-20260408T123456Z
 python scripts/qualify_inat_snapshot.py --snapshot-id inaturalist-birds-20260408T123456Z --request-interval-seconds 0.5 --max-retries 2 --initial-backoff-seconds 1 --max-backoff-seconds 8
+python scripts/migrate_database.py --db-path data/database.sqlite
 python scripts/run_pipeline.py
 python scripts/run_pipeline.py --db-path data/pilot.sqlite --qualifier-mode rules
 python scripts/run_pipeline.py --source-mode inat_snapshot --snapshot-id inaturalist-birds-20260408T123456Z --qualifier-mode cached --uncertain-policy reject
@@ -158,17 +159,21 @@ The manifest records which sort was requested and which one was actually used.
 
 The repository now writes explicit stage versions into generated artifacts:
 
-- schema version: `database.schema.v3`
+- schema version: `database.schema.v5`
 - snapshot manifest version: `inaturalist.snapshot.v3`
 - normalized snapshot version: `normalized.snapshot.v3`
 - canonical enrichment version: `canonical.enrichment.v2`
 - qualification version: `qualification.staged.v1`
-- export version: `export.bundle.v2`
+- export version: `export.bundle.v3`
+- legacy export sidecar version: `export.bundle.v2` (transitional compatibility window)
 - review override version: `review.override.v1`
 
 Snapshot manifests without `manifest_version` are rejected.
 Unknown manifest versions are rejected explicitly.
-The export bundle is validated against `schemas/qualified_resources_bundle.schema.json` before it is written.
+The primary export bundle (`v3`) is validated against
+`schemas/qualified_resources_bundle_v3.schema.json` before write.
+The optional legacy sidecar (`v2`) is validated against
+`schemas/qualified_resources_bundle.schema.json`.
 
 ## Canonical enrichment
 
@@ -249,8 +254,9 @@ It fails fast if any image is below Gemini minimum resolution (512x512), unless
 It runs, in order:
 
 1. `python -m compileall src tests`
-2. `pytest -q`
-3. `python -m ruff check src tests`
+2. `pytest -q -p no:capture`
+3. `python scripts/check_doc_code_coherence.py`
+4. `python -m ruff check src tests scripts`
 
 If `ruff` is missing, the script fails with an explicit message and recommends `pip install -e ".[dev]"`.
 

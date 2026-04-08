@@ -16,7 +16,7 @@ def main() -> None:
     _bootstrap_src_path()
     from database_core.cli import main as cli_main
 
-    sys.argv.insert(1, "review-overrides")
+    sys.argv.insert(1, "migrate")
     cli_main()
 
 

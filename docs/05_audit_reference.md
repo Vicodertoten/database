@@ -19,6 +19,20 @@ Le point de friction principal n’est pas la structure technique, mais la **gou
 
 Objectif de ce document: transformer cette base solide en trajectoire opérationnelle mesurable.
 
+### État réel (2026-04-08)
+
+- persistence hybride implémentée: historique append-only (`pipeline_runs` + tables `*_history`) et tables matérialisées `latest`.
+- schéma applicatif actuel: `database.schema.v5`.
+- export principal actuel: `export.bundle.v3`.
+- export de transition maintenu: `export.bundle.v2` (coexistence temporaire).
+- version d’overrides opérateur: `review.override.v1` (validation stricte à la lecture).
+
+### Cible (prochaine étape)
+
+- durcir la gouvernance canonique des transitions ambiguës (`auto_clear` vs `manual_reviewed`) avec une file opérateur dédiée.
+- compléter la couverture de tests R1–R12 côté transitions canoniques et conflits multi-sources.
+- sortir de la coexistence `v2` dès validation des consommateurs aval.
+
 ---
 
 ## Décisions Actées (2026-04-08)
@@ -242,12 +256,12 @@ Gouvernance IA minimale:
 Points solides:
 - CLI opérable et cohérente,
 - runbook smoke clair,
-- script standard de vérification locale (`compileall`, `pytest`, `ruff`),
+- script standard de vérification locale (`compileall`, `pytest`, cohérence doc/code, `ruff`),
 - tests unitaires/intégration déjà robustes pour un MVP.
 
 Limites:
 - processus encore local-first (runbook manuel),
-- absence de CI visible dans le repo,
+- CI visible mais encore minimale (un seul workflow de vérification),
 - observabilité runtime/coût encore peu structurée,
 - gouvernance de changement (ADR, conventions) à formaliser.
 
@@ -255,7 +269,7 @@ Limites:
 
 | ID | Constat | Impact | Priorité |
 |---|---|---|---|
-| O1 | Pas de CI visible | risque de régression silencieuse | P0 |
+| O1 | CI présente mais trop minimale | risque de régression silencieuse | P0 |
 | O2 | Smoke majoritairement manuel | faible cadence de validation live | P1 |
 | O3 | Pas de tableau de bord coût/volume | pilotage économique incomplet | P1 |
 | O4 | Gouvernance doc/changements légère | perte de contexte équipe | P2 |
@@ -387,6 +401,6 @@ next_step:
 
 ## Statut Initial (Baseline)
 
-- Vérification repo locale: `42 passed`, lint/compile OK.
+- Vérification repo locale: `71 passed`, lint/compile/doc-check OK.
 - Pipeline fixture: `qualified=4`, `exportable=2`, `review=1`.
 - Ce baseline correspond à l’état observé au `2026-04-08`.

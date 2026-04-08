@@ -31,7 +31,8 @@ def test_verify_repo_runs_compile_pytest_and_ruff_in_order(monkeypatch) -> None:
     assert commands == [
         [module.sys.executable, "-m", "compileall", "src", "tests"],
         [module.sys.executable, "-m", "pytest", "-q", "-p", "no:capture"],
-        [module.sys.executable, "-m", "ruff", "check", "src", "tests"],
+        [module.sys.executable, "scripts/check_doc_code_coherence.py"],
+        [module.sys.executable, "-m", "ruff", "check", "src", "tests", "scripts"],
     ]
     assert "Repository verification complete" in buffer.getvalue()
 
