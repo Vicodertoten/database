@@ -34,6 +34,7 @@ The repository is not the quiz app, frontend, or product runtime.
 - Stable canonical charter v1: `docs/06_charte_canonique_v1.md`
 - Canonical implementation ADR: `docs/adr/0001-charte-canonique-v1.md`
 - Canonical ID migration table: `docs/07_canonical_id_migration_v1.md`
+- Gold set IA V1: `docs/08_goldset_v1.md`
 
 ## Quickstart
 
@@ -91,7 +92,9 @@ python scripts/qualify_inat_snapshot.py --snapshot-id inaturalist-birds-20260408
 python scripts/qualify_inat_snapshot.py --snapshot-id inaturalist-birds-20260408T123456Z --request-interval-seconds 0.5 --max-retries 2 --initial-backoff-seconds 1 --max-backoff-seconds 8
 python scripts/run_pipeline.py
 python scripts/run_pipeline.py --db-path data/pilot.sqlite --qualifier-mode rules
+python scripts/run_pipeline.py --db-path data/pilot.sqlite --reset-db --qualifier-mode rules
 python scripts/run_pipeline.py --source-mode inat_snapshot --snapshot-id inaturalist-birds-20260408T123456Z --qualifier-mode cached --uncertain-policy reject
+python scripts/run_pipeline.py --source-mode inat_snapshot --snapshot-id inaturalist-birds-20260408T123456Z --allow-schema-reset --qualifier-mode cached --uncertain-policy reject
 python scripts/run_pipeline.py --source-mode inat_snapshot --snapshot-id inaturalist-birds-20260408T123456Z --qualifier-mode cached --uncertain-policy reject --apply-review-overrides
 python scripts/run_pipeline.py --source-mode inat_snapshot --snapshot-id inaturalist-birds-20260408T123456Z --qualifier-mode gemini --uncertain-policy reject
 python scripts/inspect_database.py summary
@@ -100,6 +103,8 @@ python scripts/inspect_database.py snapshot-health --snapshot-id inaturalist-bir
 python scripts/review_overrides.py init --snapshot-id inaturalist-birds-20260408T123456Z
 python scripts/review_overrides.py upsert --snapshot-id inaturalist-birds-20260408T123456Z --media-asset-id media:inaturalist:810001 --status review_required --note "manual spot-check requested"
 python scripts/review_overrides.py list --snapshot-id inaturalist-birds-20260408T123456Z
+python scripts/build_goldset_v1.py
+python scripts/verify_goldset_v1.py
 ```
 
 ## Review workflow
@@ -217,6 +222,12 @@ Use the repository verification script for the standard local check:
 python scripts/verify_repo.py
 ```
 
+Gold set verification is explicit and separate:
+
+```bash
+python scripts/verify_goldset_v1.py
+```
+
 It runs, in order:
 
 1. `python -m compileall src tests`
@@ -226,3 +237,8 @@ It runs, in order:
 If `ruff` is missing, the script fails with an explicit message and recommends `pip install -e ".[dev]"`.
 
 For the live 15-taxon smoke workflow, see [docs/04_smoke_runbook.md](docs/04_smoke_runbook.md).
+
+## Continuous integration
+
+GitHub Actions runs `python scripts/verify_repo.py` on pull requests and pushes to `main`
+via `.github/workflows/verify-repo.yml`.

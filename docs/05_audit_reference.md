@@ -312,6 +312,14 @@ Livrables:
 | CAN-11 | Couvrir les règles automatiques R1–R12 + règles interdites | tests unitaires/intégration + cas d’échec explicites | P0 | DONE (`2026-04-08`) |
 | CAN-12 | Produire l’ADR d’implémentation de la charte | ADR signée + documentation de migration hard cutover | P1 | DONE (`2026-04-08`) |
 
+### Exécution P0 complémentaire (post-canonique)
+
+| ID | Tâche | Livrable attendu | Priorité | Statut |
+|---|---|---|---|---|
+| RBT-01 | Robustesse pipeline A1+A2+A3 | fin reset implicite, transaction DB sur run, artefacts JSON écrits via temporaires+rename, exceptions critiques resserrées | P0 | DONE (`2026-04-08`) |
+| CI-01 | CI minimale GitHub | workflow `.github/workflows/verify-repo.yml` sur PR + push `main` | P0 | DONE (`2026-04-08`) |
+| GS-01 | Gold set IA V1 | dataset `data/goldset/birds_v1` avec 20 taxons / 100 images + script de vérification dédié | P0 | DONE (`2026-04-08`) |
+
 ### Horizon 31–60 jours (P1)
 
 Objectif: enrichir la qualité pédagogique et le contrat de sortie.
