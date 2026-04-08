@@ -22,16 +22,53 @@ Objectif de ce document: transformer cette base solide en trajectoire opération
 ### État réel (2026-04-08)
 
 - persistence hybride implémentée: historique append-only (`pipeline_runs` + tables `*_history`) et tables matérialisées `latest`.
-- schéma applicatif actuel: `database.schema.v5`.
-- export principal actuel: `export.bundle.v3`.
-- export de transition maintenu: `export.bundle.v2` (coexistence temporaire).
+- schéma applicatif actuel: `database.schema.v6`.
+- export principal actuel: `export.bundle.v4`.
+- export de transition maintenu: `export.bundle.v3` (fenêtre courte de compatibilité).
 - version d’overrides opérateur: `review.override.v1` (validation stricte à la lecture).
 
 ### Cible (prochaine étape)
 
-- durcir la gouvernance canonique des transitions ambiguës (`auto_clear` vs `manual_reviewed`) avec une file opérateur dédiée.
-- compléter la couverture de tests R1–R12 côté transitions canoniques et conflits multi-sources.
-- sortir de la coexistence `v2` dès validation des consommateurs aval.
+- fermer la boucle de détection canonique amont (`clear` vs `ambiguous`) à partir des changements source bruts.
+- enrichir la qualification pédagogique avec une ontologie réellement consommée downstream.
+- renforcer le contrat d’export avec flags, rationale, typologie d’incertitude et éléments de review utiles.
+- clarifier la sémantique des événements (`state snapshot` vs `business change` vs `governance decision`).
+- préparer la marche Ops suivante (métriques standardisées, indexation ciblée, smoke reports comparables).
+
+### Acté Implémenté Vs Acté Cible (séparation explicite)
+
+| Domaine | Acté implémenté | Acté cible |
+|---|---|---|
+| Canonique | politique `auto_clear équilibrée` + `reason_code` + `signal_breakdown` persistés | enrichir la détection amont avec signaux taxonomiques source plus riches |
+| Événements | séparation effective `state_event_log` / `canonical_change_log` / `governance_decision_log` | améliorer les vues opérateur avancées et indexation d’inspection |
+| Qualification | champs V1 intégrés (`difficulty_level`, `media_role`, `confusion_relevance`, `uncertainty_reason`) | étendre vers une ontologie pédagogique plus fine (diagnostic visibility, learning suitability) |
+| Export | `export.bundle.v4` principal + sidecar `v3` transition 2 releases | retrait planifié du sidecar `v3` après fenêtre de transition |
+| Ops | métriques run-level standardisées + `smoke.report.v1` | seuils opérationnels avancés (SLA review, alerting automatique) |
+
+## Challenge Consolidé De L’Analyse Externe (2026-04-08)
+
+Cette section challenge explicitement le verdict externe et sert de référence opératoire immédiate.
+
+### Points confirmés
+
+- cadrage produit/scope très discipliné (birds-first, iNaturalist-first, image-only),
+- charte canonique v1 effectivement implémentée dans les modèles et le stockage,
+- persistance hybride `latest + history` avec rollback transactionnel couvert par tests,
+- export versionné `v4` validé par schéma (+ sidecar `v3` transitoire),
+- CI minimale réelle (`verify_repo`) et base de tests crédible.
+
+### Points à challenger
+
+- la gouvernance canonique est solide, mais la **détection amont** des transitions taxonomiques reste partielle; le moteur dérive surtout des deltas déjà exprimés sur les taxons courants.
+- la couche qualification est robuste en filtrage/réutilisabilité, mais encore peu expressive pédagogiquement (ontologie courte et non contractuelle).
+- le contrat export `v4` est désormais riche, mais doit être stabilisé downstream avant retrait du sidecar `v3`.
+- la sémantique événementielle est séparée (`state` / `change` / `governance`), et les vues opérateur doivent encore être enrichies.
+- ce document contient encore des entrées historiques marquées “acté” qui sont en réalité des cibles (voir rectificatif ci-dessous).
+
+### Rectificatif Doc/Code (obligatoire)
+
+Les éléments `IA4`, `IA6` et le pilotage budget fin de `IA10` restent des objectifs ultérieurs.  
+Les éléments `DA12` et l’ontologie pédagogique V1 minimale (`difficulty_level`, `media_role`, `confusion_relevance`, `uncertainty_reason`) sont désormais implémentés.
 
 ---
 
@@ -66,7 +103,7 @@ Ces décisions sont la baseline d'exécution. Toute déviation doit être docume
 | DA9 | similarités officielles: `taxonomic_neighbor`, `visual_lookalike`, `educational_confusion` |
 | DA10 | l’IA peut enrichir mais ne gouverne jamais le canonique |
 | DA11 | `deprecated` ne reçoit plus de nouveaux assets; `provisional` sort de l’export pédagogique par exception explicite uniquement |
-| DA12 | export V2 inclut provenance enrichie, trace IA, incertitude typée, rationale review |
+| DA12 | export principal `v4` inclut provenance enrichie, trace IA, flags, notes, incertitude typée et review context; sidecar `v3` transitoire |
 
 ### IA (acté)
 
@@ -74,14 +111,14 @@ Ces décisions sont la baseline d'exécution. Toute déviation doit être docume
 |---|---|
 | IA1 | stack modèles par rôle (screening / qualification / enrichissement taxon) |
 | IA2 | convention version prompt: `family.task.group.vMAJOR.MINOR.PATCH` |
-| IA3 | ontologie pédagogique V1 validée (`diagnostic_feature_visibility`, `learning_suitability`, `difficulty_level`, `confusion_relevance`, `uncertainty_reason`, `media_role`) |
-| IA4 | double seuil confiance: `>=0.80` auto, `0.65-0.79` review |
+| IA3 | ontologie pédagogique V1 minimale intégrée (`difficulty_level`, `media_role`, `confusion_relevance`, `uncertainty_reason`) |
+| IA4 | double seuil confiance fin (`>=0.80` / `0.65-0.79`) encore cible, non activé dans ce cycle |
 | IA5 | seuil résolution acceptance conservé: `1000x750` |
-| IA6 | revue humaine adaptative avec plancher de 10% |
+| IA6 | revue humaine adaptative avec plancher de 10%: cible ultérieure |
 | IA7 | gold set V1: 100 images, 20 taxons |
 | IA8 | maintenance gold set: owner data + owner IA |
 | IA9 | rerun ciblé par cache key; rerun complet uniquement sur changement majeur |
-| IA10 | budget temporaire actuel: `10 EUR/mois` (non final) |
+| IA10 | coût IA estimé run-level (modèle simple) implémenté; budget piloté fin reste cible |
 
 ### Ops (acté)
 
@@ -100,7 +137,7 @@ Ces décisions sont la baseline d'exécution. Toute déviation doit être docume
 | RM1 | ordre P0: doctrine canonique -> robustesse pipeline -> intégrité export -> CI -> gold set |
 | RM2 | M1: "le plus vite possible" (pas de date fixe) |
 | RM3 | KPI M1: CI active; 0 unresolved exportable; 100% trace IA; 2 smokes complets consécutifs; 0 erreur silencieuse critique |
-| RM4 | go multi-taxons seulement après validation P0 + KPI M1 + export V2 figé |
+| RM4 | go multi-taxons seulement après validation P0 + KPI M1 + retrait sidecar `v3` |
 
 ---
 
@@ -115,18 +152,18 @@ Points solides:
 - review queue + overrides snapshot-scopés et rejouables.
 
 Écarts critiques à traiter:
-- reset destructif de la base à chaque run et suppression en cas de version mismatch,
-- pipeline non atomique (risque d’état partiel en cas d’interruption),
-- gestion d’erreurs trop large sur certains points d’ingestion/enrichment,
-- fallback `"unresolved"` possible dans la qualification (intégrité canonique à durcir).
+- orchestration encore monolithique dans le runner central (lisibilité/évolutivité limitées),
+- vues d’inspection encore limitées malgré la séparation des journaux d’événements,
+- gestion d’erreurs encore large sur certains chemins non critiques (`except Exception` infrastructure),
+- fallback `"unresolved"` encore possible dans la qualification interne (même si bloqué à l’export).
 
 ### Registre des écarts architecture
 
 | ID | Constat | Impact | Priorité |
 |---|---|---|---|
-| A1 | Reset DB destructif (run + migration implicite) | perte de données locales, faible auditabilité historique | P0 |
-| A2 | Exécution non atomique (DB + JSON) | artefacts incohérents possibles | P0 |
-| A3 | Exceptions larges (`except Exception`) | dégradation silencieuse | P0 |
+| A1 | Orchestrateur pipeline trop centralisé | complexité croissante à chaque nouveau flux | P1 |
+| A2 | table legacy `canonical_taxon_events` encore présente pour compatibilité | dette de simplification du schéma, confusion potentielle | P2 |
+| A3 | Exceptions larges (`except Exception`) sur couche infrastructure | diagnostic moins précis en incident | P1 |
 | A4 | Canonical fallback `"unresolved"` | affaiblit l’autorité canonique | P1 |
 | A5 | Schéma SQLite sans index métier | dette de performance à l’échelle | P2 |
 
@@ -138,8 +175,8 @@ Points solides:
 
 ### Critères de sortie Architecture (DoD)
 
-- plus de reset destructif par défaut,
-- transaction pipeline atomique (ou stratégie explicite de rollback),
+- séparation explicite entre `state event log`, `canonical change log` et `governance decision log`,
+- runner allégé par extraction de modules métier (gouvernance/export/qualification),
 - aucune exception large non tracée dans les chemins critiques,
 - `0` ressource exportée avec taxon non résolu.
 
@@ -157,21 +194,21 @@ Points solides:
 
 Limites structurantes:
 - mono-source (iNaturalist) et birds-only (pilot),
-- gouvernance canonique encore incomplète (splits/merges/synonymes),
-- contrat export encore minimaliste pour l’ambition long terme,
-- sémantique incertitude/review pas encore pleinement contractualisée côté export.
+- détection des changements taxonomiques source encore pilot-level (signaux explicites mais couverture limitée),
+- contrat export `v4` en phase de stabilisation downstream,
+- politique de retrait du sidecar `v3` à exécuter après 2 cycles.
 
 ### Registre des écarts data
 
 | ID | Constat | Impact | Priorité |
 |---|---|---|---|
-| D1 | Gouvernance des IDs canoniques incomplète | risque de divergence à l’échelle | P0 |
-| D2 | Pas de doctrine formalisée splits/merges/synonymes | instabilité du référentiel | P0 |
-| D3 | Export schema V1 trop mince | faible interopérabilité downstream | P1 |
-| D4 | Métadonnées IA/provenance incomplètes dans export | traçabilité partielle | P1 |
+| D1 | Signaux opératoires `clear` vs `ambiguous` implémentés mais encore limités à un jeu de signaux pilote | risque de sous-couverture sur cas taxonomiques complexes | P1 |
+| D2 | Détection des transitions surtout basée sur l’état canonique déjà enrichi | manque de preuve sur détection amont multi-cas | P0 |
+| D3 | Contrat `v4` nouveau: adoption downstream à sécuriser pendant la fenêtre sidecar `v3` | risque de friction de migration | P1 |
+| D4 | Maintien transitoire du sidecar `v3` | dette de compatibilité à retirer au terme des 2 cycles | P1 |
 | D5 | Similarité encore “pilot-level” | confusion canonique/pédagogique possible | P2 |
 
-### Cible Data V2
+### Cible Data (cycle suivant)
 
 1. **Gouvernance canonique**
 - règle de vie d’un `canonical_taxon_id`,
@@ -180,8 +217,9 @@ Limites structurantes:
 
 Référence normative stable: `docs/06_charte_canonique_v1.md`.
 
-2. **Contrat export V2**
+2. **Contrat export v4+**
 - provenance enrichie,
+- `qualification_flags` et `qualification_notes`,
 - incertitude typée,
 - review rationale explicite,
 - versioning IA/prompt/task explicite,
@@ -196,7 +234,7 @@ Référence normative stable: `docs/06_charte_canonique_v1.md`.
 ### Critères de sortie Data (DoD)
 
 - doctrine canonique documentée et approuvée,
-- export schema V2 validé par tests de compatibilité,
+- export schema `v4` validé par tests de compatibilité + retrait contrôlé du sidecar `v3`,
 - métriques data standardisées dans `snapshot-health`.
 
 ---
@@ -220,10 +258,10 @@ Limite principale:
 | ID | Constat | Impact | Priorité |
 |---|---|---|---|
 | I1 | Ontologie pédagogique insuffisante | faible valeur didactique downstream | P0 |
-| I2 | Pas de gold set opératoire formalisé | dérive de qualité non contrôlée | P0 |
+| I2 | Gold set présent mais encore peu utilisé comme gate de décision | dérive de qualité non contrôlée | P0 |
 | I3 | Traçabilité IA partielle dans ressources finales | auditabilité incomplète | P1 |
 | I4 | Politiques de rerun/coût non formalisées | surcoût et hétérogénéité | P1 |
-| I5 | Prompt family non documentée “par rôle” | incohérence inter-tâches future | P2 |
+| I5 | Multiplication des tâches prompt plus rapide que la consommation downstream | dispersion ontologique | P2 |
 
 ### Cible IA V2 (“même école IA”)
 
@@ -243,7 +281,7 @@ Gouvernance IA minimale:
 
 ### Critères de sortie IA (DoD)
 
-- gold set en place et exécuté avant tout bump prompt/modèle,
+- gold set exécuté comme gate explicite avant tout bump prompt/modèle,
 - nouveaux champs pédagogiques intégrés au flux qualification,
 - traçabilité complète `model + prompt family + prompt version + task` dans les sorties internes.
 
@@ -334,13 +372,23 @@ Livrables:
 | CI-01 | CI minimale GitHub | workflow `.github/workflows/verify-repo.yml` sur PR + push `main` | P0 | DONE (`2026-04-08`) |
 | GS-01 | Gold set IA V1 | dataset `data/goldset/birds_v1` avec 20 taxons / 100 images + script de vérification dédié | P0 | DONE (`2026-04-08`) |
 
+### Priorités consolidées (après challenge externe)
+
+| Ordre | Chantier | Livrable minimal |
+|---|---|---|
+| 1 | Détection canonique amont | spécification explicite des signaux `clear`/`ambiguous` + tests d’intégration associés |
+| 2 | Qualification pédagogique | champs `difficulty_level`, `media_role`, `confusion_relevance`, `uncertainty_reason` dans le pipeline |
+| 3 | Contrat export enrichi | extension `v4` (ou `v3.1`) avec flags/notes/rationale et validation schéma |
+| 4 | Sémantique événementielle | séparation nette entre journal d’état, journal de changement, journal de gouvernance |
+| 5 | Pilotage Ops | métriques standardisées (volume, coût, review load) + smoke report comparable |
+
 ### Horizon 31–60 jours (P1)
 
 Objectif: enrichir la qualité pédagogique et le contrat de sortie.
 
 Livrables:
 1. Ontologie pédagogique V1 intégrée à la qualification.
-2. Contrat export V2 (provenance + incertitude + review rationale + métadonnées IA).
+2. Contrat export `v4` stabilisé downstream + plan de retrait sidecar `v3`.
 3. Dashboard smoke standardisé (qualité/volume/coût/review).
 4. Politique de rerun IA documentée.
 
@@ -362,14 +410,14 @@ Livrables:
 | P0 | CI minimale | qualité continue sur PR |
 | P0 | Gold set IA V1 | stabilité qualitative contrôlée |
 | P1 | Ontologie pédagogique V1 | qualification utile pour apprentissage |
-| P1 | Export contract V2 | meilleure réutilisabilité downstream |
+| P1 | Stabilisation export contract `v4` | meilleure réutilisabilité downstream |
 | P1 | Pilotage coût/volume/review | décisions outillées |
 | P2 | Perf + migration DB | readiness montée en charge |
 
 ### Jalons de validation
 
 - `M1` (fin P0): noyau sécurisé, gouvernance minimale validée, à atteindre le plus vite possible (pas de date fixe).
-- `M2` (fin P1): qualification pédagogiquement plus riche + export V2.
+- `M2` (fin P1): qualification pédagogiquement plus riche + export `v4` stabilisé.
 - `M3` (fin P2): base prête à extension multi-taxons incrémentale.
 
 ---

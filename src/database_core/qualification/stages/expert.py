@@ -2,12 +2,25 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from database_core.domain.enums import PedagogicalQuality, Sex, TechnicalQuality, ViewAngle
+from database_core.domain.enums import (
+    ConfusionRelevance,
+    DifficultyLevel,
+    MediaRole,
+    PedagogicalQuality,
+    Sex,
+    TechnicalQuality,
+    UncertaintyReason,
+    ViewAngle,
+)
 from database_core.domain.models import AIQualification, MediaAsset
 from database_core.qualification.policy import (
     AI_CONFIDENCE_THRESHOLD,
+    resolve_confusion_relevance,
+    resolve_difficulty_level,
+    resolve_media_role,
     resolve_pedagogical_quality,
     resolve_technical_quality,
+    resolve_uncertainty_reason,
 )
 
 
@@ -19,6 +32,10 @@ class ExpertQualificationResult:
     sex: Sex
     visible_parts: list[str]
     view_angle: ViewAngle
+    difficulty_level: DifficultyLevel
+    media_role: MediaRole
+    confusion_relevance: ConfusionRelevance
+    uncertainty_reason: UncertaintyReason
     flags: list[str]
 
 
@@ -29,6 +46,10 @@ def run_expert_qualification(
 ) -> ExpertQualificationResult:
     technical_quality = resolve_technical_quality(media_asset, ai_qualification)
     pedagogical_quality = resolve_pedagogical_quality(ai_qualification)
+    difficulty_level = resolve_difficulty_level(ai_qualification)
+    media_role = resolve_media_role(ai_qualification)
+    confusion_relevance = resolve_confusion_relevance(ai_qualification)
+    uncertainty_reason = resolve_uncertainty_reason(ai_qualification)
     life_stage = ai_qualification.life_stage if ai_qualification else "unknown"
     sex = ai_qualification.sex if ai_qualification else Sex.UNKNOWN
     visible_parts = list(ai_qualification.visible_parts) if ai_qualification else []
@@ -51,5 +72,9 @@ def run_expert_qualification(
         sex=sex,
         visible_parts=visible_parts,
         view_angle=view_angle,
+        difficulty_level=difficulty_level,
+        media_role=media_role,
+        confusion_relevance=confusion_relevance,
+        uncertainty_reason=uncertainty_reason,
         flags=flags,
     )

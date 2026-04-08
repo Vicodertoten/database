@@ -145,12 +145,15 @@ class SQLiteRepository:
         self,
         taxa: Sequence[CanonicalTaxon],
         *,
+        run_id: str | None = None,
         connection: sqlite3.Connection | None = None,
     ) -> None:
         if connection is None:
             with self.connect() as owned_connection:
-                self.save_canonical_taxa(taxa, connection=owned_connection)
+                self.save_canonical_taxa(taxa, run_id=run_id, connection=owned_connection)
             return
+        if run_id is None:
+            raise ValueError("run_id is required to persist canonical state events")
 
         connection.executemany(
             """
@@ -174,8 +177,9 @@ class SQLiteRepository:
                 split_into_json,
                 merged_into,
                 replaced_by,
-                derived_from
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                derived_from,
+                authority_taxonomy_profile_json
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             [
                 (
@@ -206,11 +210,12 @@ class SQLiteRepository:
                     item.merged_into,
                     item.replaced_by,
                     item.derived_from,
+                    _json(item.authority_taxonomy_profile),
                 )
                 for item in taxa
             ],
         )
-        relationships, events = _build_canonical_relationships_and_events(taxa)
+        relationships, state_events = _build_canonical_relationships_and_state_events(taxa)
         connection.execute("DELETE FROM canonical_taxon_relationships")
         connection.execute("DELETE FROM canonical_taxon_events")
         connection.executemany(
@@ -236,25 +241,29 @@ class SQLiteRepository:
         )
         connection.executemany(
             """
-            INSERT INTO canonical_taxon_events (
-                event_id,
+            INSERT INTO canonical_state_events (
+                state_event_id,
+                run_id,
                 event_type,
                 canonical_taxon_id,
                 source_name,
                 effective_at,
-                payload_json
-            ) VALUES (?, ?, ?, ?, ?, ?)
+                payload_json,
+                created_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             """,
             [
                 (
-                    item.event_id,
+                    f"{run_id}:{item.event_id}",
+                    run_id,
                     item.event_type,
                     item.canonical_taxon_id,
                     item.source_name,
                     item.effective_at.isoformat(),
                     _json(item.payload),
+                    datetime.now(UTC).isoformat(),
                 )
-                for item in events
+                for item in state_events
             ],
         )
 
@@ -381,12 +390,17 @@ class SQLiteRepository:
                 sex,
                 visible_parts_json,
                 view_angle,
+                difficulty_level,
+                media_role,
+                confusion_relevance,
+                uncertainty_reason,
                 qualification_notes,
                 qualification_flags_json,
                 provenance_summary_json,
                 license_safety_result,
-                export_eligible
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                export_eligible,
+                ai_confidence
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             [
                 (
@@ -403,11 +417,16 @@ class SQLiteRepository:
                     item.sex,
                     _json(item.visible_parts),
                     item.view_angle,
+                    item.difficulty_level,
+                    item.media_role,
+                    item.confusion_relevance,
+                    item.uncertainty_reason,
                     item.qualification_notes,
                     _json(item.qualification_flags),
                     _json(item.provenance_summary.model_dump(mode="json")),
                     item.license_safety_result,
                     int(item.export_eligible),
+                    item.ai_confidence,
                 )
                 for item in resources
             ],
@@ -656,6 +675,39 @@ class SQLiteRepository:
         )
         connection.executemany(
             """
+            INSERT INTO canonical_change_events (
+                change_event_id,
+                run_id,
+                canonical_taxon_id,
+                event_type,
+                source_name,
+                effective_at,
+                payload_json,
+                created_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            [
+                (
+                    f"{run_id}:{decision.event.event_id}",
+                    run_id,
+                    decision.event.canonical_taxon_id,
+                    decision.event.event_type,
+                    decision.event.source_name,
+                    decision.event.effective_at.isoformat(),
+                    _json(
+                        {
+                            **decision.event.payload,
+                            "signal_breakdown": decision.signal_breakdown.to_payload(),
+                            "decision_reason": decision.decision_reason,
+                        }
+                    ),
+                    datetime.now(UTC).isoformat(),
+                )
+                for decision in governance_decisions
+            ],
+        )
+        connection.executemany(
+            """
             INSERT INTO canonical_governance_events (
                 governance_event_id,
                 run_id,
@@ -679,7 +731,12 @@ class SQLiteRepository:
                     decision.event.effective_at.isoformat(),
                     decision.decision_status,
                     decision.decision_reason,
-                    _json(decision.event.payload),
+                    _json(
+                        {
+                            **decision.event.payload,
+                            "signal_breakdown": decision.signal_breakdown.to_payload(),
+                        }
+                    ),
                     datetime.now(UTC).isoformat(),
                 )
                 for decision in governance_decisions
@@ -843,6 +900,148 @@ class SQLiteRepository:
             ).fetchall()
             return [dict(row) for row in rows]
 
+    def fetch_canonical_state_events(
+        self,
+        *,
+        run_id: str | None = None,
+        limit: int = 100,
+    ) -> list[dict[str, object]]:
+        with self.connect() as connection:
+            if run_id:
+                rows = connection.execute(
+                    """
+                    SELECT
+                        state_event_id,
+                        run_id,
+                        canonical_taxon_id,
+                        event_type,
+                        source_name,
+                        effective_at,
+                        payload_json,
+                        created_at
+                    FROM canonical_state_events
+                    WHERE run_id = ?
+                    ORDER BY created_at DESC, state_event_id
+                    LIMIT ?
+                    """,
+                    (run_id, limit),
+                ).fetchall()
+            else:
+                rows = connection.execute(
+                    """
+                    SELECT
+                        state_event_id,
+                        run_id,
+                        canonical_taxon_id,
+                        event_type,
+                        source_name,
+                        effective_at,
+                        payload_json,
+                        created_at
+                    FROM canonical_state_events
+                    ORDER BY created_at DESC, state_event_id
+                    LIMIT ?
+                    """,
+                    (limit,),
+                ).fetchall()
+            return [dict(row) for row in rows]
+
+    def fetch_canonical_change_events(
+        self,
+        *,
+        run_id: str | None = None,
+        limit: int = 100,
+    ) -> list[dict[str, object]]:
+        with self.connect() as connection:
+            if run_id:
+                rows = connection.execute(
+                    """
+                    SELECT
+                        change_event_id,
+                        run_id,
+                        canonical_taxon_id,
+                        event_type,
+                        source_name,
+                        effective_at,
+                        payload_json,
+                        created_at
+                    FROM canonical_change_events
+                    WHERE run_id = ?
+                    ORDER BY created_at DESC, change_event_id
+                    LIMIT ?
+                    """,
+                    (run_id, limit),
+                ).fetchall()
+            else:
+                rows = connection.execute(
+                    """
+                    SELECT
+                        change_event_id,
+                        run_id,
+                        canonical_taxon_id,
+                        event_type,
+                        source_name,
+                        effective_at,
+                        payload_json,
+                        created_at
+                    FROM canonical_change_events
+                    ORDER BY created_at DESC, change_event_id
+                    LIMIT ?
+                    """,
+                    (limit,),
+                ).fetchall()
+            return [dict(row) for row in rows]
+
+    def fetch_canonical_governance_events(
+        self,
+        *,
+        run_id: str | None = None,
+        limit: int = 100,
+    ) -> list[dict[str, object]]:
+        with self.connect() as connection:
+            if run_id:
+                rows = connection.execute(
+                    """
+                    SELECT
+                        governance_event_id,
+                        run_id,
+                        canonical_taxon_id,
+                        event_type,
+                        source_name,
+                        effective_at,
+                        decision_status,
+                        decision_reason,
+                        payload_json,
+                        created_at
+                    FROM canonical_governance_events
+                    WHERE run_id = ?
+                    ORDER BY created_at DESC, governance_event_id
+                    LIMIT ?
+                    """,
+                    (run_id, limit),
+                ).fetchall()
+            else:
+                rows = connection.execute(
+                    """
+                    SELECT
+                        governance_event_id,
+                        run_id,
+                        canonical_taxon_id,
+                        event_type,
+                        source_name,
+                        effective_at,
+                        decision_status,
+                        decision_reason,
+                        payload_json,
+                        created_at
+                    FROM canonical_governance_events
+                    ORDER BY created_at DESC, governance_event_id
+                    LIMIT ?
+                    """,
+                    (limit,),
+                ).fetchall()
+            return [dict(row) for row in rows]
+
     def fetch_exportable_resources(self) -> list[dict[str, object]]:
         with self.connect() as connection:
             rows = connection.execute(
@@ -912,6 +1111,79 @@ class SQLiteRepository:
                 "ai_model_distribution": dict(sorted(ai_model_distribution.items())),
             }
 
+    def fetch_run_level_metrics(self) -> dict[str, object]:
+        summary = self.fetch_summary()
+        qualification = self.fetch_qualification_metrics()
+        with self.connect() as connection:
+            governance_rows = connection.execute(
+                """
+                SELECT decision_status, decision_reason, COUNT(*) AS count
+                FROM canonical_governance_events
+                GROUP BY decision_status, decision_reason
+                ORDER BY decision_status, decision_reason
+                """
+            ).fetchall()
+            review_age_row = connection.execute(
+                """
+                SELECT
+                    COUNT(*) AS open_count,
+                    ROUND(
+                        AVG((julianday('now') - julianday(created_at)) * 24.0),
+                        2
+                    ) AS avg_age_hours
+                FROM review_queue
+                WHERE review_status = 'open'
+                """
+            ).fetchone()
+            governance_review_open_count = connection.execute(
+                """
+                SELECT COUNT(*) AS count
+                FROM canonical_governance_review_queue
+                WHERE review_status = 'open'
+                """
+            ).fetchone()["count"]
+
+        governance_status_counts: Counter[str] = Counter()
+        governance_reason_counts: Counter[str] = Counter()
+        for row in governance_rows:
+            governance_status_counts[str(row["decision_status"])] += int(row["count"])
+            governance_reason_counts[str(row["decision_reason"])] += int(row["count"])
+
+        ai_qualified_images = int(qualification["ai_qualified_images"])
+        estimated_ai_cost_eur = round(ai_qualified_images * 0.0012, 4)
+        return {
+            "volume": {
+                "canonical_taxa": summary["canonical_taxa"],
+                "source_observations": summary["source_observations"],
+                "media_assets": summary["media_assets"],
+                "qualified_resources": summary["qualified_resources"],
+                "exportable_resources": qualification["exportable_resources"],
+            },
+            "quality": {
+                "accepted_resources": qualification["accepted_resources"],
+                "review_required_resources": qualification["review_required_resources"],
+                "rejected_resources": qualification["rejected_resources"],
+                "top_rejection_flags": qualification["top_rejection_flags"],
+            },
+            "governance": {
+                "decision_status_counts": dict(sorted(governance_status_counts.items())),
+                "decision_reason_counts": dict(sorted(governance_reason_counts.items())),
+                "open_governance_review_items": governance_review_open_count,
+            },
+            "review_load": {
+                "open_review_queue_items": int(review_age_row["open_count"] or 0),
+                "avg_open_review_age_hours": (
+                    float(review_age_row["avg_age_hours"])
+                    if review_age_row["avg_age_hours"] is not None
+                    else 0.0
+                ),
+            },
+            "cost": {
+                "ai_qualified_images": ai_qualified_images,
+                "estimated_ai_cost_eur": estimated_ai_cost_eur,
+            },
+        }
+
     def _load_latest_canonical_taxa_before_run(
         self,
         *,
@@ -959,17 +1231,17 @@ def _json(value: object) -> str:
     return json.dumps(value, sort_keys=True, ensure_ascii=True)
 
 
-def _build_canonical_relationships_and_events(
+def _build_canonical_relationships_and_state_events(
     taxa: Sequence[CanonicalTaxon],
 ) -> tuple[list[CanonicalTaxonRelationship], list[CanonicalTaxonEvent]]:
     now = datetime.now(UTC)
     relationships: list[CanonicalTaxonRelationship] = []
-    events: list[CanonicalTaxonEvent] = []
+    state_events: list[CanonicalTaxonEvent] = []
 
     for taxon in sorted(taxa, key=lambda item: item.canonical_taxon_id):
-        events.append(
+        state_events.append(
             CanonicalTaxonEvent(
-                event_id=f"event:{taxon.canonical_taxon_id}:upsert",
+                event_id=f"state:{taxon.canonical_taxon_id}:upsert",
                 event_type=CanonicalEventType.CREATE,
                 canonical_taxon_id=taxon.canonical_taxon_id,
                 source_name=taxon.authority_source,
@@ -992,16 +1264,6 @@ def _build_canonical_relationships_and_events(
                     created_at=now,
                 )
             )
-            events.append(
-                CanonicalTaxonEvent(
-                    event_id=f"event:{taxon.canonical_taxon_id}:split_into:{target_id}",
-                    event_type=CanonicalEventType.SPLIT,
-                    canonical_taxon_id=taxon.canonical_taxon_id,
-                    source_name=taxon.authority_source,
-                    effective_at=now,
-                    payload={"target_canonical_taxon_id": target_id},
-                )
-            )
         if taxon.merged_into:
             relationships.append(
                 CanonicalTaxonRelationship(
@@ -1012,16 +1274,6 @@ def _build_canonical_relationships_and_events(
                     created_at=now,
                 )
             )
-            events.append(
-                CanonicalTaxonEvent(
-                    event_id=f"event:{taxon.canonical_taxon_id}:merged_into:{taxon.merged_into}",
-                    event_type=CanonicalEventType.MERGE,
-                    canonical_taxon_id=taxon.canonical_taxon_id,
-                    source_name=taxon.authority_source,
-                    effective_at=now,
-                    payload={"target_canonical_taxon_id": taxon.merged_into},
-                )
-            )
         if taxon.replaced_by:
             relationships.append(
                 CanonicalTaxonRelationship(
@@ -1030,16 +1282,6 @@ def _build_canonical_relationships_and_events(
                     target_canonical_taxon_id=taxon.replaced_by,
                     source_name=taxon.authority_source,
                     created_at=now,
-                )
-            )
-            events.append(
-                CanonicalTaxonEvent(
-                    event_id=f"event:{taxon.canonical_taxon_id}:replaced_by:{taxon.replaced_by}",
-                    event_type=CanonicalEventType.REPLACE,
-                    canonical_taxon_id=taxon.canonical_taxon_id,
-                    source_name=taxon.authority_source,
-                    effective_at=now,
-                    payload={"target_canonical_taxon_id": taxon.replaced_by},
                 )
             )
         if taxon.derived_from:
@@ -1070,4 +1312,4 @@ def _build_canonical_relationships_and_events(
             item.source_name,
         ),
     )
-    return deduped_relationships, events
+    return deduped_relationships, state_events

@@ -1,27 +1,34 @@
 # Directive De Remédiation En Exécution
 
-Document de pilotage opérationnel lié à l’audit (`docs/05_audit_reference.md`) et à la charte canonique (`docs/06_charte_canonique_v1.md`).
+Document de pilotage opérationnel lié à l’audit (`docs/05_audit_reference.md`) et aux ADRs (`docs/adr/0001-...`, `docs/adr/0002-...`).
 
 ## Directive active
 
-Implémenter une gouvernance canonique réellement opérable:
-- transitions déterministes appliquées automatiquement (`auto_clear`),
-- transitions ambiguës routées explicitement vers revue opérateur (`manual_reviewed`),
-- traçabilité immuable par run.
+Passer de "core gouverné et traçable" à "core gouverné, pédagogiquement expressif, contractuellement robuste", en exécution strictement séquentielle.
 
-## Tranche en cours
+## Cadre verrouillé
 
-Objectif: fermer le gap "structure présente" -> "gouvernance exécutable" sans casser la reproductibilité pipeline.
+1. Cadence: `gates séquentiels` sans chevauchement.
+2. Politique canonique: `auto_clear équilibrée` (hard blockers + score `>= 3`).
+3. Export: `v4` principal breaking + sidecar `v3` sur 2 cycles.
 
-Livrables visés:
-1. moteur de décisions canoniques basé sur état précédent vs état courant,
-2. file de revue canonique dédiée pour transitions ambiguës,
-3. inspectabilité opérateur de cette file,
-4. tests ciblés sur règles ambiguës et transitions déterministes,
-5. gestion explicite des conflits de mapping multi-sources (priorité claire sinon review).
+Référence de verrouillage: `docs/adr/0002-noyau-canonique-fort-execution-sequentielle.md`.
 
-## Règles de travail
+## Statut des gates (cycle actuel)
+
+| Gate | Statut | Résultat |
+|---|---|---|
+| Gate 0 | DONE | ADR de cadrage publié + checklist KPI publiée |
+| Gate 1 | DONE | signaux canoniques explicites + `reason_code` + `signal_breakdown` persistés |
+| Gate 2 | DONE | séparation des logs `state` / `canonical_change` / `governance_decision` |
+| Gate 3 | DONE | ontologie pédagogique V1 intégrée (`difficulty_level`, `media_role`, `confusion_relevance`, `uncertainty_reason`) |
+| Gate 4 | DONE | `export.bundle.v4` principal + sidecar `v3`, validation schéma/tests |
+| Gate 5 | DONE | métriques run-level + rapport smoke standardisé (`smoke.report.v1`) |
+
+## Discipline d'exécution maintenue
 
 1. Toute évolution doit être reliée à un risque explicite de `docs/05_audit_reference.md`.
 2. Toute règle automatique doit avoir un test de non-régression.
-3. Aucun changement de gouvernance sans trace persistée (event + reason + status).
+3. Toute décision canonique doit être persistée avec `decision_reason` + `signal_breakdown`.
+4. Toute évolution de contrat export doit être versionnée et validée par schéma.
+

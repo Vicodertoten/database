@@ -80,6 +80,14 @@ python scripts/run_pipeline.py \
   --apply-review-overrides
 ```
 
+7. Generate the standardized smoke report and enforce KPI thresholds.
+
+```bash
+python scripts/generate_smoke_report.py \
+  --snapshot-id inaturalist-birds-20260408T123456Z \
+  --fail-on-kpi-breach
+```
+
 ## What to inspect
 
 During the smoke, focus on:
@@ -131,3 +139,4 @@ After a successful live smoke, the main artifacts should be present:
 - `data/normalized/<snapshot_id>.json`
 - `data/qualified/<snapshot_id>.json`
 - `data/exports/<snapshot_id>.json`
+- `docs/smoke_reports/<snapshot_id>.smoke_report.v1.json`

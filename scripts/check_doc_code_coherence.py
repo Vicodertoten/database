@@ -31,10 +31,12 @@ def main() -> int:
         if token not in readme:
             issues.append(f"README is missing version token {name}: {token}")
 
+    if "schemas/qualified_resources_bundle_v4.schema.json" not in readme:
+        issues.append("README must reference schemas/qualified_resources_bundle_v4.schema.json")
     if "schemas/qualified_resources_bundle_v3.schema.json" not in readme:
-        issues.append("README must reference schemas/qualified_resources_bundle_v3.schema.json")
-    if "schemas/qualified_resources_bundle.schema.json" not in readme:
-        issues.append("README must reference legacy schemas/qualified_resources_bundle.schema.json")
+        issues.append(
+            "README must reference sidecar schemas/qualified_resources_bundle_v3.schema.json"
+        )
     if "database-migrate" not in readme:
         issues.append("README must document the database-migrate entrypoint")
 

@@ -19,9 +19,13 @@ from database_core.adapters import (
     qualify_inat_snapshot,
 )
 from database_core.inspect.summary import (
+    render_canonical_change_events,
+    render_canonical_governance_events,
     render_canonical_governance_review_queue,
+    render_canonical_state_events,
     render_exportables,
     render_review_queue,
+    render_run_metrics,
     render_snapshot_health,
     render_summary,
 )
@@ -64,11 +68,11 @@ def main() -> None:
     pipeline_parser.add_argument("--normalized-path", type=Path, default=DEFAULT_NORMALIZED_PATH)
     pipeline_parser.add_argument("--qualified-path", type=Path, default=DEFAULT_QUALIFIED_PATH)
     pipeline_parser.add_argument("--export-path", type=Path, default=DEFAULT_EXPORT_PATH)
-    pipeline_parser.add_argument("--export-v2-path", type=Path)
+    pipeline_parser.add_argument("--export-v3-path", type=Path)
     pipeline_parser.add_argument(
-        "--no-legacy-export-v2",
+        "--no-export-v3-sidecar",
         action="store_true",
-        help="disable transitional v2 export sidecar output",
+        help="disable transitional v3 export sidecar output",
     )
     pipeline_parser.add_argument(
         "--allow-schema-reset",
@@ -114,8 +118,12 @@ def main() -> None:
             "summary",
             "review-queue",
             "canonical-governance-review-queue",
+            "canonical-state-events",
+            "canonical-change-events",
+            "canonical-governance-events",
             "exportables",
             "snapshot-health",
+            "run-metrics",
         ],
     )
     inspect_parser.add_argument("--db-path", type=Path, default=DEFAULT_DB_PATH)
@@ -127,6 +135,7 @@ def main() -> None:
     inspect_parser.add_argument("--canonical-taxon-id", type=str)
     inspect_parser.add_argument("--priority", type=str)
     inspect_parser.add_argument("--run-id", type=str)
+    inspect_parser.add_argument("--limit", type=int, default=100)
 
     review_overrides_parser = subparsers.add_parser("review-overrides")
     review_overrides_subparsers = review_overrides_parser.add_subparsers(
@@ -172,8 +181,8 @@ def main() -> None:
             normalized_snapshot_path=args.normalized_path,
             qualification_snapshot_path=args.qualified_path,
             export_path=args.export_path,
-            export_v2_path=args.export_v2_path,
-            write_legacy_export_v2=not args.no_legacy_export_v2,
+            export_v3_path=args.export_v3_path,
+            write_sidecar_export_v3=not args.no_export_v3_sidecar,
             review_overrides_path=args.review_overrides_path,
             apply_review_overrides=args.apply_review_overrides,
             qualifier_mode=args.qualifier_mode,
@@ -342,6 +351,30 @@ def main() -> None:
                 review_status=args.review_status,
             )
         )
+    elif args.view == "canonical-state-events":
+        print(
+            render_canonical_state_events(
+                repository,
+                run_id=args.run_id,
+                limit=args.limit,
+            )
+        )
+    elif args.view == "canonical-change-events":
+        print(
+            render_canonical_change_events(
+                repository,
+                run_id=args.run_id,
+                limit=args.limit,
+            )
+        )
+    elif args.view == "canonical-governance-events":
+        print(
+            render_canonical_governance_events(
+                repository,
+                run_id=args.run_id,
+                limit=args.limit,
+            )
+        )
     elif args.view == "snapshot-health":
         if not args.snapshot_id:
             raise SystemExit("--snapshot-id is required for snapshot-health")
@@ -352,6 +385,8 @@ def main() -> None:
                 snapshot_root=args.snapshot_root,
             )
         )
+    elif args.view == "run-metrics":
+        print(render_run_metrics(repository))
     else:
         print(render_exportables(repository))
 

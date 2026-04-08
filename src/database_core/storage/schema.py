@@ -23,7 +23,8 @@ CREATE TABLE IF NOT EXISTS canonical_taxa (
     split_into_json TEXT NOT NULL,
     merged_into TEXT,
     replaced_by TEXT,
-    derived_from TEXT
+    derived_from TEXT,
+    authority_taxonomy_profile_json TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS canonical_taxon_relationships (
@@ -36,6 +37,36 @@ CREATE TABLE IF NOT EXISTS canonical_taxon_relationships (
     FOREIGN KEY (source_canonical_taxon_id) REFERENCES canonical_taxa (canonical_taxon_id),
     FOREIGN KEY (target_canonical_taxon_id) REFERENCES canonical_taxa (canonical_taxon_id)
 );
+
+CREATE TABLE IF NOT EXISTS canonical_state_events (
+    state_event_id TEXT PRIMARY KEY,
+    run_id TEXT NOT NULL,
+    canonical_taxon_id TEXT NOT NULL,
+    event_type TEXT NOT NULL,
+    source_name TEXT NOT NULL,
+    effective_at TEXT NOT NULL,
+    payload_json TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    FOREIGN KEY (run_id) REFERENCES pipeline_runs (run_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_canonical_state_events_run
+    ON canonical_state_events (run_id, canonical_taxon_id, event_type);
+
+CREATE TABLE IF NOT EXISTS canonical_change_events (
+    change_event_id TEXT PRIMARY KEY,
+    run_id TEXT NOT NULL,
+    canonical_taxon_id TEXT NOT NULL,
+    event_type TEXT NOT NULL,
+    source_name TEXT NOT NULL,
+    effective_at TEXT NOT NULL,
+    payload_json TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    FOREIGN KEY (run_id) REFERENCES pipeline_runs (run_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_canonical_change_events_run
+    ON canonical_change_events (run_id, canonical_taxon_id, event_type);
 
 CREATE TABLE IF NOT EXISTS canonical_taxon_events (
     event_id TEXT PRIMARY KEY,
@@ -189,11 +220,16 @@ CREATE TABLE IF NOT EXISTS qualified_resources (
     sex TEXT NOT NULL,
     visible_parts_json TEXT NOT NULL,
     view_angle TEXT NOT NULL,
+    difficulty_level TEXT NOT NULL,
+    media_role TEXT NOT NULL,
+    confusion_relevance TEXT NOT NULL,
+    uncertainty_reason TEXT NOT NULL,
     qualification_notes TEXT,
     qualification_flags_json TEXT NOT NULL,
     provenance_summary_json TEXT NOT NULL,
     license_safety_result TEXT NOT NULL,
     export_eligible INTEGER NOT NULL,
+    ai_confidence REAL,
     FOREIGN KEY (canonical_taxon_id) REFERENCES canonical_taxa (canonical_taxon_id),
     FOREIGN KEY (source_observation_uid) REFERENCES source_observations (observation_uid),
     FOREIGN KEY (media_asset_id) REFERENCES media_assets (media_id)

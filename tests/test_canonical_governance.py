@@ -75,7 +75,8 @@ def test_split_with_consistent_lineage_is_auto_clear() -> None:
     split_decision = [item for item in decisions if item.event.event_type == "split"][0]
 
     assert split_decision.decision_status == "auto_clear"
-    assert split_decision.decision_reason == "deterministic_transition"
+    assert split_decision.decision_reason == "weighted_transition_clear"
+    assert split_decision.signal_breakdown.score >= 3
 
 
 def test_merge_to_provisional_target_is_manual_reviewed() -> None:
@@ -112,18 +113,20 @@ def test_mapping_conflict_with_clear_source_priority_is_auto_clear() -> None:
             authority_source="inaturalist",
             external_source_mappings=[("inaturalist", "12716")],
         ),
+    ]
+    current = previous + [
         _taxon(
             canonical_taxon_id="taxon:birds:000002",
             name="Parus major legacy",
             status="deprecated",
             authority_source="gbif",
             external_source_mappings=[("inaturalist", "12716")],
-        ),
+        )
     ]
 
     decisions = derive_canonical_governance_decisions(
         previous_taxa=previous,
-        current_taxa=previous,
+        current_taxa=current,
         effective_at=datetime(2026, 4, 8, 0, 0, tzinfo=UTC),
     )
     conflict_decisions = [item for item in decisions if item.event.event_type == "mapping_conflict"]
@@ -142,17 +145,19 @@ def test_mapping_conflict_with_tie_is_manual_reviewed() -> None:
             authority_source="inaturalist",
             external_source_mappings=[("inaturalist", "12716")],
         ),
+    ]
+    current = previous + [
         _taxon(
             canonical_taxon_id="taxon:birds:000002",
             name="Parus major duplicate",
             authority_source="inaturalist",
             external_source_mappings=[("inaturalist", "12716")],
-        ),
+        )
     ]
 
     decisions = derive_canonical_governance_decisions(
         previous_taxa=previous,
-        current_taxa=previous,
+        current_taxa=current,
         effective_at=datetime(2026, 4, 8, 0, 0, tzinfo=UTC),
     )
     conflict_decisions = [item for item in decisions if item.event.event_type == "mapping_conflict"]

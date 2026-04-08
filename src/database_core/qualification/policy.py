@@ -1,12 +1,16 @@
 from __future__ import annotations
 
 from database_core.domain.enums import (
+    ConfusionRelevance,
+    DifficultyLevel,
     LicenseSafetyResult,
+    MediaRole,
     PedagogicalQuality,
     QualificationStage,
     QualificationStatus,
     ReviewPriority,
     TechnicalQuality,
+    UncertaintyReason,
 )
 from database_core.domain.models import AIQualification, MediaAsset
 from database_core.qualification.ai import AIQualificationOutcome
@@ -133,6 +137,30 @@ def resolve_pedagogical_quality(ai_qualification: AIQualification | None) -> Ped
     if ai_qualification and ai_qualification.confidence >= AI_CONFIDENCE_THRESHOLD:
         return ai_qualification.pedagogical_quality
     return PedagogicalQuality.UNKNOWN
+
+
+def resolve_difficulty_level(ai_qualification: AIQualification | None) -> DifficultyLevel:
+    if ai_qualification and ai_qualification.confidence >= AI_CONFIDENCE_THRESHOLD:
+        return ai_qualification.difficulty_level
+    return DifficultyLevel.UNKNOWN
+
+
+def resolve_media_role(ai_qualification: AIQualification | None) -> MediaRole:
+    if ai_qualification and ai_qualification.confidence >= AI_CONFIDENCE_THRESHOLD:
+        return ai_qualification.media_role
+    return MediaRole.CONTEXT
+
+
+def resolve_confusion_relevance(ai_qualification: AIQualification | None) -> ConfusionRelevance:
+    if ai_qualification and ai_qualification.confidence >= AI_CONFIDENCE_THRESHOLD:
+        return ai_qualification.confusion_relevance
+    return ConfusionRelevance.NONE
+
+
+def resolve_uncertainty_reason(ai_qualification: AIQualification | None) -> UncertaintyReason:
+    if ai_qualification and ai_qualification.confidence >= AI_CONFIDENCE_THRESHOLD:
+        return ai_qualification.uncertainty_reason
+    return UncertaintyReason.NONE
 
 
 def build_notes(

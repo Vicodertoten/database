@@ -86,6 +86,38 @@ class PedagogicalQuality(StrEnum):
     HIGH = "high"
 
 
+class DifficultyLevel(StrEnum):
+    UNKNOWN = "unknown"
+    EASY = "easy"
+    MEDIUM = "medium"
+    HARD = "hard"
+
+
+class MediaRole(StrEnum):
+    PRIMARY_ID = "primary_id"
+    CONTEXT = "context"
+    DISTRACTOR_RISK = "distractor_risk"
+    NON_DIAGNOSTIC = "non_diagnostic"
+
+
+class ConfusionRelevance(StrEnum):
+    NONE = "none"
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"
+
+
+class UncertaintyReason(StrEnum):
+    NONE = "none"
+    OCCLUSION = "occlusion"
+    ANGLE = "angle"
+    DISTANCE = "distance"
+    MOTION = "motion"
+    MULTIPLE_SUBJECTS = "multiple_subjects"
+    MODEL_UNCERTAIN = "model_uncertain"
+    TAXONOMY_AMBIGUOUS = "taxonomy_ambiguous"
+
+
 class Sex(StrEnum):
     UNKNOWN = "unknown"
     MALE = "male"

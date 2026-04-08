@@ -1,0 +1,212 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/database/schemas/qualified_resources_bundle_v4.schema.json",
+  "title": "QualifiedResourcesBundleV4",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "export_version",
+    "qualification_version",
+    "enrichment_version",
+    "generated_at",
+    "canonical_taxa",
+    "qualified_resources"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^database\\.schema\\.v[0-9]+$"
+    },
+    "export_version": {
+      "type": "string",
+      "const": "export.bundle.v4"
+    },
+    "qualification_version": {"type": "string"},
+    "enrichment_version": {"type": "string"},
+    "generated_at": {"type": "string", "format": "date-time"},
+    "canonical_taxa": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "canonical_taxon_id",
+          "accepted_scientific_name",
+          "canonical_rank",
+          "taxon_group",
+          "taxon_status"
+        ],
+        "properties": {
+          "canonical_taxon_id": {"type": "string", "pattern": "^taxon:[a-z]+:[0-9]{6}$"},
+          "accepted_scientific_name": {"type": "string", "minLength": 1},
+          "canonical_rank": {"type": "string", "enum": ["species", "genus", "family"]},
+          "taxon_group": {"type": "string", "enum": ["birds"]},
+          "taxon_status": {"type": "string", "enum": ["active", "deprecated", "provisional"]},
+          "synonyms": {"type": "array", "items": {"type": "string"}},
+          "common_names": {"type": "array", "items": {"type": "string"}},
+          "key_identification_features": {"type": "array", "items": {"type": "string"}},
+          "similar_taxon_ids": {
+            "type": "array",
+            "items": {"type": "string", "pattern": "^taxon:[a-z]+:[0-9]{6}$"}
+          }
+        }
+      }
+    },
+    "qualified_resources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "qualified_resource_id",
+          "canonical_taxon_id",
+          "media_asset_id",
+          "qualification_status",
+          "qualification_version",
+          "technical_quality",
+          "pedagogical_quality",
+          "life_stage",
+          "sex",
+          "visible_parts",
+          "view_angle",
+          "license_safety_result",
+          "export_eligible",
+          "provenance",
+          "qualification_flags",
+          "qualification_notes",
+          "pedagogy",
+          "uncertainty",
+          "review_context"
+        ],
+        "properties": {
+          "qualified_resource_id": {"type": "string", "pattern": "^qr:media:[a-z_]+:.+$"},
+          "canonical_taxon_id": {"type": "string", "pattern": "^taxon:[a-z]+:[0-9]{6}$"},
+          "media_asset_id": {"type": "string", "pattern": "^media:[a-z_]+:.+$"},
+          "qualification_status": {"type": "string", "enum": ["accepted", "review_required", "rejected"]},
+          "qualification_version": {"type": "string"},
+          "technical_quality": {"type": "string", "enum": ["unknown", "low", "medium", "high"]},
+          "pedagogical_quality": {"type": "string", "enum": ["unknown", "low", "medium", "high"]},
+          "life_stage": {"type": "string"},
+          "sex": {"type": "string", "enum": ["unknown", "male", "female", "mixed"]},
+          "visible_parts": {"type": "array", "items": {"type": "string"}},
+          "view_angle": {
+            "type": "string",
+            "enum": ["unknown", "lateral", "frontal", "dorsal", "ventral", "oblique", "close_up"]
+          },
+          "license_safety_result": {"type": "string", "enum": ["safe", "review_required", "unsafe"]},
+          "export_eligible": {"type": "boolean"},
+          "qualification_flags": {"type": "array", "items": {"type": "string"}},
+          "qualification_notes": {"type": ["string", "null"]},
+          "pedagogy": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "difficulty_level",
+              "media_role",
+              "confusion_relevance",
+              "uncertainty_reason"
+            ],
+            "properties": {
+              "difficulty_level": {"type": "string", "enum": ["unknown", "easy", "medium", "hard"]},
+              "media_role": {
+                "type": "string",
+                "enum": ["primary_id", "context", "distractor_risk", "non_diagnostic"]
+              },
+              "confusion_relevance": {"type": "string", "enum": ["none", "low", "medium", "high"]},
+              "uncertainty_reason": {
+                "type": "string",
+                "enum": [
+                  "none",
+                  "occlusion",
+                  "angle",
+                  "distance",
+                  "motion",
+                  "multiple_subjects",
+                  "model_uncertain",
+                  "taxonomy_ambiguous"
+                ]
+              }
+            }
+          },
+          "uncertainty": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["type", "rationale", "confidence"],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "none",
+                  "occlusion",
+                  "angle",
+                  "distance",
+                  "motion",
+                  "multiple_subjects",
+                  "model_uncertain",
+                  "taxonomy_ambiguous"
+                ]
+              },
+              "rationale": {"type": ["string", "null"]},
+              "confidence": {"type": ["number", "null"], "minimum": 0.0, "maximum": 1.0}
+            }
+          },
+          "review_context": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["status", "reason_code", "override_applied"],
+            "properties": {
+              "status": {"type": "string", "enum": ["not_required", "review_required", "overridden"]},
+              "reason_code": {"type": ["string", "null"]},
+              "override_applied": {"type": "boolean"}
+            }
+          },
+          "provenance": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["run_id", "source", "qualification_trace"],
+            "properties": {
+              "run_id": {"type": "string", "pattern": "^run:[0-9]{8}T[0-9]{6}Z:[a-f0-9]{8}$"},
+              "source": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "source_name",
+                  "source_observation_key",
+                  "source_media_key",
+                  "source_observation_id",
+                  "source_media_id",
+                  "raw_payload_ref",
+                  "observation_license",
+                  "media_license"
+                ],
+                "properties": {
+                  "source_name": {"type": "string", "enum": ["inaturalist", "gbif", "wikimedia_commons"]},
+                  "source_observation_key": {"type": "string", "pattern": "^[a-z_]+::.+$"},
+                  "source_media_key": {"type": "string", "pattern": "^[a-z_]+::.+$"},
+                  "source_observation_id": {"type": "string"},
+                  "source_media_id": {"type": "string"},
+                  "raw_payload_ref": {"type": "string"},
+                  "observation_license": {"type": ["string", "null"]},
+                  "media_license": {"type": ["string", "null"]}
+                }
+              },
+              "qualification_trace": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["method", "ai_model", "ai_prompt_version", "ai_task_name", "ai_status"],
+                "properties": {
+                  "method": {"type": "string"},
+                  "ai_model": {"type": ["string", "null"]},
+                  "ai_prompt_version": {"type": ["string", "null"]},
+                  "ai_task_name": {"type": ["string", "null"]},
+                  "ai_status": {"type": ["string", "null"]}
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

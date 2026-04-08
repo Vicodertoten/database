@@ -34,6 +34,8 @@ The repository is not the quiz app, frontend, or product runtime.
 - Living audit reference: `docs/05_audit_reference.md`
 - Stable canonical charter v1: `docs/06_charte_canonique_v1.md`
 - Canonical implementation ADR: `docs/adr/0001-charte-canonique-v1.md`
+- Noyau canonique fort ADR: `docs/adr/0002-noyau-canonique-fort-execution-sequentielle.md`
+- Program KPI checklist: `docs/10_program_kpis.md`
 
 ## Quickstart
 
@@ -98,11 +100,14 @@ python scripts/run_pipeline.py --source-mode inat_snapshot --snapshot-id inatura
 python scripts/run_pipeline.py --source-mode inat_snapshot --snapshot-id inaturalist-birds-20260408T123456Z --qualifier-mode cached --uncertain-policy reject --apply-review-overrides
 python scripts/run_pipeline.py --source-mode inat_snapshot --snapshot-id inaturalist-birds-20260408T123456Z --qualifier-mode gemini --uncertain-policy reject
 python scripts/inspect_database.py summary
+python scripts/inspect_database.py run-metrics --snapshot-id inaturalist-birds-20260408T123456Z
 python scripts/inspect_database.py review-queue --review-reason-code human_override
 python scripts/inspect_database.py snapshot-health --snapshot-id inaturalist-birds-20260408T123456Z
 python scripts/review_overrides.py init --snapshot-id inaturalist-birds-20260408T123456Z
 python scripts/review_overrides.py upsert --snapshot-id inaturalist-birds-20260408T123456Z --media-asset-id media:inaturalist:810001 --status review_required --note "manual spot-check requested"
 python scripts/review_overrides.py list --snapshot-id inaturalist-birds-20260408T123456Z
+python scripts/generate_smoke_report.py --snapshot-id inaturalist-birds-20260408T123456Z
+python scripts/generate_smoke_report.py --snapshot-id inaturalist-birds-20260408T123456Z --fail-on-kpi-breach
 python scripts/build_goldset_v1.py --clean
 python scripts/optimize_goldset_media.py
 python scripts/verify_goldset_v1.py
@@ -159,21 +164,21 @@ The manifest records which sort was requested and which one was actually used.
 
 The repository now writes explicit stage versions into generated artifacts:
 
-- schema version: `database.schema.v5`
+- schema version: `database.schema.v6`
 - snapshot manifest version: `inaturalist.snapshot.v3`
 - normalized snapshot version: `normalized.snapshot.v3`
 - canonical enrichment version: `canonical.enrichment.v2`
 - qualification version: `qualification.staged.v1`
-- export version: `export.bundle.v3`
-- legacy export sidecar version: `export.bundle.v2` (transitional compatibility window)
+- export version: `export.bundle.v4`
+- sidecar export version: `export.bundle.v3` (two-release transition window)
 - review override version: `review.override.v1`
 
 Snapshot manifests without `manifest_version` are rejected.
 Unknown manifest versions are rejected explicitly.
-The primary export bundle (`v3`) is validated against
-`schemas/qualified_resources_bundle_v3.schema.json` before write.
-The optional legacy sidecar (`v2`) is validated against
-`schemas/qualified_resources_bundle.schema.json`.
+The primary export bundle (`v4`) is validated against
+`schemas/qualified_resources_bundle_v4.schema.json` before write.
+The optional sidecar (`v3`) is validated against
+`schemas/qualified_resources_bundle_v3.schema.json`.
 
 ## Canonical enrichment
 
@@ -185,6 +190,7 @@ Canonical taxa now carry a small enrichment layer in addition to their internal 
 - `external_similarity_hints`
 - `similar_taxa`
 - derived `similar_taxon_ids`
+- `authority_taxonomy_profile`
 
 The important distinction is:
 

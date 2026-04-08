@@ -69,6 +69,7 @@ def _enrich_single_taxon(
                 "external_similarity_hints": external_similarity_hints,
                 "similar_taxa": _merge_similar_taxa(taxon.similar_taxa, resolved),
                 "source_enrichment_status": source_enrichment_status,
+                "authority_taxonomy_profile": _extract_authority_taxonomy_profile(record),
             }
         )
     except MALFORMED_ENRICHMENT_PAYLOAD_ERRORS:
@@ -111,6 +112,38 @@ def _extract_key_identification_features(record: Mapping[str, object]) -> list[s
     return _dedupe_preserve_order(
         item.strip() for item in str(raw_value).split("|") if item.strip()
     )
+
+
+def _extract_authority_taxonomy_profile(record: Mapping[str, object]) -> dict[str, object]:
+    source_taxon_id = record.get("id")
+    ancestor_ids_raw = record.get("ancestor_ids")
+    synonym_ids_raw = record.get("current_synonymous_taxon_ids")
+    return {
+        "source_taxon_id": str(source_taxon_id) if source_taxon_id is not None else None,
+        "accepted_scientific_name": (
+            str(record.get("name")) if record.get("name") is not None else None
+        ),
+        "is_active": bool(record.get("is_active")) if record.get("is_active") is not None else None,
+        "provisional": (
+            bool(record.get("provisional")) if record.get("provisional") is not None else None
+        ),
+        "parent_id": str(record.get("parent_id")) if record.get("parent_id") is not None else None,
+        "ancestor_ids": (
+            [str(item) for item in ancestor_ids_raw if item is not None]
+            if isinstance(ancestor_ids_raw, Sequence) and not isinstance(ancestor_ids_raw, str)
+            else []
+        ),
+        "taxon_changes_count": (
+            int(record.get("taxon_changes_count"))
+            if record.get("taxon_changes_count") is not None
+            else None
+        ),
+        "current_synonymous_taxon_ids": (
+            [str(item) for item in synonym_ids_raw if item is not None]
+            if isinstance(synonym_ids_raw, Sequence) and not isinstance(synonym_ids_raw, str)
+            else []
+        ),
+    }
 
 
 def _extract_similarity_hints(record: Mapping[str, object]) -> list[ExternalSimilarityHint]:

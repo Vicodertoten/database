@@ -89,6 +89,75 @@ def render_canonical_governance_review_queue(
     return "\n".join(lines)
 
 
+def render_canonical_state_events(
+    repository: SQLiteRepository,
+    *,
+    run_id: str | None = None,
+    limit: int = 100,
+) -> str:
+    rows = repository.fetch_canonical_state_events(run_id=run_id, limit=limit)
+    if not rows:
+        return "Canonical state event log is empty."
+    lines = ["Canonical state event log"]
+    for row in rows:
+        lines.append(
+            f"{row['state_event_id']} | run={row['run_id']} | "
+            f"{row['event_type']} | {row['canonical_taxon_id']}"
+        )
+    return "\n".join(lines)
+
+
+def render_canonical_change_events(
+    repository: SQLiteRepository,
+    *,
+    run_id: str | None = None,
+    limit: int = 100,
+) -> str:
+    rows = repository.fetch_canonical_change_events(run_id=run_id, limit=limit)
+    if not rows:
+        return "Canonical change event log is empty."
+    lines = ["Canonical change event log"]
+    for row in rows:
+        lines.append(
+            f"{row['change_event_id']} | run={row['run_id']} | "
+            f"{row['event_type']} | {row['canonical_taxon_id']}"
+        )
+    return "\n".join(lines)
+
+
+def render_canonical_governance_events(
+    repository: SQLiteRepository,
+    *,
+    run_id: str | None = None,
+    limit: int = 100,
+) -> str:
+    rows = repository.fetch_canonical_governance_events(run_id=run_id, limit=limit)
+    if not rows:
+        return "Canonical governance decision log is empty."
+    lines = ["Canonical governance decision log"]
+    for row in rows:
+        lines.append(
+            f"{row['governance_event_id']} | run={row['run_id']} | "
+            f"{row['decision_status']} | {row['decision_reason']} | "
+            f"{row['event_type']} | {row['canonical_taxon_id']}"
+        )
+    return "\n".join(lines)
+
+
+def render_run_metrics(repository: SQLiteRepository) -> str:
+    metrics = repository.fetch_run_level_metrics()
+    return "\n".join(
+        [
+            "Run metrics",
+            f"volume: {metrics['volume']}",
+            f"quality: {metrics['quality']}",
+            f"governance: {metrics['governance']}",
+            f"review_load: {metrics['review_load']}",
+            f"cost: {metrics['cost']}",
+        ]
+    )
+
+
 def render_snapshot_health(
     repository: SQLiteRepository,
     *,

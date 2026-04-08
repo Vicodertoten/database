@@ -11,8 +11,11 @@ from database_core.domain.enums import (
     CanonicalEventType,
     CanonicalGovernanceDecisionStatus,
     CanonicalRank,
+    ConfusionRelevance,
+    DifficultyLevel,
     EnrichmentStatus,
     LicenseSafetyResult,
+    MediaRole,
     MediaType,
     PedagogicalQuality,
     QualificationStage,
@@ -25,6 +28,7 @@ from database_core.domain.enums import (
     TaxonGroup,
     TaxonStatus,
     TechnicalQuality,
+    UncertaintyReason,
     ViewAngle,
 )
 
@@ -66,6 +70,10 @@ class AIQualification(DomainModel):
     sex: Sex = Sex.UNKNOWN
     visible_parts: list[str] = Field(default_factory=list)
     view_angle: ViewAngle = ViewAngle.UNKNOWN
+    difficulty_level: DifficultyLevel = DifficultyLevel.UNKNOWN
+    media_role: MediaRole = MediaRole.CONTEXT
+    confusion_relevance: ConfusionRelevance = ConfusionRelevance.NONE
+    uncertainty_reason: UncertaintyReason = UncertaintyReason.NONE
     confidence: float = 0.0
     model_name: str = "fixture-ai"
     notes: str | None = None
@@ -150,6 +158,7 @@ class CanonicalTaxon(DomainModel):
     merged_into: str | None = None
     replaced_by: str | None = None
     derived_from: str | None = None
+    authority_taxonomy_profile: dict[str, object] = Field(default_factory=dict)
 
     @field_validator("canonical_taxon_id")
     @classmethod
@@ -312,17 +321,31 @@ class QualifiedResource(DomainModel):
     sex: Sex = Sex.UNKNOWN
     visible_parts: list[str] = Field(default_factory=list)
     view_angle: ViewAngle = ViewAngle.UNKNOWN
+    difficulty_level: DifficultyLevel = DifficultyLevel.UNKNOWN
+    media_role: MediaRole = MediaRole.CONTEXT
+    confusion_relevance: ConfusionRelevance = ConfusionRelevance.NONE
+    uncertainty_reason: UncertaintyReason = UncertaintyReason.NONE
     qualification_notes: str | None = None
     qualification_flags: list[str] = Field(default_factory=list)
     provenance_summary: ProvenanceSummary
     license_safety_result: LicenseSafetyResult
     export_eligible: bool
+    ai_confidence: float | None = None
 
     @field_validator("qualified_resource_id", "canonical_taxon_id", "media_asset_id")
     @classmethod
     def validate_resource_ids(cls, value: str) -> str:
         if not value.strip():
             raise ValueError("field must not be blank")
+        return value
+
+    @field_validator("ai_confidence")
+    @classmethod
+    def validate_ai_confidence(cls, value: float | None) -> float | None:
+        if value is None:
+            return value
+        if not 0.0 <= value <= 1.0:
+            raise ValueError("ai_confidence must be between 0.0 and 1.0")
         return value
 
     @model_validator(mode="after")

@@ -16,11 +16,14 @@ Before adding a new document, update an existing one whenever possible.
 - `docs/06_charte_canonique_v1.md`: canonical governance policy (normative).
 - `docs/07_canonical_id_migration_v1.md`: canonical ID migration mapping and cutover policy.
 - `docs/adr/0001-charte-canonique-v1.md`: implementation ADR for canonical governance v1.
+- `docs/adr/0002-noyau-canonique-fort-execution-sequentielle.md`: execution ADR locking gates, canonical policy, and export transition.
 
 ## Operations
 
 - `docs/04_smoke_runbook.md`: weekly live smoke process and reporting template.
 - `docs/08_goldset_v1.md`: AI gold set build, verification, and live E2E usage.
+- `docs/10_program_kpis.md`: locked KPI definitions and smoke acceptance thresholds.
+- `docs/smoke_reports/`: versioned smoke reports (`smoke.report.v1`).
 
 ## Audit And Execution Tracking
 

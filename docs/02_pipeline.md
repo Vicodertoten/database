@@ -57,8 +57,8 @@ The pipeline is deliberately small, versioned, and reproducible.
 - keep unresolved external hints out of the public export bundle
 - fail on unresolved canonical taxon IDs in exportable resources
 - exclude `provisional` taxa from pedagogical export by default
-- validate the export against `schemas/qualified_resources_bundle_v3.schema.json` before writing
-- emit transitional legacy `export.bundle.v2` alongside `v3` during compatibility window
+- validate the primary export against `schemas/qualified_resources_bundle_v4.schema.json` before writing
+- emit transitional sidecar `export.bundle.v3` alongside `v4` during compatibility window
 
 ## Canonical governance guardrails
 

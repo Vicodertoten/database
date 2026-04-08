@@ -116,6 +116,39 @@ _MIGRATION_SQL: dict[int, str] = {
 
     PRAGMA user_version = 5;
     """,
+    6: """
+    CREATE TABLE IF NOT EXISTS canonical_state_events (
+        state_event_id TEXT PRIMARY KEY,
+        run_id TEXT NOT NULL,
+        canonical_taxon_id TEXT NOT NULL,
+        event_type TEXT NOT NULL,
+        source_name TEXT NOT NULL,
+        effective_at TEXT NOT NULL,
+        payload_json TEXT NOT NULL,
+        created_at TEXT NOT NULL,
+        FOREIGN KEY (run_id) REFERENCES pipeline_runs (run_id)
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_canonical_state_events_run
+        ON canonical_state_events (run_id, canonical_taxon_id, event_type);
+
+    CREATE TABLE IF NOT EXISTS canonical_change_events (
+        change_event_id TEXT PRIMARY KEY,
+        run_id TEXT NOT NULL,
+        canonical_taxon_id TEXT NOT NULL,
+        event_type TEXT NOT NULL,
+        source_name TEXT NOT NULL,
+        effective_at TEXT NOT NULL,
+        payload_json TEXT NOT NULL,
+        created_at TEXT NOT NULL,
+        FOREIGN KEY (run_id) REFERENCES pipeline_runs (run_id)
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_canonical_change_events_run
+        ON canonical_change_events (run_id, canonical_taxon_id, event_type);
+
+    PRAGMA user_version = 6;
+    """,
 }
 
 
@@ -147,15 +180,62 @@ def apply_migrations(
 
     applied: list[int] = []
     for version in range(current_version + 1, target_version + 1):
-        migration_sql = _MIGRATION_SQL.get(version)
-        if migration_sql is None:
-            raise ValueError(
-                "Missing SQL migration step for schema version "
-                f"{version} (current={current_version}, target={target_version})"
-            )
-        connection.executescript(migration_sql)
+        if version == 6:
+            _apply_migration_v6(connection)
+        else:
+            migration_sql = _MIGRATION_SQL.get(version)
+            if migration_sql is None:
+                raise ValueError(
+                    "Missing SQL migration step for schema version "
+                    f"{version} (current={current_version}, target={target_version})"
+                )
+            connection.executescript(migration_sql)
         applied.append(version)
     return tuple(applied)
+
+
+def _column_exists(connection: sqlite3.Connection, *, table: str, column: str) -> bool:
+    rows = connection.execute(f"PRAGMA table_info({table})").fetchall()
+    return any(str(row[1]) == column for row in rows)
+
+
+def _apply_migration_v6(connection: sqlite3.Connection) -> None:
+    if not _column_exists(
+        connection,
+        table="canonical_taxa",
+        column="authority_taxonomy_profile_json",
+    ):
+        connection.execute(
+            "ALTER TABLE canonical_taxa "
+            "ADD COLUMN authority_taxonomy_profile_json TEXT NOT NULL DEFAULT '{}'"
+        )
+    if not _column_exists(connection, table="qualified_resources", column="difficulty_level"):
+        connection.execute(
+            "ALTER TABLE qualified_resources "
+            "ADD COLUMN difficulty_level TEXT NOT NULL DEFAULT 'unknown'"
+        )
+    if not _column_exists(connection, table="qualified_resources", column="media_role"):
+        connection.execute(
+            "ALTER TABLE qualified_resources "
+            "ADD COLUMN media_role TEXT NOT NULL DEFAULT 'context'"
+        )
+    if not _column_exists(connection, table="qualified_resources", column="confusion_relevance"):
+        connection.execute(
+            "ALTER TABLE qualified_resources "
+            "ADD COLUMN confusion_relevance TEXT NOT NULL DEFAULT 'none'"
+        )
+    if not _column_exists(connection, table="qualified_resources", column="uncertainty_reason"):
+        connection.execute(
+            "ALTER TABLE qualified_resources "
+            "ADD COLUMN uncertainty_reason TEXT NOT NULL DEFAULT 'none'"
+        )
+    if not _column_exists(connection, table="qualified_resources", column="ai_confidence"):
+        connection.execute(
+            "ALTER TABLE qualified_resources "
+            "ADD COLUMN ai_confidence REAL"
+        )
+
+    connection.executescript(_MIGRATION_SQL[6])
 
 
 def migrate_database_file(

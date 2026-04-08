@@ -224,4 +224,4 @@ def test_migrate_cli_applies_pending_schema_migration(monkeypatch, tmp_path: Pat
         cli.main()
 
     assert "Database migrated" in buffer.getvalue()
-    assert repository.current_schema_version() == 5
+    assert repository.current_schema_version() == 6

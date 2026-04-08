@@ -115,6 +115,14 @@ def _qualify_single_media(
         ai_status=ai_outcome.status if ai_outcome else "rules_only",
     )
     notes = build_notes(qualification_flags, ai_qualification, ai_outcome)
+    pedagogy_note = (
+        "pedagogy:"
+        f"difficulty={expert.difficulty_level};"
+        f"media_role={expert.media_role};"
+        f"confusion_relevance={expert.confusion_relevance};"
+        f"uncertainty_reason={expert.uncertainty_reason}"
+    )
+    notes = " | ".join(item for item in [notes, pedagogy_note] if item)
     export_eligible = (
         status == QualificationStatus.ACCEPTED
         and compliance.license_safety_result == LicenseSafetyResult.SAFE
@@ -135,11 +143,16 @@ def _qualify_single_media(
         sex=expert.sex,
         visible_parts=expert.visible_parts,
         view_angle=expert.view_angle,
+        difficulty_level=expert.difficulty_level,
+        media_role=expert.media_role,
+        confusion_relevance=expert.confusion_relevance,
+        uncertainty_reason=expert.uncertainty_reason,
         qualification_notes=notes,
         qualification_flags=qualification_flags,
         provenance_summary=provenance_summary,
         license_safety_result=compliance.license_safety_result,
         export_eligible=export_eligible,
+        ai_confidence=ai_qualification.confidence if ai_qualification else None,
     )
 
 

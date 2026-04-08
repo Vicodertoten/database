@@ -27,11 +27,17 @@ SourceExternalKey = tuple[SourceName, str]
 PROMPT_BASE_TEXT = (
     "Return strict JSON only for biodiversity-learning dataset qualification. "
     "Return exactly these keys: technical_quality, pedagogical_quality, life_stage, sex, "
-    "visible_parts, view_angle, confidence, notes. "
+    "visible_parts, view_angle, difficulty_level, media_role, confusion_relevance, "
+    "uncertainty_reason, confidence, notes. "
     "technical_quality and pedagogical_quality must be one of: unknown, low, medium, high. "
     "sex must be one of: unknown, male, female, mixed. "
     "visible_parts must be a JSON array of short snake_case strings. "
     "view_angle must be one of: unknown, lateral, frontal, dorsal, ventral, oblique, close_up. "
+    "difficulty_level must be one of: unknown, easy, medium, hard. "
+    "media_role must be one of: primary_id, context, distractor_risk, non_diagnostic. "
+    "confusion_relevance must be one of: none, low, medium, high. "
+    "uncertainty_reason must be one of: none, occlusion, angle, distance, motion, "
+    "multiple_subjects, model_uncertain, taxonomy_ambiguous. "
     "confidence must be a number between 0.0 and 1.0. "
     "Do not return prose outside the JSON object."
 )
@@ -86,6 +92,35 @@ STRICT_GEMINI_RESPONSE_SCHEMA: dict[str, object] = {
             "enum": ["unknown", "lateral", "frontal", "dorsal", "ventral", "oblique", "close_up"],
             "description": "Primary view angle of the bird.",
         },
+        "difficulty_level": {
+            "type": "string",
+            "enum": ["unknown", "easy", "medium", "hard"],
+            "description": "Estimated learning difficulty for species identification.",
+        },
+        "media_role": {
+            "type": "string",
+            "enum": ["primary_id", "context", "distractor_risk", "non_diagnostic"],
+            "description": "Primary pedagogical role of this media item.",
+        },
+        "confusion_relevance": {
+            "type": "string",
+            "enum": ["none", "low", "medium", "high"],
+            "description": "How relevant this item is for confusion/differentiation training.",
+        },
+        "uncertainty_reason": {
+            "type": "string",
+            "enum": [
+                "none",
+                "occlusion",
+                "angle",
+                "distance",
+                "motion",
+                "multiple_subjects",
+                "model_uncertain",
+                "taxonomy_ambiguous",
+            ],
+            "description": "Primary reason for uncertainty, if any.",
+        },
         "confidence": {
             "type": "number",
             "minimum": 0.0,
@@ -104,6 +139,10 @@ STRICT_GEMINI_RESPONSE_SCHEMA: dict[str, object] = {
         "sex",
         "visible_parts",
         "view_angle",
+        "difficulty_level",
+        "media_role",
+        "confusion_relevance",
+        "uncertainty_reason",
         "confidence",
         "notes",
     ],
@@ -632,6 +671,10 @@ def _normalize_gemini_candidate(candidate: Mapping[str, object]) -> dict[str, ob
         "sex": _normalize_sex(candidate.get("sex")),
         "visible_parts": _normalize_visible_parts(candidate.get("visible_parts")),
         "view_angle": _normalize_view_angle(candidate.get("view_angle")),
+        "difficulty_level": _normalize_difficulty_level(candidate.get("difficulty_level")),
+        "media_role": _normalize_media_role(candidate.get("media_role")),
+        "confusion_relevance": _normalize_confusion_relevance(candidate.get("confusion_relevance")),
+        "uncertainty_reason": _normalize_uncertainty_reason(candidate.get("uncertainty_reason")),
         "confidence": _normalize_confidence(candidate.get("confidence")),
         "notes": str(notes).strip() if notes not in {None, ""} else None,
     }
@@ -784,6 +827,79 @@ def _normalize_confidence(value: object) -> float:
     if any(token in text for token in ("low", "poor")):
         return 0.4
     return 0.0
+
+
+def _normalize_difficulty_level(value: object) -> str:
+    text = _normalize_text(value)
+    if text in {"unknown", "easy", "medium", "hard"}:
+        return text
+    if any(token in text for token in ("beginner", "simple", "easy")):
+        return "easy"
+    if any(token in text for token in ("advanced", "hard", "difficult")):
+        return "hard"
+    if any(token in text for token in ("intermediate", "moderate", "medium")):
+        return "medium"
+    return "unknown"
+
+
+def _normalize_media_role(value: object) -> str:
+    text = _normalize_text(value)
+    if text in {"primary_id", "context", "distractor_risk", "non_diagnostic"}:
+        return text
+    if any(token in text for token in ("primary", "identification", "diagnostic")):
+        return "primary_id"
+    if any(token in text for token in ("distractor", "confusion", "lookalike")):
+        return "distractor_risk"
+    if any(token in text for token in ("non", "not diagnostic", "non_diagnostic")):
+        return "non_diagnostic"
+    if text:
+        return "context"
+    return "context"
+
+
+def _normalize_confusion_relevance(value: object) -> str:
+    text = _normalize_text(value)
+    if text in {"none", "low", "medium", "high"}:
+        return text
+    if any(token in text for token in ("none", "not relevant", "irrelevant")):
+        return "none"
+    if any(token in text for token in ("high", "strong", "critical")):
+        return "high"
+    if any(token in text for token in ("medium", "moderate")):
+        return "medium"
+    if any(token in text for token in ("low", "slight")):
+        return "low"
+    return "none"
+
+
+def _normalize_uncertainty_reason(value: object) -> str:
+    text = _normalize_text(value)
+    if text in {
+        "none",
+        "occlusion",
+        "angle",
+        "distance",
+        "motion",
+        "multiple_subjects",
+        "model_uncertain",
+        "taxonomy_ambiguous",
+    }:
+        return text
+    if any(token in text for token in ("occlusion", "occluded", "blocked")):
+        return "occlusion"
+    if any(token in text for token in ("angle", "view", "perspective")):
+        return "angle"
+    if any(token in text for token in ("distance", "far", "small in frame")):
+        return "distance"
+    if any(token in text for token in ("motion", "blur", "moving")):
+        return "motion"
+    if any(token in text for token in ("multiple", "several", "group")):
+        return "multiple_subjects"
+    if any(token in text for token in ("taxonomy", "taxonomic")):
+        return "taxonomy_ambiguous"
+    if any(token in text for token in ("uncertain", "unsure", "low confidence")):
+        return "model_uncertain"
+    return "none"
 
 
 def _scale_confidence(value: float) -> float:

@@ -1,0 +1,81 @@
+from __future__ import annotations
+
+import argparse
+import json
+import sys
+from pathlib import Path
+
+
+def _bootstrap_src_path() -> None:
+    root = Path(__file__).resolve().parents[1]
+    src = root / "src"
+    src_path = str(src)
+    if src_path not in sys.path:
+        sys.path.insert(0, src_path)
+
+
+def _resolve_db_path(*, snapshot_id: str | None, db_path: Path) -> Path:
+    if snapshot_id is None:
+        return db_path
+    from database_core.pipeline.runner import DEFAULT_DATABASES_DIR, DEFAULT_DB_PATH
+
+    if db_path == DEFAULT_DB_PATH:
+        return DEFAULT_DATABASES_DIR / f"{snapshot_id}.sqlite"
+    return db_path
+
+
+def _default_output_path(*, snapshot_id: str | None, db_path: Path) -> Path:
+    identifier = snapshot_id or db_path.stem
+    return Path("docs/smoke_reports") / f"{identifier}.smoke_report.v1.json"
+
+
+def main() -> None:
+    _bootstrap_src_path()
+    from database_core.ops import generate_smoke_report
+    from database_core.pipeline.runner import DEFAULT_DB_PATH
+    from database_core.storage.sqlite import SQLiteRepository
+
+    parser = argparse.ArgumentParser(prog="generate-smoke-report")
+    parser.add_argument("--snapshot-id", type=str)
+    parser.add_argument("--db-path", type=Path, default=DEFAULT_DB_PATH)
+    parser.add_argument("--output-path", type=Path)
+    parser.add_argument(
+        "--fail-on-kpi-breach",
+        action="store_true",
+        help="exit with code 1 when at least one KPI target is not met",
+    )
+    args = parser.parse_args()
+
+    resolved_db_path = _resolve_db_path(snapshot_id=args.snapshot_id, db_path=args.db_path)
+    if not resolved_db_path.exists():
+        raise SystemExit(f"Database not found: {resolved_db_path}")
+
+    repository = SQLiteRepository(resolved_db_path)
+    repository.initialize()
+    report = generate_smoke_report(
+        repository,
+        snapshot_id=args.snapshot_id,
+        db_path=resolved_db_path,
+    )
+
+    output_path = args.output_path or _default_output_path(
+        snapshot_id=args.snapshot_id,
+        db_path=resolved_db_path,
+    )
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(
+        json.dumps(report, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    print(
+        "Smoke report generated | "
+        f"path={output_path} | "
+        f"overall_pass={report['overall_pass']}"
+    )
+    if args.fail_on_kpi_breach and not bool(report["overall_pass"]):
+        raise SystemExit(1)
+
+
+if __name__ == "__main__":
+    main()
+

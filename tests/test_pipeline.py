@@ -47,7 +47,7 @@ def test_pipeline_produces_reproducible_output(tmp_path: Path) -> None:
         normalized_snapshot_path=second_normalized,
         qualification_snapshot_path=second_qualified,
         export_path=second_export,
-        legacy_export_path=second_export.with_name(f"{second_export.stem}.v2{second_export.suffix}"),
+        legacy_export_path=second_export.with_name(f"{second_export.stem}.v3{second_export.suffix}"),
         qualified_resource_count=4,
         exportable_resource_count=2,
         review_queue_count=1,
@@ -62,18 +62,18 @@ def test_pipeline_produces_reproducible_output(tmp_path: Path) -> None:
 
     export_payload = json.loads(first_export.read_text(encoding="utf-8"))
     export_schema = json.loads(
-        Path("schemas/qualified_resources_bundle_v3.schema.json").read_text(encoding="utf-8")
+        Path("schemas/qualified_resources_bundle_v4.schema.json").read_text(encoding="utf-8")
     )
     validate(instance=export_payload, schema=export_schema)
-    legacy_export_path = first_export.with_name(f"{first_export.stem}.v2{first_export.suffix}")
+    legacy_export_path = first_export.with_name(f"{first_export.stem}.v3{first_export.suffix}")
     legacy_export_payload = json.loads(legacy_export_path.read_text(encoding="utf-8"))
     legacy_schema = json.loads(
-        Path("schemas/qualified_resources_bundle.schema.json").read_text(encoding="utf-8")
+        Path("schemas/qualified_resources_bundle_v3.schema.json").read_text(encoding="utf-8")
     )
     validate(instance=legacy_export_payload, schema=legacy_schema)
 
-    assert export_payload["schema_version"] == "database.schema.v5"
-    assert export_payload["export_version"] == "export.bundle.v3"
+    assert export_payload["schema_version"] == "database.schema.v6"
+    assert export_payload["export_version"] == "export.bundle.v4"
     assert export_payload["qualification_version"] == "qualification.staged.v1"
     assert export_payload["enrichment_version"] == "canonical.enrichment.v2"
     assert [item["canonical_taxon_id"] for item in export_payload["canonical_taxa"]] == [
@@ -85,11 +85,15 @@ def test_pipeline_produces_reproducible_output(tmp_path: Path) -> None:
         "media:inaturalist:fixture-media-blackbird-001",
         "media:inaturalist:fixture-media-sparrow-001",
     ]
+    assert "qualification_flags" in export_payload["qualified_resources"][0]
+    assert "pedagogy" in export_payload["qualified_resources"][0]
+    assert "uncertainty" in export_payload["qualified_resources"][0]
+    assert "review_context" in export_payload["qualified_resources"][0]
     assert export_payload["qualified_resources"][0]["provenance"]["run_id"] == fixed_run_id
-    assert legacy_export_payload["export_version"] == "export.bundle.v2"
+    assert legacy_export_payload["export_version"] == "export.bundle.v3"
 
     normalized_payload = json.loads(first_normalized.read_text(encoding="utf-8"))
-    assert normalized_payload["schema_version"] == "database.schema.v5"
+    assert normalized_payload["schema_version"] == "database.schema.v6"
     assert normalized_payload["normalized_snapshot_version"] == "normalized.snapshot.v3"
     assert normalized_payload["enrichment_version"] == "canonical.enrichment.v2"
 
@@ -98,8 +102,8 @@ def test_pipeline_rejects_invalid_export_bundle(monkeypatch, tmp_path: Path) -> 
     def fake_build_export_bundle(**kwargs):
         del kwargs
         return {
-            "schema_version": "database.schema.v5",
-            "export_version": "export.bundle.v3",
+            "schema_version": "database.schema.v6",
+            "export_version": "export.bundle.v4",
         }
 
     monkeypatch.setattr(
@@ -196,4 +200,4 @@ def test_pipeline_rolls_back_database_on_artifact_write_failure(
     assert not (tmp_path / "rollback.normalized.json").exists()
     assert not (tmp_path / "rollback.qualified.json").exists()
     assert not (tmp_path / "rollback.export.json").exists()
-    assert not (tmp_path / "rollback.export.v2.json").exists()
+    assert not (tmp_path / "rollback.export.v3.json").exists()

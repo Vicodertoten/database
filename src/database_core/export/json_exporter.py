@@ -27,10 +27,10 @@ from database_core.versioning import (
 )
 
 DEFAULT_EXPORT_SCHEMA_PATH = (
-    Path(__file__).resolve().parents[3] / "schemas" / "qualified_resources_bundle_v3.schema.json"
+    Path(__file__).resolve().parents[3] / "schemas" / "qualified_resources_bundle_v4.schema.json"
 )
 LEGACY_EXPORT_SCHEMA_PATH = (
-    Path(__file__).resolve().parents[3] / "schemas" / "qualified_resources_bundle.schema.json"
+    Path(__file__).resolve().parents[3] / "schemas" / "qualified_resources_bundle_v3.schema.json"
 )
 
 
@@ -91,6 +91,8 @@ def build_export_bundle(
         item for item in canonical_taxa if item.canonical_taxon_id in canonical_taxon_ids
     ]
     if export_version == LEGACY_EXPORT_VERSION:
+        if not run_id:
+            raise ValueError("run_id is required when export_version is export.bundle.v3")
         return {
             "schema_version": SCHEMA_VERSION_LABEL,
             "export_version": export_version,
@@ -99,7 +101,7 @@ def build_export_bundle(
             "generated_at": generated_at.isoformat(),
             "canonical_taxa": [_serialize_export_taxon(item) for item in included_taxa],
             "qualified_resources": [
-                _serialize_export_resource_v2(item) for item in exportable_resources
+                _serialize_export_resource_v3(item, run_id=run_id) for item in exportable_resources
             ],
         }
 
@@ -107,7 +109,7 @@ def build_export_bundle(
         raise ValueError(f"Unsupported export_version: {export_version}")
 
     if not run_id:
-        raise ValueError("run_id is required when export_version is export.bundle.v3")
+        raise ValueError("run_id is required when export_version is export.bundle.v4")
     return {
         "schema_version": SCHEMA_VERSION_LABEL,
         "export_version": export_version,
@@ -116,7 +118,7 @@ def build_export_bundle(
         "generated_at": generated_at.isoformat(),
         "canonical_taxa": [_serialize_export_taxon(item) for item in included_taxa],
         "qualified_resources": [
-            _serialize_export_resource_v3(item, run_id=run_id) for item in exportable_resources
+            _serialize_export_resource_v4(item, run_id=run_id) for item in exportable_resources
         ],
     }
 
@@ -189,25 +191,6 @@ def _serialize_export_taxon(taxon: CanonicalTaxon) -> dict[str, object]:
     return payload
 
 
-def _serialize_export_resource_v2(resource: QualifiedResource) -> dict[str, object]:
-    return {
-        "qualified_resource_id": resource.qualified_resource_id,
-        "canonical_taxon_id": resource.canonical_taxon_id,
-        "source_observation_id": resource.source_observation_id,
-        "media_asset_id": resource.media_asset_id,
-        "qualification_status": resource.qualification_status,
-        "qualification_version": resource.qualification_version,
-        "technical_quality": resource.technical_quality,
-        "pedagogical_quality": resource.pedagogical_quality,
-        "life_stage": resource.life_stage,
-        "sex": resource.sex,
-        "visible_parts": list(resource.visible_parts),
-        "view_angle": resource.view_angle,
-        "license_safety_result": resource.license_safety_result,
-        "export_eligible": resource.export_eligible,
-    }
-
-
 def _serialize_export_resource_v3(
     resource: QualifiedResource,
     *,
@@ -249,6 +232,46 @@ def _serialize_export_resource_v3(
             },
         },
     }
+
+
+def _serialize_export_resource_v4(
+    resource: QualifiedResource,
+    *,
+    run_id: str,
+) -> dict[str, object]:
+    payload = _serialize_export_resource_v3(resource, run_id=run_id)
+    review_reason_code = (
+        resource.qualification_flags[0]
+        if resource.qualification_flags
+        else None
+    )
+    payload.update(
+        {
+            "qualification_flags": list(resource.qualification_flags),
+            "qualification_notes": resource.qualification_notes,
+            "pedagogy": {
+                "difficulty_level": resource.difficulty_level,
+                "media_role": resource.media_role,
+                "confusion_relevance": resource.confusion_relevance,
+                "uncertainty_reason": resource.uncertainty_reason,
+            },
+            "uncertainty": {
+                "type": resource.uncertainty_reason,
+                "rationale": resource.qualification_notes,
+                "confidence": resource.ai_confidence,
+            },
+            "review_context": {
+                "status": (
+                    "overridden"
+                    if "human_override" in resource.qualification_flags
+                    else "not_required"
+                ),
+                "reason_code": review_reason_code,
+                "override_applied": "human_override" in resource.qualification_flags,
+            },
+        }
+    )
+    return payload
 
 
 @lru_cache(maxsize=4)

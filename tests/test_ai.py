@@ -41,6 +41,10 @@ def test_normalize_gemini_candidate_recovers_common_schema_drift() -> None:
     assert qualification.confidence == 1.0
     assert "full_body" in qualification.visible_parts
     assert "head" in qualification.visible_parts
+    assert qualification.difficulty_level == "unknown"
+    assert qualification.media_role == "context"
+    assert qualification.confusion_relevance == "none"
+    assert qualification.uncertainty_reason == "none"
 
 
 def test_gemini_vision_qualifier_uses_structured_output_and_high_media_resolution(
