@@ -75,7 +75,6 @@ def run_pipeline(
     gemini_api_key: str | None = None,
     gemini_model: str = DEFAULT_GEMINI_MODEL,
     ai_qualifier: AIQualifier | None = None,
-    reset_db: bool = False,
     allow_schema_reset: bool = False,
 ) -> PipelineResult:
     dataset = _load_dataset(
@@ -112,8 +111,6 @@ def run_pipeline(
     )
     repository = SQLiteRepository(db_path)
     repository.initialize(allow_schema_reset=allow_schema_reset)
-    if reset_db:
-        repository.reset()
     enriched_taxa = enrich_canonical_taxa(
         dataset.canonical_taxa,
         taxon_payloads_by_canonical_taxon_id=dataset.taxon_payloads_by_canonical_taxon_id,
@@ -184,6 +181,9 @@ def run_pipeline(
     )
 
     with repository.connect() as connection:
+        # Overwrite strategy: every run rebuilds pipeline output tables in one transaction.
+        # If any stage fails, rollback preserves previous consistent state.
+        repository.reset(connection=connection)
         repository.save_canonical_taxa(enriched_taxa, connection=connection)
         repository.save_source_observations(dataset.observations, connection=connection)
         repository.save_media_assets(dataset.media_assets, connection=connection)

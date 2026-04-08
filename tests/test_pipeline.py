@@ -106,35 +106,35 @@ def test_pipeline_rejects_invalid_export_bundle(monkeypatch, tmp_path: Path) -> 
     assert not export_path.exists()
 
 
-def test_pipeline_does_not_reset_storage_unless_requested(
-    monkeypatch, tmp_path: Path
-) -> None:
-    reset_calls: list[bool] = []
-
-    def fake_reset(self) -> None:  # noqa: ANN001
-        del self
-        reset_calls.append(True)
-
-    monkeypatch.setattr("database_core.pipeline.runner.SQLiteRepository.reset", fake_reset)
+def test_pipeline_overwrites_previous_run_outputs_on_same_database(tmp_path: Path) -> None:
+    db_path = tmp_path / "overwrite.sqlite"
+    run_pipeline(
+        fixture_path=Path("data/fixtures/birds_pilot.json"),
+        db_path=db_path,
+        normalized_snapshot_path=tmp_path / "overwrite.normalized.json",
+        qualification_snapshot_path=tmp_path / "overwrite.qualified.json",
+        export_path=tmp_path / "overwrite.export.json",
+        uncertain_policy="review",
+    )
+    repository = SQLiteRepository(db_path)
+    repository.initialize()
+    first_summary = repository.fetch_summary()
+    assert first_summary["review_queue"] == 1
+    assert first_summary["qualified_resources"] == 4
 
     run_pipeline(
         fixture_path=Path("data/fixtures/birds_pilot.json"),
-        db_path=tmp_path / "no-reset.sqlite",
-        normalized_snapshot_path=tmp_path / "no-reset.normalized.json",
-        qualification_snapshot_path=tmp_path / "no-reset.qualified.json",
-        export_path=tmp_path / "no-reset.export.json",
+        db_path=db_path,
+        normalized_snapshot_path=tmp_path / "overwrite.normalized.json",
+        qualification_snapshot_path=tmp_path / "overwrite.qualified.json",
+        export_path=tmp_path / "overwrite.export.json",
+        uncertain_policy="reject",
     )
-    assert reset_calls == []
-
-    run_pipeline(
-        fixture_path=Path("data/fixtures/birds_pilot.json"),
-        db_path=tmp_path / "with-reset.sqlite",
-        normalized_snapshot_path=tmp_path / "with-reset.normalized.json",
-        qualification_snapshot_path=tmp_path / "with-reset.qualified.json",
-        export_path=tmp_path / "with-reset.export.json",
-        reset_db=True,
-    )
-    assert reset_calls == [True]
+    repository = SQLiteRepository(db_path)
+    repository.initialize()
+    second_summary = repository.fetch_summary()
+    assert second_summary["review_queue"] == 0
+    assert second_summary["qualified_resources"] == 4
 
 
 def test_pipeline_rolls_back_database_on_artifact_write_failure(

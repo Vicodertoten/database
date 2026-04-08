@@ -92,7 +92,6 @@ python scripts/qualify_inat_snapshot.py --snapshot-id inaturalist-birds-20260408
 python scripts/qualify_inat_snapshot.py --snapshot-id inaturalist-birds-20260408T123456Z --request-interval-seconds 0.5 --max-retries 2 --initial-backoff-seconds 1 --max-backoff-seconds 8
 python scripts/run_pipeline.py
 python scripts/run_pipeline.py --db-path data/pilot.sqlite --qualifier-mode rules
-python scripts/run_pipeline.py --db-path data/pilot.sqlite --reset-db --qualifier-mode rules
 python scripts/run_pipeline.py --source-mode inat_snapshot --snapshot-id inaturalist-birds-20260408T123456Z --qualifier-mode cached --uncertain-policy reject
 python scripts/run_pipeline.py --source-mode inat_snapshot --snapshot-id inaturalist-birds-20260408T123456Z --allow-schema-reset --qualifier-mode cached --uncertain-policy reject
 python scripts/run_pipeline.py --source-mode inat_snapshot --snapshot-id inaturalist-birds-20260408T123456Z --qualifier-mode cached --uncertain-policy reject --apply-review-overrides
@@ -227,6 +226,9 @@ Gold set verification is explicit and separate:
 ```bash
 python scripts/verify_goldset_v1.py
 ```
+
+Pipeline writes use overwrite semantics for run-output tables in one transaction
+to avoid stale rows between runs.
 
 It runs, in order:
 

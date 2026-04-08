@@ -58,10 +58,6 @@ class SQLiteRepository:
         with self.connect() as connection:
             connection.executescript(SCHEMA_SQL)
 
-    def reset_database_file(self) -> None:
-        self.db_path.unlink(missing_ok=True)
-        self.initialize()
-
     def reset(self, *, connection: sqlite3.Connection | None = None) -> None:
         if connection is None:
             with self.connect() as owned_connection:
