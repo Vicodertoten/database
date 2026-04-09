@@ -171,3 +171,24 @@ class ReviewPriority(StrEnum):
     LOW = "low"
     MEDIUM = "medium"
     HIGH = "high"
+
+
+class PackDifficultyPolicy(StrEnum):
+    EASY = "easy"
+    BALANCED = "balanced"
+    HARD = "hard"
+    MIXED = "mixed"
+
+
+class PackVisibility(StrEnum):
+    PRIVATE = "private"
+    ORG = "org"
+    PUBLIC = "public"
+
+
+class PackCompilationReasonCode(StrEnum):
+    COMPILABLE = "compilable"
+    NO_PLAYABLE_ITEMS = "no_playable_items"
+    INSUFFICIENT_TAXA_SERVED = "insufficient_taxa_served"
+    INSUFFICIENT_MEDIA_PER_TAXON = "insufficient_media_per_taxon"
+    INSUFFICIENT_TOTAL_QUESTIONS = "insufficient_total_questions"

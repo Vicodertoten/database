@@ -90,6 +90,17 @@ The pipeline is deliberately small, versioned, and reproducible.
   - `export.bundle.v4` remains unchanged
   - no runtime/session/scoring/progression logic in this stage
 
+## 9. Manage packs and diagnostics (Gate 3)
+
+- persist durable pack specs with immutable revisions (`pack_id + revision`)
+- allow pack creation even when not compilable
+- run deterministic diagnostics against current `playable_items` only
+- persist each diagnostic attempt with measured deficits and reason code
+- keep strict boundaries:
+  - no `compiled_pack_builds` and no `pack_materializations` at this gate
+  - no enrichment queue or confusions runtime ingestion at this gate
+  - no runtime/session/scoring/progression logic
+
 ## Versioning
 
 Generated artifacts carry explicit stage versions:

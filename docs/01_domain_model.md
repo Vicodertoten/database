@@ -117,3 +117,29 @@ Rules:
 - playable v1 is fed only from exportable qualified resources (`export_eligible=true`)
 - `common_names_i18n` is extensible; current bootstrap maps existing names to `en` and initializes `fr`/`nl` as empty arrays
 - playable is additive and does not replace `CanonicalTaxon`, `QualifiedResource`, or `export.bundle.v4`
+
+## PackSpec / PackRevision / PackCompilationAttempt (Gate 3)
+
+Pack layer is durable and versioned, without runtime session logic.
+
+PackSpec:
+
+- stable `pack_id`
+- pointer to `latest_revision`
+
+PackRevision (immutable):
+
+- `(pack_id, revision)` is unique and append-only
+- parameters include:
+  - `canonical_taxon_ids`
+  - `difficulty_policy` (`easy|balanced|hard|mixed`)
+  - one optional geo form (`country_code` or `bbox` or `point+radius`)
+  - `observed_from` / `observed_to` (UTC inclusive bounds)
+  - `owner_id`, `org_id`, `visibility`, `intended_use`
+- every change creates `revision +1`
+
+PackCompilationAttempt (deterministic diagnosis):
+
+- persisted trace of one diagnostic execution for a pack revision
+- includes `compilable`, `reason_code`, measured metrics, deficits, and blocking taxa
+- no external calls and no runtime/session/scoring/progression side effects

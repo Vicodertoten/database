@@ -19,6 +19,9 @@ from database_core.domain.enums import (
     LicenseSafetyResult,
     MediaRole,
     MediaType,
+    PackCompilationReasonCode,
+    PackDifficultyPolicy,
+    PackVisibility,
     PedagogicalQuality,
     QualificationStage,
     QualificationStatus,
@@ -459,6 +462,146 @@ class PlayableItem(DomainModel):
         for language, names in value.items():
             normalized[language] = [str(name).strip() for name in names if str(name).strip()]
         return normalized
+
+
+class PackRevisionParameters(DomainModel):
+    canonical_taxon_ids: list[str]
+    difficulty_policy: PackDifficultyPolicy
+    country_code: str | None = None
+    location_bbox: GeoBBox | None = None
+    location_point: GeoPoint | None = None
+    location_radius_meters: float | None = None
+    observed_from: datetime | None = None
+    observed_to: datetime | None = None
+    owner_id: str | None = None
+    org_id: str | None = None
+    visibility: PackVisibility = PackVisibility.PRIVATE
+    intended_use: str = "training"
+
+    @field_validator("canonical_taxon_ids")
+    @classmethod
+    def validate_canonical_taxon_ids(cls, value: list[str]) -> list[str]:
+        normalized = [item.strip() for item in value if item.strip()]
+        if not normalized:
+            raise ValueError("canonical_taxon_ids must contain at least one taxon")
+        unique_ids = list(dict.fromkeys(normalized))
+        return unique_ids
+
+    @field_validator("country_code", "owner_id", "org_id")
+    @classmethod
+    def validate_optional_non_blank_fields(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        normalized = value.strip()
+        if not normalized:
+            raise ValueError("field must not be blank when provided")
+        return normalized
+
+    @field_validator("intended_use")
+    @classmethod
+    def validate_intended_use(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("intended_use must not be blank")
+        return value.strip()
+
+    @model_validator(mode="after")
+    def validate_geo_and_time_filters(self) -> Self:
+        if self.observed_from and self.observed_to and self.observed_from > self.observed_to:
+            raise ValueError("observed_from must be <= observed_to")
+
+        geo_modes = 0
+        if self.country_code:
+            geo_modes += 1
+        if self.location_bbox is not None:
+            geo_modes += 1
+        if self.location_point is not None or self.location_radius_meters is not None:
+            geo_modes += 1
+        if geo_modes > 1:
+            raise ValueError("at most one geo filter form can be active")
+
+        if self.location_point is None and self.location_radius_meters is not None:
+            raise ValueError("location_radius_meters requires location_point")
+        if self.location_point is not None and self.location_radius_meters is None:
+            raise ValueError("location_point requires location_radius_meters")
+        if self.location_radius_meters is not None and self.location_radius_meters <= 0:
+            raise ValueError("location_radius_meters must be > 0")
+        return self
+
+
+class PackSpec(DomainModel):
+    pack_id: str
+    latest_revision: int
+    created_at: datetime
+    updated_at: datetime
+
+    @field_validator("pack_id")
+    @classmethod
+    def validate_pack_id(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("pack_id must not be blank")
+        return value
+
+    @field_validator("latest_revision")
+    @classmethod
+    def validate_latest_revision(cls, value: int) -> int:
+        if value < 1:
+            raise ValueError("latest_revision must be >= 1")
+        return value
+
+
+class PackRevision(DomainModel):
+    pack_id: str
+    revision: int
+    parameters: PackRevisionParameters
+    created_at: datetime
+
+    @field_validator("pack_id")
+    @classmethod
+    def validate_pack_id(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("pack_id must not be blank")
+        return value
+
+    @field_validator("revision")
+    @classmethod
+    def validate_revision(cls, value: int) -> int:
+        if value < 1:
+            raise ValueError("revision must be >= 1")
+        return value
+
+
+class PackCompilationDeficit(DomainModel):
+    code: str
+    current: int
+    required: int
+    missing: int
+
+
+class PackTaxonDeficit(DomainModel):
+    canonical_taxon_id: str
+    media_count: int
+    missing_media_count: int
+
+
+class PackCompilationAttempt(DomainModel):
+    attempt_id: str
+    pack_id: str
+    revision: int
+    attempted_at: datetime
+    compilable: bool
+    reason_code: PackCompilationReasonCode
+    thresholds: dict[str, int]
+    measured: dict[str, int]
+    deficits: list[PackCompilationDeficit] = Field(default_factory=list)
+    blocking_taxa: list[PackTaxonDeficit] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def validate_reason_consistency(self) -> Self:
+        if self.compilable and self.reason_code != PackCompilationReasonCode.COMPILABLE:
+            raise ValueError("compilable attempts must use reason_code=compilable")
+        if not self.compilable and self.reason_code == PackCompilationReasonCode.COMPILABLE:
+            raise ValueError("non compilable attempts cannot use reason_code=compilable")
+        return self
 
 
 class CanonicalGovernanceReviewItem(DomainModel):

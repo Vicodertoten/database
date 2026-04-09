@@ -14,6 +14,8 @@ Before adding a new document, update an existing one whenever possible.
 - `docs/01_domain_model.md`: domain entities and contracts.
 - `docs/02_pipeline.md`: pipeline stages and invariants.
 - `schemas/playable_corpus_v1.schema.json`: contract schema for `playable_corpus.v1`.
+- `schemas/pack_spec_v1.schema.json`: contract schema for `pack.spec.v1`.
+- `schemas/pack_diagnostic_v1.schema.json`: contract schema for `pack.diagnostic.v1`.
 - `docs/06_charte_canonique_v1.md`: canonical governance policy (normative).
 - `docs/07_canonical_id_migration_v1.md`: canonical ID migration mapping and cutover policy.
 - `docs/adr/0001-charte-canonique-v1.md`: implementation ADR for canonical governance v1.

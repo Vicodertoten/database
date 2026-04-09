@@ -30,6 +30,7 @@ database-qualify-inat-snapshot = "database_core.cli:qualify_inat_snapshot_entryp
 database-review-overrides = "database_core.cli:review_overrides_entrypoint"
 database-governance-review = "database_core.cli:governance_review_entrypoint"
 database-migrate = "database_core.cli:migrate_entrypoint"
+database-pack = "database_core.cli:pack_entrypoint"
 
 [tool.setuptools]
 package-dir = {"" = "src"}

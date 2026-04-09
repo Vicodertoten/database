@@ -10,12 +10,14 @@ from database_core.domain.models import (
     GeoPoint,
     LocationMetadata,
     MediaAsset,
+    PackRevisionParameters,
     PlayableItem,
     ProvenanceSummary,
     QualifiedResource,
     SourceObservation,
     SourceQualityMetadata,
 )
+from database_core.pack import validate_pack_diagnostic, validate_pack_spec
 from database_core.playable import validate_playable_corpus
 from database_core.storage.postgres import (
     PostgresRepository,
@@ -68,14 +70,14 @@ def test_initialize_can_reset_legacy_schema_version_with_explicit_flag(
         )
 
     assert "legacy_table" not in table_names
-    assert user_version == 9
+    assert user_version == 10
 
 
-def test_migrate_to_latest_initializes_v9_schema(database_url: str) -> None:
+def test_migrate_to_latest_initializes_v10_schema(database_url: str) -> None:
     repository = PostgresRepository(database_url)
     applied_versions = repository.migrate_to_latest()
-    assert applied_versions == (8, 9)
-    assert repository.current_schema_version() == 9
+    assert applied_versions == (8, 9, 10)
+    assert repository.current_schema_version() == 10
 
 
 def test_geospatial_queries_support_bbox_and_point_radius(database_url: str) -> None:
@@ -573,6 +575,173 @@ def test_playable_items_persist_and_support_filters(database_url: str) -> None:
     assert payload["playable_corpus_version"] == "playable_corpus.v1"
     assert len(payload["items"]) == 1
 
+
+def test_pack_creation_persists_non_compilable_pack_with_diagnostic(database_url: str) -> None:
+    repository = PostgresRepository(database_url)
+    repository.initialize()
+
+    payload = repository.create_pack(
+        parameters={
+            "canonical_taxon_ids": ["taxon:birds:000001", "taxon:birds:000002"],
+            "difficulty_policy": "balanced",
+            "country_code": "BE",
+            "location_bbox": None,
+            "location_point": None,
+            "location_radius_meters": None,
+            "observed_from": None,
+            "observed_to": None,
+            "owner_id": "owner:demo",
+            "org_id": "org:demo",
+            "visibility": "private",
+            "intended_use": "quiz",
+        }
+    )
+    validate_pack_spec(payload)
+    assert payload["revision"] == 1
+    assert payload["latest_revision"] == 1
+
+    diagnostic = repository.diagnose_pack(pack_id=str(payload["pack_id"]))
+    validate_pack_diagnostic(diagnostic)
+    assert diagnostic["compilable"] is False
+    assert diagnostic["reason_code"] == "no_playable_items"
+    assert diagnostic["measured"]["requested_taxa_count"] == 2
+    assert diagnostic["measured"]["total_playable_items"] == 0
+    assert len(diagnostic["blocking_taxa"]) == 2
+    assert {item["code"] for item in diagnostic["deficits"]} == {
+        "min_taxa_served",
+        "min_media_per_taxon",
+        "min_total_questions",
+    }
+
+    specs = repository.fetch_pack_specs(pack_id=str(payload["pack_id"]))
+    diagnostics = repository.fetch_pack_diagnostics(pack_id=str(payload["pack_id"]))
+    assert len(specs) == 1
+    assert len(diagnostics) == 1
+
+
+def test_pack_revision_increments_monotonically(database_url: str) -> None:
+    repository = PostgresRepository(database_url)
+    repository.initialize()
+
+    initial = repository.create_pack(
+        parameters={
+            "canonical_taxon_ids": ["taxon:birds:000001"],
+            "difficulty_policy": "easy",
+            "country_code": None,
+            "location_bbox": None,
+            "location_point": {"longitude": 4.35, "latitude": 50.85},
+            "location_radius_meters": 5000.0,
+            "observed_from": None,
+            "observed_to": None,
+            "owner_id": "owner:demo",
+            "org_id": None,
+            "visibility": "org",
+            "intended_use": "practice",
+        }
+    )
+    revised = repository.revise_pack(
+        pack_id=str(initial["pack_id"]),
+        parameters={
+            "canonical_taxon_ids": ["taxon:birds:000001", "taxon:birds:000002"],
+            "difficulty_policy": "mixed",
+            "country_code": None,
+            "location_bbox": None,
+            "location_point": {"longitude": 4.35, "latitude": 50.85},
+            "location_radius_meters": 5000.0,
+            "observed_from": None,
+            "observed_to": None,
+            "owner_id": "owner:demo",
+            "org_id": "org:demo",
+            "visibility": "public",
+            "intended_use": "assessment",
+        },
+    )
+
+    assert initial["revision"] == 1
+    assert revised["revision"] == 2
+    assert revised["latest_revision"] == 2
+    revisions = repository.fetch_pack_revisions(pack_id=str(initial["pack_id"]))
+    assert [item["revision"] for item in revisions] == [2, 1]
+
+
+def test_pack_revision_parameters_validate_geo_and_date_constraints() -> None:
+    with pytest.raises(ValueError, match="at most one geo filter form can be active"):
+        PackRevisionParameters(
+            canonical_taxon_ids=["taxon:birds:000001"],
+            difficulty_policy="easy",
+            country_code="BE",
+            location_bbox={
+                "min_longitude": 4.0,
+                "min_latitude": 50.7,
+                "max_longitude": 4.6,
+                "max_latitude": 51.0,
+            },
+            location_point=None,
+            location_radius_meters=None,
+            observed_from=None,
+            observed_to=None,
+            owner_id=None,
+            org_id=None,
+            visibility="private",
+            intended_use="training",
+        )
+
+    with pytest.raises(ValueError, match="location_point requires location_radius_meters"):
+        PackRevisionParameters(
+            canonical_taxon_ids=["taxon:birds:000001"],
+            difficulty_policy="easy",
+            location_point={"longitude": 4.35, "latitude": 50.85},
+            location_radius_meters=None,
+            observed_from=None,
+            observed_to=None,
+            owner_id=None,
+            org_id=None,
+            visibility="private",
+            intended_use="training",
+        )
+
+    with pytest.raises(ValueError, match="observed_from must be <= observed_to"):
+        PackRevisionParameters(
+            canonical_taxon_ids=["taxon:birds:000001"],
+            difficulty_policy="easy",
+            observed_from=datetime(2026, 4, 9, 0, 0, tzinfo=UTC),
+            observed_to=datetime(2026, 4, 8, 0, 0, tzinfo=UTC),
+            owner_id=None,
+            org_id=None,
+            visibility="private",
+            intended_use="training",
+        )
+
+
+def test_pack_diagnostic_is_deterministic_for_same_revision(database_url: str) -> None:
+    repository = PostgresRepository(database_url)
+    repository.initialize()
+    payload = repository.create_pack(
+        pack_id="pack:deterministic:test",
+        parameters={
+            "canonical_taxon_ids": ["taxon:birds:000001", "taxon:birds:000002"],
+            "difficulty_policy": "hard",
+            "country_code": None,
+            "location_bbox": None,
+            "location_point": None,
+            "location_radius_meters": None,
+            "observed_from": None,
+            "observed_to": None,
+            "owner_id": "owner:deterministic",
+            "org_id": None,
+            "visibility": "private",
+            "intended_use": "training",
+        },
+    )
+
+    first = repository.diagnose_pack(pack_id=str(payload["pack_id"]))
+    second = repository.diagnose_pack(pack_id=str(payload["pack_id"]))
+
+    assert first["reason_code"] == second["reason_code"] == "no_playable_items"
+    assert first["thresholds"] == second["thresholds"]
+    assert first["measured"] == second["measured"]
+    assert first["deficits"] == second["deficits"]
+    assert first["blocking_taxa"] == second["blocking_taxa"]
 
 def _canonical_taxon(
     *,

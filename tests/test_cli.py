@@ -225,7 +225,7 @@ def test_migrate_cli_applies_pending_schema_migration(monkeypatch, database_url:
         cli.main()
 
     assert "Database migrated" in buffer.getvalue()
-    assert repository.current_schema_version() == 9
+    assert repository.current_schema_version() == 10
 
 
 def test_governance_review_cli_resolves_item(monkeypatch, database_url: str) -> None:
@@ -406,3 +406,150 @@ def test_inspect_cli_playable_corpus_supports_filters(
     payload = json.loads(buffer.getvalue())
     assert len(payload["items"]) == 1
     assert payload["items"][0]["canonical_taxon_id"] == "taxon:birds:000014"
+
+
+def test_pack_cli_create_revise_diagnose_and_inspect(monkeypatch, database_url: str) -> None:
+    create_buffer = io.StringIO()
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "database-core",
+            "pack",
+            "create",
+            "--database-url",
+            database_url,
+            "--pack-id",
+            "pack:test:cli",
+            "--canonical-taxon-id",
+            "taxon:birds:000001",
+            "--canonical-taxon-id",
+            "taxon:birds:000002",
+            "--difficulty-policy",
+            "balanced",
+            "--country-code",
+            "BE",
+            "--owner-id",
+            "owner:cli",
+            "--org-id",
+            "org:cli",
+            "--visibility",
+            "private",
+            "--intended-use",
+            "quiz",
+        ],
+    )
+    with redirect_stdout(create_buffer):
+        cli.main()
+    created = json.loads(create_buffer.getvalue())
+    assert created["pack_id"] == "pack:test:cli"
+    assert created["revision"] == 1
+
+    revise_buffer = io.StringIO()
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "database-core",
+            "pack",
+            "revise",
+            "--database-url",
+            database_url,
+            "--pack-id",
+            "pack:test:cli",
+            "--canonical-taxon-id",
+            "taxon:birds:000001",
+            "--difficulty-policy",
+            "hard",
+            "--point-radius",
+            "4.35,50.85,5000",
+            "--visibility",
+            "org",
+            "--intended-use",
+            "practice",
+        ],
+    )
+    with redirect_stdout(revise_buffer):
+        cli.main()
+    revised = json.loads(revise_buffer.getvalue())
+    assert revised["revision"] == 2
+    assert revised["latest_revision"] == 2
+
+    diagnose_buffer = io.StringIO()
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "database-core",
+            "pack",
+            "diagnose",
+            "--database-url",
+            database_url,
+            "--pack-id",
+            "pack:test:cli",
+        ],
+    )
+    with redirect_stdout(diagnose_buffer):
+        cli.main()
+    diagnostic = json.loads(diagnose_buffer.getvalue())
+    assert diagnostic["pack_id"] == "pack:test:cli"
+    assert diagnostic["reason_code"] == "no_playable_items"
+
+    specs_buffer = io.StringIO()
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "database-core",
+            "inspect",
+            "pack-specs",
+            "--database-url",
+            database_url,
+            "--pack-id",
+            "pack:test:cli",
+        ],
+    )
+    with redirect_stdout(specs_buffer):
+        cli.main()
+    specs = json.loads(specs_buffer.getvalue())
+    assert len(specs) == 1
+    assert specs[0]["latest_revision"] == 2
+
+    revisions_buffer = io.StringIO()
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "database-core",
+            "inspect",
+            "pack-revisions",
+            "--database-url",
+            database_url,
+            "--pack-id",
+            "pack:test:cli",
+        ],
+    )
+    with redirect_stdout(revisions_buffer):
+        cli.main()
+    revisions = json.loads(revisions_buffer.getvalue())
+    assert [item["revision"] for item in revisions] == [2, 1]
+
+    diagnostics_buffer = io.StringIO()
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "database-core",
+            "inspect",
+            "pack-diagnostics",
+            "--database-url",
+            database_url,
+            "--pack-id",
+            "pack:test:cli",
+        ],
+    )
+    with redirect_stdout(diagnostics_buffer):
+        cli.main()
+    diagnostics = json.loads(diagnostics_buffer.getvalue())
+    assert len(diagnostics) == 1
+    assert diagnostics[0]["reason_code"] == "no_playable_items"

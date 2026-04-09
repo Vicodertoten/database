@@ -374,3 +374,100 @@ SELECT
     created_at
 FROM playable_items;
 """
+
+POSTGRES_PACK_V10_SQL = """
+CREATE TABLE IF NOT EXISTS pack_specs (
+    pack_id TEXT PRIMARY KEY,
+    latest_revision INTEGER NOT NULL CHECK (latest_revision >= 1),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS pack_revisions (
+    pack_id TEXT NOT NULL,
+    revision INTEGER NOT NULL CHECK (revision >= 1),
+    canonical_taxon_ids_json TEXT NOT NULL,
+    difficulty_policy TEXT NOT NULL CHECK (
+        difficulty_policy IN ('easy', 'balanced', 'hard', 'mixed')
+    ),
+    country_code TEXT,
+    location_bbox geometry(Polygon, 4326),
+    location_point geometry(Point, 4326),
+    location_radius_meters DOUBLE PRECISION,
+    observed_from TIMESTAMPTZ,
+    observed_to TIMESTAMPTZ,
+    owner_id TEXT,
+    org_id TEXT,
+    visibility TEXT NOT NULL CHECK (visibility IN ('private', 'org', 'public')),
+    intended_use TEXT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    PRIMARY KEY (pack_id, revision),
+    FOREIGN KEY (pack_id) REFERENCES pack_specs (pack_id) ON DELETE CASCADE,
+    CONSTRAINT pack_revisions_observed_order
+        CHECK (observed_from IS NULL OR observed_to IS NULL OR observed_from <= observed_to),
+    CONSTRAINT pack_revisions_geo_exclusive
+        CHECK (
+            (
+                CASE WHEN country_code IS NOT NULL THEN 1 ELSE 0 END
+                + CASE WHEN location_bbox IS NOT NULL THEN 1 ELSE 0 END
+                + CASE
+                    WHEN location_point IS NOT NULL OR location_radius_meters IS NOT NULL
+                    THEN 1
+                    ELSE 0
+                  END
+            ) <= 1
+        ),
+    CONSTRAINT pack_revisions_point_radius_consistency
+        CHECK (
+            (location_point IS NULL AND location_radius_meters IS NULL)
+            OR (
+                location_point IS NOT NULL
+                AND location_radius_meters IS NOT NULL
+                AND location_radius_meters > 0
+            )
+        )
+);
+
+CREATE INDEX IF NOT EXISTS idx_pack_revisions_pack
+    ON pack_revisions (pack_id, revision DESC);
+
+CREATE INDEX IF NOT EXISTS idx_pack_revisions_country_code
+    ON pack_revisions (country_code);
+
+CREATE INDEX IF NOT EXISTS idx_pack_revisions_observed_from
+    ON pack_revisions (observed_from);
+
+CREATE INDEX IF NOT EXISTS idx_pack_revisions_observed_to
+    ON pack_revisions (observed_to);
+
+CREATE INDEX IF NOT EXISTS idx_pack_revisions_bbox_gist
+    ON pack_revisions USING GIST (location_bbox);
+
+CREATE INDEX IF NOT EXISTS idx_pack_revisions_point_gist
+    ON pack_revisions USING GIST (location_point);
+
+CREATE TABLE IF NOT EXISTS pack_compilation_attempts (
+    attempt_id TEXT PRIMARY KEY,
+    pack_id TEXT NOT NULL,
+    revision INTEGER NOT NULL,
+    attempted_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    schema_version TEXT NOT NULL,
+    pack_diagnostic_version TEXT NOT NULL,
+    compilable BOOLEAN NOT NULL,
+    reason_code TEXT NOT NULL,
+    metrics_json TEXT NOT NULL,
+    deficits_json TEXT NOT NULL,
+    blocking_taxa_json TEXT NOT NULL,
+    payload_json TEXT NOT NULL,
+    FOREIGN KEY (pack_id, revision) REFERENCES pack_revisions (pack_id, revision) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_pack_compilation_attempts_pack
+    ON pack_compilation_attempts (pack_id, revision, attempted_at DESC);
+
+CREATE INDEX IF NOT EXISTS idx_pack_compilation_attempts_reason
+    ON pack_compilation_attempts (reason_code, attempted_at DESC);
+
+CREATE INDEX IF NOT EXISTS idx_pack_specs_updated_at
+    ON pack_specs (updated_at DESC);
+"""

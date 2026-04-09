@@ -24,6 +24,8 @@ def main() -> int:
         version_tokens["LEGACY_EXPORT_VERSION"],
         version_tokens["REVIEW_OVERRIDE_VERSION"],
         version_tokens["PLAYABLE_CORPUS_VERSION"],
+        version_tokens["PACK_SPEC_VERSION"],
+        version_tokens["PACK_DIAGNOSTIC_VERSION"],
     ):
         if token not in audit_doc:
             issues.append(f"docs/05 is missing version token: {token}")
@@ -40,8 +42,14 @@ def main() -> int:
         )
     if "schemas/playable_corpus_v1.schema.json" not in readme:
         issues.append("README must reference schemas/playable_corpus_v1.schema.json")
+    if "schemas/pack_spec_v1.schema.json" not in readme:
+        issues.append("README must reference schemas/pack_spec_v1.schema.json")
+    if "schemas/pack_diagnostic_v1.schema.json" not in readme:
+        issues.append("README must reference schemas/pack_diagnostic_v1.schema.json")
     if "database-migrate" not in readme:
         issues.append("README must document the database-migrate entrypoint")
+    if "database-pack" not in readme:
+        issues.append("README must document the database-pack entrypoint")
 
     if WORKFLOW_PATH.exists() and "absence de ci visible" in audit_doc.lower():
         issues.append("docs/05 still claims CI is not visible while workflow file exists")
@@ -71,6 +79,8 @@ def _extract_version_tokens(versioning_content: str) -> dict[str, str]:
         "LEGACY_EXPORT_VERSION",
         "REVIEW_OVERRIDE_VERSION",
         "PLAYABLE_CORPUS_VERSION",
+        "PACK_SPEC_VERSION",
+        "PACK_DIAGNOSTIC_VERSION",
     ):
         match = re.search(rf'^{key}\s*=\s*"([^"]+)"', versioning_content, flags=re.MULTILINE)
         if match:

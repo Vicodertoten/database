@@ -19,6 +19,7 @@ from database_core.adapters import (
     fetch_inat_snapshot,
     qualify_inat_snapshot,
 )
+from database_core.domain.models import PackRevisionParameters
 from database_core.inspect.summary import (
     render_canonical_change_events,
     render_canonical_governance_events,
@@ -129,6 +130,9 @@ def main() -> None:
             "snapshot-health",
             "run-metrics",
             "playable-corpus",
+            "pack-specs",
+            "pack-revisions",
+            "pack-diagnostics",
         ],
     )
     inspect_parser.add_argument(
@@ -162,6 +166,100 @@ def main() -> None:
         type=str,
         help="longitude,latitude,radius_meters",
     )
+    inspect_parser.add_argument("--pack-id", type=str)
+    inspect_parser.add_argument("--revision", type=int)
+
+    pack_parser = subparsers.add_parser("pack")
+    pack_subparsers = pack_parser.add_subparsers(dest="pack_command", required=True)
+
+    pack_create_parser = pack_subparsers.add_parser("create")
+    pack_create_parser.add_argument(
+        "--database-url",
+        type=str,
+        default=os.environ.get("DATABASE_URL", DEFAULT_DATABASE_URL),
+    )
+    pack_create_parser.add_argument("--pack-id", type=str)
+    pack_create_parser.add_argument(
+        "--canonical-taxon-id",
+        action="append",
+        dest="canonical_taxon_ids",
+        required=True,
+    )
+    pack_create_parser.add_argument(
+        "--difficulty-policy",
+        choices=["easy", "balanced", "hard", "mixed"],
+        required=True,
+    )
+    pack_create_parser.add_argument("--country-code", type=str)
+    pack_create_parser.add_argument(
+        "--bbox",
+        type=str,
+        help="min_longitude,min_latitude,max_longitude,max_latitude",
+    )
+    pack_create_parser.add_argument(
+        "--point-radius",
+        type=str,
+        help="longitude,latitude,radius_meters",
+    )
+    pack_create_parser.add_argument("--observed-from", type=str)
+    pack_create_parser.add_argument("--observed-to", type=str)
+    pack_create_parser.add_argument("--owner-id", type=str)
+    pack_create_parser.add_argument("--org-id", type=str)
+    pack_create_parser.add_argument(
+        "--visibility",
+        choices=["private", "org", "public"],
+        default="private",
+    )
+    pack_create_parser.add_argument("--intended-use", type=str, default="training")
+
+    pack_revise_parser = pack_subparsers.add_parser("revise")
+    pack_revise_parser.add_argument(
+        "--database-url",
+        type=str,
+        default=os.environ.get("DATABASE_URL", DEFAULT_DATABASE_URL),
+    )
+    pack_revise_parser.add_argument("--pack-id", required=True)
+    pack_revise_parser.add_argument(
+        "--canonical-taxon-id",
+        action="append",
+        dest="canonical_taxon_ids",
+        required=True,
+    )
+    pack_revise_parser.add_argument(
+        "--difficulty-policy",
+        choices=["easy", "balanced", "hard", "mixed"],
+        required=True,
+    )
+    pack_revise_parser.add_argument("--country-code", type=str)
+    pack_revise_parser.add_argument(
+        "--bbox",
+        type=str,
+        help="min_longitude,min_latitude,max_longitude,max_latitude",
+    )
+    pack_revise_parser.add_argument(
+        "--point-radius",
+        type=str,
+        help="longitude,latitude,radius_meters",
+    )
+    pack_revise_parser.add_argument("--observed-from", type=str)
+    pack_revise_parser.add_argument("--observed-to", type=str)
+    pack_revise_parser.add_argument("--owner-id", type=str)
+    pack_revise_parser.add_argument("--org-id", type=str)
+    pack_revise_parser.add_argument(
+        "--visibility",
+        choices=["private", "org", "public"],
+        default="private",
+    )
+    pack_revise_parser.add_argument("--intended-use", type=str, default="training")
+
+    pack_diagnose_parser = pack_subparsers.add_parser("diagnose")
+    pack_diagnose_parser.add_argument(
+        "--database-url",
+        type=str,
+        default=os.environ.get("DATABASE_URL", DEFAULT_DATABASE_URL),
+    )
+    pack_diagnose_parser.add_argument("--pack-id", required=True)
+    pack_diagnose_parser.add_argument("--revision", type=int)
 
     review_overrides_parser = subparsers.add_parser("review-overrides")
     review_overrides_subparsers = review_overrides_parser.add_subparsers(
@@ -294,6 +392,34 @@ def main() -> None:
             f"path={result.ai_outputs_path}"
         )
         return
+
+    if args.command == "pack":
+        repository = PostgresRepository(args.database_url)
+        repository.initialize()
+        if args.pack_command == "create":
+            parameters = _build_pack_revision_parameters_from_args(args)
+            payload = repository.create_pack(
+                pack_id=args.pack_id,
+                parameters=parameters,
+            )
+            print(json.dumps(payload, indent=2, sort_keys=True))
+            return
+        if args.pack_command == "revise":
+            parameters = _build_pack_revision_parameters_from_args(args)
+            payload = repository.revise_pack(
+                pack_id=args.pack_id,
+                parameters=parameters,
+            )
+            print(json.dumps(payload, indent=2, sort_keys=True))
+            return
+        if args.pack_command == "diagnose":
+            payload = repository.diagnose_pack(
+                pack_id=args.pack_id,
+                revision=args.revision,
+            )
+            print(json.dumps(payload, indent=2, sort_keys=True))
+            return
+        raise SystemExit(f"Unsupported pack command: {args.pack_command}")
 
     if args.command == "migrate":
         repository = PostgresRepository(args.database_url)
@@ -480,6 +606,25 @@ def main() -> None:
             limit=args.limit,
         )
         print(json.dumps(payload, indent=2, sort_keys=True))
+    elif args.view == "pack-specs":
+        payload = repository.fetch_pack_specs(pack_id=args.pack_id, limit=args.limit)
+        print(json.dumps(payload, indent=2, sort_keys=True))
+    elif args.view == "pack-revisions":
+        if not args.pack_id:
+            raise SystemExit("--pack-id is required for pack-revisions")
+        payload = repository.fetch_pack_revisions(
+            pack_id=args.pack_id,
+            revision=args.revision,
+            limit=args.limit,
+        )
+        print(json.dumps(payload, indent=2, sort_keys=True))
+    elif args.view == "pack-diagnostics":
+        payload = repository.fetch_pack_diagnostics(
+            pack_id=args.pack_id,
+            revision=args.revision,
+            limit=args.limit,
+        )
+        print(json.dumps(payload, indent=2, sort_keys=True))
     else:
         print(render_exportables(repository))
 
@@ -526,6 +671,42 @@ def _parse_point_radius(value: str | None) -> tuple[float, float, float] | None:
     return longitude, latitude, radius_meters
 
 
+def _build_pack_revision_parameters_from_args(args: argparse.Namespace) -> PackRevisionParameters:
+    bbox = _parse_bbox(args.bbox)
+    point_radius = _parse_point_radius(args.point_radius)
+    location_point = None
+    location_radius_meters = None
+    if point_radius is not None:
+        longitude, latitude, location_radius_meters = point_radius
+        location_point = {
+            "longitude": longitude,
+            "latitude": latitude,
+        }
+    return PackRevisionParameters(
+        canonical_taxon_ids=list(args.canonical_taxon_ids),
+        difficulty_policy=args.difficulty_policy,
+        country_code=args.country_code,
+        location_bbox=(
+            {
+                "min_longitude": bbox[0],
+                "min_latitude": bbox[1],
+                "max_longitude": bbox[2],
+                "max_latitude": bbox[3],
+            }
+            if bbox is not None
+            else None
+        ),
+        location_point=location_point,
+        location_radius_meters=location_radius_meters,
+        observed_from=_parse_optional_iso8601_datetime(args.observed_from),
+        observed_to=_parse_optional_iso8601_datetime(args.observed_to),
+        owner_id=args.owner_id,
+        org_id=args.org_id,
+        visibility=args.visibility,
+        intended_use=args.intended_use,
+    )
+
+
 def run_pipeline_entrypoint() -> None:
     sys.argv.insert(1, "run-pipeline")
     main()
@@ -558,6 +739,11 @@ def governance_review_entrypoint() -> None:
 
 def migrate_entrypoint() -> None:
     sys.argv.insert(1, "migrate")
+    main()
+
+
+def pack_entrypoint() -> None:
+    sys.argv.insert(1, "pack")
     main()
 
 
