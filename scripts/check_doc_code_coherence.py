@@ -21,7 +21,6 @@ def main() -> int:
     for token in (
         version_tokens["SCHEMA_VERSION_LABEL"],
         version_tokens["EXPORT_VERSION"],
-        version_tokens["LEGACY_EXPORT_VERSION"],
         version_tokens["REVIEW_OVERRIDE_VERSION"],
         version_tokens["PLAYABLE_CORPUS_VERSION"],
         version_tokens["PACK_SPEC_VERSION"],
@@ -40,10 +39,6 @@ def main() -> int:
 
     if "schemas/qualified_resources_bundle_v4.schema.json" not in readme:
         issues.append("README must reference schemas/qualified_resources_bundle_v4.schema.json")
-    if "schemas/qualified_resources_bundle_v3.schema.json" not in readme:
-        issues.append(
-            "README must reference sidecar schemas/qualified_resources_bundle_v3.schema.json"
-        )
     if "schemas/playable_corpus_v1.schema.json" not in readme:
         issues.append("README must reference schemas/playable_corpus_v1.schema.json")
     if "schemas/pack_spec_v1.schema.json" not in readme:
@@ -109,7 +104,6 @@ def _extract_version_tokens(versioning_content: str) -> dict[str, str]:
         "ENRICHMENT_VERSION",
         "QUALIFICATION_VERSION",
         "EXPORT_VERSION",
-        "LEGACY_EXPORT_VERSION",
         "REVIEW_OVERRIDE_VERSION",
         "PLAYABLE_CORPUS_VERSION",
         "PACK_SPEC_VERSION",

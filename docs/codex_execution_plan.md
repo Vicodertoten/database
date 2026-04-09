@@ -124,10 +124,11 @@ Point critique explicite:
 - Gate 6 - Queue d'enrichissement: DONE
 - Gate 7 - Contrat batch confusions + agregats globaux: DONE
 - Gate 8 - Inspection/KPI/smoke/CI etendus: DONE
+- Gate 9 - Retrait sidecar export v3: DONE
 
 ### Suite reordonnee
 
-- Gate 9 - Retrait sidecar export v3
+- Aucun gate actif dans ce plan de reference
 
 ---
 

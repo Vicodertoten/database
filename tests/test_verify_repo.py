@@ -73,7 +73,7 @@ def test_gate_8_docs_keep_playable_gap_and_gate_ordering_visible() -> None:
     assert "Gate 8 - Inspection/KPI/smoke/CI etendus" in plan
 
 
-def test_gate_8_storage_layers_keep_gate_7_markers_and_gate_9_open() -> None:
+def test_gate_9_storage_layers_keep_gate_7_markers_and_retire_sidecar_v3() -> None:
     root = Path(".")
     storage_schema = (root / "src/database_core/storage/postgres_schema.py").read_text(
         encoding="utf-8"
@@ -92,13 +92,13 @@ def test_gate_8_storage_layers_keep_gate_7_markers_and_gate_9_open() -> None:
     for marker in required_gate_7_markers:
         assert marker in storage_schema or marker in storage_repo
 
-    # Gate 9 sidecar retirement is still closed in Gate 8.
+    # Gate 9 sidecar retirement is complete in this cycle.
     versioning = (root / "src/database_core/versioning.py").read_text(encoding="utf-8")
     pipeline_runner = (root / "src/database_core/pipeline/runner.py").read_text(
         encoding="utf-8"
     )
-    assert 'LEGACY_EXPORT_VERSION = "export.bundle.v3"' in versioning
-    assert "write_sidecar_export_v3" in pipeline_runner
+    assert 'LEGACY_EXPORT_VERSION = "export.bundle.v3"' not in versioning
+    assert "write_sidecar_export_v3" not in pipeline_runner
 
 
 def _load_verify_repo_module():

@@ -50,7 +50,7 @@ from database_core.review.overrides import (
     resolve_review_overrides_path,
 )
 from database_core.storage.postgres import PostgresRepository
-from database_core.versioning import ENRICHMENT_VERSION, EXPORT_VERSION, LEGACY_EXPORT_VERSION
+from database_core.versioning import ENRICHMENT_VERSION, EXPORT_VERSION
 
 DEFAULT_FIXTURE_PATH = Path("data/fixtures/birds_pilot.json")
 DEFAULT_DATABASE_URL = os.environ.get(
@@ -60,7 +60,6 @@ DEFAULT_DATABASE_URL = os.environ.get(
 DEFAULT_NORMALIZED_PATH = Path("data/normalized/normalized_snapshot.json")
 DEFAULT_QUALIFIED_PATH = Path("data/qualified/qualification_snapshot.json")
 DEFAULT_EXPORT_PATH = Path("data/exports/qualified_resources_bundle.json")
-DEFAULT_SIDECAR_EXPORT_SUFFIX = ".v3"
 
 
 @dataclass(frozen=True)
@@ -70,7 +69,6 @@ class PipelineResult:
     normalized_snapshot_path: Path
     qualification_snapshot_path: Path
     export_path: Path
-    legacy_export_path: Path | None
     qualified_resource_count: int
     exportable_resource_count: int
     review_queue_count: int
@@ -87,7 +85,6 @@ class PreparedPipelineState:
     normalized_snapshot: dict[str, object]
     qualification_snapshot: dict[str, object]
     export_bundle: dict[str, object]
-    sidecar_export_bundle: dict[str, object] | None
 
 
 def run_pipeline(
@@ -101,8 +98,6 @@ def run_pipeline(
     normalized_snapshot_path: Path = DEFAULT_NORMALIZED_PATH,
     qualification_snapshot_path: Path = DEFAULT_QUALIFIED_PATH,
     export_path: Path = DEFAULT_EXPORT_PATH,
-    export_v3_path: Path | None = None,
-    write_sidecar_export_v3: bool = False,
     review_overrides_path: Path | None = None,
     apply_review_overrides: bool = False,
     qualifier_mode: str | None = None,
@@ -139,15 +134,6 @@ def run_pipeline(
     export_path = resolved_paths["export_path"]
     resolved_snapshot_id = resolved_paths["snapshot_id"]
     resolved_run_id = run_id or _generate_run_id()
-    resolved_export_v3_path = (
-        export_v3_path
-        if write_sidecar_export_v3
-        else None
-    )
-    if write_sidecar_export_v3 and resolved_export_v3_path is None:
-        resolved_export_v3_path = export_path.with_name(
-            f"{export_path.stem}{DEFAULT_SIDECAR_EXPORT_SUFFIX}{export_path.suffix}"
-        )
     resolved_review_overrides_path = _resolve_review_overrides_path(
         apply_review_overrides=apply_review_overrides,
         source_mode=source_mode,
@@ -168,7 +154,6 @@ def run_pipeline(
         ai_qualifier=ai_qualifier,
         review_overrides_path=resolved_review_overrides_path,
         snapshot_id=resolved_snapshot_id,
-        write_sidecar_export_v3=resolved_export_v3_path is not None,
     )
 
     with repository.connect() as connection:
@@ -210,11 +195,9 @@ def run_pipeline(
             normalized_snapshot_path=normalized_snapshot_path,
             qualification_snapshot_path=qualification_snapshot_path,
             export_path=export_path,
-            export_v3_path=resolved_export_v3_path,
             normalized_snapshot=prepared_state.normalized_snapshot,
             qualification_snapshot=prepared_state.qualification_snapshot,
             export_bundle=prepared_state.export_bundle,
-            sidecar_export_bundle=prepared_state.sidecar_export_bundle,
         )
         repository.complete_pipeline_run(
             run_id=resolved_run_id,
@@ -231,7 +214,6 @@ def run_pipeline(
         normalized_snapshot_path=normalized_snapshot_path,
         qualification_snapshot_path=qualification_snapshot_path,
         export_path=export_path,
-        legacy_export_path=resolved_export_v3_path,
         qualified_resource_count=len(prepared_state.qualified_resources),
         exportable_resource_count=exportable_resource_count,
         review_queue_count=len(prepared_state.review_items),
@@ -250,7 +232,6 @@ def _prepare_pipeline_state(
     ai_qualifier: AIQualifier | None,
     review_overrides_path: Path | None,
     snapshot_id: str | None,
-    write_sidecar_export_v3: bool,
 ) -> PreparedPipelineState:
     canonical_taxa = enrich_canonical_taxa(
         dataset.canonical_taxa,
@@ -334,19 +315,6 @@ def _prepare_pipeline_state(
         qualified_resources=qualified_resources,
         run_id=run_id,
     )
-    sidecar_export_bundle = (
-        build_export_bundle(
-            export_version=LEGACY_EXPORT_VERSION,
-            qualification_version=QUALIFICATION_VERSION,
-            enrichment_version=ENRICHMENT_VERSION,
-            generated_at=dataset.captured_at,
-            canonical_taxa=canonical_taxa,
-            qualified_resources=qualified_resources,
-            run_id=run_id,
-        )
-        if write_sidecar_export_v3
-        else None
-    )
     return PreparedPipelineState(
         canonical_taxa=canonical_taxa,
         observations=list(dataset.observations),
@@ -357,7 +325,6 @@ def _prepare_pipeline_state(
         normalized_snapshot=normalized_snapshot,
         qualification_snapshot=qualification_snapshot,
         export_bundle=export_bundle,
-        sidecar_export_bundle=sidecar_export_bundle,
     )
 
 
@@ -583,30 +550,21 @@ def _write_pipeline_artifacts(
     normalized_snapshot_path: Path,
     qualification_snapshot_path: Path,
     export_path: Path,
-    export_v3_path: Path | None,
     normalized_snapshot: dict[str, object],
     qualification_snapshot: dict[str, object],
     export_bundle: dict[str, object],
-    sidecar_export_bundle: dict[str, object] | None,
 ) -> None:
     temporary_normalized = _temporary_output_path(normalized_snapshot_path)
     temporary_qualification = _temporary_output_path(qualification_snapshot_path)
     temporary_export = _temporary_output_path(export_path)
-    temporary_export_v3 = _temporary_output_path(export_v3_path) if export_v3_path else None
     temporary_paths = [temporary_normalized, temporary_qualification, temporary_export]
-    if temporary_export_v3 is not None:
-        temporary_paths.append(temporary_export_v3)
     try:
         write_json(temporary_normalized, normalized_snapshot)
         write_json(temporary_qualification, qualification_snapshot)
         write_export_bundle(temporary_export, export_bundle)
-        if temporary_export_v3 is not None and sidecar_export_bundle is not None and export_v3_path:
-            write_export_bundle(temporary_export_v3, sidecar_export_bundle)
         temporary_normalized.replace(normalized_snapshot_path)
         temporary_qualification.replace(qualification_snapshot_path)
         temporary_export.replace(export_path)
-        if temporary_export_v3 is not None and export_v3_path:
-            temporary_export_v3.replace(export_v3_path)
     finally:
         for item in temporary_paths:
             item.unlink(missing_ok=True)

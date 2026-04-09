@@ -21,16 +21,12 @@ from database_core.domain.models import (
 from database_core.versioning import (
     ENRICHMENT_VERSION,
     EXPORT_VERSION,
-    LEGACY_EXPORT_VERSION,
     NORMALIZED_SNAPSHOT_VERSION,
     SCHEMA_VERSION_LABEL,
 )
 
 DEFAULT_EXPORT_SCHEMA_PATH = (
     Path(__file__).resolve().parents[3] / "schemas" / "qualified_resources_bundle_v4.schema.json"
-)
-LEGACY_EXPORT_SCHEMA_PATH = (
-    Path(__file__).resolve().parents[3] / "schemas" / "qualified_resources_bundle_v3.schema.json"
 )
 
 
@@ -90,21 +86,6 @@ def build_export_bundle(
     included_taxa = [
         item for item in canonical_taxa if item.canonical_taxon_id in canonical_taxon_ids
     ]
-    if export_version == LEGACY_EXPORT_VERSION:
-        if not run_id:
-            raise ValueError("run_id is required when export_version is export.bundle.v3")
-        return {
-            "schema_version": SCHEMA_VERSION_LABEL,
-            "export_version": export_version,
-            "qualification_version": qualification_version,
-            "enrichment_version": enrichment_version,
-            "generated_at": generated_at.isoformat(),
-            "canonical_taxa": [_serialize_export_taxon(item) for item in included_taxa],
-            "qualified_resources": [
-                _serialize_export_resource_v3(item, run_id=run_id) for item in exportable_resources
-            ],
-        }
-
     if export_version != EXPORT_VERSION:
         raise ValueError(f"Unsupported export_version: {export_version}")
 
@@ -165,8 +146,6 @@ def validate_export_bundle(
 
 def _schema_path_for_export_payload(payload: dict[str, object]) -> Path:
     export_version = str(payload.get("export_version") or "")
-    if export_version == LEGACY_EXPORT_VERSION:
-        return LEGACY_EXPORT_SCHEMA_PATH
     if export_version == EXPORT_VERSION:
         return DEFAULT_EXPORT_SCHEMA_PATH
     raise ValueError(f"Cannot resolve schema path for export_version={export_version!r}")
@@ -191,7 +170,7 @@ def _serialize_export_taxon(taxon: CanonicalTaxon) -> dict[str, object]:
     return payload
 
 
-def _serialize_export_resource_v3(
+def _serialize_export_resource_base(
     resource: QualifiedResource,
     *,
     run_id: str,
@@ -239,7 +218,7 @@ def _serialize_export_resource_v4(
     *,
     run_id: str,
 ) -> dict[str, object]:
-    payload = _serialize_export_resource_v3(resource, run_id=run_id)
+    payload = _serialize_export_resource_base(resource, run_id=run_id)
     review_reason_code = (
         resource.qualification_flags[0]
         if resource.qualification_flags

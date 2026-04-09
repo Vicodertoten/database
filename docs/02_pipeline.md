@@ -71,7 +71,6 @@ Controlled promotion rule:
 - fail on unresolved canonical taxon IDs in exportable resources
 - exclude `provisional` taxa from pedagogical export by default
 - validate the primary export against `schemas/qualified_resources_bundle_v4.schema.json` before writing
-- emit transitional sidecar `export.bundle.v3` only when explicitly requested (`--export-v3-sidecar`)
 
 ## Canonical governance guardrails
 

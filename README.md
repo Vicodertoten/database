@@ -28,7 +28,7 @@ The current pilot stays narrow on purpose:
 
 The repository is not the quiz app, frontend, or product runtime.
 
-## Post-Gate 8 Strategic Context
+## Post-Gate 9 Strategic Context
 
 The repository has reached Gate 4 (playable + packs + compilation + materialization).
 This is a strong milestone, but it is not yet the final target shape.
@@ -37,6 +37,7 @@ Gate 5 (distractor policy v2) is implemented for compiled packs.
 Gate 6 (asynchronous enrichment queue) is now implemented for pack compilation deficits.
 Gate 7 (batch confusion ingestion + global aggregates) is now implemented.
 Gate 8 (inspection/KPI/smoke/CI extension) is now implemented.
+Gate 9 (v3 sidecar export retirement) is now implemented.
 
 The final playable target is a real cumulative incremental corpus:
 
@@ -187,7 +188,6 @@ python scripts/run_pipeline.py --database-url "$DATABASE_URL" --qualifier-mode r
 python scripts/run_pipeline.py --source-mode inat_snapshot --snapshot-id inaturalist-birds-20260408T123456Z --qualifier-mode cached --uncertain-policy reject
 python scripts/run_pipeline.py --source-mode inat_snapshot --snapshot-id inaturalist-birds-20260408T123456Z --allow-schema-reset --qualifier-mode cached --uncertain-policy reject
 python scripts/run_pipeline.py --source-mode inat_snapshot --snapshot-id inaturalist-birds-20260408T123456Z --qualifier-mode cached --uncertain-policy reject --apply-review-overrides
-python scripts/run_pipeline.py --source-mode inat_snapshot --snapshot-id inaturalist-birds-20260408T123456Z --qualifier-mode cached --uncertain-policy reject --export-v3-sidecar
 python scripts/run_pipeline.py --source-mode inat_snapshot --snapshot-id inaturalist-birds-20260408T123456Z --qualifier-mode gemini --uncertain-policy reject
 python scripts/inspect_database.py summary
 python scripts/inspect_database.py run-metrics --snapshot-id inaturalist-birds-20260408T123456Z --run-id run:20260408T123456Z:aaaaaaaa
@@ -276,7 +276,6 @@ In `inat_snapshot` mode, the default derived outputs become snapshot-scoped:
 - normalized: `data/normalized/<snapshot_id>.json`
 - qualified: `data/qualified/<snapshot_id>.json`
 - export: `data/exports/<snapshot_id>.json`
-- optional sidecar export (`v3`, opt-in only): `data/exports/<snapshot_id>.v3.json`
 
 Running `fetch_inat_snapshot.py` writes:
 
@@ -303,7 +302,6 @@ The repository now writes explicit stage versions into generated artifacts:
 - canonical enrichment version: `canonical.enrichment.v2`
 - qualification version: `qualification.staged.v1`
 - export version: `export.bundle.v4`
-- sidecar export version: `export.bundle.v3` (transition mode, opt-in only)
 - review override version: `review.override.v1`
 - playable corpus version: `playable_corpus.v1`
 - pack spec version: `pack.spec.v1`
@@ -317,8 +315,6 @@ Snapshot manifests without `manifest_version` are rejected.
 Unknown manifest versions are rejected explicitly.
 The primary export bundle (`v4`) is validated against
 `schemas/qualified_resources_bundle_v4.schema.json` before write.
-The optional sidecar (`v3`) is generated only with `--export-v3-sidecar` and validated against
-`schemas/qualified_resources_bundle_v3.schema.json`.
 The playable corpus payload is validated against
 `schemas/playable_corpus_v1.schema.json`.
 Pack specs and diagnostics are validated against

@@ -17,6 +17,5 @@ Active open questions:
 - Operator thresholds for promoting `provisional` taxa to `active` or `deprecated` after manual review.
 - Signal extraction depth from raw iNaturalist deltas: current implementation is explicit and deterministic, but still centered on pilot signals (future extension needed for richer taxon-change patterns).
 - Canonical governance operator policy after `manual_reviewed`: SLA and escalation path are still open; closure workflow is now implemented in CLI with mandatory note.
-- Downstream migration completion plan for ending `v3` sidecar after the two-release transition window.
 - Future pedagogical ontology expansion beyond V1 fields (`diagnostic_feature_visibility`, learning sequencing, distractor planning).
 - Multi-group rollout guardrails (after birds): sequence, acceptance criteria, and required updates to prompt supplements and canonical mappings.

@@ -79,12 +79,6 @@ def main() -> None:
     pipeline_parser.add_argument("--normalized-path", type=Path, default=DEFAULT_NORMALIZED_PATH)
     pipeline_parser.add_argument("--qualified-path", type=Path, default=DEFAULT_QUALIFIED_PATH)
     pipeline_parser.add_argument("--export-path", type=Path, default=DEFAULT_EXPORT_PATH)
-    pipeline_parser.add_argument("--export-v3-path", type=Path)
-    pipeline_parser.add_argument(
-        "--export-v3-sidecar",
-        action="store_true",
-        help="enable transitional v3 export sidecar output (disabled by default)",
-    )
     pipeline_parser.add_argument(
         "--allow-schema-reset",
         action="store_true",
@@ -426,8 +420,6 @@ def main() -> None:
             normalized_snapshot_path=args.normalized_path,
             qualification_snapshot_path=args.qualified_path,
             export_path=args.export_path,
-            export_v3_path=args.export_v3_path,
-            write_sidecar_export_v3=args.export_v3_sidecar,
             review_overrides_path=args.review_overrides_path,
             apply_review_overrides=args.apply_review_overrides,
             qualifier_mode=args.qualifier_mode,

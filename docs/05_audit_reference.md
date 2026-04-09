@@ -3,7 +3,7 @@
 Statut: document vivant (reference d'execution)
 Version: v6
 Date de mise a jour: 2026-04-09
-Perimetre: etat reel du repo apres Gate 8
+Perimetre: etat reel du repo apres Gate 9
 
 ---
 
@@ -22,12 +22,13 @@ Points forts confirmes:
 - queue d'enrichissement asynchrone tracee en base
 - contrat batch confusions + agregats globaux plateforme en base
 - couverture tests structurants et smoke KPI verrouilles
+- retrait complet du sidecar export v3 (fin de transition)
 
 Point critique post-Gate 7:
 
 - la cible finale playable est un corpus cumulatif incremental reel
 - l'implementation actuelle reste une surface latest reconstruite a chaque run
-- cet ecart reste explicite et constitue le chantier strategique avant Gate 9+
+- cet ecart reste explicite et constitue le chantier strategique post-Gate 9
 
 Decision de pilotage appliquee:
 
@@ -35,7 +36,8 @@ Decision de pilotage appliquee:
 - Gate 5 distracteurs v2: execute sans evolution de contrat export/schema
 - Gate 6 queue d'enrichissement: execute sans evolution de contrat export/schema
 - Gate 7 confusions batch + agregats globaux: execute sans derive runtime temps reel
-- Gate 8 inspection/KPI/smoke/CI: execute sans changement de KPI verrouille ni derive Gate 9
+- Gate 8 inspection/KPI/smoke/CI: execute sans changement de KPI verrouille
+- Gate 9 retrait sidecar v3: execute sans changement de contrat export.bundle.v4
 
 ---
 
@@ -53,6 +55,7 @@ Decision de pilotage appliquee:
 | Gate 6 - Queue d'enrichissement | DONE | 2026-04-09 | requetes+targets+executions asynchrones |
 | Gate 7 - Contrat batch confusions + agregats globaux | DONE | 2026-04-09 | ingestion batch + agregats globaux diriges |
 | Gate 8 - Inspection/KPI/smoke/CI etendus | DONE | 2026-04-09 | vues metriques operateur + discipline KPI verrouille |
+| Gate 9 - Retrait sidecar export v3 | DONE | 2026-04-09 | sidecar retire du code, CLI, schemas et docs |
 
 Etat schema applicatif observe:
 
@@ -61,7 +64,6 @@ Etat schema applicatif observe:
 Etat contrats observes:
 
 - export.bundle.v4 (principal)
-- export.bundle.v3 (sidecar transitoire opt-in)
 - review.override.v1
 - playable_corpus.v1
 - pack.spec.v1
@@ -88,7 +90,7 @@ La cible d'evolution reste:
 
 - un playable corpus cumulatif incremental reel
 - des frontieres strictes entre database et runtime
-- une trajectoire sequentielle avec Gate 9 retrait sidecar v3
+- une trajectoire sequentielle post-Gate 9 sans sidecar legacy
 - une reduction de dette PostgresRepository planifiee sans lancer de refactor pendant Gate 8
 
 ---
@@ -216,7 +218,7 @@ Criteres d'acceptation:
 8. Gate 6 - Queue d'enrichissement (DONE)
 9. Gate 7 - Ingestion batch confusions + agregats globaux
 10. Gate 8 - Inspection/KPI/smoke/CI etendus
-11. Gate 9 - Retrait sidecar export v3
+11. Gate 9 - Retrait sidecar export v3 (DONE)
 
 ---
 
@@ -402,3 +404,21 @@ residual_risks:
 - playable persistence target remains cumulative-incremental backlog item
 - PostgresRepository concentration remains strategic debt tracked for later work
 go_no_go: GO for Gate 8 closure, Gate 9 remains closed
+
+## 16. Gate 9 closure evidence
+
+date: 2026-04-09
+owner: codex
+checklist_items_passed:
+- `export.bundle.v3` contract retired from code paths and constants
+- CLI sidecar flags removed (`--export-v3-sidecar`, `--export-v3-path`)
+- sidecar schema file removed (`schemas/qualified_resources_bundle_v3.schema.json`)
+- doc/code coherence checks updated to v4-only export schema discipline
+- non-regression checks updated to assert absence of legacy sidecar markers
+tests_run:
+- tests/test_pipeline.py
+- tests/test_verify_repo.py
+- python scripts/check_doc_code_coherence.py
+residual_risks:
+- external downstream consumers still expecting v3 must migrate to v4 before upgrade
+go_no_go: GO for Gate 9 closure

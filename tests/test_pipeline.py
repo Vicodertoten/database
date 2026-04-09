@@ -50,7 +50,6 @@ def test_pipeline_produces_reproducible_output(
         normalized_snapshot_path=second_normalized,
         qualification_snapshot_path=second_qualified,
         export_path=second_export,
-        legacy_export_path=None,
         qualified_resource_count=4,
         exportable_resource_count=2,
         review_queue_count=1,
@@ -92,27 +91,6 @@ def test_pipeline_produces_reproducible_output(
     assert normalized_payload["schema_version"] == "database.schema.v13"
     assert normalized_payload["normalized_snapshot_version"] == "normalized.snapshot.v3"
     assert normalized_payload["enrichment_version"] == "canonical.enrichment.v2"
-    assert not first_export.with_name(f"{first_export.stem}.v3{first_export.suffix}").exists()
-
-
-def test_pipeline_can_emit_v3_sidecar_when_opted_in(tmp_path: Path, database_url: str) -> None:
-    export_path = tmp_path / "optin_export.json"
-    run_pipeline(
-        fixture_path=Path("data/fixtures/birds_pilot.json"),
-        database_url=database_url,
-        normalized_snapshot_path=tmp_path / "optin_normalized.json",
-        qualification_snapshot_path=tmp_path / "optin_qualified.json",
-        export_path=export_path,
-        write_sidecar_export_v3=True,
-    )
-
-    legacy_export_path = export_path.with_name(f"{export_path.stem}.v3{export_path.suffix}")
-    legacy_export_payload = json.loads(legacy_export_path.read_text(encoding="utf-8"))
-    legacy_schema = json.loads(
-        Path("schemas/qualified_resources_bundle_v3.schema.json").read_text(encoding="utf-8")
-    )
-    validate(instance=legacy_export_payload, schema=legacy_schema)
-    assert legacy_export_payload["export_version"] == "export.bundle.v3"
 
 
 def test_export_v4_matches_internal_golden_snapshot(tmp_path: Path, database_url: str) -> None:
@@ -124,7 +102,6 @@ def test_export_v4_matches_internal_golden_snapshot(tmp_path: Path, database_url
         qualification_snapshot_path=tmp_path / "golden_qualified.json",
         export_path=export_path,
         run_id="run:20260408T000000Z:aaaaaaaa",
-        write_sidecar_export_v3=False,
     )
 
     payload = json.loads(export_path.read_text(encoding="utf-8"))
