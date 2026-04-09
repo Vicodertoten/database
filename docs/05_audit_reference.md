@@ -51,11 +51,32 @@ Etat contrats observes:
 
 - export.bundle.v4 (principal)
 - export.bundle.v3 (sidecar transitoire opt-in)
+- review.override.v1
 - playable_corpus.v1
 - pack.spec.v1
 - pack.diagnostic.v1
 - pack.compiled.v1
 - pack.materialization.v1
+
+## État réel
+
+Le repo est operationnel jusqu'au Gate 4 avec:
+
+- une surface playable latest reconstruite a chaque run
+- un historique run-level conserve pour auditabilite
+- des builds compiles conserves de maniere historique
+- des materializations figees immuables
+
+Le delta vers la cible finale est explicite et traite par Gate 4.5.
+
+## Cible
+
+La cible d'evolution reste:
+
+- un playable corpus cumulatif incremental reel
+- des frontieres strictes entre database et runtime
+- une trajectoire sequentielle avec Gate 5 dedie distracteurs v2 puis Gate 6 enrichissement
+- une reduction de dette PostgresRepository planifiee sans lancer de refactor dans Gate 4.5
 
 ---
 
@@ -251,4 +272,29 @@ changement:
 raison:
 impact:
 next_step:
+```
+
+---
+
+## 11. Gate 4.5 closure checklist
+
+Gate 4.5 is considered closed only when all items below are true:
+
+- docs alignment complete across README, scope, domain model, pipeline, audit, and execution plan
+- playable target vs current latest-surface gap is explicit and non-ambiguous
+- gate sequence includes Gate 4.5 and dedicated Gate 5 distractor policy v2
+- PostgresRepository debt is tracked as a strategic workstream without launched refactor
+- compiled build history and materialization immutability are explicit in docs
+- canonical boundary for external similar species hints is explicit and controlled
+- no implementation markers for Gate 5+ were introduced during Gate 4.5
+
+Evidence format for closure update:
+
+```text
+date:
+owner:
+checklist_items_passed:
+tests_run:
+residual_risks:
+go_no_go:
 ```

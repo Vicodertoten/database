@@ -49,6 +49,13 @@ Current implementation status:
 A dedicated corrective gate (Gate 4.5) is now part of the execution plan to align doctrine,
 traceability contracts, and next-step architecture before further feature expansion.
 
+Gate 4.5 closure artifacts are documentation and discipline checks only:
+
+- cross-doc alignment on playable target vs current latest-surface implementation
+- explicit gate ordering with a dedicated distractor policy v2 gate after Gate 4.5
+- explicit strategic debt tracking for PostgresRepository without launching refactor work
+- non-regression checks that block accidental Gate 5+ implementation markers during Gate 4.5
+
 ## Reference docs
 
 - Documentation index: `docs/README.md`

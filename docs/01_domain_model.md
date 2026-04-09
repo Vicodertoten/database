@@ -136,6 +136,13 @@ Rules:
 - playable does not replace `CanonicalTaxon`, `QualifiedResource`, or `export.bundle.v4`
 - Gate 4.5 clarifies the migration path from current latest surface to cumulative incremental target
 
+Gate 4.5 migration framing (documentation only):
+
+- keep current serving behavior stable while documenting target lifecycle semantics.
+- introduce explicit invalidation semantics at doctrine level before any schema or behavior change.
+- preserve contract stability for `playable_corpus.v1` during Gate 4.5.
+- defer all behavior changes to later gates after dedicated implementation work.
+
 ## PackSpec / PackRevision / PackCompilationAttempt (Gate 3)
 
 Pack layer is durable and versioned, without runtime session logic.

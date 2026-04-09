@@ -45,8 +45,8 @@ Current non-goals:
 - institution features
 - full-scale ingestion
 - runtime session/scoring/progression
-- distractor policy v2 implementation in the current cycle
-- repository refactor implementation in the current cycle
+- distractor policy v2 implementation during Gate 4.5
+- repository refactor implementation during Gate 4.5
 
 Phase 1 stays intentionally small:
 
