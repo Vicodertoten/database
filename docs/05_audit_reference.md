@@ -270,6 +270,30 @@ Impacts techniques:
 - renforcement des tests par zone fonctionnelle
 - reduction du risque de conflits et regressions futures
 
+Etat d'avancement (2026-04-09):
+
+Phase 1 — domaine pack:
+- extraction initiale effective du domaine pack vers `src/database_core/storage/pack_store.py`
+- `PostgresRepository` delegue les operations pack principales au store specialise
+- CLI `database-pack` et vues inspect pack (`pack-specs`, `pack-revisions`, `pack-diagnostics`, `compiled-pack-builds`, `pack-materializations`) utilisent directement le store pack
+- suppression complete du bloc helper pack residuel dans `storage/postgres.py` (pas de duplication morte maintenue)
+- reduction mesuree de `storage/postgres.py` sur cette phase pack: `3985 -> 3223` lignes (`-762`)
+- test de non-regression ajoute pour valider le point d'entree `PostgresPackStore`
+- suites `tests/test_storage.py` et `tests/test_cli.py` vertes apres suppression
+- aucun changement de contrat export JSON sur ce lot (`no contract change`)
+
+Phase 2 — domaines enrichment, confusion, inspection:
+- extraction de l'ensemble du domaine enrichment queue vers `src/database_core/storage/enrichment_store.py` (`PostgresEnrichmentStore`)
+  - methodes: `enqueue_enrichment_for_pack`, `create_or_merge_enrichment_request`, `fetch_enrichment_requests`, `fetch_enrichment_request_targets`, `fetch_enrichment_executions`, `record_enrichment_execution`, `fetch_enrichment_queue_metrics`
+  - helpers prives `_normalize_enrichment_targets` et `_fetch_enrichment_target_signature` supprimes de `postgres.py`
+- extraction du domaine confusion vers `src/database_core/storage/confusion_store.py` (`PostgresConfusionStore`)
+  - methodes: `ingest_confusion_batch`, `fetch_confusion_events`, `recompute_confusion_aggregates_global`, `fetch_confusion_aggregates_global`, `fetch_confusion_metrics`
+- extraction de la metrique qualification vers `src/database_core/storage/inspection_store.py` (`PostgresInspectionStore`)
+  - methodes: `fetch_qualification_metrics`
+- `PostgresRepository` conserve les delegations minces pour compatibilite de surface publique
+- reduction totale de `storage/postgres.py`: `3985 -> 2422` lignes (`-1563` depuis le debut du gate P0-2)
+- 52 tests storage + CLI verts apres extraction complete (aucune regression)
+
 ## 11. Architecture cible autour du repo
 
 ### `database`

@@ -1,11 +1,10 @@
 from __future__ import annotations
 
 import json
-from collections import Counter, defaultdict
+from collections import Counter
 from collections.abc import Iterator, Sequence
 from contextlib import contextmanager
-from datetime import UTC, datetime, timedelta
-from uuid import uuid4
+from datetime import UTC, datetime
 
 import psycopg
 from psycopg import sql
@@ -16,12 +15,6 @@ from database_core.domain.enums import (
     CanonicalChangeRelationType,
     CanonicalEventType,
     CanonicalGovernanceDecisionStatus,
-    EnrichmentExecutionStatus,
-    EnrichmentRequestReasonCode,
-    EnrichmentRequestStatus,
-    EnrichmentTargetResourceType,
-    PackCompilationReasonCode,
-    PackMaterializationPurpose,
     ReviewStatus,
 )
 from database_core.domain.models import (
@@ -29,47 +22,26 @@ from database_core.domain.models import (
     CanonicalTaxon,
     CanonicalTaxonEvent,
     CanonicalTaxonRelationship,
-    CompiledPackBuild,
-    CompiledPackQuestion,
-    ConfusionAggregateGlobal,
-    ConfusionBatch,
-    ConfusionEvent,
-    ConfusionEventInput,
-    EnrichmentExecution,
-    EnrichmentRequest,
-    EnrichmentRequestTarget,
-    MaterializedPack,
     MediaAsset,
-    PackCompilationAttempt,
-    PackCompilationDeficit,
-    PackRevision,
     PackRevisionParameters,
-    PackSpec,
-    PackTaxonDeficit,
     PlayableItem,
     QualifiedResource,
     ReviewItem,
     SourceObservation,
 )
-from database_core.pack import (
-    validate_compiled_pack,
-    validate_pack_diagnostic,
-    validate_pack_materialization,
-    validate_pack_spec,
-)
 from database_core.playable import validate_playable_corpus
+from database_core.storage.confusion_store import PostgresConfusionStore
+from database_core.storage.enrichment_store import PostgresEnrichmentStore
+from database_core.storage.inspection_store import PostgresInspectionStore
+from database_core.storage.pack_store import MIN_PACK_TOTAL_QUESTIONS, PostgresPackStore
 from database_core.storage.postgres_migrations import (
     apply_migrations,
     current_schema_version,
     reset_schema,
 )
 from database_core.versioning import (
-    COMPILED_PACK_VERSION,
     ENRICHMENT_VERSION,
     EXPORT_VERSION,
-    PACK_DIAGNOSTIC_VERSION,
-    PACK_MATERIALIZATION_VERSION,
-    PACK_SPEC_VERSION,
     PLAYABLE_CORPUS_VERSION,
     QUALIFICATION_VERSION,
     SCHEMA_VERSION,
@@ -81,14 +53,16 @@ class RepositorySchemaVersionMismatchError(ValueError):
     """Raised when an existing PostgreSQL schema has a schema version mismatch."""
 
 
-MIN_PACK_TAXA_SERVED = 10
-MIN_PACK_MEDIA_PER_TAXON = 2
-MIN_PACK_TOTAL_QUESTIONS = 20
-
-
 class PostgresRepository:
     def __init__(self, database_url: str) -> None:
         self.database_url = database_url
+        self.pack_store = PostgresPackStore(connect=self.connect)
+        self.enrichment_store = PostgresEnrichmentStore(
+            connect=self.connect,
+            pack_store=self.pack_store,
+        )
+        self.confusion_store = PostgresConfusionStore(connect=self.connect)
+        self.inspection_store = PostgresInspectionStore(connect=self.connect)
 
     @contextmanager
     def connect(self) -> Iterator[psycopg.Connection]:
@@ -1920,50 +1894,10 @@ class PostgresRepository:
         pack_id: str | None = None,
         connection: psycopg.Connection | None = None,
     ) -> dict[str, object]:
-        if connection is None:
-            with self.connect() as owned_connection:
-                return self.create_pack(
-                    parameters=parameters,
-                    pack_id=pack_id,
-                    connection=owned_connection,
-                )
-
-        normalized_parameters = (
-            parameters
-            if isinstance(parameters, PackRevisionParameters)
-            else PackRevisionParameters(**parameters)
-        )
-        resolved_pack_id = (pack_id or self._generate_pack_id()).strip()
-        if not resolved_pack_id:
-            raise ValueError("pack_id must not be blank")
-
-        now = datetime.now(UTC)
-        try:
-            connection.execute(
-                """
-                INSERT INTO pack_specs (
-                    pack_id,
-                    latest_revision,
-                    created_at,
-                    updated_at
-                ) VALUES (%s, 1, %s, %s)
-                """,
-                (resolved_pack_id, now.isoformat(), now.isoformat()),
-            )
-        except psycopg.errors.UniqueViolation as exc:
-            raise ValueError(f"Pack already exists: {resolved_pack_id}") from exc
-
-        self._insert_pack_revision(
-            connection,
-            pack_id=resolved_pack_id,
-            revision=1,
-            parameters=normalized_parameters,
-            created_at=now,
-        )
-        return self._fetch_pack_revision_payload(
-            connection,
-            pack_id=resolved_pack_id,
-            revision=1,
+        return self.pack_store.create_pack(
+            parameters=parameters,
+            pack_id=pack_id,
+            connection=connection,
         )
 
     def revise_pack(
@@ -1973,53 +1907,10 @@ class PostgresRepository:
         parameters: PackRevisionParameters | dict[str, object],
         connection: psycopg.Connection | None = None,
     ) -> dict[str, object]:
-        if connection is None:
-            with self.connect() as owned_connection:
-                return self.revise_pack(
-                    pack_id=pack_id,
-                    parameters=parameters,
-                    connection=owned_connection,
-                )
-
-        normalized_parameters = (
-            parameters
-            if isinstance(parameters, PackRevisionParameters)
-            else PackRevisionParameters(**parameters)
-        )
-        row = connection.execute(
-            """
-            SELECT latest_revision
-            FROM pack_specs
-            WHERE pack_id = %s
-            FOR UPDATE
-            """,
-            (pack_id,),
-        ).fetchone()
-        if row is None:
-            raise ValueError(f"Unknown pack_id: {pack_id}")
-
-        new_revision = int(row["latest_revision"]) + 1
-        now = datetime.now(UTC)
-        self._insert_pack_revision(
-            connection,
+        return self.pack_store.revise_pack(
             pack_id=pack_id,
-            revision=new_revision,
-            parameters=normalized_parameters,
-            created_at=now,
-        )
-        connection.execute(
-            """
-            UPDATE pack_specs
-            SET latest_revision = %s,
-                updated_at = %s
-            WHERE pack_id = %s
-            """,
-            (new_revision, now.isoformat(), pack_id),
-        )
-        return self._fetch_pack_revision_payload(
-            connection,
-            pack_id=pack_id,
-            revision=new_revision,
+            parameters=parameters,
+            connection=connection,
         )
 
     def fetch_pack_specs(
@@ -2028,63 +1919,7 @@ class PostgresRepository:
         pack_id: str | None = None,
         limit: int = 100,
     ) -> list[dict[str, object]]:
-        with self.connect() as connection:
-            where_clause = "WHERE ps.pack_id = %s" if pack_id else ""
-            params: list[object] = [pack_id] if pack_id else []
-            rows = connection.execute(
-                f"""
-                SELECT
-                    ps.pack_id,
-                    ps.latest_revision,
-                    ps.created_at AS pack_created_at,
-                    ps.updated_at AS pack_updated_at,
-                    pr.revision,
-                    pr.canonical_taxon_ids_json,
-                    pr.difficulty_policy,
-                    pr.country_code,
-                    pr.observed_from,
-                    pr.observed_to,
-                    pr.owner_id,
-                    pr.org_id,
-                    pr.visibility,
-                    pr.intended_use,
-                    pr.created_at AS revision_created_at,
-                    CASE
-                        WHEN pr.location_point IS NULL THEN NULL
-                        ELSE ST_X(pr.location_point)
-                    END AS point_longitude,
-                    CASE
-                        WHEN pr.location_point IS NULL THEN NULL
-                        ELSE ST_Y(pr.location_point)
-                    END AS point_latitude,
-                    CASE
-                        WHEN pr.location_bbox IS NULL THEN NULL
-                        ELSE ST_XMin(pr.location_bbox)
-                    END AS bbox_min_longitude,
-                    CASE
-                        WHEN pr.location_bbox IS NULL THEN NULL
-                        ELSE ST_YMin(pr.location_bbox)
-                    END AS bbox_min_latitude,
-                    CASE
-                        WHEN pr.location_bbox IS NULL THEN NULL
-                        ELSE ST_XMax(pr.location_bbox)
-                    END AS bbox_max_longitude,
-                    CASE
-                        WHEN pr.location_bbox IS NULL THEN NULL
-                        ELSE ST_YMax(pr.location_bbox)
-                    END AS bbox_max_latitude,
-                    pr.location_radius_meters
-                FROM pack_specs ps
-                JOIN pack_revisions pr
-                    ON pr.pack_id = ps.pack_id
-                    AND pr.revision = ps.latest_revision
-                {where_clause}
-                ORDER BY ps.updated_at DESC, ps.pack_id
-                LIMIT %s
-                """,
-                [*params, limit],
-            ).fetchall()
-            return [self._pack_spec_payload_from_row(row) for row in rows]
+        return self.pack_store.fetch_pack_specs(pack_id=pack_id, limit=limit)
 
     def fetch_pack_revisions(
         self,
@@ -2093,64 +1928,11 @@ class PostgresRepository:
         revision: int | None = None,
         limit: int = 100,
     ) -> list[dict[str, object]]:
-        with self.connect() as connection:
-            where_clauses = ["pr.pack_id = %s"]
-            params: list[object] = [pack_id]
-            if revision is not None:
-                where_clauses.append("pr.revision = %s")
-                params.append(revision)
-            rows = connection.execute(
-                f"""
-                SELECT
-                    ps.pack_id,
-                    ps.latest_revision,
-                    ps.created_at AS pack_created_at,
-                    ps.updated_at AS pack_updated_at,
-                    pr.revision,
-                    pr.canonical_taxon_ids_json,
-                    pr.difficulty_policy,
-                    pr.country_code,
-                    pr.observed_from,
-                    pr.observed_to,
-                    pr.owner_id,
-                    pr.org_id,
-                    pr.visibility,
-                    pr.intended_use,
-                    pr.created_at AS revision_created_at,
-                    CASE
-                        WHEN pr.location_point IS NULL THEN NULL
-                        ELSE ST_X(pr.location_point)
-                    END AS point_longitude,
-                    CASE
-                        WHEN pr.location_point IS NULL THEN NULL
-                        ELSE ST_Y(pr.location_point)
-                    END AS point_latitude,
-                    CASE
-                        WHEN pr.location_bbox IS NULL THEN NULL
-                        ELSE ST_XMin(pr.location_bbox)
-                    END AS bbox_min_longitude,
-                    CASE
-                        WHEN pr.location_bbox IS NULL THEN NULL
-                        ELSE ST_YMin(pr.location_bbox)
-                    END AS bbox_min_latitude,
-                    CASE
-                        WHEN pr.location_bbox IS NULL THEN NULL
-                        ELSE ST_XMax(pr.location_bbox)
-                    END AS bbox_max_longitude,
-                    CASE
-                        WHEN pr.location_bbox IS NULL THEN NULL
-                        ELSE ST_YMax(pr.location_bbox)
-                    END AS bbox_max_latitude,
-                    pr.location_radius_meters
-                FROM pack_revisions pr
-                JOIN pack_specs ps ON ps.pack_id = pr.pack_id
-                WHERE {' AND '.join(where_clauses)}
-                ORDER BY pr.revision DESC
-                LIMIT %s
-                """,
-                [*params, limit],
-            ).fetchall()
-            return [self._pack_spec_payload_from_row(row) for row in rows]
+        return self.pack_store.fetch_pack_revisions(
+            pack_id=pack_id,
+            revision=revision,
+            limit=limit,
+        )
 
     def diagnose_pack(
         self,
@@ -2159,75 +1941,11 @@ class PostgresRepository:
         revision: int | None = None,
         connection: psycopg.Connection | None = None,
     ) -> dict[str, object]:
-        if connection is None:
-            with self.connect() as owned_connection:
-                return self.diagnose_pack(
-                    pack_id=pack_id,
-                    revision=revision,
-                    connection=owned_connection,
-                )
-
-        context = self._compute_pack_compilation_context(
-            connection,
+        return self.pack_store.diagnose_pack(
             pack_id=pack_id,
             revision=revision,
-            question_count_requested=MIN_PACK_TOTAL_QUESTIONS,
+            connection=connection,
         )
-
-        attempted_at = datetime.now(UTC)
-        attempt = PackCompilationAttempt(
-            attempt_id=f"packdiag:{pack_id}:{context['revision']}:{uuid4().hex[:8]}",
-            pack_id=pack_id,
-            revision=int(context["revision"]),
-            attempted_at=attempted_at,
-            compilable=bool(context["compilable"]),
-            reason_code=context["reason_code"],
-            thresholds=context["thresholds"],
-            measured=context["measured"],
-            deficits=context["deficits"],
-            blocking_taxa=context["blocking_taxa"],
-        )
-        payload = {
-            "schema_version": SCHEMA_VERSION_LABEL,
-            "pack_diagnostic_version": PACK_DIAGNOSTIC_VERSION,
-            **attempt.model_dump(mode="json"),
-        }
-        validate_pack_diagnostic(payload)
-        connection.execute(
-            """
-            INSERT INTO pack_compilation_attempts (
-                attempt_id,
-                pack_id,
-                revision,
-                attempted_at,
-                schema_version,
-                pack_diagnostic_version,
-                compilable,
-                reason_code,
-                metrics_json,
-                deficits_json,
-                blocking_taxa_json,
-                payload_json
-            ) VALUES (
-                %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
-            )
-            """,
-            (
-                attempt.attempt_id,
-                attempt.pack_id,
-                attempt.revision,
-                attempt.attempted_at.isoformat(),
-                SCHEMA_VERSION_LABEL,
-                PACK_DIAGNOSTIC_VERSION,
-                attempt.compilable,
-                attempt.reason_code,
-                _json(attempt.measured),
-                _json([item.model_dump(mode="json") for item in attempt.deficits]),
-                _json([item.model_dump(mode="json") for item in attempt.blocking_taxa]),
-                _json(payload),
-            ),
-        )
-        return payload
 
     def compile_pack(
         self,
@@ -2237,87 +1955,12 @@ class PostgresRepository:
         question_count: int = MIN_PACK_TOTAL_QUESTIONS,
         connection: psycopg.Connection | None = None,
     ) -> dict[str, object]:
-        if question_count < 1:
-            raise ValueError("question_count must be >= 1")
-
-        if connection is None:
-            with self.connect() as owned_connection:
-                return self.compile_pack(
-                    pack_id=pack_id,
-                    revision=revision,
-                    question_count=question_count,
-                    connection=owned_connection,
-                )
-
-        context = self._compute_pack_compilation_context(
-            connection,
+        return self.pack_store.compile_pack(
             pack_id=pack_id,
             revision=revision,
-            question_count_requested=max(question_count, MIN_PACK_TOTAL_QUESTIONS),
+            question_count=question_count,
+            connection=connection,
         )
-        if not context["compilable"]:
-            deficits = ", ".join(
-                f"{item.code}:{item.current}/{item.required}"
-                for item in context["deficits"]
-            ) or "none"
-            raise ValueError(
-                "Pack is not compilable for build persistence "
-                f"(reason_code={context['reason_code']}, deficits={deficits})"
-            )
-
-        build_id = f"packbuild:{pack_id}:{context['revision']}:{uuid4().hex[:8]}"
-        built_at = datetime.now(UTC)
-        built_questions = context["questions"][:question_count]
-        build = CompiledPackBuild(
-            build_id=build_id,
-            pack_id=pack_id,
-            revision=int(context["revision"]),
-            built_at=built_at,
-            question_count_requested=question_count,
-            question_count_built=len(built_questions),
-            distractor_count=3,
-            source_run_id=context["source_run_id"],
-            questions=built_questions,
-        )
-        payload = {
-            "schema_version": SCHEMA_VERSION_LABEL,
-            "pack_compiled_version": COMPILED_PACK_VERSION,
-            **build.model_dump(mode="json"),
-        }
-        validate_compiled_pack(payload)
-        connection.execute(
-            """
-            INSERT INTO compiled_pack_builds (
-                build_id,
-                pack_id,
-                revision,
-                built_at,
-                schema_version,
-                pack_compiled_version,
-                question_count_requested,
-                question_count_built,
-                distractor_count,
-                source_run_id,
-                payload_json
-            ) VALUES (
-                %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
-            )
-            """,
-            (
-                build.build_id,
-                build.pack_id,
-                build.revision,
-                build.built_at.isoformat(),
-                SCHEMA_VERSION_LABEL,
-                COMPILED_PACK_VERSION,
-                build.question_count_requested,
-                build.question_count_built,
-                build.distractor_count,
-                build.source_run_id,
-                _json(payload),
-            ),
-        )
-        return payload
 
     def materialize_pack(
         self,
@@ -2329,112 +1972,14 @@ class PostgresRepository:
         ttl_hours: int | None = None,
         connection: psycopg.Connection | None = None,
     ) -> dict[str, object]:
-        if question_count < 1:
-            raise ValueError("question_count must be >= 1")
-
-        if connection is None:
-            with self.connect() as owned_connection:
-                return self.materialize_pack(
-                    pack_id=pack_id,
-                    revision=revision,
-                    question_count=question_count,
-                    purpose=purpose,
-                    ttl_hours=ttl_hours,
-                    connection=owned_connection,
-                )
-
-        revision_payload = self._fetch_pack_revision_payload(
-            connection,
+        return self.pack_store.materialize_pack(
             pack_id=pack_id,
             revision=revision,
+            question_count=question_count,
+            purpose=purpose,
+            ttl_hours=ttl_hours,
+            connection=connection,
         )
-        revision_value = int(revision_payload["revision"])
-        latest_build = self._fetch_latest_compiled_payload(
-            connection,
-            pack_id=pack_id,
-            revision=revision_value,
-        )
-        if latest_build is None:
-            raise ValueError(
-                "No compiled build found for materialization. "
-                "Run `pack compile` first for this revision."
-            )
-
-        available_questions = list(latest_build["questions"])
-        if question_count > len(available_questions):
-            raise ValueError(
-                "Requested materialization question_count exceeds available compiled questions "
-                f"(requested={question_count}, available={len(available_questions)})"
-            )
-        selected_questions = available_questions[:question_count]
-        purpose_value = PackMaterializationPurpose(purpose)
-        created_at = datetime.now(UTC)
-
-        resolved_ttl_hours: int | None = None
-        expires_at: datetime | None = None
-        if purpose_value == PackMaterializationPurpose.DAILY_CHALLENGE:
-            resolved_ttl_hours = ttl_hours or 24
-            if resolved_ttl_hours <= 0:
-                raise ValueError("daily_challenge materialization requires ttl_hours > 0")
-            expires_at = created_at + timedelta(hours=resolved_ttl_hours)
-        elif ttl_hours is not None:
-            raise ValueError("assignment materialization cannot define ttl_hours")
-
-        materialization = MaterializedPack(
-            materialization_id=(
-                f"packmat:{pack_id}:{revision_value}:{purpose_value}:{uuid4().hex[:8]}"
-            ),
-            pack_id=pack_id,
-            revision=revision_value,
-            source_build_id=str(latest_build["build_id"]),
-            created_at=created_at,
-            purpose=purpose_value,
-            ttl_hours=resolved_ttl_hours,
-            expires_at=expires_at,
-            question_count=len(selected_questions),
-            questions=[CompiledPackQuestion(**item) for item in selected_questions],
-        )
-        payload = {
-            "schema_version": SCHEMA_VERSION_LABEL,
-            "pack_materialization_version": PACK_MATERIALIZATION_VERSION,
-            **materialization.model_dump(mode="json"),
-        }
-        validate_pack_materialization(payload)
-        connection.execute(
-            """
-            INSERT INTO pack_materializations (
-                materialization_id,
-                pack_id,
-                revision,
-                source_build_id,
-                created_at,
-                purpose,
-                ttl_hours,
-                expires_at,
-                schema_version,
-                pack_materialization_version,
-                question_count,
-                payload_json
-            ) VALUES (
-                %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
-            )
-            """,
-            (
-                materialization.materialization_id,
-                materialization.pack_id,
-                materialization.revision,
-                materialization.source_build_id,
-                materialization.created_at.isoformat(),
-                materialization.purpose,
-                materialization.ttl_hours,
-                materialization.expires_at.isoformat() if materialization.expires_at else None,
-                SCHEMA_VERSION_LABEL,
-                PACK_MATERIALIZATION_VERSION,
-                materialization.question_count,
-                _json(payload),
-            ),
-        )
-        return payload
 
     def fetch_pack_diagnostics(
         self,
@@ -2443,30 +1988,11 @@ class PostgresRepository:
         revision: int | None = None,
         limit: int = 100,
     ) -> list[dict[str, object]]:
-        with self.connect() as connection:
-            clauses: list[str] = []
-            params: list[object] = []
-            if pack_id:
-                clauses.append("pack_id = %s")
-                params.append(pack_id)
-            if revision is not None:
-                clauses.append("revision = %s")
-                params.append(revision)
-            where_clause = f"WHERE {' AND '.join(clauses)}" if clauses else ""
-            rows = connection.execute(
-                f"""
-                SELECT payload_json
-                FROM pack_compilation_attempts
-                {where_clause}
-                ORDER BY attempted_at DESC, attempt_id
-                LIMIT %s
-                """,
-                [*params, limit],
-            ).fetchall()
-            payloads = [json.loads(str(row["payload_json"])) for row in rows]
-            for payload in payloads:
-                validate_pack_diagnostic(payload)
-            return payloads
+        return self.pack_store.fetch_pack_diagnostics(
+            pack_id=pack_id,
+            revision=revision,
+            limit=limit,
+        )
 
     def fetch_compiled_pack_builds(
         self,
@@ -2475,30 +2001,11 @@ class PostgresRepository:
         revision: int | None = None,
         limit: int = 100,
     ) -> list[dict[str, object]]:
-        with self.connect() as connection:
-            clauses: list[str] = []
-            params: list[object] = []
-            if pack_id:
-                clauses.append("pack_id = %s")
-                params.append(pack_id)
-            if revision is not None:
-                clauses.append("revision = %s")
-                params.append(revision)
-            where_clause = f"WHERE {' AND '.join(clauses)}" if clauses else ""
-            rows = connection.execute(
-                f"""
-                SELECT payload_json
-                FROM compiled_pack_builds
-                {where_clause}
-                ORDER BY built_at DESC, build_id
-                LIMIT %s
-                """,
-                [*params, limit],
-            ).fetchall()
-            payloads = [json.loads(str(row["payload_json"])) for row in rows]
-            for payload in payloads:
-                validate_compiled_pack(payload)
-            return payloads
+        return self.pack_store.fetch_compiled_pack_builds(
+            pack_id=pack_id,
+            revision=revision,
+            limit=limit,
+        )
 
     def fetch_pack_materializations(
         self,
@@ -2508,33 +2015,12 @@ class PostgresRepository:
         purpose: str | None = None,
         limit: int = 100,
     ) -> list[dict[str, object]]:
-        with self.connect() as connection:
-            clauses: list[str] = []
-            params: list[object] = []
-            if pack_id:
-                clauses.append("pack_id = %s")
-                params.append(pack_id)
-            if revision is not None:
-                clauses.append("revision = %s")
-                params.append(revision)
-            if purpose:
-                clauses.append("purpose = %s")
-                params.append(purpose)
-            where_clause = f"WHERE {' AND '.join(clauses)}" if clauses else ""
-            rows = connection.execute(
-                f"""
-                SELECT payload_json
-                FROM pack_materializations
-                {where_clause}
-                ORDER BY created_at DESC, materialization_id
-                LIMIT %s
-                """,
-                [*params, limit],
-            ).fetchall()
-            payloads = [json.loads(str(row["payload_json"])) for row in rows]
-            for payload in payloads:
-                validate_pack_materialization(payload)
-            return payloads
+        return self.pack_store.fetch_pack_materializations(
+            pack_id=pack_id,
+            revision=revision,
+            purpose=purpose,
+            limit=limit,
+        )
 
     def enqueue_enrichment_for_pack(
         self,
@@ -2544,60 +2030,12 @@ class PostgresRepository:
         question_count: int = MIN_PACK_TOTAL_QUESTIONS,
         connection: psycopg.Connection | None = None,
     ) -> dict[str, object]:
-        if connection is None:
-            with self.connect() as owned_connection:
-                return self.enqueue_enrichment_for_pack(
-                    pack_id=pack_id,
-                    revision=revision,
-                    question_count=question_count,
-                    connection=owned_connection,
-                )
-
-        context = self._compute_pack_compilation_context(
-            connection,
+        return self.enrichment_store.enqueue_enrichment_for_pack(
             pack_id=pack_id,
             revision=revision,
-            question_count_requested=max(question_count, MIN_PACK_TOTAL_QUESTIONS),
-        )
-        if context["compilable"]:
-            return {
-                "enqueued": False,
-                "reason": "pack_compilable",
-                "pack_id": pack_id,
-                "revision": int(context["revision"]),
-            }
-
-        targets = [
-            {
-                "resource_type": EnrichmentTargetResourceType.CANONICAL_TAXON,
-                "resource_id": str(item.canonical_taxon_id),
-                "target_attribute": "similar_taxon_ids",
-            }
-            for item in context["blocking_taxa"]
-        ]
-        if not targets:
-            targets = [
-                {
-                    "resource_type": EnrichmentTargetResourceType.PACK,
-                    "resource_id": pack_id,
-                    "target_attribute": "playable_availability",
-                }
-            ]
-
-        request_payload = self.create_or_merge_enrichment_request(
-            pack_id=pack_id,
-            revision=int(context["revision"]),
-            reason_code=str(context["reason_code"]),
-            targets=targets,
+            question_count=question_count,
             connection=connection,
         )
-        return {
-            "enqueued": True,
-            "pack_id": pack_id,
-            "revision": int(context["revision"]),
-            "compilation_reason_code": str(context["reason_code"]),
-            "request": request_payload,
-        }
 
     def create_or_merge_enrichment_request(
         self,
@@ -2608,140 +2046,13 @@ class PostgresRepository:
         targets: Sequence[dict[str, object]],
         connection: psycopg.Connection | None = None,
     ) -> dict[str, object]:
-        if connection is None:
-            with self.connect() as owned_connection:
-                return self.create_or_merge_enrichment_request(
-                    pack_id=pack_id,
-                    revision=revision,
-                    reason_code=reason_code,
-                    targets=targets,
-                    connection=owned_connection,
-                )
-
-        reason = EnrichmentRequestReasonCode(reason_code)
-        normalized_targets = self._normalize_enrichment_targets(targets)
-        if not normalized_targets:
-            raise ValueError("targets must contain at least one item")
-
-        existing_requests = connection.execute(
-            """
-            SELECT enrichment_request_id
-            FROM enrichment_requests
-            WHERE pack_id = %s
-              AND revision = %s
-              AND reason_code = %s
-              AND request_status IN ('pending', 'in_progress')
-            ORDER BY created_at DESC, enrichment_request_id
-            """,
-            (pack_id, revision, reason),
-        ).fetchall()
-        requested_signature = tuple(normalized_targets)
-        for row in existing_requests:
-            enrichment_request_id = str(row["enrichment_request_id"])
-            current_signature = self._fetch_enrichment_target_signature(
-                connection,
-                enrichment_request_id=enrichment_request_id,
-            )
-            if current_signature == requested_signature:
-                return {
-                    "merged": True,
-                    "request": self.fetch_enrichment_requests(
-                        enrichment_request_id=enrichment_request_id,
-                        limit=1,
-                        connection=connection,
-                    )[0],
-                    "targets": self.fetch_enrichment_request_targets(
-                        enrichment_request_id=enrichment_request_id,
-                        connection=connection,
-                    ),
-                }
-
-        created_at = datetime.now(UTC)
-        request = EnrichmentRequest(
-            enrichment_request_id=f"enrreq:{pack_id}:{revision}:{uuid4().hex[:8]}",
+        return self.enrichment_store.create_or_merge_enrichment_request(
             pack_id=pack_id,
             revision=revision,
-            reason_code=reason,
-            request_status=EnrichmentRequestStatus.PENDING,
-            created_at=created_at,
-            completed_at=None,
-            execution_attempt_count=0,
+            reason_code=reason_code,
+            targets=targets,
+            connection=connection,
         )
-        connection.execute(
-            """
-            INSERT INTO enrichment_requests (
-                enrichment_request_id,
-                pack_id,
-                revision,
-                reason_code,
-                request_status,
-                created_at,
-                completed_at,
-                execution_attempt_count
-            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-            """,
-            (
-                request.enrichment_request_id,
-                request.pack_id,
-                request.revision,
-                request.reason_code,
-                request.request_status,
-                request.created_at.isoformat(),
-                None,
-                request.execution_attempt_count,
-            ),
-        )
-        targets_payload: list[EnrichmentRequestTarget] = []
-        for resource_type, resource_id, target_attribute in normalized_targets:
-            targets_payload.append(
-                EnrichmentRequestTarget(
-                    enrichment_request_target_id=f"enrtgt:{uuid4().hex[:12]}",
-                    enrichment_request_id=request.enrichment_request_id,
-                    resource_type=EnrichmentTargetResourceType(resource_type),
-                    resource_id=resource_id,
-                    target_attribute=target_attribute,
-                    created_at=created_at,
-                )
-            )
-
-        _executemany(
-            connection,
-            """
-            INSERT INTO enrichment_request_targets (
-                enrichment_request_target_id,
-                enrichment_request_id,
-                resource_type,
-                resource_id,
-                target_attribute,
-                created_at
-            ) VALUES (%s, %s, %s, %s, %s, %s)
-            """,
-            [
-                (
-                    target.enrichment_request_target_id,
-                    target.enrichment_request_id,
-                    target.resource_type,
-                    target.resource_id,
-                    target.target_attribute,
-                    target.created_at.isoformat(),
-                )
-                for target in targets_payload
-            ],
-        )
-        return {
-            "merged": False,
-            "request": {
-                "enrichment_request_id": request.enrichment_request_id,
-                "pack_id": request.pack_id,
-                "revision": request.revision,
-                "reason_code": str(request.reason_code),
-                "request_status": str(request.request_status),
-                "created_at": request.created_at.isoformat(),
-                "completed_at": None,
-                "execution_attempt_count": request.execution_attempt_count,
-            },
-            "targets": [item.model_dump(mode="json") for item in targets_payload],
-        }
 
     def fetch_enrichment_requests(
         self,
@@ -2753,65 +2064,14 @@ class PostgresRepository:
         limit: int = 100,
         connection: psycopg.Connection | None = None,
     ) -> list[dict[str, object]]:
-        if connection is None:
-            with self.connect() as owned_connection:
-                return self.fetch_enrichment_requests(
-                    enrichment_request_id=enrichment_request_id,
-                    request_status=request_status,
-                    pack_id=pack_id,
-                    revision=revision,
-                    limit=limit,
-                    connection=owned_connection,
-                )
-
-        clauses: list[str] = []
-        params: list[object] = []
-        if enrichment_request_id:
-            clauses.append("enrichment_request_id = %s")
-            params.append(enrichment_request_id)
-        if request_status:
-            clauses.append("request_status = %s")
-            params.append(request_status)
-        if pack_id:
-            clauses.append("pack_id = %s")
-            params.append(pack_id)
-        if revision is not None:
-            clauses.append("revision = %s")
-            params.append(revision)
-        where_clause = f"WHERE {' AND '.join(clauses)}" if clauses else ""
-        rows = connection.execute(
-            f"""
-            SELECT
-                enrichment_request_id,
-                pack_id,
-                revision,
-                reason_code,
-                request_status,
-                created_at,
-                completed_at,
-                execution_attempt_count
-            FROM enrichment_requests
-            {where_clause}
-            ORDER BY created_at DESC, enrichment_request_id
-            LIMIT %s
-            """,
-            [*params, limit],
-        ).fetchall()
-        return [
-            {
-                "enrichment_request_id": str(row["enrichment_request_id"]),
-                "pack_id": str(row["pack_id"]),
-                "revision": int(row["revision"]),
-                "reason_code": str(row["reason_code"]),
-                "request_status": str(row["request_status"]),
-                "created_at": row["created_at"].isoformat(),
-                "completed_at": row["completed_at"].isoformat()
-                if row["completed_at"] is not None
-                else None,
-                "execution_attempt_count": int(row["execution_attempt_count"]),
-            }
-            for row in rows
-        ]
+        return self.enrichment_store.fetch_enrichment_requests(
+            enrichment_request_id=enrichment_request_id,
+            request_status=request_status,
+            pack_id=pack_id,
+            revision=revision,
+            limit=limit,
+            connection=connection,
+        )
 
     def fetch_enrichment_request_targets(
         self,
@@ -2819,39 +2079,10 @@ class PostgresRepository:
         enrichment_request_id: str,
         connection: psycopg.Connection | None = None,
     ) -> list[dict[str, object]]:
-        if connection is None:
-            with self.connect() as owned_connection:
-                return self.fetch_enrichment_request_targets(
-                    enrichment_request_id=enrichment_request_id,
-                    connection=owned_connection,
-                )
-
-        rows = connection.execute(
-            """
-            SELECT
-                enrichment_request_target_id,
-                enrichment_request_id,
-                resource_type,
-                resource_id,
-                target_attribute,
-                created_at
-            FROM enrichment_request_targets
-            WHERE enrichment_request_id = %s
-            ORDER BY resource_type, resource_id, target_attribute, enrichment_request_target_id
-            """,
-            (enrichment_request_id,),
-        ).fetchall()
-        return [
-            {
-                "enrichment_request_target_id": str(row["enrichment_request_target_id"]),
-                "enrichment_request_id": str(row["enrichment_request_id"]),
-                "resource_type": str(row["resource_type"]),
-                "resource_id": str(row["resource_id"]),
-                "target_attribute": str(row["target_attribute"]),
-                "created_at": row["created_at"].isoformat(),
-            }
-            for row in rows
-        ]
+        return self.enrichment_store.fetch_enrichment_request_targets(
+            enrichment_request_id=enrichment_request_id,
+            connection=connection,
+        )
 
     def fetch_enrichment_executions(
         self,
@@ -2860,47 +2091,11 @@ class PostgresRepository:
         limit: int = 100,
         connection: psycopg.Connection | None = None,
     ) -> list[dict[str, object]]:
-        if connection is None:
-            with self.connect() as owned_connection:
-                return self.fetch_enrichment_executions(
-                    enrichment_request_id=enrichment_request_id,
-                    limit=limit,
-                    connection=owned_connection,
-                )
-
-        clauses: list[str] = []
-        params: list[object] = []
-        if enrichment_request_id:
-            clauses.append("enrichment_request_id = %s")
-            params.append(enrichment_request_id)
-        where_clause = f"WHERE {' AND '.join(clauses)}" if clauses else ""
-        rows = connection.execute(
-            f"""
-            SELECT
-                enrichment_execution_id,
-                enrichment_request_id,
-                execution_status,
-                executed_at,
-                execution_context_json,
-                error_info
-            FROM enrichment_executions
-            {where_clause}
-            ORDER BY executed_at DESC, enrichment_execution_id
-            LIMIT %s
-            """,
-            [*params, limit],
-        ).fetchall()
-        return [
-            {
-                "enrichment_execution_id": str(row["enrichment_execution_id"]),
-                "enrichment_request_id": str(row["enrichment_request_id"]),
-                "execution_status": str(row["execution_status"]),
-                "executed_at": row["executed_at"].isoformat(),
-                "execution_context": json.loads(str(row["execution_context_json"])),
-                "error_info": row["error_info"],
-            }
-            for row in rows
-        ]
+        return self.enrichment_store.fetch_enrichment_executions(
+            enrichment_request_id=enrichment_request_id,
+            limit=limit,
+            connection=connection,
+        )
 
     def record_enrichment_execution(
         self,
@@ -2912,154 +2107,13 @@ class PostgresRepository:
         trigger_recompile: bool = False,
         connection: psycopg.Connection | None = None,
     ) -> dict[str, object]:
-        if connection is None:
-            with self.connect() as owned_connection:
-                return self.record_enrichment_execution(
-                    enrichment_request_id=enrichment_request_id,
-                    execution_status=execution_status,
-                    execution_context=execution_context,
-                    error_info=error_info,
-                    trigger_recompile=trigger_recompile,
-                    connection=owned_connection,
-                )
-
-        request_row = connection.execute(
-            """
-            SELECT pack_id, revision
-            FROM enrichment_requests
-            WHERE enrichment_request_id = %s
-            """,
-            (enrichment_request_id,),
-        ).fetchone()
-        if request_row is None:
-            raise ValueError(f"Unknown enrichment_request_id: {enrichment_request_id}")
-
-        status = EnrichmentExecutionStatus(execution_status)
-        executed_at = datetime.now(UTC)
-        execution = EnrichmentExecution(
-            enrichment_execution_id=f"enrexec:{enrichment_request_id}:{uuid4().hex[:8]}",
+        return self.enrichment_store.record_enrichment_execution(
             enrichment_request_id=enrichment_request_id,
-            execution_status=status,
-            executed_at=executed_at,
-            execution_context=execution_context or {},
+            execution_status=execution_status,
+            execution_context=execution_context,
             error_info=error_info,
-        )
-        connection.execute(
-            """
-            INSERT INTO enrichment_executions (
-                enrichment_execution_id,
-                enrichment_request_id,
-                execution_status,
-                executed_at,
-                execution_context_json,
-                error_info
-            ) VALUES (%s, %s, %s, %s, %s, %s)
-            """,
-            (
-                execution.enrichment_execution_id,
-                execution.enrichment_request_id,
-                execution.execution_status,
-                execution.executed_at.isoformat(),
-                _json(execution.execution_context),
-                execution.error_info,
-            ),
-        )
-
-        next_status = (
-            EnrichmentRequestStatus.COMPLETED
-            if status in (EnrichmentExecutionStatus.SUCCESS, EnrichmentExecutionStatus.PARTIAL)
-            else EnrichmentRequestStatus.FAILED
-        )
-        completed_at = executed_at if next_status == EnrichmentRequestStatus.COMPLETED else None
-        connection.execute(
-            """
-            UPDATE enrichment_requests
-            SET request_status = %s,
-                completed_at = %s,
-                execution_attempt_count = execution_attempt_count + 1
-            WHERE enrichment_request_id = %s
-            """,
-            (
-                next_status,
-                completed_at.isoformat() if completed_at else None,
-                enrichment_request_id,
-            ),
-        )
-
-        recompilation_result: dict[str, object] | None = None
-        if trigger_recompile and status in (
-            EnrichmentExecutionStatus.SUCCESS,
-            EnrichmentExecutionStatus.PARTIAL,
-        ):
-            pack_id = str(request_row["pack_id"])
-            revision = int(request_row["revision"])
-            diagnostic = self.diagnose_pack(
-                pack_id=pack_id,
-                revision=revision,
-                connection=connection,
-            )
-            recompilation_result = {
-                "attempted": True,
-                "pack_id": pack_id,
-                "revision": revision,
-                "diagnostic_reason_code": diagnostic["reason_code"],
-                "compiled_build_id": None,
-            }
-            if diagnostic["compilable"]:
-                compiled = self.compile_pack(
-                    pack_id=pack_id,
-                    revision=revision,
-                    question_count=MIN_PACK_TOTAL_QUESTIONS,
-                    connection=connection,
-                )
-                recompilation_result["compiled_build_id"] = compiled["build_id"]
-
-        return {
-            "enrichment_execution_id": execution.enrichment_execution_id,
-            "enrichment_request_id": execution.enrichment_request_id,
-            "execution_status": str(execution.execution_status),
-            "executed_at": execution.executed_at.isoformat(),
-            "request_status": str(next_status),
-            "trigger_recompile": trigger_recompile,
-            "recompilation": recompilation_result,
-        }
-
-    def _normalize_enrichment_targets(
-        self,
-        targets: Sequence[dict[str, object]],
-    ) -> list[tuple[str, str, str]]:
-        normalized: set[tuple[str, str, str]] = set()
-        for target in targets:
-            resource_type = str(target.get("resource_type") or "").strip()
-            resource_id = str(target.get("resource_id") or "").strip()
-            target_attribute = str(target.get("target_attribute") or "").strip()
-            if not resource_type or not resource_id or not target_attribute:
-                continue
-            normalized.add((resource_type, resource_id, target_attribute))
-        return sorted(normalized)
-
-    def _fetch_enrichment_target_signature(
-        self,
-        connection: psycopg.Connection,
-        *,
-        enrichment_request_id: str,
-    ) -> tuple[tuple[str, str, str], ...]:
-        rows = connection.execute(
-            """
-            SELECT resource_type, resource_id, target_attribute
-            FROM enrichment_request_targets
-            WHERE enrichment_request_id = %s
-            ORDER BY resource_type, resource_id, target_attribute
-            """,
-            (enrichment_request_id,),
-        ).fetchall()
-        return tuple(
-            (
-                str(row["resource_type"]),
-                str(row["resource_id"]),
-                str(row["target_attribute"]),
-            )
-            for row in rows
+            trigger_recompile=trigger_recompile,
+            connection=connection,
         )
 
     def ingest_confusion_batch(
@@ -3069,91 +2123,11 @@ class PostgresRepository:
         events: Sequence[dict[str, object]],
         connection: psycopg.Connection | None = None,
     ) -> dict[str, object]:
-        if connection is None:
-            with self.connect() as owned_connection:
-                return self.ingest_confusion_batch(
-                    batch_id=batch_id,
-                    events=events,
-                    connection=owned_connection,
-                )
-
-        if connection.execute(
-            "SELECT 1 FROM confusion_batches WHERE batch_id = %s",
-            (batch_id,),
-        ).fetchone() is not None:
-            return {
-                "ingested": False,
-                "reason": "duplicate_batch",
-                "batch_id": batch_id,
-            }
-
-        created_at = datetime.now(UTC)
-        event_inputs = [ConfusionEventInput(**item) for item in events]
-        batch = ConfusionBatch(
+        return self.confusion_store.ingest_confusion_batch(
             batch_id=batch_id,
-            created_at=created_at,
-            event_count=len(event_inputs),
+            events=events,
+            connection=connection,
         )
-        connection.execute(
-            """
-            INSERT INTO confusion_batches (
-                batch_id,
-                created_at,
-                event_count
-            ) VALUES (%s, %s, %s)
-            """,
-            (
-                batch.batch_id,
-                batch.created_at.isoformat(),
-                batch.event_count,
-            ),
-        )
-
-        event_payload: list[ConfusionEvent] = []
-        for index, event in enumerate(event_inputs, start=1):
-            event_payload.append(
-                ConfusionEvent(
-                    confusion_event_id=f"{batch.batch_id}:{index}",
-                    batch_id=batch.batch_id,
-                    taxon_confused_for_id=event.taxon_confused_for_id,
-                    taxon_correct_id=event.taxon_correct_id,
-                    occurred_at=event.occurred_at,
-                    created_at=created_at,
-                )
-            )
-
-        if event_payload:
-            _executemany(
-                connection,
-                """
-                INSERT INTO confusion_events (
-                    confusion_event_id,
-                    batch_id,
-                    taxon_confused_for_id,
-                    taxon_correct_id,
-                    occurred_at,
-                    created_at
-                ) VALUES (%s, %s, %s, %s, %s, %s)
-                """,
-                [
-                    (
-                        item.confusion_event_id,
-                        item.batch_id,
-                        item.taxon_confused_for_id,
-                        item.taxon_correct_id,
-                        item.occurred_at.isoformat(),
-                        item.created_at.isoformat(),
-                    )
-                    for item in event_payload
-                ],
-            )
-
-        return {
-            "ingested": True,
-            "batch_id": batch.batch_id,
-            "created_at": batch.created_at.isoformat(),
-            "event_count": batch.event_count,
-        }
 
     def fetch_confusion_events(
         self,
@@ -3162,89 +2136,20 @@ class PostgresRepository:
         limit: int = 100,
         connection: psycopg.Connection | None = None,
     ) -> list[dict[str, object]]:
-        if connection is None:
-            with self.connect() as owned_connection:
-                return self.fetch_confusion_events(
-                    batch_id=batch_id,
-                    limit=limit,
-                    connection=owned_connection,
-                )
-
-        clauses: list[str] = []
-        params: list[object] = []
-        if batch_id:
-            clauses.append("batch_id = %s")
-            params.append(batch_id)
-        where_clause = f"WHERE {' AND '.join(clauses)}" if clauses else ""
-        rows = connection.execute(
-            f"""
-            SELECT
-                confusion_event_id,
-                batch_id,
-                taxon_confused_for_id,
-                taxon_correct_id,
-                occurred_at,
-                created_at
-            FROM confusion_events
-            {where_clause}
-            ORDER BY occurred_at DESC, confusion_event_id
-            LIMIT %s
-            """,
-            [*params, limit],
-        ).fetchall()
-        return [
-            {
-                "confusion_event_id": str(row["confusion_event_id"]),
-                "batch_id": str(row["batch_id"]),
-                "taxon_confused_for_id": str(row["taxon_confused_for_id"]),
-                "taxon_correct_id": str(row["taxon_correct_id"]),
-                "occurred_at": row["occurred_at"].isoformat(),
-                "created_at": row["created_at"].isoformat(),
-            }
-            for row in rows
-        ]
+        return self.confusion_store.fetch_confusion_events(
+            batch_id=batch_id,
+            limit=limit,
+            connection=connection,
+        )
 
     def recompute_confusion_aggregates_global(
         self,
         *,
         connection: psycopg.Connection | None = None,
     ) -> dict[str, object]:
-        if connection is None:
-            with self.connect() as owned_connection:
-                return self.recompute_confusion_aggregates_global(connection=owned_connection)
-
-        aggregated_at = datetime.now(UTC)
-        connection.execute("DELETE FROM confusion_aggregates_global")
-        connection.execute(
-            """
-            INSERT INTO confusion_aggregates_global (
-                taxon_confused_for_id,
-                taxon_correct_id,
-                event_count,
-                latest_occurred_at,
-                aggregated_at
-            )
-            SELECT
-                taxon_confused_for_id,
-                taxon_correct_id,
-                COUNT(*) AS event_count,
-                MAX(occurred_at) AS latest_occurred_at,
-                %s
-            FROM confusion_events
-            GROUP BY taxon_confused_for_id, taxon_correct_id
-            """,
-            (aggregated_at.isoformat(),),
+        return self.confusion_store.recompute_confusion_aggregates_global(
+            connection=connection,
         )
-        pair_count = int(
-            connection.execute(
-                "SELECT COUNT(*) AS count FROM confusion_aggregates_global"
-            ).fetchone()["count"]
-        )
-        return {
-            "recomputed": True,
-            "pair_count": pair_count,
-            "aggregated_at": aggregated_at.isoformat(),
-        }
 
     def fetch_confusion_aggregates_global(
         self,
@@ -3253,978 +2158,24 @@ class PostgresRepository:
         limit: int = 100,
         connection: psycopg.Connection | None = None,
     ) -> list[dict[str, object]]:
-        if connection is None:
-            with self.connect() as owned_connection:
-                return self.fetch_confusion_aggregates_global(
-                    taxon_confused_for_id=taxon_confused_for_id,
-                    limit=limit,
-                    connection=owned_connection,
-                )
-
-        clauses: list[str] = []
-        params: list[object] = []
-        if taxon_confused_for_id:
-            clauses.append("taxon_confused_for_id = %s")
-            params.append(taxon_confused_for_id)
-        where_clause = f"WHERE {' AND '.join(clauses)}" if clauses else ""
-        rows = connection.execute(
-            f"""
-            SELECT
-                taxon_confused_for_id,
-                taxon_correct_id,
-                event_count,
-                latest_occurred_at,
-                aggregated_at
-            FROM confusion_aggregates_global
-            {where_clause}
-            ORDER BY event_count DESC, taxon_confused_for_id, taxon_correct_id
-            LIMIT %s
-            """,
-            [*params, limit],
-        ).fetchall()
-        payload: list[dict[str, object]] = []
-        for row in rows:
-            aggregate = ConfusionAggregateGlobal(
-                taxon_confused_for_id=str(row["taxon_confused_for_id"]),
-                taxon_correct_id=str(row["taxon_correct_id"]),
-                event_count=int(row["event_count"]),
-                latest_occurred_at=row["latest_occurred_at"],
-                aggregated_at=row["aggregated_at"],
-            )
-            payload.append(aggregate.model_dump(mode="json"))
-        return payload
+        return self.confusion_store.fetch_confusion_aggregates_global(
+            taxon_confused_for_id=taxon_confused_for_id,
+            limit=limit,
+            connection=connection,
+        )
 
     def fetch_enrichment_queue_metrics(self) -> dict[str, object]:
-        with self.connect() as connection:
-            status_rows = connection.execute(
-                """
-                SELECT request_status, COUNT(*) AS count
-                FROM enrichment_requests
-                GROUP BY request_status
-                """
-            ).fetchall()
-            status_counts: dict[str, int] = {
-                "pending": 0,
-                "in_progress": 0,
-                "completed": 0,
-                "failed": 0,
-            }
-            for row in status_rows:
-                status_counts[str(row["request_status"])] = int(row["count"])
-
-            totals_row = connection.execute(
-                """
-                SELECT
-                    COUNT(*) AS requests_total,
-                    COALESCE(SUM(execution_attempt_count), 0) AS attempts_total
-                FROM enrichment_requests
-                """
-            ).fetchone()
-            executions_total = int(
-                connection.execute(
-                    "SELECT COUNT(*) AS count FROM enrichment_executions"
-                ).fetchone()["count"]
-            )
-            oldest_pending_row = connection.execute(
-                """
-                SELECT created_at
-                FROM enrichment_requests
-                WHERE request_status = 'pending'
-                ORDER BY created_at ASC
-                LIMIT 1
-                """
-            ).fetchone()
-            oldest_pending_age_hours = 0.0
-            if oldest_pending_row is not None:
-                created_at = oldest_pending_row["created_at"]
-                oldest_pending_age_hours = round(
-                    (datetime.now(UTC) - created_at).total_seconds() / 3600.0,
-                    2,
-                )
-
-            return {
-                "requests_total": int(totals_row["requests_total"]),
-                "executions_total": executions_total,
-                "attempts_total": int(totals_row["attempts_total"]),
-                "status_counts": status_counts,
-                "oldest_pending_age_hours": oldest_pending_age_hours,
-            }
+        return self.enrichment_store.fetch_enrichment_queue_metrics()
 
     def fetch_confusion_metrics(self, *, top_pair_limit: int = 5) -> dict[str, object]:
-        with self.connect() as connection:
-            counts_row = connection.execute(
-                """
-                SELECT
-                    (SELECT COUNT(*) FROM confusion_batches) AS batches_total,
-                    (SELECT COUNT(*) FROM confusion_events) AS events_total,
-                    (SELECT COUNT(*) FROM confusion_aggregates_global) AS aggregates_total
-                """
-            ).fetchone()
-            freshest_row = connection.execute(
-                "SELECT MAX(aggregated_at) AS aggregated_at FROM confusion_aggregates_global"
-            ).fetchone()
-            top_rows = connection.execute(
-                """
-                SELECT taxon_confused_for_id, taxon_correct_id, event_count
-                FROM confusion_aggregates_global
-                ORDER BY event_count DESC, taxon_confused_for_id, taxon_correct_id
-                LIMIT %s
-                """,
-                (top_pair_limit,),
-            ).fetchall()
-
-            return {
-                "batches_total": int(counts_row["batches_total"]),
-                "events_total": int(counts_row["events_total"]),
-                "aggregates_total": int(counts_row["aggregates_total"]),
-                "last_aggregated_at": (
-                    freshest_row["aggregated_at"].isoformat()
-                    if freshest_row["aggregated_at"] is not None
-                    else None
-                ),
-                "top_pairs": [
-                    {
-                        "taxon_confused_for_id": str(row["taxon_confused_for_id"]),
-                        "taxon_correct_id": str(row["taxon_correct_id"]),
-                        "event_count": int(row["event_count"]),
-                    }
-                    for row in top_rows
-                ],
-            }
-
-    def _generate_pack_id(self) -> str:
-        return f"pack:{datetime.now(UTC).strftime('%Y%m%dT%H%M%SZ')}:{uuid4().hex[:8]}"
-
-    def _insert_pack_revision(
-        self,
-        connection: psycopg.Connection,
-        *,
-        pack_id: str,
-        revision: int,
-        parameters: PackRevisionParameters,
-        created_at: datetime,
-    ) -> None:
-        connection.execute(
-            """
-            INSERT INTO pack_revisions (
-                pack_id,
-                revision,
-                canonical_taxon_ids_json,
-                difficulty_policy,
-                country_code,
-                location_bbox,
-                location_point,
-                location_radius_meters,
-                observed_from,
-                observed_to,
-                owner_id,
-                org_id,
-                visibility,
-                intended_use,
-                created_at
-            ) VALUES (
-                %s, %s, %s, %s, %s,
-                CASE
-                    WHEN %s::DOUBLE PRECISION IS NOT NULL
-                        AND %s::DOUBLE PRECISION IS NOT NULL
-                        AND %s::DOUBLE PRECISION IS NOT NULL
-                        AND %s::DOUBLE PRECISION IS NOT NULL
-                    THEN ST_MakeEnvelope(
-                        %s::DOUBLE PRECISION,
-                        %s::DOUBLE PRECISION,
-                        %s::DOUBLE PRECISION,
-                        %s::DOUBLE PRECISION,
-                        4326
-                    )
-                    ELSE NULL
-                END,
-                CASE
-                    WHEN %s::DOUBLE PRECISION IS NOT NULL AND %s::DOUBLE PRECISION IS NOT NULL
-                    THEN ST_SetSRID(
-                        ST_MakePoint(%s::DOUBLE PRECISION, %s::DOUBLE PRECISION),
-                        4326
-                    )
-                    ELSE NULL
-                END,
-                %s,
-                %s,
-                %s,
-                %s,
-                %s,
-                %s,
-                %s,
-                %s
-            )
-            """,
-            (
-                pack_id,
-                revision,
-                _json(parameters.canonical_taxon_ids),
-                parameters.difficulty_policy,
-                parameters.country_code,
-                parameters.location_bbox.min_longitude if parameters.location_bbox else None,
-                parameters.location_bbox.min_latitude if parameters.location_bbox else None,
-                parameters.location_bbox.max_longitude if parameters.location_bbox else None,
-                parameters.location_bbox.max_latitude if parameters.location_bbox else None,
-                parameters.location_bbox.min_longitude if parameters.location_bbox else None,
-                parameters.location_bbox.min_latitude if parameters.location_bbox else None,
-                parameters.location_bbox.max_longitude if parameters.location_bbox else None,
-                parameters.location_bbox.max_latitude if parameters.location_bbox else None,
-                parameters.location_point.longitude if parameters.location_point else None,
-                parameters.location_point.latitude if parameters.location_point else None,
-                parameters.location_point.longitude if parameters.location_point else None,
-                parameters.location_point.latitude if parameters.location_point else None,
-                parameters.location_radius_meters,
-                parameters.observed_from.isoformat() if parameters.observed_from else None,
-                parameters.observed_to.isoformat() if parameters.observed_to else None,
-                parameters.owner_id,
-                parameters.org_id,
-                parameters.visibility,
-                parameters.intended_use,
-                created_at.isoformat(),
-            ),
-        )
-
-    def _fetch_pack_revision_payload(
-        self,
-        connection: psycopg.Connection,
-        *,
-        pack_id: str,
-        revision: int | None = None,
-    ) -> dict[str, object]:
-        if revision is None:
-            row = connection.execute(
-                """
-                SELECT latest_revision
-                FROM pack_specs
-                WHERE pack_id = %s
-                """,
-                (pack_id,),
-            ).fetchone()
-            if row is None:
-                raise ValueError(f"Unknown pack_id: {pack_id}")
-            revision = int(row["latest_revision"])
-
-        row = connection.execute(
-            """
-            SELECT
-                ps.pack_id,
-                ps.latest_revision,
-                ps.created_at AS pack_created_at,
-                ps.updated_at AS pack_updated_at,
-                pr.revision,
-                pr.canonical_taxon_ids_json,
-                pr.difficulty_policy,
-                pr.country_code,
-                pr.observed_from,
-                pr.observed_to,
-                pr.owner_id,
-                pr.org_id,
-                pr.visibility,
-                pr.intended_use,
-                pr.created_at AS revision_created_at,
-                CASE
-                    WHEN pr.location_point IS NULL THEN NULL
-                    ELSE ST_X(pr.location_point)
-                END AS point_longitude,
-                CASE
-                    WHEN pr.location_point IS NULL THEN NULL
-                    ELSE ST_Y(pr.location_point)
-                END AS point_latitude,
-                CASE
-                    WHEN pr.location_bbox IS NULL THEN NULL
-                    ELSE ST_XMin(pr.location_bbox)
-                END AS bbox_min_longitude,
-                CASE
-                    WHEN pr.location_bbox IS NULL THEN NULL
-                    ELSE ST_YMin(pr.location_bbox)
-                END AS bbox_min_latitude,
-                CASE
-                    WHEN pr.location_bbox IS NULL THEN NULL
-                    ELSE ST_XMax(pr.location_bbox)
-                END AS bbox_max_longitude,
-                CASE
-                    WHEN pr.location_bbox IS NULL THEN NULL
-                    ELSE ST_YMax(pr.location_bbox)
-                END AS bbox_max_latitude,
-                pr.location_radius_meters
-            FROM pack_revisions pr
-            JOIN pack_specs ps ON ps.pack_id = pr.pack_id
-            WHERE pr.pack_id = %s
-              AND pr.revision = %s
-            """,
-            (pack_id, revision),
-        ).fetchone()
-        if row is None:
-            raise ValueError(f"Unknown pack revision: {pack_id}@{revision}")
-        return self._pack_spec_payload_from_row(row)
-
-    def _pack_spec_payload_from_row(self, row: dict[str, object]) -> dict[str, object]:
-        observed_from = row["observed_from"]
-        observed_to = row["observed_to"]
-        parameters = PackRevisionParameters(
-            canonical_taxon_ids=json.loads(str(row["canonical_taxon_ids_json"])),
-            difficulty_policy=str(row["difficulty_policy"]),
-            country_code=row["country_code"],
-            location_bbox=(
-                {
-                    "min_longitude": float(row["bbox_min_longitude"]),
-                    "min_latitude": float(row["bbox_min_latitude"]),
-                    "max_longitude": float(row["bbox_max_longitude"]),
-                    "max_latitude": float(row["bbox_max_latitude"]),
-                }
-                if row["bbox_min_longitude"] is not None
-                and row["bbox_min_latitude"] is not None
-                and row["bbox_max_longitude"] is not None
-                and row["bbox_max_latitude"] is not None
-                else None
-            ),
-            location_point=(
-                {
-                    "longitude": float(row["point_longitude"]),
-                    "latitude": float(row["point_latitude"]),
-                }
-                if row["point_longitude"] is not None and row["point_latitude"] is not None
-                else None
-            ),
-            location_radius_meters=(
-                float(row["location_radius_meters"])
-                if row["location_radius_meters"] is not None
-                else None
-            ),
-            observed_from=observed_from,
-            observed_to=observed_to,
-            owner_id=row["owner_id"],
-            org_id=row["org_id"],
-            visibility=str(row["visibility"]),
-            intended_use=str(row["intended_use"]),
-        )
-        pack_spec = PackSpec(
-            pack_id=str(row["pack_id"]),
-            latest_revision=int(row["latest_revision"]),
-            created_at=row["pack_created_at"],
-            updated_at=row["pack_updated_at"],
-        )
-        pack_revision = PackRevision(
-            pack_id=pack_spec.pack_id,
-            revision=int(row["revision"]),
-            parameters=parameters,
-            created_at=row["revision_created_at"],
-        )
-        payload = {
-            "schema_version": SCHEMA_VERSION_LABEL,
-            "pack_spec_version": PACK_SPEC_VERSION,
-            "pack_id": pack_revision.pack_id,
-            "revision": pack_revision.revision,
-            "latest_revision": pack_spec.latest_revision,
-            "created_at": pack_revision.created_at.isoformat(),
-            "parameters": pack_revision.parameters.model_dump(mode="json"),
-        }
-        validate_pack_spec(payload)
-        return payload
-
-    def _fetch_playable_rows_for_pack(
-        self,
-        connection: psycopg.Connection,
-        *,
-        parameters: PackRevisionParameters,
-    ) -> list[dict[str, object]]:
-        where_clauses = ["canonical_taxon_id = ANY(%s)"]
-        query_params: list[object] = [parameters.canonical_taxon_ids]
-
-        if parameters.country_code:
-            where_clauses.append("country_code = %s")
-            query_params.append(parameters.country_code)
-        if parameters.observed_from:
-            where_clauses.append("observed_at >= %s")
-            query_params.append(parameters.observed_from.isoformat())
-        if parameters.observed_to:
-            where_clauses.append("observed_at <= %s")
-            query_params.append(parameters.observed_to.isoformat())
-        if parameters.location_bbox is not None:
-            where_clauses.append(
-                """
-                (
-                    (location_bbox IS NOT NULL AND ST_Intersects(
-                        location_bbox,
-                        ST_MakeEnvelope(%s, %s, %s, %s, 4326)
-                    ))
-                    OR
-                    (location_point IS NOT NULL AND ST_Intersects(
-                        location_point,
-                        ST_MakeEnvelope(%s, %s, %s, %s, 4326)
-                    ))
-                )
-                """
-            )
-            query_params.extend(
-                [
-                    parameters.location_bbox.min_longitude,
-                    parameters.location_bbox.min_latitude,
-                    parameters.location_bbox.max_longitude,
-                    parameters.location_bbox.max_latitude,
-                    parameters.location_bbox.min_longitude,
-                    parameters.location_bbox.min_latitude,
-                    parameters.location_bbox.max_longitude,
-                    parameters.location_bbox.max_latitude,
-                ]
-            )
-        if parameters.location_point is not None and parameters.location_radius_meters is not None:
-            where_clauses.append(
-                """
-                location_point IS NOT NULL
-                AND ST_DWithin(
-                    location_point::geography,
-                    ST_SetSRID(ST_MakePoint(%s, %s), 4326)::geography,
-                    %s
-                )
-                """
-            )
-            query_params.extend(
-                [
-                    parameters.location_point.longitude,
-                    parameters.location_point.latitude,
-                    parameters.location_radius_meters,
-                ]
-            )
-        where_sql = " AND ".join(where_clauses)
-        return [
-            self._normalize_playable_pack_row(dict(row))
-            for row in connection.execute(
-                f"""
-                SELECT
-                    playable_item_id,
-                    canonical_taxon_id,
-                    difficulty_level,
-                    media_role,
-                    confusion_relevance,
-                    similar_taxon_ids_json,
-                    run_id
-                FROM playable_corpus_v1
-                WHERE {where_sql}
-                ORDER BY canonical_taxon_id, playable_item_id
-                """,
-                query_params,
-            ).fetchall()
-        ]
-
-    def _fetch_latest_compiled_payload(
-        self,
-        connection: psycopg.Connection,
-        *,
-        pack_id: str,
-        revision: int,
-    ) -> dict[str, object] | None:
-        row = connection.execute(
-            """
-            SELECT payload_json
-            FROM compiled_pack_builds
-            WHERE pack_id = %s AND revision = %s
-            ORDER BY built_at DESC, build_id DESC
-            LIMIT 1
-            """,
-            (pack_id, revision),
-        ).fetchone()
-        if row is None:
-            return None
-        payload = json.loads(str(row["payload_json"]))
-        validate_compiled_pack(payload)
-        return payload
-
-    def _compute_pack_compilation_context(
-        self,
-        connection: psycopg.Connection,
-        *,
-        pack_id: str,
-        revision: int | None,
-        question_count_requested: int,
-    ) -> dict[str, object]:
-        revision_payload = self._fetch_pack_revision_payload(
-            connection,
-            pack_id=pack_id,
-            revision=revision,
-        )
-        revision_value = int(revision_payload["revision"])
-        parameters = PackRevisionParameters(**revision_payload["parameters"])
-        rows = self._fetch_playable_rows_for_pack(connection, parameters=parameters)
-        requested_taxa = list(parameters.canonical_taxon_ids)
-
-        items_per_taxon: dict[str, list[dict[str, object]]] = defaultdict(list)
-        for row in rows:
-            canonical_taxon_id = str(row["canonical_taxon_id"])
-            items_per_taxon[canonical_taxon_id].append(row)
-
-        for canonical_taxon_id in requested_taxa:
-            items_per_taxon.setdefault(canonical_taxon_id, [])
-
-        inat_similar_taxa_by_target = self._fetch_inat_similar_taxa_by_target(
-            connection,
-            canonical_taxon_ids=requested_taxa,
-        )
-
-        questions = self._build_compiled_questions(
-            items_per_taxon=items_per_taxon,
-            requested_taxa=requested_taxa,
-            difficulty_policy=str(parameters.difficulty_policy),
-            question_count_requested=question_count_requested,
-            inat_similar_taxa_by_target=inat_similar_taxa_by_target,
-        )
-
-        taxa_served = sum(
-            1
-            for canonical_taxon_id in requested_taxa
-            if items_per_taxon[canonical_taxon_id]
-        )
-        media_counts = [
-            len(items_per_taxon[canonical_taxon_id]) for canonical_taxon_id in requested_taxa
-        ]
-        min_media_count_per_taxon = min(media_counts) if media_counts else 0
-        total_playable_items = sum(media_counts)
-        questions_possible = len(questions)
-
-        thresholds = {
-            "min_taxa_served": MIN_PACK_TAXA_SERVED,
-            "min_media_per_taxon": MIN_PACK_MEDIA_PER_TAXON,
-            "min_total_questions": MIN_PACK_TOTAL_QUESTIONS,
-        }
-        measured = {
-            "requested_taxa_count": len(requested_taxa),
-            "taxa_served": taxa_served,
-            "min_media_count_per_taxon": min_media_count_per_taxon,
-            "total_playable_items": total_playable_items,
-            "questions_possible": questions_possible,
-        }
-
-        deficits: list[PackCompilationDeficit] = []
-        if taxa_served < thresholds["min_taxa_served"]:
-            deficits.append(
-                PackCompilationDeficit(
-                    code="min_taxa_served",
-                    current=taxa_served,
-                    required=thresholds["min_taxa_served"],
-                    missing=thresholds["min_taxa_served"] - taxa_served,
-                )
-            )
-        if min_media_count_per_taxon < thresholds["min_media_per_taxon"]:
-            deficits.append(
-                PackCompilationDeficit(
-                    code="min_media_per_taxon",
-                    current=min_media_count_per_taxon,
-                    required=thresholds["min_media_per_taxon"],
-                    missing=thresholds["min_media_per_taxon"] - min_media_count_per_taxon,
-                )
-            )
-        if questions_possible < thresholds["min_total_questions"]:
-            deficits.append(
-                PackCompilationDeficit(
-                    code="min_total_questions",
-                    current=questions_possible,
-                    required=thresholds["min_total_questions"],
-                    missing=thresholds["min_total_questions"] - questions_possible,
-                )
-            )
-
-        blocking_taxa = [
-            PackTaxonDeficit(
-                canonical_taxon_id=canonical_taxon_id,
-                media_count=len(items_per_taxon[canonical_taxon_id]),
-                missing_media_count=max(
-                    thresholds["min_media_per_taxon"] - len(items_per_taxon[canonical_taxon_id]),
-                    0,
-                ),
-            )
-            for canonical_taxon_id in requested_taxa
-            if len(items_per_taxon[canonical_taxon_id]) < thresholds["min_media_per_taxon"]
-        ]
-
-        reason_code = PackCompilationReasonCode.COMPILABLE
-        if total_playable_items == 0:
-            reason_code = PackCompilationReasonCode.NO_PLAYABLE_ITEMS
-        elif taxa_served < thresholds["min_taxa_served"]:
-            reason_code = PackCompilationReasonCode.INSUFFICIENT_TAXA_SERVED
-        elif min_media_count_per_taxon < thresholds["min_media_per_taxon"]:
-            reason_code = PackCompilationReasonCode.INSUFFICIENT_MEDIA_PER_TAXON
-        elif questions_possible < thresholds["min_total_questions"]:
-            reason_code = PackCompilationReasonCode.INSUFFICIENT_TOTAL_QUESTIONS
-
-        source_run_id = str(rows[0]["run_id"]) if rows else None
-        compilable = reason_code == PackCompilationReasonCode.COMPILABLE
-
-        return {
-            "pack_id": pack_id,
-            "revision": revision_value,
-            "thresholds": thresholds,
-            "measured": measured,
-            "deficits": deficits,
-            "blocking_taxa": blocking_taxa,
-            "reason_code": reason_code,
-            "compilable": compilable,
-            "source_run_id": source_run_id,
-            "questions": questions,
-        }
-
-    def _build_compiled_questions(
-        self,
-        *,
-        items_per_taxon: dict[str, list[dict[str, object]]],
-        requested_taxa: Sequence[str],
-        difficulty_policy: str,
-        question_count_requested: int,
-        inat_similar_taxa_by_target: dict[str, list[str]] | None = None,
-    ) -> list[CompiledPackQuestion]:
-        inat_similar_taxa_by_target = inat_similar_taxa_by_target or {}
-        sorted_taxon_ids = list(dict.fromkeys(requested_taxa))
-        for canonical_taxon_id in sorted_taxon_ids:
-            items_per_taxon[canonical_taxon_id].sort(
-                key=lambda row: self._distractor_item_sort_key(
-                    difficulty_policy=difficulty_policy,
-                    row=row,
-                )
-            )
-
-        target_rows: list[dict[str, object]] = []
-        for canonical_taxon_id in sorted_taxon_ids:
-            target_rows.extend(items_per_taxon[canonical_taxon_id])
-        target_rows.sort(
-            key=lambda row: self._pack_item_sort_key(
-                difficulty_policy=difficulty_policy,
-                canonical_taxon_id=str(row["canonical_taxon_id"]),
-                playable_item_id=str(row["playable_item_id"]),
-                difficulty_level=str(row["difficulty_level"]),
-            )
-        )
-
-        questions: list[CompiledPackQuestion] = []
-        for target_row in target_rows:
-            target_taxon = str(target_row["canonical_taxon_id"])
-            target_similar_taxon_ids = {
-                taxon_id
-                for taxon_id in self._normalize_similar_taxon_ids(target_row)
-                if taxon_id != target_taxon
-            }
-            target_similar_taxon_ids.update(
-                taxon_id
-                for taxon_id in inat_similar_taxa_by_target.get(target_taxon, [])
-                if taxon_id != target_taxon
-            )
-            distractor_candidates = [
-                items_per_taxon[canonical_taxon_id][0]
-                for canonical_taxon_id in sorted_taxon_ids
-                if canonical_taxon_id != target_taxon and items_per_taxon[canonical_taxon_id]
-            ]
-            prioritized_candidates = [
-                row
-                for row in distractor_candidates
-                if str(row["canonical_taxon_id"]) in target_similar_taxon_ids
-            ]
-            fallback_candidates = [
-                row
-                for row in distractor_candidates
-                if str(row["canonical_taxon_id"]) not in target_similar_taxon_ids
-            ]
-            prioritized_candidates.sort(
-                key=lambda row: self._distractor_item_sort_key(
-                    difficulty_policy=difficulty_policy,
-                    row=row,
-                )
-            )
-            fallback_candidates.sort(
-                key=lambda row: self._distractor_item_sort_key(
-                    difficulty_policy=difficulty_policy,
-                    row=row,
-                )
-            )
-
-            selected_distractors = prioritized_candidates[:3]
-            if len(selected_distractors) < 3:
-                selected_distractors.extend(
-                    fallback_candidates[: 3 - len(selected_distractors)]
-                )
-            if len(selected_distractors) < 3:
-                continue
-            questions.append(
-                CompiledPackQuestion(
-                    position=len(questions) + 1,
-                    target_playable_item_id=str(target_row["playable_item_id"]),
-                    target_canonical_taxon_id=target_taxon,
-                    distractor_playable_item_ids=[
-                        str(item["playable_item_id"]) for item in selected_distractors
-                    ],
-                    distractor_canonical_taxon_ids=[
-                        str(item["canonical_taxon_id"]) for item in selected_distractors
-                    ],
-                )
-            )
-            if len(questions) >= question_count_requested:
-                break
-        return questions
-
-    def _fetch_inat_similar_taxa_by_target(
-        self,
-        connection: psycopg.Connection,
-        *,
-        canonical_taxon_ids: Sequence[str],
-    ) -> dict[str, list[str]]:
-        unique_taxon_ids = list(dict.fromkeys(canonical_taxon_ids))
-        if not unique_taxon_ids:
-            return {}
-
-        rows = connection.execute(
-            """
-            SELECT
-                canonical_taxon_id,
-                external_source_mappings_json,
-                external_similarity_hints_json
-            FROM canonical_taxa
-            WHERE canonical_taxon_id = ANY(%s)
-            ORDER BY canonical_taxon_id
-            """,
-            (unique_taxon_ids,),
-        ).fetchall()
-
-        inat_external_id_to_canonical_taxon_id: dict[str, str] = {}
-        hints_by_canonical_taxon_id: dict[str, list[dict[str, object]]] = {}
-        for row in rows:
-            canonical_taxon_id = str(row["canonical_taxon_id"])
-            mappings = self._parse_json_list_of_dicts(row["external_source_mappings_json"])
-            for mapping in mappings:
-                source_name = str(mapping.get("source_name") or "")
-                external_id = str(mapping.get("external_id") or "").strip()
-                if source_name == "inaturalist" and external_id:
-                    inat_external_id_to_canonical_taxon_id[external_id] = canonical_taxon_id
-
-            hints_by_canonical_taxon_id[canonical_taxon_id] = self._parse_json_list_of_dicts(
-                row["external_similarity_hints_json"]
-            )
-
-        similar_taxa_by_target: dict[str, list[str]] = {}
-        for target_taxon_id in unique_taxon_ids:
-            seen: set[str] = set()
-            resolved_taxa: list[str] = []
-            for hint in hints_by_canonical_taxon_id.get(target_taxon_id, []):
-                source_name = str(hint.get("source_name") or "")
-                if source_name != "inaturalist":
-                    continue
-                external_taxon_id = str(hint.get("external_taxon_id") or "").strip()
-                if not external_taxon_id:
-                    continue
-                mapped_taxon_id = inat_external_id_to_canonical_taxon_id.get(external_taxon_id)
-                if (
-                    mapped_taxon_id is None
-                    or mapped_taxon_id == target_taxon_id
-                    or mapped_taxon_id in seen
-                ):
-                    continue
-                seen.add(mapped_taxon_id)
-                resolved_taxa.append(mapped_taxon_id)
-            similar_taxa_by_target[target_taxon_id] = sorted(resolved_taxa)
-
-        return similar_taxa_by_target
-
-    def _parse_json_list_of_dicts(self, raw_value: object) -> list[dict[str, object]]:
-        if isinstance(raw_value, str):
-            try:
-                parsed = json.loads(raw_value)
-            except json.JSONDecodeError:
-                return []
-        elif isinstance(raw_value, list):
-            parsed = raw_value
-        else:
-            return []
-
-        if not isinstance(parsed, list):
-            return []
-        return [item for item in parsed if isinstance(item, dict)]
-
-    def _normalize_playable_pack_row(self, row: dict[str, object]) -> dict[str, object]:
-        row["similar_taxon_ids"] = self._normalize_similar_taxon_ids(row)
-        return row
-
-    def _normalize_similar_taxon_ids(self, row: dict[str, object]) -> list[str]:
-        raw_value = row.get("similar_taxon_ids")
-        if raw_value is None:
-            raw_value = row.get("similar_taxon_ids_json")
-
-        parsed: list[object]
-        if isinstance(raw_value, str):
-            try:
-                decoded = json.loads(raw_value)
-            except json.JSONDecodeError:
-                decoded = []
-            parsed = decoded if isinstance(decoded, list) else []
-        elif isinstance(raw_value, list):
-            parsed = raw_value
-        else:
-            parsed = []
-
-        normalized: list[str] = []
-        for value in parsed:
-            text = str(value).strip()
-            if text and text not in normalized:
-                normalized.append(text)
-        return normalized
-
-    def _distractor_item_sort_key(
-        self,
-        *,
-        difficulty_policy: str,
-        row: dict[str, object],
-    ) -> tuple[int, int, int, str, str]:
-        media_role = str(row.get("media_role") or "")
-        media_role_priority = {
-            "primary_id": 0,
-            "context": 1,
-            "non_diagnostic": 2,
-            "distractor_risk": 3,
-        }
-        confusion_relevance = str(row.get("confusion_relevance") or "")
-        confusion_relevance_priority = {
-            "high": 0,
-            "medium": 1,
-            "low": 2,
-            "none": 3,
-        }
-        pack_sort_key = self._pack_item_sort_key(
-            difficulty_policy=difficulty_policy,
-            canonical_taxon_id=str(row["canonical_taxon_id"]),
-            playable_item_id=str(row["playable_item_id"]),
-            difficulty_level=str(row["difficulty_level"]),
-        )
-        return (
-            media_role_priority.get(media_role, 99),
-            confusion_relevance_priority.get(confusion_relevance, 99),
-            pack_sort_key[0],
-            pack_sort_key[1],
-            pack_sort_key[2],
-        )
-
-    def _pack_item_sort_key(
-        self,
-        *,
-        difficulty_policy: str,
-        canonical_taxon_id: str,
-        playable_item_id: str,
-        difficulty_level: str,
-    ) -> tuple[int, str, str]:
-        if difficulty_policy == "easy":
-            difficulty_priority = {"easy": 0, "medium": 1, "hard": 2, "unknown": 3}
-            return (
-                difficulty_priority.get(difficulty_level, 99),
-                canonical_taxon_id,
-                playable_item_id,
-            )
-        if difficulty_policy == "balanced":
-            difficulty_priority = {"medium": 0, "easy": 1, "hard": 2, "unknown": 3}
-            return (
-                difficulty_priority.get(difficulty_level, 99),
-                canonical_taxon_id,
-                playable_item_id,
-            )
-        if difficulty_policy == "hard":
-            difficulty_priority = {"hard": 0, "medium": 1, "easy": 2, "unknown": 3}
-            return (
-                difficulty_priority.get(difficulty_level, 99),
-                canonical_taxon_id,
-                playable_item_id,
-            )
-        return (0, canonical_taxon_id, playable_item_id)
+        return self.confusion_store.fetch_confusion_metrics(top_pair_limit=top_pair_limit)
 
     def fetch_qualification_metrics(self, *, run_id: str | None = None) -> dict[str, object]:
-        with self.connect() as connection:
-            if run_id:
-                rows = connection.execute(
-                    """
-                    SELECT payload_json
-                    FROM qualified_resources_history
-                    WHERE run_id = %s
-                    """,
-                    (run_id,),
-                ).fetchall()
-                payloads = [
-                    json.loads(str(row["payload_json"]))
-                    for row in rows
-                ]
-            else:
-                rows = connection.execute(
-                    """
-                    SELECT
-                        qualification_status,
-                        provenance_summary_json,
-                        qualification_flags_json,
-                        license_safety_result,
-                        export_eligible
-                    FROM qualified_resources
-                    """
-                ).fetchall()
-                payloads = [
-                    {
-                        "qualification_status": row["qualification_status"],
-                        "provenance_summary": json.loads(str(row["provenance_summary_json"])),
-                        "qualification_flags": json.loads(str(row["qualification_flags_json"])),
-                        "license_safety_result": row["license_safety_result"],
-                        "export_eligible": bool(row["export_eligible"]),
-                    }
-                    for row in rows
-                ]
-            accepted_resources = 0
-            rejected_resources = 0
-            review_required_resources = 0
-            ai_qualified_images = 0
-            exportable_resources = 0
-            flag_counts: Counter[str] = Counter()
-            license_distribution: Counter[str] = Counter()
-            ai_model_distribution: Counter[str] = Counter()
-            for payload in payloads:
-                qualification_status = str(payload.get("qualification_status", ""))
-                if qualification_status == "accepted":
-                    accepted_resources += 1
-                elif qualification_status == "rejected":
-                    rejected_resources += 1
-                elif qualification_status == "review_required":
-                    review_required_resources += 1
-                provenance = payload.get("provenance_summary")
-                if not isinstance(provenance, dict):
-                    provenance = {}
-                if provenance.get("ai_model"):
-                    ai_qualified_images += 1
-                    ai_model_distribution[str(provenance["ai_model"])] += 1
-                if bool(payload.get("export_eligible")):
-                    exportable_resources += 1
-                license_distribution[str(payload.get("license_safety_result", "unknown"))] += 1
-                qualification_flags = payload.get("qualification_flags")
-                if not isinstance(qualification_flags, list):
-                    qualification_flags = []
-                for flag in qualification_flags:
-                    flag_counts[flag] += 1
-
-            if run_id:
-                review_queue_count = connection.execute(
-                    """
-                    SELECT COUNT(*) AS count
-                    FROM review_queue_history
-                    WHERE run_id = %s
-                    """,
-                    (run_id,),
-                ).fetchone()["count"]
-            else:
-                review_queue_count = connection.execute(
-                    "SELECT COUNT(*) AS count FROM review_queue"
-                ).fetchone()["count"]
-            return {
-                "accepted_resources": accepted_resources,
-                "rejected_resources": rejected_resources,
-                "review_required_resources": review_required_resources,
-                "ai_qualified_images": ai_qualified_images,
-                "exportable_resources": exportable_resources,
-                "review_queue_count": review_queue_count,
-                "top_rejection_flags": dict(flag_counts.most_common(5)),
-                "license_distribution": dict(sorted(license_distribution.items())),
-                "ai_model_distribution": dict(sorted(ai_model_distribution.items())),
-            }
+        return self.inspection_store.fetch_qualification_metrics(run_id=run_id)
 
     def fetch_run_level_metrics(self, *, run_id: str | None = None) -> dict[str, object]:
         summary = self.fetch_summary(run_id=run_id)
-        qualification = self.fetch_qualification_metrics(run_id=run_id)
+        qualification = self.inspection_store.fetch_qualification_metrics(run_id=run_id)
         with self.connect() as connection:
             governance_where_clause = "WHERE run_id = %s" if run_id else ""
             governance_params: tuple[object, ...] = (run_id,) if run_id else ()

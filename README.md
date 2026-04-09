@@ -35,12 +35,11 @@ It provides canonical governance, qualification, exports, playable serving data,
 packs, diagnostics, compiled builds, frozen materializations, asynchronous
 enrichment queue persistence, batch confusion ingestion, and operator metrics.
 
-Two structural gaps remain explicit:
+One structural gap remains explicit:
 
-- `playable_items` is still rebuilt as a latest serving surface instead of a cumulative incremental corpus with explicit invalidation
-- `PostgresRepository` still concentrates too many responsibilities
+- `playable_items` is still rebuilt as a latest serving surface instead of a cumulative incremental corpus with explicit invalidation (P0-1)
 
-Those are the two main architectural priorities before any significant new scope is added.
+That is the main architectural priority before any significant new scope is added.
 
 ## Reference docs
 
@@ -155,6 +154,11 @@ Installed entrypoints mirror the script wrappers:
 - pack layer v1 with immutable revisions (`pack.spec.v1`) and deterministic compilability diagnostics (`pack.diagnostic.v1`)
 - deterministic compiled pack builds persisted as `pack.compiled.v1`
 - frozen pack materializations persisted as `pack.materialization.v1` for `assignment` and `daily_challenge`
+- pack persistence/compilation/materialization logic extracted in `storage/pack_store.py` and consumed directly by CLI pack/inspect pack entrypoints
+- enrichment queue operations extracted in `storage/enrichment_store.py` (`PostgresEnrichmentStore`)
+- confusion batch ingestion and aggregates extracted in `storage/confusion_store.py` (`PostgresConfusionStore`)
+- qualification inspection metrics extracted in `storage/inspection_store.py` (`PostgresInspectionStore`)
+- `storage/postgres.py` reduced from 3985 to 2422 lines via P0-2 domain extraction; `PostgresRepository` retains thin delegation facade for backward compatibility
 - asynchronous enrichment request queue with execution tracking for non-compilable packs
 - batch confusion ingestion with directed global confusion aggregates
 - compiled build history is preserved and queryable for traceability
