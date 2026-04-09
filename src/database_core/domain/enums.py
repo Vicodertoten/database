@@ -197,3 +197,30 @@ class PackCompilationReasonCode(StrEnum):
     INSUFFICIENT_TAXA_SERVED = "insufficient_taxa_served"
     INSUFFICIENT_MEDIA_PER_TAXON = "insufficient_media_per_taxon"
     INSUFFICIENT_TOTAL_QUESTIONS = "insufficient_total_questions"
+
+
+class EnrichmentRequestStatus(StrEnum):
+    PENDING = "pending"
+    IN_PROGRESS = "in_progress"
+    COMPLETED = "completed"
+    FAILED = "failed"
+
+
+class EnrichmentExecutionStatus(StrEnum):
+    SUCCESS = "success"
+    PARTIAL = "partial"
+    FAILED = "failed"
+
+
+class EnrichmentTargetResourceType(StrEnum):
+    PACK = "pack"
+    CANONICAL_TAXON = "canonical_taxon"
+    PLAYABLE_ITEM = "playable_item"
+    QUALIFIED_RESOURCE = "qualified_resource"
+
+
+class EnrichmentRequestReasonCode(StrEnum):
+    NO_PLAYABLE_ITEMS = "no_playable_items"
+    INSUFFICIENT_TAXA_SERVED = "insufficient_taxa_served"
+    INSUFFICIENT_MEDIA_PER_TAXON = "insufficient_media_per_taxon"
+    INSUFFICIENT_TOTAL_QUESTIONS = "insufficient_total_questions"

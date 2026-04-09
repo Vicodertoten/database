@@ -238,7 +238,7 @@ def test_migrate_cli_applies_pending_schema_migration(monkeypatch, database_url:
         cli.main()
 
     assert "Database migrated" in buffer.getvalue()
-    assert repository.current_schema_version() == 11
+    assert repository.current_schema_version() == 12
 
 
 def test_governance_review_cli_resolves_item(monkeypatch, database_url: str) -> None:

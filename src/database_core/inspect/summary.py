@@ -19,8 +19,58 @@ def render_summary(repository: PostgresRepository) -> str:
             f"playable_items: {summary['playable_items']}",
             f"compiled_pack_builds: {summary['compiled_pack_builds']}",
             f"pack_materializations: {summary['pack_materializations']}",
+            f"enrichment_requests: {summary['enrichment_requests']}",
+            f"enrichment_executions: {summary['enrichment_executions']}",
         ]
     )
+
+
+def render_enrichment_requests(
+    repository: PostgresRepository,
+    *,
+    request_status: str | None = None,
+    pack_id: str | None = None,
+    revision: int | None = None,
+    limit: int = 100,
+) -> str:
+    rows = repository.fetch_enrichment_requests(
+        request_status=request_status,
+        pack_id=pack_id,
+        revision=revision,
+        limit=limit,
+    )
+    if not rows:
+        return "Enrichment request queue is empty."
+    lines = ["Enrichment request queue"]
+    for row in rows:
+        lines.append(
+            f"{row['enrichment_request_id']} | pack={row['pack_id']}@{row['revision']} | "
+            f"reason={row['reason_code']} | status={row['request_status']} | "
+            f"attempts={row['execution_attempt_count']} | created_at={row['created_at']}"
+        )
+    return "\n".join(lines)
+
+
+def render_enrichment_executions(
+    repository: PostgresRepository,
+    *,
+    enrichment_request_id: str | None = None,
+    limit: int = 100,
+) -> str:
+    rows = repository.fetch_enrichment_executions(
+        enrichment_request_id=enrichment_request_id,
+        limit=limit,
+    )
+    if not rows:
+        return "Enrichment execution log is empty."
+    lines = ["Enrichment execution log"]
+    for row in rows:
+        lines.append(
+            f"{row['enrichment_execution_id']} | request={row['enrichment_request_id']} | "
+            f"status={row['execution_status']} | executed_at={row['executed_at']} | "
+            f"error={row['error_info'] or 'none'}"
+        )
+    return "\n".join(lines)
 
 
 def render_review_queue(

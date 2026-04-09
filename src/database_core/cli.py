@@ -25,6 +25,8 @@ from database_core.inspect.summary import (
     render_canonical_governance_events,
     render_canonical_governance_review_queue,
     render_canonical_state_events,
+    render_enrichment_executions,
+    render_enrichment_requests,
     render_exportables,
     render_review_queue,
     render_run_metrics,
@@ -135,6 +137,8 @@ def main() -> None:
             "pack-diagnostics",
             "compiled-pack-builds",
             "pack-materializations",
+            "enrichment-requests",
+            "enrichment-executions",
         ],
     )
     inspect_parser.add_argument(
@@ -143,6 +147,8 @@ def main() -> None:
         default=os.environ.get("DATABASE_URL", DEFAULT_DATABASE_URL),
     )
     inspect_parser.add_argument("--snapshot-id", type=str)
+    inspect_parser.add_argument("--enrichment-request-id", type=str)
+    inspect_parser.add_argument("--enrichment-status", type=str)
     inspect_parser.add_argument("--snapshot-root", type=Path, default=DEFAULT_INAT_SNAPSHOT_ROOT)
     inspect_parser.add_argument("--review-reason-code", type=str)
     inspect_parser.add_argument("--stage-name", type=str)
@@ -293,6 +299,31 @@ def main() -> None:
         default="assignment",
     )
     pack_materialize_parser.add_argument("--ttl-hours", type=int)
+
+    pack_enrich_enqueue_parser = pack_subparsers.add_parser("enrich-enqueue")
+    pack_enrich_enqueue_parser.add_argument(
+        "--database-url",
+        type=str,
+        default=os.environ.get("DATABASE_URL", DEFAULT_DATABASE_URL),
+    )
+    pack_enrich_enqueue_parser.add_argument("--pack-id", required=True)
+    pack_enrich_enqueue_parser.add_argument("--revision", type=int)
+    pack_enrich_enqueue_parser.add_argument("--question-count", type=int, default=20)
+
+    pack_enrich_execute_parser = pack_subparsers.add_parser("enrich-execute")
+    pack_enrich_execute_parser.add_argument(
+        "--database-url",
+        type=str,
+        default=os.environ.get("DATABASE_URL", DEFAULT_DATABASE_URL),
+    )
+    pack_enrich_execute_parser.add_argument("--enrichment-request-id", required=True)
+    pack_enrich_execute_parser.add_argument(
+        "--execution-status",
+        choices=["success", "partial", "failed"],
+        default="success",
+    )
+    pack_enrich_execute_parser.add_argument("--error-info", type=str)
+    pack_enrich_execute_parser.add_argument("--trigger-recompile", action="store_true")
 
     review_overrides_parser = subparsers.add_parser("review-overrides")
     review_overrides_subparsers = review_overrides_parser.add_subparsers(
@@ -467,6 +498,27 @@ def main() -> None:
                 question_count=args.question_count,
                 purpose=args.purpose,
                 ttl_hours=args.ttl_hours,
+            )
+            print(json.dumps(payload, indent=2, sort_keys=True))
+            return
+        if args.pack_command == "enrich-enqueue":
+            payload = repository.enqueue_enrichment_for_pack(
+                pack_id=args.pack_id,
+                revision=args.revision,
+                question_count=args.question_count,
+            )
+            print(json.dumps(payload, indent=2, sort_keys=True))
+            return
+        if args.pack_command == "enrich-execute":
+            payload = repository.record_enrichment_execution(
+                enrichment_request_id=args.enrichment_request_id,
+                execution_status=args.execution_status,
+                execution_context={
+                    "operator": "pack enrich-execute",
+                    "trigger_recompile": bool(args.trigger_recompile),
+                },
+                error_info=args.error_info,
+                trigger_recompile=args.trigger_recompile,
             )
             print(json.dumps(payload, indent=2, sort_keys=True))
             return
@@ -691,6 +743,24 @@ def main() -> None:
             limit=args.limit,
         )
         print(json.dumps(payload, indent=2, sort_keys=True))
+    elif args.view == "enrichment-requests":
+        print(
+            render_enrichment_requests(
+                repository,
+                request_status=args.enrichment_status,
+                pack_id=args.pack_id,
+                revision=args.revision,
+                limit=args.limit,
+            )
+        )
+    elif args.view == "enrichment-executions":
+        print(
+            render_enrichment_executions(
+                repository,
+                enrichment_request_id=args.enrichment_request_id,
+                limit=args.limit,
+            )
+        )
     else:
         print(render_exportables(repository))
 

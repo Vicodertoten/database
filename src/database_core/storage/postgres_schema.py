@@ -526,3 +526,57 @@ CREATE INDEX IF NOT EXISTS idx_pack_materializations_pack_revision
 CREATE INDEX IF NOT EXISTS idx_pack_materializations_purpose_expires_at
     ON pack_materializations (purpose, expires_at);
 """
+
+POSTGRES_ENRICHMENT_QUEUE_V12_SQL = """
+CREATE TABLE IF NOT EXISTS enrichment_requests (
+    enrichment_request_id TEXT PRIMARY KEY,
+    pack_id TEXT NOT NULL,
+    revision INTEGER NOT NULL,
+    reason_code TEXT NOT NULL,
+    request_status TEXT NOT NULL CHECK (
+        request_status IN ('pending', 'in_progress', 'completed', 'failed')
+    ),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    completed_at TIMESTAMPTZ,
+    execution_attempt_count INTEGER NOT NULL DEFAULT 0 CHECK (execution_attempt_count >= 0),
+    FOREIGN KEY (pack_id, revision) REFERENCES pack_revisions (pack_id, revision) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_enrichment_requests_status_created
+    ON enrichment_requests (request_status, created_at DESC);
+
+CREATE INDEX IF NOT EXISTS idx_enrichment_requests_pack_revision
+    ON enrichment_requests (pack_id, revision, created_at DESC);
+
+CREATE TABLE IF NOT EXISTS enrichment_request_targets (
+    enrichment_request_target_id TEXT PRIMARY KEY,
+    enrichment_request_id TEXT NOT NULL,
+    resource_type TEXT NOT NULL,
+    resource_id TEXT NOT NULL,
+    target_attribute TEXT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    FOREIGN KEY (enrichment_request_id) REFERENCES enrichment_requests (enrichment_request_id)
+        ON DELETE CASCADE,
+    CONSTRAINT enrichment_request_targets_unique
+        UNIQUE (enrichment_request_id, resource_type, resource_id, target_attribute)
+);
+
+CREATE INDEX IF NOT EXISTS idx_enrichment_request_targets_request_id
+    ON enrichment_request_targets (enrichment_request_id);
+
+CREATE TABLE IF NOT EXISTS enrichment_executions (
+    enrichment_execution_id TEXT PRIMARY KEY,
+    enrichment_request_id TEXT NOT NULL,
+    execution_status TEXT NOT NULL CHECK (
+        execution_status IN ('success', 'partial', 'failed')
+    ),
+    executed_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    execution_context_json TEXT NOT NULL,
+    error_info TEXT,
+    FOREIGN KEY (enrichment_request_id) REFERENCES enrichment_requests (enrichment_request_id)
+        ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_enrichment_executions_request_id
+    ON enrichment_executions (enrichment_request_id, executed_at DESC);
+"""

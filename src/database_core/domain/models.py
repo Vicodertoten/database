@@ -14,7 +14,11 @@ from database_core.domain.enums import (
     ConfusionRelevance,
     DiagnosticFeatureVisibility,
     DifficultyLevel,
+    EnrichmentExecutionStatus,
+    EnrichmentRequestReasonCode,
+    EnrichmentRequestStatus,
     EnrichmentStatus,
+    EnrichmentTargetResourceType,
     LearningSuitability,
     LicenseSafetyResult,
     MediaRole,
@@ -602,6 +606,74 @@ class PackCompilationAttempt(DomainModel):
             raise ValueError("compilable attempts must use reason_code=compilable")
         if not self.compilable and self.reason_code == PackCompilationReasonCode.COMPILABLE:
             raise ValueError("non compilable attempts cannot use reason_code=compilable")
+        return self
+
+
+class EnrichmentRequest(DomainModel):
+    enrichment_request_id: str
+    pack_id: str
+    revision: int = Field(ge=1)
+    reason_code: EnrichmentRequestReasonCode
+    request_status: EnrichmentRequestStatus = EnrichmentRequestStatus.PENDING
+    created_at: datetime
+    completed_at: datetime | None = None
+    execution_attempt_count: int = Field(default=0, ge=0)
+
+    @field_validator("enrichment_request_id", "pack_id")
+    @classmethod
+    def validate_request_ids(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("field must not be blank")
+        return value
+
+    @model_validator(mode="after")
+    def validate_completion_fields(self) -> Self:
+        if self.request_status == EnrichmentRequestStatus.COMPLETED and self.completed_at is None:
+            raise ValueError("completed_at is required when request_status=completed")
+        return self
+
+
+class EnrichmentRequestTarget(DomainModel):
+    enrichment_request_target_id: str
+    enrichment_request_id: str
+    resource_type: EnrichmentTargetResourceType
+    resource_id: str
+    target_attribute: str
+    created_at: datetime
+
+    @field_validator(
+        "enrichment_request_target_id",
+        "enrichment_request_id",
+        "resource_id",
+        "target_attribute",
+    )
+    @classmethod
+    def validate_target_fields(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("field must not be blank")
+        return value
+
+
+class EnrichmentExecution(DomainModel):
+    enrichment_execution_id: str
+    enrichment_request_id: str
+    execution_status: EnrichmentExecutionStatus
+    executed_at: datetime
+    execution_context: dict[str, object] = Field(default_factory=dict)
+    error_info: str | None = None
+
+    @field_validator("enrichment_execution_id", "enrichment_request_id")
+    @classmethod
+    def validate_execution_ids(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("field must not be blank")
+        return value
+
+    @model_validator(mode="after")
+    def validate_error_info(self) -> Self:
+        if self.execution_status == EnrichmentExecutionStatus.FAILED:
+            if self.error_info is None or not self.error_info.strip():
+                raise ValueError("error_info is required when execution_status=failed")
         return self
 
 

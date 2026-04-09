@@ -1,15 +1,15 @@
 # Audit De Reference - database
 
 Statut: document vivant (reference d'execution)
-Version: v3
+Version: v4
 Date de mise a jour: 2026-04-09
-Perimetre: etat reel du repo apres Gate 5
+Perimetre: etat reel du repo apres Gate 6
 
 ---
 
 ## 1. Synthese executive
 
-Le repo est sur la bonne trajectoire et a livre une base operationnelle solide jusqu'au Gate 5.
+Le repo est sur la bonne trajectoire et a livre une base operationnelle solide jusqu'au Gate 6.
 
 Points forts confirmes:
 
@@ -19,18 +19,20 @@ Points forts confirmes:
 - couche playable v1 en base, inspectable via CLI
 - couche pack v1, diagnostic v1, compilation v1, materialization v1
 - policy distracteurs v2 active dans la compilation pack
+- queue d'enrichissement asynchrone tracee en base
 - couverture tests structurants et smoke KPI verrouilles
 
-Point critique post-Gate 5:
+Point critique post-Gate 6:
 
 - la cible finale playable est un corpus cumulatif incremental reel
 - l'implementation actuelle reste une surface latest reconstruite a chaque run
-- cet ecart reste explicite et constitue le chantier strategique avant Gate 6+
+- cet ecart reste explicite et constitue le chantier strategique avant Gate 7+
 
 Decision de pilotage appliquee:
 
 - Gate 4.5 de remise a niveau documentaire et strategique: ferme
 - Gate 5 distracteurs v2: execute sans evolution de contrat export/schema
+- Gate 6 queue d'enrichissement: execute sans evolution de contrat export/schema
 
 ---
 
@@ -45,10 +47,11 @@ Decision de pilotage appliquee:
 | Gate 4 - Compilation + materialization | DONE | 2026-04-09 | pack.compiled.v1 + pack.materialization.v1 |
 | Gate 4.5 - Correctif strategique pre-extension | DONE | 2026-04-09 | alignement doctrine/docs/garde-fous |
 | Gate 5 - Politique distracteurs v2 | DONE | 2026-04-09 | similarites internes prioritaires + fallback deterministe |
+| Gate 6 - Queue d'enrichissement | DONE | 2026-04-09 | requetes+targets+executions asynchrones |
 
 Etat schema applicatif observe:
 
-- database.schema.v11
+- database.schema.v12
 
 Etat contrats observes:
 
@@ -63,14 +66,14 @@ Etat contrats observes:
 
 ## État réel
 
-Le repo est operationnel jusqu'au Gate 5 avec:
+Le repo est operationnel jusqu'au Gate 6 avec:
 
 - une surface playable latest reconstruite a chaque run
 - un historique run-level conserve pour auditabilite
 - des builds compiles conserves de maniere historique
 - des materializations figees immuables
 
-Le delta vers la cible finale est explicite; Gate 4.5 est clos et Gate 5 est execute.
+Le delta vers la cible finale est explicite; Gate 4.5, Gate 5 et Gate 6 sont executes.
 
 ## Cible
 
@@ -78,8 +81,8 @@ La cible d'evolution reste:
 
 - un playable corpus cumulatif incremental reel
 - des frontieres strictes entre database et runtime
-- une trajectoire sequentielle avec Gate 6 enrichissement puis Gate 7 confusions batch
-- une reduction de dette PostgresRepository planifiee sans lancer de refactor pendant Gate 5
+- une trajectoire sequentielle avec Gate 7 confusions batch puis Gate 8 inspection et KPI
+- une reduction de dette PostgresRepository planifiee sans lancer de refactor pendant Gate 6
 
 ---
 
@@ -183,7 +186,7 @@ Perimetre:
 
 Hors perimetre:
 
-- aucune implementation Gate 6+
+- aucune implementation Gate 7+
 - aucun refactor repository lance
 
 Criteres d'acceptation:
@@ -203,7 +206,7 @@ Criteres d'acceptation:
 5. Gate 4 - Compilation + materialization (DONE)
 6. Gate 4.5 - Correctif strategique pre-extension (documentation + trajectoire)
 7. Gate 5 - Politique distracteurs v2 (dedie)
-8. Gate 6 - Queue d'enrichissement
+8. Gate 6 - Queue d'enrichissement (DONE)
 9. Gate 7 - Ingestion batch confusions + agregats globaux
 10. Gate 8 - Inspection/KPI/smoke/CI etendus
 11. Gate 9 - Retrait sidecar export v3
@@ -232,13 +235,13 @@ Raison: pas de logique runtime/session/scoring/progression dans database.
 ## 8. Risques pour la suite
 
 - R1: confusion persistante entre surface latest et cible cumulative tant que le modele cumulatif n'est pas livre
-- R2: amplification de dette repository si Gate 6+ avance sans extraction preparee
+- R2: amplification de dette repository si Gate 7+ avance sans extraction preparee
 - R3: distracteurs v2 trop ambitieuse et hors discipline canonique
 - R4: derive de perimetre runtime dans les gates 5-7
 
 Mitigations:
 
-- conserver les garde-fous Gate 6+ dans la couche storage
+- conserver les garde-fous Gate 7+ dans la couche storage
 - conserver des criteres d'acceptation courts et testables par gate
 - lier chaque extension a ses frontieres explicites
 
@@ -322,4 +325,25 @@ tests_run:
 residual_risks:
 - playable persistence model remains latest-surface and not cumulative incremental yet
 - fallback observability remains inferred from payload selections (no new contract field added)
-go_no_go: GO for Gate 5 closure, Gate 6 remains closed
+go_no_go: GO for Gate 5 closure, Gate 6 opened then closed
+
+## 13. Gate 6 closure evidence
+
+date: 2026-04-09
+owner: codex
+checklist_items_passed:
+- asynchronous enrichment queue persisted (`enrichment_requests`, `enrichment_request_targets`, `enrichment_executions`)
+- strict merge on pack_id+revision+reason_code+targets implemented
+- compilation path remains deterministic and does not enrich inline
+- optional asynchronous recompilation trigger added after successful/partial execution
+- no Gate 7 confusion ingestion markers introduced
+tests_run:
+- tests/test_storage.py::test_enqueue_enrichment_for_pack_creates_request_and_targets
+- tests/test_storage.py::test_enqueue_enrichment_for_pack_merges_same_request_signature
+- tests/test_storage.py::test_record_enrichment_execution_updates_status_and_attempt_count
+- tests/test_storage.py::test_record_enrichment_execution_failed_requires_error_info
+- tests/test_verify_repo.py
+residual_risks:
+- queue execution is command-driven (no background worker in this gate)
+- playable persistence target remains cumulative-incremental backlog item
+go_no_go: GO for Gate 6 closure, Gate 7 remains closed

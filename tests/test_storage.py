@@ -75,14 +75,14 @@ def test_initialize_can_reset_legacy_schema_version_with_explicit_flag(
         )
 
     assert "legacy_table" not in table_names
-    assert user_version == 11
+    assert user_version == 12
 
 
-def test_migrate_to_latest_initializes_v11_schema(database_url: str) -> None:
+def test_migrate_to_latest_initializes_v12_schema(database_url: str) -> None:
     repository = PostgresRepository(database_url)
     applied_versions = repository.migrate_to_latest()
-    assert applied_versions == (8, 9, 10, 11)
-    assert repository.current_schema_version() == 11
+    assert applied_versions == (8, 9, 10, 11, 12)
+    assert repository.current_schema_version() == 12
 
 
 def test_geospatial_queries_support_bbox_and_point_radius(database_url: str) -> None:
@@ -863,6 +863,139 @@ def test_compile_pack_rejects_non_compilable_pack_without_persisting_build(
         repository.compile_pack(pack_id=str(payload["pack_id"]), question_count=20)
 
     assert repository.fetch_compiled_pack_builds(pack_id=str(payload["pack_id"])) == []
+
+
+def test_enqueue_enrichment_for_pack_creates_request_and_targets(database_url: str) -> None:
+    repository = PostgresRepository(database_url)
+    repository.initialize()
+    payload = repository.create_pack(
+        pack_id="pack:enrichment:queue-create",
+        parameters={
+            "canonical_taxon_ids": ["taxon:birds:000001", "taxon:birds:000002"],
+            "difficulty_policy": "balanced",
+            "country_code": None,
+            "location_bbox": None,
+            "location_point": None,
+            "location_radius_meters": None,
+            "observed_from": None,
+            "observed_to": None,
+            "owner_id": "owner:enrichment",
+            "org_id": None,
+            "visibility": "private",
+            "intended_use": "training",
+        },
+    )
+
+    result = repository.enqueue_enrichment_for_pack(pack_id=str(payload["pack_id"]))
+    assert result["enqueued"] is True
+    assert result["request"]["merged"] is False
+    request = result["request"]["request"]
+    assert request["reason_code"] == "no_playable_items"
+    assert request["request_status"] == "pending"
+    assert len(result["request"]["targets"]) == 2
+
+
+def test_enqueue_enrichment_for_pack_merges_same_request_signature(database_url: str) -> None:
+    repository = PostgresRepository(database_url)
+    repository.initialize()
+    payload = repository.create_pack(
+        pack_id="pack:enrichment:queue-merge",
+        parameters={
+            "canonical_taxon_ids": ["taxon:birds:000001", "taxon:birds:000002"],
+            "difficulty_policy": "balanced",
+            "country_code": None,
+            "location_bbox": None,
+            "location_point": None,
+            "location_radius_meters": None,
+            "observed_from": None,
+            "observed_to": None,
+            "owner_id": "owner:enrichment",
+            "org_id": None,
+            "visibility": "private",
+            "intended_use": "training",
+        },
+    )
+
+    first = repository.enqueue_enrichment_for_pack(pack_id=str(payload["pack_id"]))
+    second = repository.enqueue_enrichment_for_pack(pack_id=str(payload["pack_id"]))
+
+    assert first["request"]["merged"] is False
+    assert second["request"]["merged"] is True
+    requests = repository.fetch_enrichment_requests(pack_id=str(payload["pack_id"]))
+    assert len(requests) == 1
+
+
+def test_record_enrichment_execution_updates_status_and_attempt_count(
+    database_url: str,
+) -> None:
+    repository = PostgresRepository(database_url)
+    repository.initialize()
+    payload = repository.create_pack(
+        pack_id="pack:enrichment:execution-status",
+        parameters={
+            "canonical_taxon_ids": ["taxon:birds:000001", "taxon:birds:000002"],
+            "difficulty_policy": "balanced",
+            "country_code": None,
+            "location_bbox": None,
+            "location_point": None,
+            "location_radius_meters": None,
+            "observed_from": None,
+            "observed_to": None,
+            "owner_id": "owner:enrichment",
+            "org_id": None,
+            "visibility": "private",
+            "intended_use": "training",
+        },
+    )
+    enqueue = repository.enqueue_enrichment_for_pack(pack_id=str(payload["pack_id"]))
+    request_id = enqueue["request"]["request"]["enrichment_request_id"]
+
+    execution = repository.record_enrichment_execution(
+        enrichment_request_id=request_id,
+        execution_status="success",
+        execution_context={"step": "manual"},
+        trigger_recompile=True,
+    )
+    assert execution["execution_status"] == "success"
+    assert execution["request_status"] == "completed"
+    assert execution["recompilation"]["attempted"] is True
+
+    requests = repository.fetch_enrichment_requests(enrichment_request_id=request_id)
+    assert requests[0]["execution_attempt_count"] == 1
+    assert requests[0]["request_status"] == "completed"
+    executions = repository.fetch_enrichment_executions(enrichment_request_id=request_id)
+    assert len(executions) == 1
+
+
+def test_record_enrichment_execution_failed_requires_error_info(database_url: str) -> None:
+    repository = PostgresRepository(database_url)
+    repository.initialize()
+    payload = repository.create_pack(
+        pack_id="pack:enrichment:execution-failed",
+        parameters={
+            "canonical_taxon_ids": ["taxon:birds:000001", "taxon:birds:000002"],
+            "difficulty_policy": "balanced",
+            "country_code": None,
+            "location_bbox": None,
+            "location_point": None,
+            "location_radius_meters": None,
+            "observed_from": None,
+            "observed_to": None,
+            "owner_id": "owner:enrichment",
+            "org_id": None,
+            "visibility": "private",
+            "intended_use": "training",
+        },
+    )
+    enqueue = repository.enqueue_enrichment_for_pack(pack_id=str(payload["pack_id"]))
+    request_id = enqueue["request"]["request"]["enrichment_request_id"]
+
+    with pytest.raises(ValueError, match="error_info is required"):
+        repository.record_enrichment_execution(
+            enrichment_request_id=request_id,
+            execution_status="failed",
+            execution_context={"step": "manual"},
+        )
 
 
 def test_compile_pack_prefers_internal_similar_taxa_for_distractors(

@@ -3,6 +3,7 @@ from __future__ import annotations
 from psycopg import Connection, sql
 
 from database_core.storage.postgres_schema import (
+    POSTGRES_ENRICHMENT_QUEUE_V12_SQL,
     POSTGRES_PACK_COMPILATION_V11_SQL,
     POSTGRES_PACK_V10_SQL,
     POSTGRES_PLAYABLE_V9_SQL,
@@ -15,6 +16,7 @@ _MIGRATION_SQL: dict[int, str] = {
     9: POSTGRES_PLAYABLE_V9_SQL,
     10: POSTGRES_PACK_V10_SQL,
     11: POSTGRES_PACK_COMPILATION_V11_SQL,
+    12: POSTGRES_ENRICHMENT_QUEUE_V12_SQL,
 }
 
 

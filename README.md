@@ -28,12 +28,13 @@ The current pilot stays narrow on purpose:
 
 The repository is not the quiz app, frontend, or product runtime.
 
-## Post-Gate 5 Strategic Context
+## Post-Gate 6 Strategic Context
 
 The repository has reached Gate 4 (playable + packs + compilation + materialization).
 This is a strong milestone, but it is not yet the final target shape.
 
-Gate 5 (distractor policy v2) is now implemented for compiled packs.
+Gate 5 (distractor policy v2) is implemented for compiled packs.
+Gate 6 (asynchronous enrichment queue) is now implemented for pack compilation deficits.
 
 The final playable target is a real cumulative incremental corpus:
 
@@ -56,7 +57,7 @@ Gate 4.5 closure artifacts are documentation and discipline checks only:
 - cross-doc alignment on playable target vs current latest-surface implementation
 - explicit gate ordering with a dedicated distractor policy v2 gate after Gate 4.5
 - explicit strategic debt tracking for PostgresRepository without launching refactor work
-- non-regression checks that block accidental Gate 6+ implementation markers while Gate 5 is active
+- non-regression checks that block accidental Gate 7+ implementation markers while Gate 6 is active
 
 Gate 5 execution artifacts:
 
@@ -64,6 +65,15 @@ Gate 5 execution artifacts:
 - deterministic fallback remains active when similarity candidates are insufficient
 - distractor ranking now prefers pedagogically safer media roles over `distractor_risk`
 - contracts remain unchanged: `pack.compiled.v1`, `pack.materialization.v1`, `playable_corpus.v1`, `export.bundle.v4`
+
+Gate 6 execution artifacts:
+
+- asynchronous enrichment request queue persisted in PostgreSQL (`enrichment_requests`)
+- strict merge of duplicate requests by `pack_id + revision + reason_code + targets`
+- target-level queue entries persisted in `enrichment_request_targets`
+- execution history persisted in `enrichment_executions`
+- optional asynchronous recompilation trigger after a successful/partial execution
+- no Gate 7 confusion ingestion or aggregates introduced
 
 ## Reference docs
 
@@ -122,6 +132,7 @@ Installed entrypoints mirror the script wrappers:
 - pack layer v1 with immutable revisions (`pack.spec.v1`) and deterministic compilability diagnostics (`pack.diagnostic.v1`)
 - deterministic compiled pack builds persisted as `pack.compiled.v1`
 - frozen pack materializations persisted as `pack.materialization.v1` for `assignment` and `daily_challenge`
+- asynchronous enrichment request queue with execution tracking for non-compilable packs
 - compiled build history is preserved and queryable for traceability
 - materializations are frozen immutable snapshots derived from one compiled build
 - versioned normalized, qualification, and export artifacts
@@ -171,11 +182,15 @@ python scripts/manage_packs.py revise --pack-id pack:birds:be:v1 --canonical-tax
 python scripts/manage_packs.py diagnose --pack-id pack:birds:be:v1
 python scripts/manage_packs.py compile --pack-id pack:birds:be:v1 --question-count 20
 python scripts/manage_packs.py materialize --pack-id pack:birds:be:v1 --question-count 20 --purpose daily_challenge
+python scripts/manage_packs.py enrich-enqueue --pack-id pack:birds:be:v1
+python scripts/manage_packs.py enrich-execute --enrichment-request-id enrreq:pack:birds:be:v1:1:aaaaaaaa --execution-status success --trigger-recompile
 python scripts/inspect_database.py pack-specs --pack-id pack:birds:be:v1
 python scripts/inspect_database.py pack-revisions --pack-id pack:birds:be:v1
 python scripts/inspect_database.py pack-diagnostics --pack-id pack:birds:be:v1
 python scripts/inspect_database.py compiled-pack-builds --pack-id pack:birds:be:v1
 python scripts/inspect_database.py pack-materializations --pack-id pack:birds:be:v1 --purpose daily_challenge
+python scripts/inspect_database.py enrichment-requests --pack-id pack:birds:be:v1 --enrichment-status pending
+python scripts/inspect_database.py enrichment-executions --enrichment-request-id enrreq:pack:birds:be:v1:1:aaaaaaaa
 python scripts/review_overrides.py init --snapshot-id inaturalist-birds-20260408T123456Z
 python scripts/review_overrides.py upsert --snapshot-id inaturalist-birds-20260408T123456Z --media-asset-id media:inaturalist:810001 --status review_required --note "manual spot-check requested"
 python scripts/review_overrides.py list --snapshot-id inaturalist-birds-20260408T123456Z
@@ -256,7 +271,7 @@ The manifest records which sort was requested and which one was actually used.
 
 The repository now writes explicit stage versions into generated artifacts:
 
-- schema version: `database.schema.v11`
+- schema version: `database.schema.v12`
 - snapshot manifest version: `inaturalist.snapshot.v3`
 - normalized snapshot version: `normalized.snapshot.v3`
 - canonical enrichment version: `canonical.enrichment.v2`
