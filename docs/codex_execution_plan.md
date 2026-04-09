@@ -122,10 +122,10 @@ Point critique explicite:
 - Gate 4.5 - Correctif strategique pre-extension: DONE
 - Gate 5 - Politique distracteurs v2 (dedie): DONE
 - Gate 6 - Queue d'enrichissement: DONE
+- Gate 7 - Contrat batch confusions + agregats globaux: DONE
 
 ### Suite reordonnee
 
-- Gate 7 - Contrat batch confusions + agregats globaux
 - Gate 8 - Inspection/KPI/smoke/CI etendus
 - Gate 9 - Retrait sidecar export v3
 

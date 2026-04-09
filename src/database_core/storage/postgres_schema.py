@@ -580,3 +580,43 @@ CREATE TABLE IF NOT EXISTS enrichment_executions (
 CREATE INDEX IF NOT EXISTS idx_enrichment_executions_request_id
     ON enrichment_executions (enrichment_request_id, executed_at DESC);
 """
+
+POSTGRES_CONFUSION_V13_SQL = """
+CREATE TABLE IF NOT EXISTS confusion_batches (
+    batch_id TEXT PRIMARY KEY,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    event_count INTEGER NOT NULL CHECK (event_count >= 0)
+);
+
+CREATE TABLE IF NOT EXISTS confusion_events (
+    confusion_event_id TEXT PRIMARY KEY,
+    batch_id TEXT NOT NULL,
+    taxon_confused_for_id TEXT NOT NULL,
+    taxon_correct_id TEXT NOT NULL,
+    occurred_at TIMESTAMPTZ NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    FOREIGN KEY (batch_id) REFERENCES confusion_batches (batch_id) ON DELETE CASCADE,
+    CONSTRAINT confusion_events_distinct_taxa
+        CHECK (taxon_confused_for_id <> taxon_correct_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_confusion_events_batch_id
+    ON confusion_events (batch_id, occurred_at DESC);
+
+CREATE INDEX IF NOT EXISTS idx_confusion_events_pair
+    ON confusion_events (taxon_confused_for_id, taxon_correct_id, occurred_at DESC);
+
+CREATE TABLE IF NOT EXISTS confusion_aggregates_global (
+    taxon_confused_for_id TEXT NOT NULL,
+    taxon_correct_id TEXT NOT NULL,
+    event_count INTEGER NOT NULL CHECK (event_count >= 0),
+    latest_occurred_at TIMESTAMPTZ NOT NULL,
+    aggregated_at TIMESTAMPTZ NOT NULL,
+    PRIMARY KEY (taxon_confused_for_id, taxon_correct_id),
+    CONSTRAINT confusion_aggregates_global_distinct_taxa
+        CHECK (taxon_confused_for_id <> taxon_correct_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_confusion_aggregates_global_event_count
+    ON confusion_aggregates_global (event_count DESC, taxon_confused_for_id, taxon_correct_id);
+"""

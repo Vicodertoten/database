@@ -677,6 +677,86 @@ class EnrichmentExecution(DomainModel):
         return self
 
 
+class ConfusionBatch(DomainModel):
+    batch_id: str
+    created_at: datetime
+    event_count: int = Field(ge=0)
+
+    @field_validator("batch_id")
+    @classmethod
+    def validate_batch_id(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("batch_id must not be blank")
+        return value
+
+
+class ConfusionEventInput(DomainModel):
+    taxon_confused_for_id: str
+    taxon_correct_id: str
+    occurred_at: datetime
+
+    @field_validator("taxon_confused_for_id", "taxon_correct_id")
+    @classmethod
+    def validate_taxon_ids(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("taxon ids must not be blank")
+        return value
+
+    @model_validator(mode="after")
+    def validate_distinct_taxa(self) -> Self:
+        if self.taxon_confused_for_id == self.taxon_correct_id:
+            raise ValueError("taxon_confused_for_id and taxon_correct_id must differ")
+        return self
+
+
+class ConfusionEvent(DomainModel):
+    confusion_event_id: str
+    batch_id: str
+    taxon_confused_for_id: str
+    taxon_correct_id: str
+    occurred_at: datetime
+    created_at: datetime
+
+    @field_validator(
+        "confusion_event_id",
+        "batch_id",
+        "taxon_confused_for_id",
+        "taxon_correct_id",
+    )
+    @classmethod
+    def validate_event_fields(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("field must not be blank")
+        return value
+
+    @model_validator(mode="after")
+    def validate_distinct_taxa(self) -> Self:
+        if self.taxon_confused_for_id == self.taxon_correct_id:
+            raise ValueError("taxon_confused_for_id and taxon_correct_id must differ")
+        return self
+
+
+class ConfusionAggregateGlobal(DomainModel):
+    taxon_confused_for_id: str
+    taxon_correct_id: str
+    event_count: int = Field(ge=0)
+    latest_occurred_at: datetime
+    aggregated_at: datetime
+
+    @field_validator("taxon_confused_for_id", "taxon_correct_id")
+    @classmethod
+    def validate_aggregate_taxon_ids(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("taxon ids must not be blank")
+        return value
+
+    @model_validator(mode="after")
+    def validate_distinct_taxa(self) -> Self:
+        if self.taxon_confused_for_id == self.taxon_correct_id:
+            raise ValueError("taxon_confused_for_id and taxon_correct_id must differ")
+        return self
+
+
 class CompiledPackQuestion(DomainModel):
     position: int = Field(ge=1)
     target_playable_item_id: str

@@ -2,6 +2,7 @@ import json
 from datetime import UTC, datetime
 
 import pytest
+from pydantic import ValidationError
 
 from database_core.domain.enums import SourceName
 from database_core.domain.models import (
@@ -75,14 +76,14 @@ def test_initialize_can_reset_legacy_schema_version_with_explicit_flag(
         )
 
     assert "legacy_table" not in table_names
-    assert user_version == 12
+    assert user_version == 13
 
 
-def test_migrate_to_latest_initializes_v12_schema(database_url: str) -> None:
+def test_migrate_to_latest_initializes_v13_schema(database_url: str) -> None:
     repository = PostgresRepository(database_url)
     applied_versions = repository.migrate_to_latest()
-    assert applied_versions == (8, 9, 10, 11, 12)
-    assert repository.current_schema_version() == 12
+    assert applied_versions == (8, 9, 10, 11, 12, 13)
+    assert repository.current_schema_version() == 13
 
 
 def test_geospatial_queries_support_bbox_and_point_radius(database_url: str) -> None:
@@ -996,6 +997,183 @@ def test_record_enrichment_execution_failed_requires_error_info(database_url: st
             execution_status="failed",
             execution_context={"step": "manual"},
         )
+
+
+def test_ingest_confusion_batch_creates_events(database_url: str) -> None:
+    repository = PostgresRepository(database_url)
+    repository.initialize()
+
+    payload = repository.ingest_confusion_batch(
+        batch_id="batch:confusions:001",
+        events=[
+            {
+                "taxon_confused_for_id": "taxon:birds:000001",
+                "taxon_correct_id": "taxon:birds:000002",
+                "occurred_at": datetime(2026, 4, 9, 12, 0, tzinfo=UTC).isoformat(),
+            },
+            {
+                "taxon_confused_for_id": "taxon:birds:000003",
+                "taxon_correct_id": "taxon:birds:000004",
+                "occurred_at": datetime(2026, 4, 9, 12, 1, tzinfo=UTC).isoformat(),
+            },
+        ],
+    )
+    assert payload["ingested"] is True
+    assert payload["event_count"] == 2
+
+    events = repository.fetch_confusion_events(batch_id="batch:confusions:001")
+    assert len(events) == 2
+
+
+def test_ingest_confusion_batch_duplicate_batch_rejected(database_url: str) -> None:
+    repository = PostgresRepository(database_url)
+    repository.initialize()
+    events = [
+        {
+            "taxon_confused_for_id": "taxon:birds:000001",
+            "taxon_correct_id": "taxon:birds:000002",
+            "occurred_at": datetime(2026, 4, 9, 12, 0, tzinfo=UTC).isoformat(),
+        }
+    ]
+
+    first = repository.ingest_confusion_batch(batch_id="batch:confusions:dupe", events=events)
+    second = repository.ingest_confusion_batch(batch_id="batch:confusions:dupe", events=events)
+
+    assert first["ingested"] is True
+    assert second == {
+        "ingested": False,
+        "reason": "duplicate_batch",
+        "batch_id": "batch:confusions:dupe",
+    }
+    stored = repository.fetch_confusion_events(batch_id="batch:confusions:dupe")
+    assert len(stored) == 1
+
+
+def test_ingest_confusion_batch_assigns_deterministic_event_ids(database_url: str) -> None:
+    repository = PostgresRepository(database_url)
+    repository.initialize()
+
+    repository.ingest_confusion_batch(
+        batch_id="batch:confusions:deterministic",
+        events=[
+            {
+                "taxon_confused_for_id": "taxon:birds:000001",
+                "taxon_correct_id": "taxon:birds:000002",
+                "occurred_at": datetime(2026, 4, 9, 12, 0, tzinfo=UTC).isoformat(),
+            },
+            {
+                "taxon_confused_for_id": "taxon:birds:000003",
+                "taxon_correct_id": "taxon:birds:000004",
+                "occurred_at": datetime(2026, 4, 9, 12, 1, tzinfo=UTC).isoformat(),
+            },
+        ],
+    )
+    events = repository.fetch_confusion_events(batch_id="batch:confusions:deterministic")
+    ids = sorted(item["confusion_event_id"] for item in events)
+    assert ids == [
+        "batch:confusions:deterministic:1",
+        "batch:confusions:deterministic:2",
+    ]
+
+
+def test_recompute_confusion_aggregates_global_counts_directed_pairs(database_url: str) -> None:
+    repository = PostgresRepository(database_url)
+    repository.initialize()
+    repository.ingest_confusion_batch(
+        batch_id="batch:confusions:agg",
+        events=[
+            {
+                "taxon_confused_for_id": "taxon:birds:000001",
+                "taxon_correct_id": "taxon:birds:000002",
+                "occurred_at": datetime(2026, 4, 9, 12, 0, tzinfo=UTC).isoformat(),
+            },
+            {
+                "taxon_confused_for_id": "taxon:birds:000001",
+                "taxon_correct_id": "taxon:birds:000002",
+                "occurred_at": datetime(2026, 4, 9, 12, 5, tzinfo=UTC).isoformat(),
+            },
+            {
+                "taxon_confused_for_id": "taxon:birds:000002",
+                "taxon_correct_id": "taxon:birds:000001",
+                "occurred_at": datetime(2026, 4, 9, 12, 7, tzinfo=UTC).isoformat(),
+            },
+        ],
+    )
+
+    recomputed = repository.recompute_confusion_aggregates_global()
+    assert recomputed["recomputed"] is True
+    assert recomputed["pair_count"] == 2
+
+    aggregates = repository.fetch_confusion_aggregates_global(limit=10)
+    by_pair = {
+        (item["taxon_confused_for_id"], item["taxon_correct_id"]): item["event_count"]
+        for item in aggregates
+    }
+    assert by_pair[("taxon:birds:000001", "taxon:birds:000002")] == 2
+    assert by_pair[("taxon:birds:000002", "taxon:birds:000001")] == 1
+
+
+def test_recompute_confusion_aggregates_global_is_idempotent(database_url: str) -> None:
+    repository = PostgresRepository(database_url)
+    repository.initialize()
+    repository.ingest_confusion_batch(
+        batch_id="batch:confusions:idempotent",
+        events=[
+            {
+                "taxon_confused_for_id": "taxon:birds:000011",
+                "taxon_correct_id": "taxon:birds:000012",
+                "occurred_at": datetime(2026, 4, 9, 13, 0, tzinfo=UTC).isoformat(),
+            }
+        ],
+    )
+
+    first = repository.recompute_confusion_aggregates_global()
+    second = repository.recompute_confusion_aggregates_global()
+    assert first["pair_count"] == second["pair_count"] == 1
+    aggregates = repository.fetch_confusion_aggregates_global(limit=10)
+    assert len(aggregates) == 1
+    assert aggregates[0]["event_count"] == 1
+
+
+def test_ingest_confusion_batch_rejects_same_taxon_pair(database_url: str) -> None:
+    repository = PostgresRepository(database_url)
+    repository.initialize()
+
+    with pytest.raises(ValidationError, match="must differ"):
+        repository.ingest_confusion_batch(
+            batch_id="batch:confusions:invalid",
+            events=[
+                {
+                    "taxon_confused_for_id": "taxon:birds:000001",
+                    "taxon_correct_id": "taxon:birds:000001",
+                    "occurred_at": datetime(2026, 4, 9, 12, 0, tzinfo=UTC).isoformat(),
+                }
+            ],
+        )
+
+
+def test_fetch_summary_confusion_counts_only_global_mode(database_url: str) -> None:
+    repository = PostgresRepository(database_url)
+    repository.initialize()
+    repository.ingest_confusion_batch(
+        batch_id="batch:confusions:summary",
+        events=[
+            {
+                "taxon_confused_for_id": "taxon:birds:000001",
+                "taxon_correct_id": "taxon:birds:000002",
+                "occurred_at": datetime(2026, 4, 9, 12, 0, tzinfo=UTC).isoformat(),
+            }
+        ],
+    )
+    repository.recompute_confusion_aggregates_global()
+
+    global_summary = repository.fetch_summary()
+    assert global_summary["confusion_events"] == 1
+    assert global_summary["confusion_aggregates_global"] == 1
+
+    run_summary = repository.fetch_summary(run_id="run:nonexistent")
+    assert "confusion_events" not in run_summary
+    assert "confusion_aggregates_global" not in run_summary
 
 
 def test_compile_pack_prefers_internal_similar_taxa_for_distractors(

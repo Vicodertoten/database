@@ -1,15 +1,15 @@
 # Audit De Reference - database
 
 Statut: document vivant (reference d'execution)
-Version: v4
+Version: v5
 Date de mise a jour: 2026-04-09
-Perimetre: etat reel du repo apres Gate 6
+Perimetre: etat reel du repo apres Gate 7
 
 ---
 
 ## 1. Synthese executive
 
-Le repo est sur la bonne trajectoire et a livre une base operationnelle solide jusqu'au Gate 6.
+Le repo est sur la bonne trajectoire et a livre une base operationnelle solide jusqu'au Gate 7.
 
 Points forts confirmes:
 
@@ -20,19 +20,21 @@ Points forts confirmes:
 - couche pack v1, diagnostic v1, compilation v1, materialization v1
 - policy distracteurs v2 active dans la compilation pack
 - queue d'enrichissement asynchrone tracee en base
+- contrat batch confusions + agregats globaux plateforme en base
 - couverture tests structurants et smoke KPI verrouilles
 
-Point critique post-Gate 6:
+Point critique post-Gate 7:
 
 - la cible finale playable est un corpus cumulatif incremental reel
 - l'implementation actuelle reste une surface latest reconstruite a chaque run
-- cet ecart reste explicite et constitue le chantier strategique avant Gate 7+
+- cet ecart reste explicite et constitue le chantier strategique avant Gate 8+
 
 Decision de pilotage appliquee:
 
 - Gate 4.5 de remise a niveau documentaire et strategique: ferme
 - Gate 5 distracteurs v2: execute sans evolution de contrat export/schema
 - Gate 6 queue d'enrichissement: execute sans evolution de contrat export/schema
+- Gate 7 confusions batch + agregats globaux: execute sans derive runtime temps reel
 
 ---
 
@@ -48,10 +50,11 @@ Decision de pilotage appliquee:
 | Gate 4.5 - Correctif strategique pre-extension | DONE | 2026-04-09 | alignement doctrine/docs/garde-fous |
 | Gate 5 - Politique distracteurs v2 | DONE | 2026-04-09 | similarites internes prioritaires + fallback deterministe |
 | Gate 6 - Queue d'enrichissement | DONE | 2026-04-09 | requetes+targets+executions asynchrones |
+| Gate 7 - Contrat batch confusions + agregats globaux | DONE | 2026-04-09 | ingestion batch + agregats globaux diriges |
 
 Etat schema applicatif observe:
 
-- database.schema.v12
+- database.schema.v13
 
 Etat contrats observes:
 
@@ -63,17 +66,19 @@ Etat contrats observes:
 - pack.diagnostic.v1
 - pack.compiled.v1
 - pack.materialization.v1
+- confusion.event.v1
+- confusion.aggregate.v1
 
 ## État réel
 
-Le repo est operationnel jusqu'au Gate 6 avec:
+Le repo est operationnel jusqu'au Gate 7 avec:
 
 - une surface playable latest reconstruite a chaque run
 - un historique run-level conserve pour auditabilite
 - des builds compiles conserves de maniere historique
 - des materializations figees immuables
 
-Le delta vers la cible finale est explicite; Gate 4.5, Gate 5 et Gate 6 sont executes.
+Le delta vers la cible finale est explicite; Gate 4.5, Gate 5, Gate 6 et Gate 7 sont executes.
 
 ## Cible
 
@@ -81,8 +86,8 @@ La cible d'evolution reste:
 
 - un playable corpus cumulatif incremental reel
 - des frontieres strictes entre database et runtime
-- une trajectoire sequentielle avec Gate 7 confusions batch puis Gate 8 inspection et KPI
-- une reduction de dette PostgresRepository planifiee sans lancer de refactor pendant Gate 6
+- une trajectoire sequentielle avec Gate 8 inspection et KPI puis Gate 9 retrait sidecar v3
+- une reduction de dette PostgresRepository planifiee sans lancer de refactor pendant Gate 7
 
 ---
 
@@ -346,4 +351,29 @@ tests_run:
 residual_risks:
 - queue execution is command-driven (no background worker in this gate)
 - playable persistence target remains cumulative-incremental backlog item
-go_no_go: GO for Gate 6 closure, Gate 7 remains closed
+go_no_go: GO for Gate 6 closure, Gate 7 opened then closed
+
+## 14. Gate 7 closure evidence
+
+date: 2026-04-09
+owner: codex
+checklist_items_passed:
+- batch confusion ingestion persisted (`confusion_batches`, `confusion_events`)
+- deterministic event id strategy applied (`{batch_id}:{index}`)
+- idempotent ingestion enforced on duplicate `batch_id`
+- directed global aggregates persisted (`confusion_aggregates_global`)
+- aggregate recomputation remains asynchronous and operator-driven
+- no runtime/session/scoring/progression logic added
+tests_run:
+- tests/test_storage.py::test_ingest_confusion_batch_creates_events
+- tests/test_storage.py::test_ingest_confusion_batch_duplicate_batch_rejected
+- tests/test_storage.py::test_ingest_confusion_batch_assigns_deterministic_event_ids
+- tests/test_storage.py::test_recompute_confusion_aggregates_global_counts_directed_pairs
+- tests/test_storage.py::test_recompute_confusion_aggregates_global_is_idempotent
+- tests/test_storage.py::test_ingest_confusion_batch_rejects_same_taxon_pair
+- tests/test_storage.py::test_fetch_summary_confusion_counts_only_global_mode
+- tests/test_verify_repo.py
+residual_risks:
+- aggregates are recomputed on demand (no scheduler in this gate)
+- playable persistence target remains cumulative-incremental backlog item
+go_no_go: GO for Gate 7 closure, Gate 8 remains closed

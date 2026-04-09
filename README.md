@@ -28,13 +28,14 @@ The current pilot stays narrow on purpose:
 
 The repository is not the quiz app, frontend, or product runtime.
 
-## Post-Gate 6 Strategic Context
+## Post-Gate 7 Strategic Context
 
 The repository has reached Gate 4 (playable + packs + compilation + materialization).
 This is a strong milestone, but it is not yet the final target shape.
 
 Gate 5 (distractor policy v2) is implemented for compiled packs.
 Gate 6 (asynchronous enrichment queue) is now implemented for pack compilation deficits.
+Gate 7 (batch confusion ingestion + global aggregates) is now implemented.
 
 The final playable target is a real cumulative incremental corpus:
 
@@ -57,7 +58,7 @@ Gate 4.5 closure artifacts are documentation and discipline checks only:
 - cross-doc alignment on playable target vs current latest-surface implementation
 - explicit gate ordering with a dedicated distractor policy v2 gate after Gate 4.5
 - explicit strategic debt tracking for PostgresRepository without launching refactor work
-- non-regression checks that block accidental Gate 7+ implementation markers while Gate 6 is active
+- non-regression checks that block accidental Gate 8+ storage drift while Gate 7 is active
 
 Gate 5 execution artifacts:
 
@@ -73,7 +74,14 @@ Gate 6 execution artifacts:
 - target-level queue entries persisted in `enrichment_request_targets`
 - execution history persisted in `enrichment_executions`
 - optional asynchronous recompilation trigger after a successful/partial execution
-- no Gate 7 confusion ingestion or aggregates introduced
+
+Gate 7 execution artifacts:
+
+- batch confusion ingestion persisted in PostgreSQL (`confusion_batches`, `confusion_events`)
+- idempotent batch contract (`batch_id`) with deterministic event ids (`{batch_id}:{index}`)
+- global directed-pair aggregates persisted in `confusion_aggregates_global`
+- aggregate recomputation is operator-driven and asynchronous (no real-time adaptation)
+- no gate drift into runtime session/scoring/progression logic
 
 ## Reference docs
 
@@ -111,7 +119,7 @@ python scripts/inspect_database.py playable-corpus --limit 20
 Installed entrypoints mirror the script wrappers:
 `database-run-pipeline`, `database-inspect`, `database-fetch-inat-snapshot`,
 `database-qualify-inat-snapshot`, `database-review-overrides`,
-`database-governance-review`, `database-migrate`, and `database-pack`.
+`database-governance-review`, `database-migrate`, `database-pack`, and `database-confusion`.
 
 ## What works now
 
@@ -133,6 +141,7 @@ Installed entrypoints mirror the script wrappers:
 - deterministic compiled pack builds persisted as `pack.compiled.v1`
 - frozen pack materializations persisted as `pack.materialization.v1` for `assignment` and `daily_challenge`
 - asynchronous enrichment request queue with execution tracking for non-compilable packs
+- batch confusion ingestion with directed global confusion aggregates
 - compiled build history is preserved and queryable for traceability
 - materializations are frozen immutable snapshots derived from one compiled build
 - versioned normalized, qualification, and export artifacts
@@ -184,6 +193,8 @@ python scripts/manage_packs.py compile --pack-id pack:birds:be:v1 --question-cou
 python scripts/manage_packs.py materialize --pack-id pack:birds:be:v1 --question-count 20 --purpose daily_challenge
 python scripts/manage_packs.py enrich-enqueue --pack-id pack:birds:be:v1
 python scripts/manage_packs.py enrich-execute --enrichment-request-id enrreq:pack:birds:be:v1:1:aaaaaaaa --execution-status success --trigger-recompile
+python scripts/manage_confusions.py ingest-batch --batch-id batch:birds:20260409T120000Z --events-file data/fixtures/confusions_sample.json
+python scripts/manage_confusions.py aggregate-recompute
 python scripts/inspect_database.py pack-specs --pack-id pack:birds:be:v1
 python scripts/inspect_database.py pack-revisions --pack-id pack:birds:be:v1
 python scripts/inspect_database.py pack-diagnostics --pack-id pack:birds:be:v1
@@ -191,6 +202,8 @@ python scripts/inspect_database.py compiled-pack-builds --pack-id pack:birds:be:
 python scripts/inspect_database.py pack-materializations --pack-id pack:birds:be:v1 --purpose daily_challenge
 python scripts/inspect_database.py enrichment-requests --pack-id pack:birds:be:v1 --enrichment-status pending
 python scripts/inspect_database.py enrichment-executions --enrichment-request-id enrreq:pack:birds:be:v1:1:aaaaaaaa
+python scripts/inspect_database.py confusion-events --batch-id batch:birds:20260409T120000Z
+python scripts/inspect_database.py confusion-aggregates-global --taxon-confused-for-id taxon:birds:000014
 python scripts/review_overrides.py init --snapshot-id inaturalist-birds-20260408T123456Z
 python scripts/review_overrides.py upsert --snapshot-id inaturalist-birds-20260408T123456Z --media-asset-id media:inaturalist:810001 --status review_required --note "manual spot-check requested"
 python scripts/review_overrides.py list --snapshot-id inaturalist-birds-20260408T123456Z
@@ -271,7 +284,7 @@ The manifest records which sort was requested and which one was actually used.
 
 The repository now writes explicit stage versions into generated artifacts:
 
-- schema version: `database.schema.v12`
+- schema version: `database.schema.v13`
 - snapshot manifest version: `inaturalist.snapshot.v3`
 - normalized snapshot version: `normalized.snapshot.v3`
 - canonical enrichment version: `canonical.enrichment.v2`
@@ -284,6 +297,8 @@ The repository now writes explicit stage versions into generated artifacts:
 - pack diagnostic version: `pack.diagnostic.v1`
 - compiled pack version: `pack.compiled.v1`
 - pack materialization version: `pack.materialization.v1`
+- confusion event version: `confusion.event.v1`
+- confusion aggregate version: `confusion.aggregate.v1`
 
 Snapshot manifests without `manifest_version` are rejected.
 Unknown manifest versions are rejected explicitly.

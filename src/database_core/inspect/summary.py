@@ -21,6 +21,8 @@ def render_summary(repository: PostgresRepository) -> str:
             f"pack_materializations: {summary['pack_materializations']}",
             f"enrichment_requests: {summary['enrichment_requests']}",
             f"enrichment_executions: {summary['enrichment_executions']}",
+            f"confusion_events: {summary['confusion_events']}",
+            f"confusion_aggregates_global: {summary['confusion_aggregates_global']}",
         ]
     )
 
@@ -69,6 +71,48 @@ def render_enrichment_executions(
             f"{row['enrichment_execution_id']} | request={row['enrichment_request_id']} | "
             f"status={row['execution_status']} | executed_at={row['executed_at']} | "
             f"error={row['error_info'] or 'none'}"
+        )
+    return "\n".join(lines)
+
+
+def render_confusion_events(
+    repository: PostgresRepository,
+    *,
+    batch_id: str | None = None,
+    limit: int = 100,
+) -> str:
+    rows = repository.fetch_confusion_events(batch_id=batch_id, limit=limit)
+    if not rows:
+        return "Confusion events log is empty."
+    lines = ["Confusion events log"]
+    for row in rows:
+        lines.append(
+            f"{row['confusion_event_id']} | batch={row['batch_id']} | "
+            f"confused_for={row['taxon_confused_for_id']} | correct={row['taxon_correct_id']} | "
+            f"occurred_at={row['occurred_at']}"
+        )
+    return "\n".join(lines)
+
+
+def render_confusion_aggregates_global(
+    repository: PostgresRepository,
+    *,
+    taxon_confused_for_id: str | None = None,
+    limit: int = 100,
+) -> str:
+    rows = repository.fetch_confusion_aggregates_global(
+        taxon_confused_for_id=taxon_confused_for_id,
+        limit=limit,
+    )
+    if not rows:
+        return "Confusion global aggregates are empty."
+    lines = ["Confusion global aggregates"]
+    for row in rows:
+        lines.append(
+            f"{row['taxon_confused_for_id']} -> {row['taxon_correct_id']} | "
+            f"events={row['event_count']} | "
+            f"latest_occurred_at={row['latest_occurred_at']} | "
+            f"aggregated_at={row['aggregated_at']}"
         )
     return "\n".join(lines)
 

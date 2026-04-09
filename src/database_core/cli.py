@@ -19,12 +19,14 @@ from database_core.adapters import (
     fetch_inat_snapshot,
     qualify_inat_snapshot,
 )
-from database_core.domain.models import PackRevisionParameters
+from database_core.domain.models import ConfusionEventInput, PackRevisionParameters
 from database_core.inspect.summary import (
     render_canonical_change_events,
     render_canonical_governance_events,
     render_canonical_governance_review_queue,
     render_canonical_state_events,
+    render_confusion_aggregates_global,
+    render_confusion_events,
     render_enrichment_executions,
     render_enrichment_requests,
     render_exportables,
@@ -139,6 +141,8 @@ def main() -> None:
             "pack-materializations",
             "enrichment-requests",
             "enrichment-executions",
+            "confusion-events",
+            "confusion-aggregates-global",
         ],
     )
     inspect_parser.add_argument(
@@ -149,6 +153,8 @@ def main() -> None:
     inspect_parser.add_argument("--snapshot-id", type=str)
     inspect_parser.add_argument("--enrichment-request-id", type=str)
     inspect_parser.add_argument("--enrichment-status", type=str)
+    inspect_parser.add_argument("--batch-id", type=str)
+    inspect_parser.add_argument("--taxon-confused-for-id", type=str)
     inspect_parser.add_argument("--snapshot-root", type=Path, default=DEFAULT_INAT_SNAPSHOT_ROOT)
     inspect_parser.add_argument("--review-reason-code", type=str)
     inspect_parser.add_argument("--stage-name", type=str)
@@ -324,6 +330,27 @@ def main() -> None:
     )
     pack_enrich_execute_parser.add_argument("--error-info", type=str)
     pack_enrich_execute_parser.add_argument("--trigger-recompile", action="store_true")
+
+    confusion_parser = subparsers.add_parser("confusion")
+    confusion_subparsers = confusion_parser.add_subparsers(
+        dest="confusion_command", required=True
+    )
+
+    confusion_ingest_parser = confusion_subparsers.add_parser("ingest-batch")
+    confusion_ingest_parser.add_argument(
+        "--database-url",
+        type=str,
+        default=os.environ.get("DATABASE_URL", DEFAULT_DATABASE_URL),
+    )
+    confusion_ingest_parser.add_argument("--batch-id", required=True)
+    confusion_ingest_parser.add_argument("--events-file", type=Path, required=True)
+
+    confusion_recompute_parser = confusion_subparsers.add_parser("aggregate-recompute")
+    confusion_recompute_parser.add_argument(
+        "--database-url",
+        type=str,
+        default=os.environ.get("DATABASE_URL", DEFAULT_DATABASE_URL),
+    )
 
     review_overrides_parser = subparsers.add_parser("review-overrides")
     review_overrides_subparsers = review_overrides_parser.add_subparsers(
@@ -523,6 +550,23 @@ def main() -> None:
             print(json.dumps(payload, indent=2, sort_keys=True))
             return
         raise SystemExit(f"Unsupported pack command: {args.pack_command}")
+
+    if args.command == "confusion":
+        repository = PostgresRepository(args.database_url)
+        repository.initialize()
+        if args.confusion_command == "ingest-batch":
+            events = _load_confusion_events_from_file(args.events_file)
+            payload = repository.ingest_confusion_batch(
+                batch_id=args.batch_id,
+                events=events,
+            )
+            print(json.dumps(payload, indent=2, sort_keys=True))
+            return
+        if args.confusion_command == "aggregate-recompute":
+            payload = repository.recompute_confusion_aggregates_global()
+            print(json.dumps(payload, indent=2, sort_keys=True))
+            return
+        raise SystemExit(f"Unsupported confusion command: {args.confusion_command}")
 
     if args.command == "migrate":
         repository = PostgresRepository(args.database_url)
@@ -761,8 +805,47 @@ def main() -> None:
                 limit=args.limit,
             )
         )
+    elif args.view == "confusion-events":
+        print(
+            render_confusion_events(
+                repository,
+                batch_id=args.batch_id,
+                limit=args.limit,
+            )
+        )
+    elif args.view == "confusion-aggregates-global":
+        print(
+            render_confusion_aggregates_global(
+                repository,
+                taxon_confused_for_id=args.taxon_confused_for_id,
+                limit=args.limit,
+            )
+        )
     else:
         print(render_exportables(repository))
+
+
+def _load_confusion_events_from_file(path: Path) -> list[dict[str, object]]:
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except OSError as exc:
+        raise SystemExit(f"Cannot read events file: {path}") from exc
+    except json.JSONDecodeError as exc:
+        raise SystemExit(f"Invalid JSON in events file: {path}") from exc
+
+    if not isinstance(payload, list):
+        raise SystemExit("--events-file must be a JSON list of confusion event objects")
+
+    validated: list[dict[str, object]] = []
+    for index, item in enumerate(payload, start=1):
+        if not isinstance(item, dict):
+            raise SystemExit(f"Invalid event at index {index}: expected JSON object")
+        try:
+            event = ConfusionEventInput(**item)
+        except Exception as exc:  # pragma: no cover - CLI validation failure path.
+            raise SystemExit(f"Invalid event at index {index}: {exc}") from exc
+        validated.append(event.model_dump(mode="json"))
+    return validated
 
 
 def _parse_optional_iso8601_datetime(value: str | None) -> datetime | None:
@@ -880,6 +963,11 @@ def migrate_entrypoint() -> None:
 
 def pack_entrypoint() -> None:
     sys.argv.insert(1, "pack")
+    main()
+
+
+def confusion_entrypoint() -> None:
+    sys.argv.insert(1, "confusion")
     main()
 
 

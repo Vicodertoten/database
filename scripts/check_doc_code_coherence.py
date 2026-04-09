@@ -28,6 +28,8 @@ def main() -> int:
         version_tokens["PACK_DIAGNOSTIC_VERSION"],
         version_tokens["COMPILED_PACK_VERSION"],
         version_tokens["PACK_MATERIALIZATION_VERSION"],
+        version_tokens["CONFUSION_EVENT_VERSION"],
+        version_tokens["CONFUSION_AGGREGATE_VERSION"],
     ):
         if token not in audit_doc:
             issues.append(f"docs/05 is missing version token: {token}")
@@ -56,6 +58,8 @@ def main() -> int:
         issues.append("README must document the database-migrate entrypoint")
     if "database-pack" not in readme:
         issues.append("README must document the database-pack entrypoint")
+    if "database-confusion" not in readme:
+        issues.append("README must document the database-confusion entrypoint")
 
     if WORKFLOW_PATH.exists() and "absence de ci visible" in audit_doc.lower():
         issues.append("docs/05 still claims CI is not visible while workflow file exists")
@@ -89,6 +93,8 @@ def _extract_version_tokens(versioning_content: str) -> dict[str, str]:
         "PACK_DIAGNOSTIC_VERSION",
         "COMPILED_PACK_VERSION",
         "PACK_MATERIALIZATION_VERSION",
+        "CONFUSION_EVENT_VERSION",
+        "CONFUSION_AGGREGATE_VERSION",
     ):
         match = re.search(rf'^{key}\s*=\s*"([^"]+)"', versioning_content, flags=re.MULTILINE)
         if match:

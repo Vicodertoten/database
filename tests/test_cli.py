@@ -238,7 +238,68 @@ def test_migrate_cli_applies_pending_schema_migration(monkeypatch, database_url:
         cli.main()
 
     assert "Database migrated" in buffer.getvalue()
-    assert repository.current_schema_version() == 12
+    assert repository.current_schema_version() == 13
+
+
+def test_confusion_cli_ingest_and_recompute(monkeypatch, tmp_path: Path, database_url: str) -> None:
+    events_file = tmp_path / "confusions.json"
+    events_file.write_text(
+        json.dumps(
+            [
+                {
+                    "taxon_confused_for_id": "taxon:birds:000001",
+                    "taxon_correct_id": "taxon:birds:000002",
+                    "occurred_at": "2026-04-09T12:00:00+00:00",
+                },
+                {
+                    "taxon_confused_for_id": "taxon:birds:000001",
+                    "taxon_correct_id": "taxon:birds:000003",
+                    "occurred_at": "2026-04-09T12:01:00+00:00",
+                },
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "database-core",
+            "confusion",
+            "ingest-batch",
+            "--database-url",
+            database_url,
+            "--batch-id",
+            "batch:cli:001",
+            "--events-file",
+            str(events_file),
+        ],
+    )
+    ingest_buffer = io.StringIO()
+    with redirect_stdout(ingest_buffer):
+        cli.main()
+    ingested = json.loads(ingest_buffer.getvalue())
+    assert ingested["ingested"] is True
+    assert ingested["event_count"] == 2
+
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "database-core",
+            "confusion",
+            "aggregate-recompute",
+            "--database-url",
+            database_url,
+        ],
+    )
+    recompute_buffer = io.StringIO()
+    with redirect_stdout(recompute_buffer):
+        cli.main()
+    recomputed = json.loads(recompute_buffer.getvalue())
+    assert recomputed["recomputed"] is True
+    assert recomputed["pair_count"] == 2
 
 
 def test_governance_review_cli_resolves_item(monkeypatch, database_url: str) -> None:
