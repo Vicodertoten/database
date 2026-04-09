@@ -270,3 +270,107 @@ CREATE TABLE IF NOT EXISTS review_queue (
     FOREIGN KEY (canonical_taxon_id) REFERENCES canonical_taxa (canonical_taxon_id)
 );
 """
+
+POSTGRES_PLAYABLE_V9_SQL = """
+CREATE TABLE IF NOT EXISTS playable_items (
+    playable_item_id TEXT PRIMARY KEY,
+    run_id TEXT NOT NULL,
+    qualified_resource_id TEXT NOT NULL,
+    canonical_taxon_id TEXT NOT NULL,
+    media_asset_id TEXT NOT NULL,
+    source_observation_uid TEXT NOT NULL,
+    source_name TEXT NOT NULL,
+    source_observation_id TEXT NOT NULL,
+    source_media_id TEXT NOT NULL,
+    scientific_name TEXT NOT NULL,
+    common_names_i18n_json TEXT NOT NULL,
+    difficulty_level TEXT NOT NULL,
+    media_role TEXT NOT NULL,
+    learning_suitability TEXT NOT NULL,
+    confusion_relevance TEXT NOT NULL,
+    diagnostic_feature_visibility TEXT NOT NULL,
+    similar_taxon_ids_json TEXT NOT NULL,
+    what_to_look_at_specific_json TEXT NOT NULL,
+    what_to_look_at_general_json TEXT NOT NULL,
+    confusion_hint TEXT,
+    country_code TEXT,
+    observed_at TIMESTAMPTZ,
+    location_point geometry(Point, 4326),
+    location_bbox geometry(Polygon, 4326),
+    location_radius_meters DOUBLE PRECISION,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    FOREIGN KEY (run_id) REFERENCES pipeline_runs (run_id),
+    FOREIGN KEY (qualified_resource_id) REFERENCES qualified_resources (qualified_resource_id),
+    FOREIGN KEY (canonical_taxon_id) REFERENCES canonical_taxa (canonical_taxon_id),
+    FOREIGN KEY (media_asset_id) REFERENCES media_assets (media_id),
+    FOREIGN KEY (source_observation_uid) REFERENCES source_observations (observation_uid)
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_playable_items_qualified_resource
+    ON playable_items (qualified_resource_id);
+
+CREATE INDEX IF NOT EXISTS idx_playable_items_canonical_taxon_id
+    ON playable_items (canonical_taxon_id);
+
+CREATE INDEX IF NOT EXISTS idx_playable_items_country_code
+    ON playable_items (country_code);
+
+CREATE INDEX IF NOT EXISTS idx_playable_items_observed_at
+    ON playable_items (observed_at DESC);
+
+CREATE INDEX IF NOT EXISTS idx_playable_items_difficulty
+    ON playable_items (difficulty_level);
+
+CREATE INDEX IF NOT EXISTS idx_playable_items_media_role
+    ON playable_items (media_role);
+
+CREATE INDEX IF NOT EXISTS idx_playable_items_learning_suitability
+    ON playable_items (learning_suitability);
+
+CREATE INDEX IF NOT EXISTS idx_playable_items_confusion_relevance
+    ON playable_items (confusion_relevance);
+
+CREATE INDEX IF NOT EXISTS idx_playable_items_point_gist
+    ON playable_items USING GIST (location_point);
+
+CREATE INDEX IF NOT EXISTS idx_playable_items_bbox_gist
+    ON playable_items USING GIST (location_bbox);
+
+CREATE TABLE IF NOT EXISTS playable_items_history (
+    run_id TEXT NOT NULL,
+    playable_item_id TEXT NOT NULL,
+    payload_json TEXT NOT NULL,
+    PRIMARY KEY (run_id, playable_item_id),
+    FOREIGN KEY (run_id) REFERENCES pipeline_runs (run_id)
+);
+
+CREATE OR REPLACE VIEW playable_corpus_v1 AS
+SELECT
+    playable_item_id,
+    run_id,
+    qualified_resource_id,
+    canonical_taxon_id,
+    media_asset_id,
+    source_observation_uid,
+    source_name,
+    source_observation_id,
+    source_media_id,
+    scientific_name,
+    common_names_i18n_json,
+    difficulty_level,
+    media_role,
+    learning_suitability,
+    confusion_relevance,
+    diagnostic_feature_visibility,
+    similar_taxon_ids_json,
+    what_to_look_at_specific_json,
+    what_to_look_at_general_json,
+    confusion_hint,
+    country_code,
+    observed_at,
+    location_point,
+    location_bbox,
+    location_radius_meters,
+    created_at
+FROM playable_items;
+"""

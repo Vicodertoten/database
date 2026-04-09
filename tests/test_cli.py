@@ -9,6 +9,7 @@ import pytest
 
 import database_core.cli as cli
 from database_core.adapters.inaturalist_qualification import SnapshotQualificationResult
+from database_core.pipeline.runner import run_pipeline
 from database_core.storage.postgres import PostgresRepository
 
 
@@ -224,7 +225,7 @@ def test_migrate_cli_applies_pending_schema_migration(monkeypatch, database_url:
         cli.main()
 
     assert "Database migrated" in buffer.getvalue()
-    assert repository.current_schema_version() == 8
+    assert repository.current_schema_version() == 9
 
 
 def test_governance_review_cli_resolves_item(monkeypatch, database_url: str) -> None:
@@ -335,3 +336,73 @@ def test_governance_review_cli_resolves_item(monkeypatch, database_url: str) -> 
     assert rows[0]["review_status"] == "closed"
     assert rows[0]["resolved_note"] == "validated against source taxonomy delta"
     assert rows[0]["resolved_by"] == "operator:test"
+
+
+def test_inspect_cli_playable_corpus_outputs_payload(
+    monkeypatch, tmp_path: Path, database_url: str
+) -> None:
+    run_pipeline(
+        fixture_path=Path("data/fixtures/birds_pilot.json"),
+        database_url=database_url,
+        normalized_snapshot_path=tmp_path / "playable.normalized.json",
+        qualification_snapshot_path=tmp_path / "playable.qualified.json",
+        export_path=tmp_path / "playable.export.json",
+        run_id="run:20260408T000000Z:aaaaaaaa",
+    )
+
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "database-core",
+            "inspect",
+            "playable-corpus",
+            "--database-url",
+            database_url,
+            "--limit",
+            "10",
+        ],
+    )
+    buffer = io.StringIO()
+    with redirect_stdout(buffer):
+        cli.main()
+    payload = json.loads(buffer.getvalue())
+    assert payload["playable_corpus_version"] == "playable_corpus.v1"
+    assert len(payload["items"]) == 2
+
+
+def test_inspect_cli_playable_corpus_supports_filters(
+    monkeypatch, tmp_path: Path, database_url: str
+) -> None:
+    run_pipeline(
+        fixture_path=Path("data/fixtures/birds_pilot.json"),
+        database_url=database_url,
+        normalized_snapshot_path=tmp_path / "playable_filter.normalized.json",
+        qualification_snapshot_path=tmp_path / "playable_filter.qualified.json",
+        export_path=tmp_path / "playable_filter.export.json",
+        run_id="run:20260408T000000Z:aaaaaaaa",
+    )
+
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "database-core",
+            "inspect",
+            "playable-corpus",
+            "--database-url",
+            database_url,
+                "--canonical-taxon-id",
+                "taxon:birds:000014",
+                "--difficulty-level",
+                "unknown",
+                "--limit",
+                "10",
+            ],
+    )
+    buffer = io.StringIO()
+    with redirect_stdout(buffer):
+        cli.main()
+    payload = json.loads(buffer.getvalue())
+    assert len(payload["items"]) == 1
+    assert payload["items"][0]["canonical_taxon_id"] == "taxon:birds:000014"

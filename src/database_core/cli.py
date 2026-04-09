@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import sys
 from datetime import UTC, datetime
@@ -127,6 +128,7 @@ def main() -> None:
             "exportables",
             "snapshot-health",
             "run-metrics",
+            "playable-corpus",
         ],
     )
     inspect_parser.add_argument(
@@ -143,6 +145,23 @@ def main() -> None:
     inspect_parser.add_argument("--priority", type=str)
     inspect_parser.add_argument("--run-id", type=str)
     inspect_parser.add_argument("--limit", type=int, default=100)
+    inspect_parser.add_argument("--difficulty-level", type=str)
+    inspect_parser.add_argument("--media-role", type=str)
+    inspect_parser.add_argument("--learning-suitability", type=str)
+    inspect_parser.add_argument("--confusion-relevance", type=str)
+    inspect_parser.add_argument("--country-code", type=str)
+    inspect_parser.add_argument("--observed-from", type=str)
+    inspect_parser.add_argument("--observed-to", type=str)
+    inspect_parser.add_argument(
+        "--bbox",
+        type=str,
+        help="min_longitude,min_latitude,max_longitude,max_latitude",
+    )
+    inspect_parser.add_argument(
+        "--point-radius",
+        type=str,
+        help="longitude,latitude,radius_meters",
+    )
 
     review_overrides_parser = subparsers.add_parser("review-overrides")
     review_overrides_subparsers = review_overrides_parser.add_subparsers(
@@ -446,8 +465,65 @@ def main() -> None:
         )
     elif args.view == "run-metrics":
         print(render_run_metrics(repository, run_id=args.run_id))
+    elif args.view == "playable-corpus":
+        payload = repository.fetch_playable_corpus_payload(
+            canonical_taxon_id=args.canonical_taxon_id,
+            country_code=args.country_code,
+            difficulty_level=args.difficulty_level,
+            media_role=args.media_role,
+            learning_suitability=args.learning_suitability,
+            confusion_relevance=args.confusion_relevance,
+            observed_from=_parse_optional_iso8601_datetime(args.observed_from),
+            observed_to=_parse_optional_iso8601_datetime(args.observed_to),
+            bbox=_parse_bbox(args.bbox),
+            point_radius=_parse_point_radius(args.point_radius),
+            limit=args.limit,
+        )
+        print(json.dumps(payload, indent=2, sort_keys=True))
     else:
         print(render_exportables(repository))
+
+
+def _parse_optional_iso8601_datetime(value: str | None) -> datetime | None:
+    if value is None:
+        return None
+    normalized = value.strip()
+    if not normalized:
+        return None
+    candidate = normalized.replace("Z", "+00:00")
+    try:
+        parsed = datetime.fromisoformat(candidate)
+    except ValueError as exc:  # pragma: no cover - CLI parse failure path.
+        raise SystemExit(f"Invalid ISO-8601 datetime value: {value}") from exc
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=UTC)
+    return parsed
+
+
+def _parse_bbox(value: str | None) -> tuple[float, float, float, float] | None:
+    if value is None:
+        return None
+    parts = [item.strip() for item in value.split(",")]
+    if len(parts) != 4:
+        raise SystemExit("--bbox expects min_longitude,min_latitude,max_longitude,max_latitude")
+    try:
+        min_longitude, min_latitude, max_longitude, max_latitude = (float(item) for item in parts)
+    except ValueError as exc:  # pragma: no cover - CLI parse failure path.
+        raise SystemExit("--bbox values must be numeric") from exc
+    return min_longitude, min_latitude, max_longitude, max_latitude
+
+
+def _parse_point_radius(value: str | None) -> tuple[float, float, float] | None:
+    if value is None:
+        return None
+    parts = [item.strip() for item in value.split(",")]
+    if len(parts) != 3:
+        raise SystemExit("--point-radius expects longitude,latitude,radius_meters")
+    try:
+        longitude, latitude, radius_meters = (float(item) for item in parts)
+    except ValueError as exc:  # pragma: no cover - CLI parse failure path.
+        raise SystemExit("--point-radius values must be numeric") from exc
+    return longitude, latitude, radius_meters
 
 
 def run_pipeline_entrypoint() -> None:

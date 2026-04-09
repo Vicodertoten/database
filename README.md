@@ -57,6 +57,7 @@ python scripts/verify_repo.py
 python scripts/migrate_database.py --database-url "$DATABASE_URL"
 python scripts/run_pipeline.py
 python scripts/inspect_database.py summary
+python scripts/inspect_database.py playable-corpus --limit 20
 ```
 
 Installed entrypoints mirror the script wrappers:
@@ -79,6 +80,7 @@ Installed entrypoints mirror the script wrappers:
 - structured review queue with stage, reason code, and priority
 - canonical governance review queue with close/resolve workflow metadata (`resolved_at`, `resolved_note`, `resolved_by`)
 - snapshot-scoped review overrides that can be replayed on rerun
+- playable corpus surface (`playable_corpus.v1`) persisted in Postgres and queryable with geo/date filters
 - versioned normalized, qualification, and export artifacts
 - JSON export bundles validated against versioned JSON Schemas before write
 - lightweight inspection CLI
@@ -119,6 +121,8 @@ python scripts/inspect_database.py review-queue --review-reason-code human_overr
 python scripts/inspect_database.py canonical-governance-review-queue --snapshot-id inaturalist-birds-20260408T123456Z --review-status open
 python scripts/governance_review.py resolve --snapshot-id inaturalist-birds-20260408T123456Z --governance-review-item-id cgr:run:20260408T123456Z:aaaaaaaa:event:taxon:birds:000001:split:demo --note "validated against source delta" --resolved-by operator:alice
 python scripts/inspect_database.py snapshot-health --snapshot-id inaturalist-birds-20260408T123456Z
+python scripts/inspect_database.py playable-corpus --canonical-taxon-id taxon:birds:000014 --difficulty-level unknown --limit 20
+python scripts/inspect_database.py playable-corpus --country-code BE --point-radius 4.35,50.85,5000 --limit 20
 python scripts/review_overrides.py init --snapshot-id inaturalist-birds-20260408T123456Z
 python scripts/review_overrides.py upsert --snapshot-id inaturalist-birds-20260408T123456Z --media-asset-id media:inaturalist:810001 --status review_required --note "manual spot-check requested"
 python scripts/review_overrides.py list --snapshot-id inaturalist-birds-20260408T123456Z
@@ -164,6 +168,7 @@ Running the fixture pipeline writes:
 - qualification snapshot to `data/qualified/qualification_snapshot.json`
 - export bundle to `data/exports/qualified_resources_bundle.json`
 - materialized/latest state + history into the configured PostgreSQL schema (`DATABASE_URL`)
+- playable corpus API-ready payload via inspect: `python scripts/inspect_database.py playable-corpus`
 
 In `inat_snapshot` mode, the default derived outputs become snapshot-scoped:
 
@@ -191,7 +196,7 @@ The manifest records which sort was requested and which one was actually used.
 
 The repository now writes explicit stage versions into generated artifacts:
 
-- schema version: `database.schema.v8`
+- schema version: `database.schema.v9`
 - snapshot manifest version: `inaturalist.snapshot.v3`
 - normalized snapshot version: `normalized.snapshot.v3`
 - canonical enrichment version: `canonical.enrichment.v2`
@@ -199,6 +204,7 @@ The repository now writes explicit stage versions into generated artifacts:
 - export version: `export.bundle.v4`
 - sidecar export version: `export.bundle.v3` (transition mode, opt-in only)
 - review override version: `review.override.v1`
+- playable corpus version: `playable_corpus.v1`
 
 Snapshot manifests without `manifest_version` are rejected.
 Unknown manifest versions are rejected explicitly.
@@ -206,6 +212,8 @@ The primary export bundle (`v4`) is validated against
 `schemas/qualified_resources_bundle_v4.schema.json` before write.
 The optional sidecar (`v3`) is generated only with `--export-v3-sidecar` and validated against
 `schemas/qualified_resources_bundle_v3.schema.json`.
+The playable corpus payload is validated against
+`schemas/playable_corpus_v1.schema.json`.
 
 ## Canonical enrichment
 

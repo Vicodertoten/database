@@ -58,6 +58,26 @@ class LocationMetadata(DomainModel):
     country_code: str | None = None
 
 
+class GeoPoint(DomainModel):
+    longitude: float
+    latitude: float
+
+
+class GeoBBox(DomainModel):
+    min_longitude: float
+    min_latitude: float
+    max_longitude: float
+    max_latitude: float
+
+    @model_validator(mode="after")
+    def validate_bbox_order(self) -> Self:
+        if self.min_longitude > self.max_longitude:
+            raise ValueError("min_longitude must be <= max_longitude")
+        if self.min_latitude > self.max_latitude:
+            raise ValueError("min_latitude must be <= max_latitude")
+        return self
+
+
 class SourceQualityMetadata(DomainModel):
     quality_grade: str
     research_grade: bool
@@ -379,6 +399,66 @@ class ReviewItem(DomainModel):
     priority: ReviewPriority = ReviewPriority.MEDIUM
     review_status: ReviewStatus = ReviewStatus.OPEN
     created_at: datetime
+
+
+class PlayableItem(DomainModel):
+    playable_item_id: str
+    run_id: str
+    qualified_resource_id: str
+    canonical_taxon_id: str
+    media_asset_id: str
+    source_observation_uid: str
+    source_name: SourceName
+    source_observation_id: str
+    source_media_id: str
+    scientific_name: str
+    common_names_i18n: dict[str, list[str]] = Field(default_factory=dict)
+    difficulty_level: DifficultyLevel
+    media_role: MediaRole
+    learning_suitability: LearningSuitability
+    confusion_relevance: ConfusionRelevance
+    diagnostic_feature_visibility: DiagnosticFeatureVisibility
+    similar_taxon_ids: list[str] = Field(default_factory=list)
+    what_to_look_at_specific: list[str] = Field(default_factory=list)
+    what_to_look_at_general: list[str] = Field(default_factory=list)
+    confusion_hint: str | None = None
+    country_code: str | None = None
+    observed_at: datetime | None = None
+    location_point: GeoPoint | None = None
+    location_bbox: GeoBBox | None = None
+    location_radius_meters: float | None = None
+
+    @field_validator(
+        "playable_item_id",
+        "run_id",
+        "qualified_resource_id",
+        "canonical_taxon_id",
+        "media_asset_id",
+        "source_observation_uid",
+        "source_observation_id",
+        "source_media_id",
+        "scientific_name",
+    )
+    @classmethod
+    def validate_non_blank_fields(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("field must not be blank")
+        return value
+
+    @field_validator("common_names_i18n")
+    @classmethod
+    def validate_common_names_i18n(cls, value: dict[str, list[str]]) -> dict[str, list[str]]:
+        required_languages = ("fr", "en", "nl")
+        missing = [language for language in required_languages if language not in value]
+        if missing:
+            raise ValueError(
+                "common_names_i18n must include keys: fr, en, nl "
+                f"(missing={','.join(missing)})"
+            )
+        normalized: dict[str, list[str]] = {}
+        for language, names in value.items():
+            normalized[language] = [str(name).strip() for name in names if str(name).strip()]
+        return normalized
 
 
 class CanonicalGovernanceReviewItem(DomainModel):

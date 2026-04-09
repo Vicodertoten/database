@@ -7,10 +7,16 @@ from database_core.domain.enums import SourceName
 from database_core.domain.models import (
     CanonicalTaxon,
     ExternalMapping,
+    GeoPoint,
     LocationMetadata,
+    MediaAsset,
+    PlayableItem,
+    ProvenanceSummary,
+    QualifiedResource,
     SourceObservation,
     SourceQualityMetadata,
 )
+from database_core.playable import validate_playable_corpus
 from database_core.storage.postgres import (
     PostgresRepository,
     RepositorySchemaVersionMismatchError,
@@ -62,14 +68,14 @@ def test_initialize_can_reset_legacy_schema_version_with_explicit_flag(
         )
 
     assert "legacy_table" not in table_names
-    assert user_version == 8
+    assert user_version == 9
 
 
-def test_migrate_to_latest_initializes_v8_schema(database_url: str) -> None:
+def test_migrate_to_latest_initializes_v9_schema(database_url: str) -> None:
     repository = PostgresRepository(database_url)
     applied_versions = repository.migrate_to_latest()
-    assert applied_versions == (8,)
-    assert repository.current_schema_version() == 8
+    assert applied_versions == (8, 9)
+    assert repository.current_schema_version() == 9
 
 
 def test_geospatial_queries_support_bbox_and_point_radius(database_url: str) -> None:
@@ -447,6 +453,127 @@ def test_governance_review_resolution_requires_non_blank_note(database_url: str)
         )
 
 
+def test_playable_items_persist_and_support_filters(database_url: str) -> None:
+    repository = PostgresRepository(database_url)
+    repository.initialize()
+    captured_at = datetime(2026, 4, 8, 0, 0, tzinfo=UTC)
+    run_id = "run:20260408T000000Z:aaaaaaaa"
+
+    with repository.connect() as connection:
+        repository.start_pipeline_run(
+            run_id=run_id,
+            source_mode="fixture",
+            dataset_id="fixture:playable",
+            snapshot_id=None,
+            started_at=captured_at,
+            connection=connection,
+        )
+        repository.save_canonical_taxa(
+            [_canonical_taxon(canonical_taxon_id="taxon:birds:000001", name="Parus major")],
+            run_id=run_id,
+            connection=connection,
+        )
+        repository.save_source_observations(
+            [
+                SourceObservation(
+                    observation_uid="obs:inaturalist:playable-1",
+                    source_name=SourceName.INATURALIST,
+                    source_observation_id="playable-1",
+                    source_taxon_id="12716",
+                    observed_at=captured_at,
+                    location=LocationMetadata(
+                        place_name="Brussels",
+                        latitude=50.8503,
+                        longitude=4.3517,
+                        country_code="BE",
+                    ),
+                    source_quality=SourceQualityMetadata(
+                        quality_grade="research",
+                        research_grade=True,
+                        observation_license="CC-BY",
+                        captive=False,
+                    ),
+                    raw_payload_ref="fixture://playable/1",
+                    canonical_taxon_id="taxon:birds:000001",
+                )
+            ],
+            connection=connection,
+        )
+        repository.save_media_assets(
+            [
+                _media_asset(
+                    media_id="media:inaturalist:playable-1",
+                    source_media_id="playable-1",
+                    source_observation_uid="obs:inaturalist:playable-1",
+                    canonical_taxon_id="taxon:birds:000001",
+                )
+            ],
+            connection=connection,
+        )
+        repository.save_qualified_resources(
+            [
+                _qualified_resource(
+                    qualified_resource_id="qr:media:inaturalist:playable-1",
+                    media_asset_id="media:inaturalist:playable-1",
+                    source_observation_uid="obs:inaturalist:playable-1",
+                    source_observation_id="playable-1",
+                    canonical_taxon_id="taxon:birds:000001",
+                )
+            ],
+            connection=connection,
+        )
+        playable_item = _playable_item(
+            run_id=run_id,
+            qualified_resource_id="qr:media:inaturalist:playable-1",
+            canonical_taxon_id="taxon:birds:000001",
+            media_asset_id="media:inaturalist:playable-1",
+            source_observation_uid="obs:inaturalist:playable-1",
+            source_observation_id="playable-1",
+            source_media_id="playable-1",
+        )
+        repository.save_playable_items([playable_item], connection=connection)
+        repository.append_run_history(
+            run_id=run_id,
+            governance_effective_at=captured_at,
+            canonical_taxa=[],
+            observations=[],
+            media_assets=[],
+            qualified_resources=[],
+            review_items=[],
+            playable_items=[playable_item],
+            connection=connection,
+        )
+        repository.complete_pipeline_run(
+            run_id=run_id,
+            completed_at=captured_at,
+            connection=connection,
+        )
+
+    rows = repository.fetch_playable_corpus(
+        canonical_taxon_id="taxon:birds:000001",
+        country_code="BE",
+        difficulty_level="easy",
+        media_role="primary_id",
+        learning_suitability="high",
+        confusion_relevance="medium",
+        observed_from=datetime(2026, 4, 8, 0, 0, tzinfo=UTC),
+        observed_to=datetime(2026, 4, 8, 0, 0, tzinfo=UTC),
+        bbox=(4.0, 50.7, 4.6, 51.0),
+        point_radius=(4.3517, 50.8503, 500.0),
+        limit=10,
+    )
+    assert len(rows) == 1
+    assert rows[0]["playable_item_id"] == "playable:qr:media:inaturalist:playable-1"
+    assert rows[0]["common_names_i18n"]["en"] == ["Great Tit"]
+    assert rows[0]["common_names_i18n"]["fr"] == []
+    assert rows[0]["common_names_i18n"]["nl"] == []
+
+    payload = repository.fetch_playable_corpus_payload(limit=10)
+    validate_playable_corpus(payload)
+    assert payload["playable_corpus_version"] == "playable_corpus.v1"
+    assert len(payload["items"]) == 1
+
+
 def _canonical_taxon(
     *,
     canonical_taxon_id: str,
@@ -480,4 +607,122 @@ def _canonical_taxon(
         merged_into=None,
         replaced_by=None,
         derived_from=None,
+    )
+
+
+def _playable_item(
+    *,
+    run_id: str,
+    qualified_resource_id: str,
+    canonical_taxon_id: str,
+    media_asset_id: str,
+    source_observation_uid: str,
+    source_observation_id: str,
+    source_media_id: str,
+) -> PlayableItem:
+    return PlayableItem(
+        playable_item_id=f"playable:{qualified_resource_id}",
+        run_id=run_id,
+        qualified_resource_id=qualified_resource_id,
+        canonical_taxon_id=canonical_taxon_id,
+        media_asset_id=media_asset_id,
+        source_observation_uid=source_observation_uid,
+        source_name=SourceName.INATURALIST,
+        source_observation_id=source_observation_id,
+        source_media_id=source_media_id,
+        scientific_name="Parus major",
+        common_names_i18n={"fr": [], "en": ["Great Tit"], "nl": []},
+        difficulty_level="easy",
+        media_role="primary_id",
+        learning_suitability="high",
+        confusion_relevance="medium",
+        diagnostic_feature_visibility="high",
+        similar_taxon_ids=[],
+        what_to_look_at_specific=["head"],
+        what_to_look_at_general=["black head", "white cheeks"],
+        confusion_hint=None,
+        country_code="BE",
+        observed_at=datetime(2026, 4, 8, 0, 0, tzinfo=UTC),
+        location_point=GeoPoint(longitude=4.3517, latitude=50.8503),
+        location_bbox=None,
+        location_radius_meters=None,
+    )
+
+
+def _media_asset(
+    *,
+    media_id: str,
+    source_media_id: str,
+    source_observation_uid: str,
+    canonical_taxon_id: str,
+):
+    return MediaAsset(
+        media_id=media_id,
+        source_name=SourceName.INATURALIST,
+        source_media_id=source_media_id,
+        media_type="image",
+        source_url="https://example.test/image.jpg",
+        attribution="test",
+        author="test",
+        license="CC-BY",
+        mime_type="image/jpeg",
+        file_extension="jpg",
+        width=1600,
+        height=1200,
+        checksum=None,
+        source_observation_uid=source_observation_uid,
+        canonical_taxon_id=canonical_taxon_id,
+        raw_payload_ref="fixture://media",
+    )
+
+
+def _qualified_resource(
+    *,
+    qualified_resource_id: str,
+    media_asset_id: str,
+    source_observation_uid: str,
+    source_observation_id: str,
+    canonical_taxon_id: str,
+):
+    return QualifiedResource(
+        qualified_resource_id=qualified_resource_id,
+        canonical_taxon_id=canonical_taxon_id,
+        source_observation_uid=source_observation_uid,
+        source_observation_id=source_observation_id,
+        media_asset_id=media_asset_id,
+        qualification_status="accepted",
+        qualification_version="qualification.staged.v1",
+        technical_quality="high",
+        pedagogical_quality="high",
+        life_stage="adult",
+        sex="unknown",
+        visible_parts=["head"],
+        view_angle="lateral",
+        difficulty_level="easy",
+        media_role="primary_id",
+        confusion_relevance="medium",
+        diagnostic_feature_visibility="high",
+        learning_suitability="high",
+        uncertainty_reason="none",
+        qualification_notes=None,
+        qualification_flags=[],
+        provenance_summary=ProvenanceSummary(
+            source_name=SourceName.INATURALIST,
+            source_observation_key="inaturalist::playable-1",
+            source_media_key="inaturalist::playable-1",
+            source_observation_id=source_observation_id,
+            source_media_id="playable-1",
+            raw_payload_ref="fixture://media",
+            run_id="run:fixture",
+            observation_license="CC-BY",
+            media_license="CC-BY",
+            qualification_method="fixture",
+            ai_model="fixture-ai",
+            ai_prompt_version="phase1.inat.image.v2",
+            ai_task_name="expert_qualification",
+            ai_status="ok",
+        ),
+        license_safety_result="safe",
+        export_eligible=True,
+        ai_confidence=0.95,
     )

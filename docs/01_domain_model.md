@@ -96,3 +96,24 @@ Fields:
 - export eligibility
 
 Qualification stays explicit. Unknown and review-required are first-class outcomes.
+
+## PlayableItem (Gate 2)
+
+Derived, queryable runtime-facing item persisted in database (without runtime session logic).
+
+Fields:
+
+- stable `playable_item_id` (derived from qualified resource)
+- run lineage (`run_id`, `qualified_resource_id`)
+- canonical and media links (`canonical_taxon_id`, `media_asset_id`, source refs)
+- taxon display (`scientific_name`, `common_names_i18n` with mandatory `fr`/`en`/`nl` keys)
+- pedagogical signals (`difficulty_level`, `media_role`, `learning_suitability`, `confusion_relevance`, `diagnostic_feature_visibility`)
+- canonical similarity projection (`similar_taxon_ids`)
+- feedback blocks (`what_to_look_at_specific`, `what_to_look_at_general`, `confusion_hint`)
+- geo/date facets (`country_code`, `observed_at`, `location_point`, `location_bbox`, `location_radius_meters`)
+
+Rules:
+
+- playable v1 is fed only from exportable qualified resources (`export_eligible=true`)
+- `common_names_i18n` is extensible; current bootstrap maps existing names to `en` and initializes `fr`/`nl` as empty arrays
+- playable is additive and does not replace `CanonicalTaxon`, `QualifiedResource`, or `export.bundle.v4`

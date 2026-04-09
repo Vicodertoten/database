@@ -16,6 +16,7 @@ def render_summary(repository: PostgresRepository) -> str:
             f"media_assets: {summary['media_assets']}",
             f"qualified_resources: {summary['qualified_resources']}",
             f"review_queue: {summary['review_queue']}",
+            f"playable_items: {summary['playable_items']}",
         ]
     )
 

@@ -69,7 +69,7 @@ def test_pipeline_produces_reproducible_output(
     )
     validate(instance=export_payload, schema=export_schema)
 
-    assert export_payload["schema_version"] == "database.schema.v8"
+    assert export_payload["schema_version"] == "database.schema.v9"
     assert export_payload["export_version"] == "export.bundle.v4"
     assert export_payload["qualification_version"] == "qualification.staged.v1"
     assert export_payload["enrichment_version"] == "canonical.enrichment.v2"
@@ -89,7 +89,7 @@ def test_pipeline_produces_reproducible_output(
     assert export_payload["qualified_resources"][0]["provenance"]["run_id"] == fixed_run_id
 
     normalized_payload = json.loads(first_normalized.read_text(encoding="utf-8"))
-    assert normalized_payload["schema_version"] == "database.schema.v8"
+    assert normalized_payload["schema_version"] == "database.schema.v9"
     assert normalized_payload["normalized_snapshot_version"] == "normalized.snapshot.v3"
     assert normalized_payload["enrichment_version"] == "canonical.enrichment.v2"
     assert not first_export.with_name(f"{first_export.stem}.v3{first_export.suffix}").exists()
@@ -142,7 +142,7 @@ def test_pipeline_rejects_invalid_export_bundle(
     def fake_build_export_bundle(**kwargs):
         del kwargs
         return {
-            "schema_version": "database.schema.v8",
+            "schema_version": "database.schema.v9",
             "export_version": "export.bundle.v4",
         }
 
@@ -194,6 +194,7 @@ def test_pipeline_overwrites_previous_run_outputs_on_same_database(
     second_summary = repository.fetch_summary()
     assert second_summary["review_queue"] == 0
     assert second_summary["qualified_resources"] == 4
+    assert second_summary["playable_items"] == 2
 
     with repository.connect() as connection:
         run_count = connection.execute("SELECT COUNT(*) AS count FROM pipeline_runs").fetchone()[
@@ -272,8 +273,32 @@ def test_pipeline_rolls_back_database_on_artifact_write_failure(
         "media_assets": 0,
         "qualified_resources": 0,
         "review_queue": 0,
+        "playable_items": 0,
     }
     assert not (tmp_path / "rollback.normalized.json").exists()
     assert not (tmp_path / "rollback.qualified.json").exists()
     assert not (tmp_path / "rollback.export.json").exists()
     assert not (tmp_path / "rollback.export.v3.json").exists()
+
+
+def test_pipeline_populates_playable_corpus_with_exportable_resources(
+    tmp_path: Path,
+    database_url: str,
+) -> None:
+    run_pipeline(
+        fixture_path=Path("data/fixtures/birds_pilot.json"),
+        database_url=database_url,
+        normalized_snapshot_path=tmp_path / "playable.normalized.json",
+        qualification_snapshot_path=tmp_path / "playable.qualified.json",
+        export_path=tmp_path / "playable.export.json",
+        run_id="run:20260408T000000Z:aaaaaaaa",
+    )
+    repository = PostgresRepository(database_url)
+    payload = repository.fetch_playable_corpus_payload(limit=100)
+
+    assert payload["playable_corpus_version"] == "playable_corpus.v1"
+    assert len(payload["items"]) == 2
+    assert [item["media_asset_id"] for item in payload["items"]] == [
+        "media:inaturalist:fixture-media-blackbird-001",
+        "media:inaturalist:fixture-media-sparrow-001",
+    ]

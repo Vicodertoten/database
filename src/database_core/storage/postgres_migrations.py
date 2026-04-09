@@ -2,11 +2,12 @@ from __future__ import annotations
 
 from psycopg import Connection, sql
 
-from database_core.storage.postgres_schema import POSTGRES_SCHEMA_SQL
+from database_core.storage.postgres_schema import POSTGRES_PLAYABLE_V9_SQL, POSTGRES_SCHEMA_SQL
 from database_core.versioning import SCHEMA_VERSION
 
 _MIGRATION_SQL: dict[int, str] = {
     8: POSTGRES_SCHEMA_SQL,
+    9: POSTGRES_PLAYABLE_V9_SQL,
 }
 
 

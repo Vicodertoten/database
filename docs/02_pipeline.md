@@ -75,6 +75,20 @@ The pipeline is deliberately small, versioned, and reproducible.
 - list exportable resources
 - list review queue items with filters
 - report snapshot health for cached iNaturalist snapshots
+- expose playable corpus payload (`playable_corpus.v1`) with canonical/pedagogy/geo/date filters
+
+## 8. Build playable corpus (Gate 2)
+
+- derive `PlayableItem` rows from current run outputs (`canonical_taxa`, `observations`, `media_assets`, `qualified_resources`)
+- include only exportable resources (`export_eligible = true`)
+- materialize feedback blocks for runtime-facing consumption:
+  - `what_to_look_at_specific` from qualified visible parts
+  - `what_to_look_at_general` from canonical key identification features
+  - `confusion_hint` from resolved similar canonical taxa when available
+- persist living surface in Postgres (`playable_items`) and append immutable snapshots in `playable_items_history`
+- keep contract isolation:
+  - `export.bundle.v4` remains unchanged
+  - no runtime/session/scoring/progression logic in this stage
 
 ## Versioning
 
@@ -86,6 +100,7 @@ Generated artifacts carry explicit stage versions:
 - `enrichment_version`
 - `qualification_version`
 - `export_version`
+- `playable_corpus_version`
 
 The current writers always emit snapshot manifests as `inaturalist.snapshot.v3`.
 Legacy manifests without `manifest_version` are rejected.

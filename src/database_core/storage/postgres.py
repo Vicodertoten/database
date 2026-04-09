@@ -23,10 +23,12 @@ from database_core.domain.models import (
     CanonicalTaxonEvent,
     CanonicalTaxonRelationship,
     MediaAsset,
+    PlayableItem,
     QualifiedResource,
     ReviewItem,
     SourceObservation,
 )
+from database_core.playable import validate_playable_corpus
 from database_core.storage.postgres_migrations import (
     apply_migrations,
     current_schema_version,
@@ -35,6 +37,7 @@ from database_core.storage.postgres_migrations import (
 from database_core.versioning import (
     ENRICHMENT_VERSION,
     EXPORT_VERSION,
+    PLAYABLE_CORPUS_VERSION,
     QUALIFICATION_VERSION,
     SCHEMA_VERSION,
     SCHEMA_VERSION_LABEL,
@@ -153,6 +156,7 @@ class PostgresRepository:
 
         for statement in (
             "DELETE FROM canonical_taxon_relationships",
+            "DELETE FROM playable_items",
             "DELETE FROM review_queue",
             "DELETE FROM qualified_resources",
             "DELETE FROM media_assets",
@@ -531,6 +535,117 @@ class PostgresRepository:
             ],
         )
 
+    def save_playable_items(
+        self,
+        playable_items: Sequence[PlayableItem],
+        *,
+        connection: psycopg.Connection | None = None,
+    ) -> None:
+        if connection is None:
+            with self.connect() as owned_connection:
+                self.save_playable_items(playable_items, connection=owned_connection)
+            return
+        connection.execute("DELETE FROM playable_items")
+
+        _executemany(
+            connection,
+            """
+            INSERT INTO playable_items (
+                playable_item_id,
+                run_id,
+                qualified_resource_id,
+                canonical_taxon_id,
+                media_asset_id,
+                source_observation_uid,
+                source_name,
+                source_observation_id,
+                source_media_id,
+                scientific_name,
+                common_names_i18n_json,
+                difficulty_level,
+                media_role,
+                learning_suitability,
+                confusion_relevance,
+                diagnostic_feature_visibility,
+                similar_taxon_ids_json,
+                what_to_look_at_specific_json,
+                what_to_look_at_general_json,
+                confusion_hint,
+                country_code,
+                observed_at,
+                location_point,
+                location_bbox,
+                location_radius_meters
+            ) VALUES (
+                %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
+                %s, %s,
+                CASE
+                    WHEN %s::DOUBLE PRECISION IS NOT NULL AND %s::DOUBLE PRECISION IS NOT NULL
+                    THEN ST_SetSRID(
+                        ST_MakePoint(%s::DOUBLE PRECISION, %s::DOUBLE PRECISION),
+                        4326
+                    )
+                    ELSE NULL
+                END,
+                CASE
+                    WHEN %s::DOUBLE PRECISION IS NOT NULL
+                        AND %s::DOUBLE PRECISION IS NOT NULL
+                        AND %s::DOUBLE PRECISION IS NOT NULL
+                        AND %s::DOUBLE PRECISION IS NOT NULL
+                    THEN ST_MakeEnvelope(
+                        %s::DOUBLE PRECISION,
+                        %s::DOUBLE PRECISION,
+                        %s::DOUBLE PRECISION,
+                        %s::DOUBLE PRECISION,
+                        4326
+                    )
+                    ELSE NULL
+                END,
+                %s
+            )
+            """,
+            [
+                (
+                    item.playable_item_id,
+                    item.run_id,
+                    item.qualified_resource_id,
+                    item.canonical_taxon_id,
+                    item.media_asset_id,
+                    item.source_observation_uid,
+                    item.source_name,
+                    item.source_observation_id,
+                    item.source_media_id,
+                    item.scientific_name,
+                    _json(item.common_names_i18n),
+                    item.difficulty_level,
+                    item.media_role,
+                    item.learning_suitability,
+                    item.confusion_relevance,
+                    item.diagnostic_feature_visibility,
+                    _json(item.similar_taxon_ids),
+                    _json(item.what_to_look_at_specific),
+                    _json(item.what_to_look_at_general),
+                    item.confusion_hint,
+                    item.country_code,
+                    item.observed_at.isoformat() if item.observed_at else None,
+                    item.location_point.longitude if item.location_point else None,
+                    item.location_point.latitude if item.location_point else None,
+                    item.location_point.longitude if item.location_point else None,
+                    item.location_point.latitude if item.location_point else None,
+                    item.location_bbox.min_longitude if item.location_bbox else None,
+                    item.location_bbox.min_latitude if item.location_bbox else None,
+                    item.location_bbox.max_longitude if item.location_bbox else None,
+                    item.location_bbox.max_latitude if item.location_bbox else None,
+                    item.location_bbox.min_longitude if item.location_bbox else None,
+                    item.location_bbox.min_latitude if item.location_bbox else None,
+                    item.location_bbox.max_longitude if item.location_bbox else None,
+                    item.location_bbox.max_latitude if item.location_bbox else None,
+                    item.location_radius_meters,
+                )
+                for item in playable_items
+            ],
+        )
+
     def start_pipeline_run(
         self,
         *,
@@ -619,6 +734,7 @@ class PostgresRepository:
         media_assets: Sequence[MediaAsset],
         qualified_resources: Sequence[QualifiedResource],
         review_items: Sequence[ReviewItem],
+        playable_items: Sequence[PlayableItem] = (),
         connection: psycopg.Connection | None = None,
     ) -> None:
         if connection is None:
@@ -631,6 +747,7 @@ class PostgresRepository:
                     media_assets=media_assets,
                     qualified_resources=qualified_resources,
                     review_items=review_items,
+                    playable_items=playable_items,
                     connection=owned_connection,
                 )
             return
@@ -717,6 +834,21 @@ class PostgresRepository:
                     _json(item.model_dump(mode="json")),
                 )
                 for item in review_items
+            ],
+        )
+        _executemany(
+            connection,
+            """
+            INSERT INTO playable_items_history (run_id, playable_item_id, payload_json)
+            VALUES (%s, %s, %s)
+            """,
+            [
+                (
+                    run_id,
+                    item.playable_item_id,
+                    _json(item.model_dump(mode="json")),
+                )
+                for item in playable_items
             ],
         )
 
@@ -863,6 +995,7 @@ class PostgresRepository:
                     "media_assets": "media_assets_history",
                     "qualified_resources": "qualified_resources_history",
                     "review_queue": "review_queue_history",
+                    "playable_items": "playable_items_history",
                 }
                 return {
                     key: connection.execute(
@@ -878,6 +1011,7 @@ class PostgresRepository:
                 "media_assets",
                 "qualified_resources",
                 "review_queue",
+                "playable_items",
             ]
             return {
                 table: connection.execute(f"SELECT COUNT(*) AS count FROM {table}").fetchone()[
@@ -1370,6 +1504,268 @@ class PostgresRepository:
                 (longitude, latitude, radius_meters),
             ).fetchall()
             return [dict(row) for row in rows]
+
+    def fetch_playable_corpus(
+        self,
+        *,
+        canonical_taxon_id: str | None = None,
+        country_code: str | None = None,
+        difficulty_level: str | None = None,
+        media_role: str | None = None,
+        learning_suitability: str | None = None,
+        confusion_relevance: str | None = None,
+        observed_from: datetime | None = None,
+        observed_to: datetime | None = None,
+        bbox: tuple[float, float, float, float] | None = None,
+        point_radius: tuple[float, float, float] | None = None,
+        limit: int = 100,
+    ) -> list[dict[str, object]]:
+        with self.connect() as connection:
+            where_clauses: list[str] = []
+            params: list[object] = []
+            if canonical_taxon_id:
+                where_clauses.append("canonical_taxon_id = %s")
+                params.append(canonical_taxon_id)
+            if country_code:
+                where_clauses.append("country_code = %s")
+                params.append(country_code)
+            if difficulty_level:
+                where_clauses.append("difficulty_level = %s")
+                params.append(difficulty_level)
+            if media_role:
+                where_clauses.append("media_role = %s")
+                params.append(media_role)
+            if learning_suitability:
+                where_clauses.append("learning_suitability = %s")
+                params.append(learning_suitability)
+            if confusion_relevance:
+                where_clauses.append("confusion_relevance = %s")
+                params.append(confusion_relevance)
+            if observed_from:
+                where_clauses.append("observed_at >= %s")
+                params.append(observed_from.isoformat())
+            if observed_to:
+                where_clauses.append("observed_at <= %s")
+                params.append(observed_to.isoformat())
+            if bbox is not None:
+                where_clauses.append(
+                    """
+                    (
+                        (
+                            location_bbox IS NOT NULL
+                            AND ST_Intersects(
+                                location_bbox,
+                                ST_MakeEnvelope(%s, %s, %s, %s, 4326)
+                            )
+                        )
+                        OR
+                        (
+                            location_point IS NOT NULL
+                            AND ST_Intersects(
+                                location_point,
+                                ST_MakeEnvelope(%s, %s, %s, %s, 4326)
+                            )
+                        )
+                    )
+                    """
+                )
+                min_longitude, min_latitude, max_longitude, max_latitude = bbox
+                params.extend(
+                    [
+                        min_longitude,
+                        min_latitude,
+                        max_longitude,
+                        max_latitude,
+                        min_longitude,
+                        min_latitude,
+                        max_longitude,
+                        max_latitude,
+                    ]
+                )
+            if point_radius is not None:
+                longitude, latitude, radius_meters = point_radius
+                where_clauses.append(
+                    """
+                    location_point IS NOT NULL
+                    AND ST_DWithin(
+                        location_point::geography,
+                        ST_SetSRID(ST_MakePoint(%s, %s), 4326)::geography,
+                        %s
+                    )
+                    """
+                )
+                params.extend([longitude, latitude, radius_meters])
+
+            where_sql = f"WHERE {' AND '.join(where_clauses)}" if where_clauses else ""
+            rows = connection.execute(
+                f"""
+                SELECT
+                    playable_item_id,
+                    run_id,
+                    qualified_resource_id,
+                    canonical_taxon_id,
+                    media_asset_id,
+                    source_observation_uid,
+                    source_name,
+                    source_observation_id,
+                    source_media_id,
+                    scientific_name,
+                    common_names_i18n_json,
+                    difficulty_level,
+                    media_role,
+                    learning_suitability,
+                    confusion_relevance,
+                    diagnostic_feature_visibility,
+                    similar_taxon_ids_json,
+                    what_to_look_at_specific_json,
+                    what_to_look_at_general_json,
+                    confusion_hint,
+                    country_code,
+                    observed_at,
+                    CASE
+                        WHEN location_point IS NULL THEN NULL
+                        ELSE ST_X(location_point)
+                    END AS location_longitude,
+                    CASE
+                        WHEN location_point IS NULL THEN NULL
+                        ELSE ST_Y(location_point)
+                    END AS location_latitude,
+                    CASE
+                        WHEN location_bbox IS NULL THEN NULL
+                        ELSE ST_XMin(location_bbox)
+                    END AS bbox_min_longitude,
+                    CASE
+                        WHEN location_bbox IS NULL THEN NULL
+                        ELSE ST_YMin(location_bbox)
+                    END AS bbox_min_latitude,
+                    CASE
+                        WHEN location_bbox IS NULL THEN NULL
+                        ELSE ST_XMax(location_bbox)
+                    END AS bbox_max_longitude,
+                    CASE
+                        WHEN location_bbox IS NULL THEN NULL
+                        ELSE ST_YMax(location_bbox)
+                    END AS bbox_max_latitude,
+                    location_radius_meters
+                FROM playable_corpus_v1
+                {where_sql}
+                ORDER BY playable_item_id
+                LIMIT %s
+                """,
+                [*params, limit],
+            ).fetchall()
+
+        parsed_rows: list[dict[str, object]] = []
+        for row in rows:
+            observed_at = row["observed_at"]
+            parsed_rows.append(
+                {
+                    "playable_item_id": row["playable_item_id"],
+                    "qualified_resource_id": row["qualified_resource_id"],
+                    "canonical_taxon_id": row["canonical_taxon_id"],
+                    "media_asset_id": row["media_asset_id"],
+                    "source_name": row["source_name"],
+                    "source_observation_id": row["source_observation_id"],
+                    "source_media_id": row["source_media_id"],
+                    "scientific_name": row["scientific_name"],
+                    "common_names_i18n": json.loads(str(row["common_names_i18n_json"])),
+                    "difficulty_level": row["difficulty_level"],
+                    "media_role": row["media_role"],
+                    "learning_suitability": row["learning_suitability"],
+                    "confusion_relevance": row["confusion_relevance"],
+                    "diagnostic_feature_visibility": row["diagnostic_feature_visibility"],
+                    "similar_taxon_ids": json.loads(str(row["similar_taxon_ids_json"])),
+                    "what_to_look_at_specific": json.loads(
+                        str(row["what_to_look_at_specific_json"])
+                    ),
+                    "what_to_look_at_general": json.loads(
+                        str(row["what_to_look_at_general_json"])
+                    ),
+                    "confusion_hint": row["confusion_hint"],
+                    "country_code": row["country_code"],
+                    "observed_at": observed_at.isoformat() if observed_at else None,
+                    "location_point": (
+                        {
+                            "longitude": float(row["location_longitude"]),
+                            "latitude": float(row["location_latitude"]),
+                        }
+                        if row["location_longitude"] is not None
+                        and row["location_latitude"] is not None
+                        else None
+                    ),
+                    "location_bbox": (
+                        {
+                            "min_longitude": float(row["bbox_min_longitude"]),
+                            "min_latitude": float(row["bbox_min_latitude"]),
+                            "max_longitude": float(row["bbox_max_longitude"]),
+                            "max_latitude": float(row["bbox_max_latitude"]),
+                        }
+                        if row["bbox_min_longitude"] is not None
+                        and row["bbox_min_latitude"] is not None
+                        and row["bbox_max_longitude"] is not None
+                        and row["bbox_max_latitude"] is not None
+                        else None
+                    ),
+                    "location_radius_meters": (
+                        float(row["location_radius_meters"])
+                        if row["location_radius_meters"] is not None
+                        else None
+                    ),
+                }
+            )
+        return parsed_rows
+
+    def fetch_playable_corpus_payload(
+        self,
+        *,
+        canonical_taxon_id: str | None = None,
+        country_code: str | None = None,
+        difficulty_level: str | None = None,
+        media_role: str | None = None,
+        learning_suitability: str | None = None,
+        confusion_relevance: str | None = None,
+        observed_from: datetime | None = None,
+        observed_to: datetime | None = None,
+        bbox: tuple[float, float, float, float] | None = None,
+        point_radius: tuple[float, float, float] | None = None,
+        limit: int = 100,
+    ) -> dict[str, object]:
+        items = self.fetch_playable_corpus(
+            canonical_taxon_id=canonical_taxon_id,
+            country_code=country_code,
+            difficulty_level=difficulty_level,
+            media_role=media_role,
+            learning_suitability=learning_suitability,
+            confusion_relevance=confusion_relevance,
+            observed_from=observed_from,
+            observed_to=observed_to,
+            bbox=bbox,
+            point_radius=point_radius,
+            limit=limit,
+        )
+        with self.connect() as connection:
+            latest_row = connection.execute(
+                """
+                SELECT run_id, completed_at
+                FROM pipeline_runs
+                WHERE run_status = 'completed'
+                ORDER BY completed_at DESC
+                LIMIT 1
+                """
+            ).fetchone()
+        payload = {
+            "schema_version": SCHEMA_VERSION_LABEL,
+            "playable_corpus_version": PLAYABLE_CORPUS_VERSION,
+            "generated_at": (
+                latest_row["completed_at"].isoformat()
+                if latest_row and latest_row["completed_at"]
+                else datetime.now(UTC).isoformat()
+            ),
+            "run_id": str(latest_row["run_id"]) if latest_row else None,
+            "items": items,
+        }
+        validate_playable_corpus(payload)
+        return payload
 
     def fetch_qualification_metrics(self, *, run_id: str | None = None) -> dict[str, object]:
         with self.connect() as connection:

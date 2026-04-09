@@ -1,0 +1,267 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "playable_corpus_v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "playable_corpus_version",
+    "generated_at",
+    "run_id",
+    "items"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "playable_corpus_version": {
+      "type": "string",
+      "const": "playable_corpus.v1"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "run_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "playable_item_id",
+          "qualified_resource_id",
+          "canonical_taxon_id",
+          "media_asset_id",
+          "source_name",
+          "source_observation_id",
+          "source_media_id",
+          "scientific_name",
+          "common_names_i18n",
+          "difficulty_level",
+          "media_role",
+          "learning_suitability",
+          "confusion_relevance",
+          "diagnostic_feature_visibility",
+          "similar_taxon_ids",
+          "what_to_look_at_specific",
+          "what_to_look_at_general",
+          "confusion_hint",
+          "country_code",
+          "observed_at",
+          "location_point",
+          "location_bbox",
+          "location_radius_meters"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "playable_item_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "qualified_resource_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "canonical_taxon_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "media_asset_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source_name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source_observation_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source_media_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "scientific_name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "common_names_i18n": {
+            "type": "object",
+            "required": [
+              "fr",
+              "en",
+              "nl"
+            ],
+            "properties": {
+              "fr": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "en": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "nl": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "difficulty_level": {
+            "type": "string",
+            "enum": [
+              "unknown",
+              "easy",
+              "medium",
+              "hard"
+            ]
+          },
+          "media_role": {
+            "type": "string",
+            "enum": [
+              "primary_id",
+              "context",
+              "distractor_risk",
+              "non_diagnostic"
+            ]
+          },
+          "learning_suitability": {
+            "type": "string",
+            "enum": [
+              "unknown",
+              "low",
+              "medium",
+              "high"
+            ]
+          },
+          "confusion_relevance": {
+            "type": "string",
+            "enum": [
+              "none",
+              "low",
+              "medium",
+              "high"
+            ]
+          },
+          "diagnostic_feature_visibility": {
+            "type": "string",
+            "enum": [
+              "unknown",
+              "low",
+              "medium",
+              "high"
+            ]
+          },
+          "similar_taxon_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "what_to_look_at_specific": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "what_to_look_at_general": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "confusion_hint": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "country_code": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "observed_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "location_point": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "required": [
+              "longitude",
+              "latitude"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "longitude": {
+                "type": "number"
+              },
+              "latitude": {
+                "type": "number"
+              }
+            }
+          },
+          "location_bbox": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "required": [
+              "min_longitude",
+              "min_latitude",
+              "max_longitude",
+              "max_latitude"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "min_longitude": {
+                "type": "number"
+              },
+              "min_latitude": {
+                "type": "number"
+              },
+              "max_longitude": {
+                "type": "number"
+              },
+              "max_latitude": {
+                "type": "number"
+              }
+            }
+          },
+          "location_radius_meters": {
+            "type": [
+              "number",
+              "null"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

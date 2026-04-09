@@ -2,14 +2,17 @@ from __future__ import annotations
 
 import os
 from collections.abc import Callable
+from pathlib import Path
 from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
 from uuid import uuid4
 
 import psycopg
 import pytest
+from dotenv import load_dotenv
 from psycopg import sql
 
 _DEFAULT_TEST_DATABASE_URL = "postgresql://postgres:postgres@127.0.0.1:5432/postgres"
+load_dotenv(dotenv_path=Path(".env"))
 
 
 def _base_database_url() -> str:

@@ -17,7 +17,9 @@ from database_core.domain.canonical_reconciliation import (
 from database_core.domain.enums import TaxonStatus
 from database_core.domain.models import (
     CanonicalTaxon,
+    GeoPoint,
     MediaAsset,
+    PlayableItem,
     QualifiedResource,
     ReviewItem,
     SourceObservation,
@@ -81,6 +83,7 @@ class PreparedPipelineState:
     media_assets: list[MediaAsset]
     qualified_resources: list[QualifiedResource]
     review_items: list[ReviewItem]
+    playable_items: list[PlayableItem]
     normalized_snapshot: dict[str, object]
     qualification_snapshot: dict[str, object]
     export_bundle: dict[str, object]
@@ -191,6 +194,7 @@ def run_pipeline(
             connection=connection,
         )
         repository.save_review_items(prepared_state.review_items, connection=connection)
+        repository.save_playable_items(prepared_state.playable_items, connection=connection)
         repository.append_run_history(
             run_id=resolved_run_id,
             governance_effective_at=dataset.captured_at,
@@ -199,6 +203,7 @@ def run_pipeline(
             media_assets=prepared_state.media_assets,
             qualified_resources=prepared_state.qualified_resources,
             review_items=prepared_state.review_items,
+            playable_items=prepared_state.playable_items,
             connection=connection,
         )
         _write_pipeline_artifacts(
@@ -298,6 +303,13 @@ def _prepare_pipeline_state(
         override_file=override_file,
     )
     review_items = build_review_items(qualified_resources, created_at=dataset.captured_at)
+    playable_items = _build_playable_items(
+        run_id=run_id,
+        canonical_taxa=canonical_taxa,
+        observations=dataset.observations,
+        media_assets=dataset.media_assets,
+        qualified_resources=qualified_resources,
+    )
 
     normalized_snapshot = build_normalized_snapshot(
         dataset_id=dataset.dataset_id,
@@ -341,11 +353,125 @@ def _prepare_pipeline_state(
         media_assets=list(dataset.media_assets),
         qualified_resources=qualified_resources,
         review_items=review_items,
+        playable_items=playable_items,
         normalized_snapshot=normalized_snapshot,
         qualification_snapshot=qualification_snapshot,
         export_bundle=export_bundle,
         sidecar_export_bundle=sidecar_export_bundle,
     )
+
+
+def _build_playable_items(
+    *,
+    run_id: str,
+    canonical_taxa: list[CanonicalTaxon],
+    observations: list[SourceObservation],
+    media_assets: list[MediaAsset],
+    qualified_resources: list[QualifiedResource],
+) -> list[PlayableItem]:
+    canonical_by_id = {item.canonical_taxon_id: item for item in canonical_taxa}
+    observations_by_uid = {item.observation_uid: item for item in observations}
+    media_assets_by_id = {item.media_id: item for item in media_assets}
+    playable_items: list[PlayableItem] = []
+
+    for resource in qualified_resources:
+        if not resource.export_eligible:
+            continue
+        taxon = canonical_by_id.get(resource.canonical_taxon_id)
+        if taxon is None:
+            raise ValueError(
+                "Playable corpus integrity failure: missing canonical taxon for "
+                f"qualified_resource_id={resource.qualified_resource_id}"
+            )
+        observation = observations_by_uid.get(resource.source_observation_uid)
+        if observation is None:
+            raise ValueError(
+                "Playable corpus integrity failure: missing source observation for "
+                f"qualified_resource_id={resource.qualified_resource_id}"
+            )
+        media_asset = media_assets_by_id.get(resource.media_asset_id)
+        if media_asset is None:
+            raise ValueError(
+                "Playable corpus integrity failure: missing media asset for "
+                f"qualified_resource_id={resource.qualified_resource_id}"
+            )
+
+        location_point = (
+            GeoPoint(
+                longitude=observation.location.longitude,
+                latitude=observation.location.latitude,
+            )
+            if (
+                observation.location.longitude is not None
+                and observation.location.latitude is not None
+            )
+            else None
+        )
+        playable_items.append(
+            PlayableItem(
+                playable_item_id=f"playable:{resource.qualified_resource_id}",
+                run_id=run_id,
+                qualified_resource_id=resource.qualified_resource_id,
+                canonical_taxon_id=resource.canonical_taxon_id,
+                media_asset_id=resource.media_asset_id,
+                source_observation_uid=resource.source_observation_uid,
+                source_name=observation.source_name,
+                source_observation_id=observation.source_observation_id,
+                source_media_id=media_asset.source_media_id,
+                scientific_name=taxon.accepted_scientific_name,
+                common_names_i18n={
+                    "fr": [],
+                    "en": _dedupe_non_blank_strings(taxon.common_names),
+                    "nl": [],
+                },
+                difficulty_level=resource.difficulty_level,
+                media_role=resource.media_role,
+                learning_suitability=resource.learning_suitability,
+                confusion_relevance=resource.confusion_relevance,
+                diagnostic_feature_visibility=resource.diagnostic_feature_visibility,
+                similar_taxon_ids=sorted(set(taxon.similar_taxon_ids)),
+                what_to_look_at_specific=_dedupe_non_blank_strings(resource.visible_parts),
+                what_to_look_at_general=_dedupe_non_blank_strings(
+                    taxon.key_identification_features
+                ),
+                confusion_hint=_build_confusion_hint(taxon=taxon, canonical_by_id=canonical_by_id),
+                country_code=observation.location.country_code,
+                observed_at=observation.observed_at,
+                location_point=location_point,
+                location_bbox=None,
+                location_radius_meters=None,
+            )
+        )
+    return sorted(playable_items, key=lambda item: item.playable_item_id)
+
+
+def _build_confusion_hint(
+    *,
+    taxon: CanonicalTaxon,
+    canonical_by_id: dict[str, CanonicalTaxon],
+) -> str | None:
+    if not taxon.similar_taxon_ids:
+        return None
+    similar_names = [
+        canonical_by_id[item].accepted_scientific_name
+        for item in sorted(set(taxon.similar_taxon_ids))
+        if item in canonical_by_id
+    ]
+    if not similar_names:
+        return None
+    return f"Compare with: {', '.join(similar_names[:3])}."
+
+
+def _dedupe_non_blank_strings(values: list[str]) -> list[str]:
+    seen: set[str] = set()
+    normalized: list[str] = []
+    for value in values:
+        item = str(value).strip()
+        if not item or item in seen:
+            continue
+        seen.add(item)
+        normalized.append(item)
+    return normalized
 
 
 def _load_dataset(

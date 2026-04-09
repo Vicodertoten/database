@@ -25,23 +25,24 @@ Objectif de ce document: transformer cette base solide en trajectoire opération
 |---|---|---|---|
 | Gate 0 — Migration storage PostgreSQL/PostGIS | DONE | `2026-04-09` | backend principal basculé sur PostgreSQL/PostGIS, CI/tests alignés Postgres |
 | Gate 1 — Verrou doctrinal + ADR de chaîne | DONE | `2026-04-09` | clôture documentaire/doctrinale uniquement; aucun changement de contrat technique ni implémentation des gates suivants |
+| Gate 2 — Playable corpus vivant v1 | DONE | `2026-04-09` | couche playable versionnée en base (`playable_corpus.v1`) livrée; aucun objet gate 3+ introduit |
 
-### État réel (2026-04-08)
+### État réel (2026-04-09)
 
 - persistence hybride implémentée: historique append-only (`pipeline_runs` + tables `*_history`) et tables matérialisées `latest`.
-- schéma applicatif actuel: `database.schema.v8`.
+- schéma applicatif actuel: `database.schema.v9`.
 - backend storage principal: PostgreSQL/PostGIS (`DATABASE_URL`) avec migrations versionnées (`schema_migrations`).
 - export principal actuel: `export.bundle.v4`.
 - export de transition maintenu en mode opt-in: `export.bundle.v3` (désactivé par défaut).
 - version d’overrides opérateur: `review.override.v1` (validation stricte à la lecture).
+- contrat playable principal: `playable_corpus.v1` (payload validé par schéma dédié).
+- résiduel Gate 2: i18n `common_names_i18n` initialisé en `en` avec `fr`/`nl` vides tant qu’aucune source locale traduite n’est branchée.
 
 ### Cible (prochaine étape)
 
-- fermer la boucle de détection canonique amont (`clear` vs `ambiguous`) à partir des changements source bruts.
-- enrichir la qualification pédagogique avec une ontologie réellement consommée downstream.
-- renforcer le contrat d’export avec flags, rationale, typologie d’incertitude et éléments de review utiles.
-- clarifier la sémantique des événements (`state snapshot` vs `business change` vs `governance decision`).
-- préparer la marche Ops suivante (métriques standardisées, indexation ciblée, smoke reports comparables).
+- introduire le modèle `pack_id + revision` et le diagnostic formel de compilabilité (Gate 3).
+- conserver la séparation stricte: pas de runtime/session/scoring/progression dans `database`.
+- préserver `export.bundle.v4` inchangé pendant la montée des surfaces playable/pack.
 
 ### Acté Implémenté Vs Acté Cible (séparation explicite)
 
@@ -51,6 +52,7 @@ Objectif de ce document: transformer cette base solide en trajectoire opération
 | Événements | séparation effective `state_event_log` / `canonical_change_log` / `governance_decision_log` | améliorer les vues opérateur avancées et indexation d’inspection |
 | Qualification | champs V1+ intégrés (`difficulty_level`, `media_role`, `confusion_relevance`, `diagnostic_feature_visibility`, `learning_suitability`, `uncertainty_reason`) | étendre vers une ontologie pédagogique plus fine (learning sequencing, distractor planning) |
 | Export | `export.bundle.v4` principal + sidecar `v3` transition 2 releases | retrait planifié du sidecar `v3` après fenêtre de transition |
+| Playable | couche vivante `playable_corpus.v1` persistée en Postgres avec filtres geo/date/signaux | brancher packs/compilation (gates suivants) sans dériver runtime |
 | Ops | métriques run-level standardisées + `smoke.report.v1` | seuils opérationnels avancés (SLA review, alerting automatique) |
 
 ## Challenge Consolidé De L’Analyse Externe (2026-04-08)

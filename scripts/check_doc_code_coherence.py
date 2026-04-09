@@ -23,6 +23,7 @@ def main() -> int:
         version_tokens["EXPORT_VERSION"],
         version_tokens["LEGACY_EXPORT_VERSION"],
         version_tokens["REVIEW_OVERRIDE_VERSION"],
+        version_tokens["PLAYABLE_CORPUS_VERSION"],
     ):
         if token not in audit_doc:
             issues.append(f"docs/05 is missing version token: {token}")
@@ -37,6 +38,8 @@ def main() -> int:
         issues.append(
             "README must reference sidecar schemas/qualified_resources_bundle_v3.schema.json"
         )
+    if "schemas/playable_corpus_v1.schema.json" not in readme:
+        issues.append("README must reference schemas/playable_corpus_v1.schema.json")
     if "database-migrate" not in readme:
         issues.append("README must document the database-migrate entrypoint")
 
@@ -67,6 +70,7 @@ def _extract_version_tokens(versioning_content: str) -> dict[str, str]:
         "EXPORT_VERSION",
         "LEGACY_EXPORT_VERSION",
         "REVIEW_OVERRIDE_VERSION",
+        "PLAYABLE_CORPUS_VERSION",
     ):
         match = re.search(rf'^{key}\s*=\s*"([^"]+)"', versioning_content, flags=re.MULTILINE)
         if match:
