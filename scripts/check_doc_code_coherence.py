@@ -60,6 +60,29 @@ def main() -> int:
         issues.append("README must document the database-pack entrypoint")
     if "database-confusion" not in readme:
         issues.append("README must document the database-confusion entrypoint")
+    if "enrichment-metrics" not in readme:
+        issues.append("README must document inspect enrichment-metrics")
+    if "confusion-metrics" not in readme:
+        issues.append("README must document inspect confusion-metrics")
+
+    for locked_kpi in (
+        "exportable_unresolved_or_provisional",
+        "governance_reason_and_signal_coverage",
+        "export_trace_flags_uncertainty_coverage",
+    ):
+        if locked_kpi not in audit_doc:
+            issues.append(f"docs/05 must mention locked KPI: {locked_kpi}")
+        if locked_kpi not in readme:
+            issues.append(f"README must mention locked KPI: {locked_kpi}")
+
+    kpi_doc = (ROOT / "docs" / "10_program_kpis.md").read_text(encoding="utf-8")
+    for locked_kpi in (
+        "exportable_unresolved_or_provisional",
+        "governance_reason_and_signal_coverage",
+        "export_trace_flags_uncertainty_coverage",
+    ):
+        if locked_kpi not in kpi_doc:
+            issues.append(f"docs/10_program_kpis.md must mention locked KPI: {locked_kpi}")
 
     if WORKFLOW_PATH.exists() and "absence de ci visible" in audit_doc.lower():
         issues.append("docs/05 still claims CI is not visible while workflow file exists")

@@ -123,10 +123,10 @@ Point critique explicite:
 - Gate 5 - Politique distracteurs v2 (dedie): DONE
 - Gate 6 - Queue d'enrichissement: DONE
 - Gate 7 - Contrat batch confusions + agregats globaux: DONE
+- Gate 8 - Inspection/KPI/smoke/CI etendus: DONE
 
 ### Suite reordonnee
 
-- Gate 8 - Inspection/KPI/smoke/CI etendus
 - Gate 9 - Retrait sidecar export v3
 
 ---

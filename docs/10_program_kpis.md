@@ -32,3 +32,20 @@ Sortie par défaut:
 
 - `overall_pass=true`: les 3 KPIs verrouillés sont atteints.
 - `overall_pass=false`: au moins un KPI est hors seuil; le run est bloqué pour promotion.
+
+## Gate 8 clarification
+
+Gate 8 etend l'inspection operateur et la lisibilite des metriques, sans changer les KPI verrouilles.
+
+Contraintes appliquees:
+
+- aucun renommage de KPI verrouille
+- aucun changement de seuil
+- aucune rupture de format `smoke.report.v1`
+
+Surfaces inspect metriques ajoutees en Gate 8:
+
+- `inspect enrichment-metrics`
+- `inspect confusion-metrics`
+
+Ces vues sont des surfaces de lecture operateur et ne changent pas le contrat smoke KPI.

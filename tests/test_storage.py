@@ -1176,6 +1176,81 @@ def test_fetch_summary_confusion_counts_only_global_mode(database_url: str) -> N
     assert "confusion_aggregates_global" not in run_summary
 
 
+def test_fetch_enrichment_queue_metrics_includes_status_distribution(database_url: str) -> None:
+    repository = PostgresRepository(database_url)
+    repository.initialize()
+    payload = repository.create_pack(
+        pack_id="pack:enrichment:metrics",
+        parameters={
+            "canonical_taxon_ids": ["taxon:birds:000001", "taxon:birds:000002"],
+            "difficulty_policy": "balanced",
+            "country_code": None,
+            "location_bbox": None,
+            "location_point": None,
+            "location_radius_meters": None,
+            "observed_from": None,
+            "observed_to": None,
+            "owner_id": "owner:metrics",
+            "org_id": None,
+            "visibility": "private",
+            "intended_use": "training",
+        },
+    )
+    enqueue = repository.enqueue_enrichment_for_pack(pack_id=str(payload["pack_id"]))
+    request_id = enqueue["request"]["request"]["enrichment_request_id"]
+    repository.record_enrichment_execution(
+        enrichment_request_id=request_id,
+        execution_status="failed",
+        execution_context={"step": "metrics"},
+        error_info="synthetic failure",
+    )
+
+    metrics = repository.fetch_enrichment_queue_metrics()
+    assert metrics["requests_total"] == 1
+    assert metrics["executions_total"] == 1
+    assert metrics["attempts_total"] == 1
+    assert metrics["status_counts"]["failed"] == 1
+    assert metrics["status_counts"]["pending"] == 0
+
+
+def test_fetch_confusion_metrics_reports_top_pairs(database_url: str) -> None:
+    repository = PostgresRepository(database_url)
+    repository.initialize()
+    repository.ingest_confusion_batch(
+        batch_id="batch:confusions:metrics",
+        events=[
+            {
+                "taxon_confused_for_id": "taxon:birds:000031",
+                "taxon_correct_id": "taxon:birds:000032",
+                "occurred_at": datetime(2026, 4, 9, 14, 0, tzinfo=UTC).isoformat(),
+            },
+            {
+                "taxon_confused_for_id": "taxon:birds:000031",
+                "taxon_correct_id": "taxon:birds:000032",
+                "occurred_at": datetime(2026, 4, 9, 14, 1, tzinfo=UTC).isoformat(),
+            },
+            {
+                "taxon_confused_for_id": "taxon:birds:000033",
+                "taxon_correct_id": "taxon:birds:000034",
+                "occurred_at": datetime(2026, 4, 9, 14, 2, tzinfo=UTC).isoformat(),
+            },
+        ],
+    )
+    repository.recompute_confusion_aggregates_global()
+
+    metrics = repository.fetch_confusion_metrics(top_pair_limit=1)
+    assert metrics["batches_total"] == 1
+    assert metrics["events_total"] == 3
+    assert metrics["aggregates_total"] == 2
+    assert metrics["last_aggregated_at"] is not None
+    assert len(metrics["top_pairs"]) == 1
+    assert metrics["top_pairs"][0] == {
+        "taxon_confused_for_id": "taxon:birds:000031",
+        "taxon_correct_id": "taxon:birds:000032",
+        "event_count": 2,
+    }
+
+
 def test_compile_pack_prefers_internal_similar_taxa_for_distractors(
     database_url: str,
 ) -> None:

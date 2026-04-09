@@ -28,7 +28,7 @@ The current pilot stays narrow on purpose:
 
 The repository is not the quiz app, frontend, or product runtime.
 
-## Post-Gate 7 Strategic Context
+## Post-Gate 8 Strategic Context
 
 The repository has reached Gate 4 (playable + packs + compilation + materialization).
 This is a strong milestone, but it is not yet the final target shape.
@@ -36,6 +36,7 @@ This is a strong milestone, but it is not yet the final target shape.
 Gate 5 (distractor policy v2) is implemented for compiled packs.
 Gate 6 (asynchronous enrichment queue) is now implemented for pack compilation deficits.
 Gate 7 (batch confusion ingestion + global aggregates) is now implemented.
+Gate 8 (inspection/KPI/smoke/CI extension) is now implemented.
 
 The final playable target is a real cumulative incremental corpus:
 
@@ -82,6 +83,16 @@ Gate 7 execution artifacts:
 - global directed-pair aggregates persisted in `confusion_aggregates_global`
 - aggregate recomputation is operator-driven and asynchronous (no real-time adaptation)
 - no gate drift into runtime session/scoring/progression logic
+
+Gate 8 execution artifacts:
+
+- new operator inspect metric views: `enrichment-metrics` and `confusion-metrics`
+- smoke report now builds KPIs from an explicit locked registry in code
+- locked KPIs remain unchanged:
+  - `exportable_unresolved_or_provisional`
+  - `governance_reason_and_signal_coverage`
+  - `export_trace_flags_uncertainty_coverage`
+- repository verification and doc/code coherence keep these KPI names and inspect views aligned
 
 ## Reference docs
 
@@ -202,8 +213,10 @@ python scripts/inspect_database.py compiled-pack-builds --pack-id pack:birds:be:
 python scripts/inspect_database.py pack-materializations --pack-id pack:birds:be:v1 --purpose daily_challenge
 python scripts/inspect_database.py enrichment-requests --pack-id pack:birds:be:v1 --enrichment-status pending
 python scripts/inspect_database.py enrichment-executions --enrichment-request-id enrreq:pack:birds:be:v1:1:aaaaaaaa
+python scripts/inspect_database.py enrichment-metrics
 python scripts/inspect_database.py confusion-events --batch-id batch:birds:20260409T120000Z
 python scripts/inspect_database.py confusion-aggregates-global --taxon-confused-for-id taxon:birds:000014
+python scripts/inspect_database.py confusion-metrics
 python scripts/review_overrides.py init --snapshot-id inaturalist-birds-20260408T123456Z
 python scripts/review_overrides.py upsert --snapshot-id inaturalist-birds-20260408T123456Z --media-asset-id media:inaturalist:810001 --status review_required --note "manual spot-check requested"
 python scripts/review_overrides.py list --snapshot-id inaturalist-birds-20260408T123456Z

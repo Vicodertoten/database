@@ -37,7 +37,7 @@ def test_verify_repo_runs_compile_pytest_and_ruff_in_order(monkeypatch) -> None:
     assert "Repository verification complete" in buffer.getvalue()
 
 
-def test_gate_7_docs_keep_playable_gap_and_gate_ordering_visible() -> None:
+def test_gate_8_docs_keep_playable_gap_and_gate_ordering_visible() -> None:
     root = Path(".")
     readme = (root / "README.md").read_text(encoding="utf-8")
     scope = (root / "docs/00_scope.md").read_text(encoding="utf-8")
@@ -52,6 +52,7 @@ def test_gate_7_docs_keep_playable_gap_and_gate_ordering_visible() -> None:
     assert "Gate 5" in readme
     assert "Gate 6" in readme
     assert "Gate 7" in readme
+    assert "Gate 8" in readme
 
     assert "during Gate 4.5" in scope
     assert "cumulative incremental playable corpus" in scope
@@ -69,9 +70,10 @@ def test_gate_7_docs_keep_playable_gap_and_gate_ordering_visible() -> None:
     assert "Gate 5 - Politique distracteurs v2" in plan
     assert "Gate 6 - Queue d'enrichissement" in plan
     assert "Gate 7 - Contrat batch confusions + agregats globaux" in plan
+    assert "Gate 8 - Inspection/KPI/smoke/CI etendus" in plan
 
 
-def test_gate_7_storage_layers_include_confusion_markers() -> None:
+def test_gate_8_storage_layers_keep_gate_7_markers_and_gate_9_open() -> None:
     root = Path(".")
     storage_schema = (root / "src/database_core/storage/postgres_schema.py").read_text(
         encoding="utf-8"
@@ -89,6 +91,14 @@ def test_gate_7_storage_layers_include_confusion_markers() -> None:
     )
     for marker in required_gate_7_markers:
         assert marker in storage_schema or marker in storage_repo
+
+    # Gate 9 sidecar retirement is still closed in Gate 8.
+    versioning = (root / "src/database_core/versioning.py").read_text(encoding="utf-8")
+    pipeline_runner = (root / "src/database_core/pipeline/runner.py").read_text(
+        encoding="utf-8"
+    )
+    assert 'LEGACY_EXPORT_VERSION = "export.bundle.v3"' in versioning
+    assert "write_sidecar_export_v3" in pipeline_runner
 
 
 def _load_verify_repo_module():

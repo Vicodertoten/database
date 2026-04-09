@@ -27,6 +27,11 @@ _TYPED_UNCERTAINTY_VALUES = {
 }
 _GOVERNANCE_OPEN_BACKLOG_ALERT_THRESHOLD = 25
 _GOVERNANCE_AVG_AGE_HOURS_ALERT_THRESHOLD = 72.0
+_LOCKED_KPIS = {
+    "exportable_unresolved_or_provisional": "== 0",
+    "governance_reason_and_signal_coverage": "== 1.0",
+    "export_trace_flags_uncertainty_coverage": "== 1.0",
+}
 
 
 def generate_smoke_report(
@@ -69,18 +74,18 @@ def generate_smoke_report(
         )
 
     kpi_exportable_unresolved_provisional = {
-        "target": "== 0",
+        "target": _LOCKED_KPIS["exportable_unresolved_or_provisional"],
         "actual": unresolved_or_provisional_exportable_count,
         "pass": unresolved_or_provisional_exportable_count == 0,
     }
     kpi_governance_reason_signal = {
-        "target": "== 1.0",
+        "target": _LOCKED_KPIS["governance_reason_and_signal_coverage"],
         "actual": governance_reason_signal["coverage_ratio"],
         "pass": governance_reason_signal["coverage_ratio"] == 1.0,
         "stats": governance_reason_signal,
     }
     kpi_export_trace_flags_uncertainty = {
-        "target": "== 1.0",
+        "target": _LOCKED_KPIS["export_trace_flags_uncertainty_coverage"],
         "actual": export_trace_flags_uncertainty["coverage_ratio"],
         "pass": export_trace_flags_uncertainty["coverage_ratio"] == 1.0,
         "stats": export_trace_flags_uncertainty,

@@ -1,15 +1,15 @@
 # Audit De Reference - database
 
 Statut: document vivant (reference d'execution)
-Version: v5
+Version: v6
 Date de mise a jour: 2026-04-09
-Perimetre: etat reel du repo apres Gate 7
+Perimetre: etat reel du repo apres Gate 8
 
 ---
 
 ## 1. Synthese executive
 
-Le repo est sur la bonne trajectoire et a livre une base operationnelle solide jusqu'au Gate 7.
+Le repo est sur la bonne trajectoire et a livre une base operationnelle solide jusqu'au Gate 8.
 
 Points forts confirmes:
 
@@ -27,7 +27,7 @@ Point critique post-Gate 7:
 
 - la cible finale playable est un corpus cumulatif incremental reel
 - l'implementation actuelle reste une surface latest reconstruite a chaque run
-- cet ecart reste explicite et constitue le chantier strategique avant Gate 8+
+- cet ecart reste explicite et constitue le chantier strategique avant Gate 9+
 
 Decision de pilotage appliquee:
 
@@ -35,6 +35,7 @@ Decision de pilotage appliquee:
 - Gate 5 distracteurs v2: execute sans evolution de contrat export/schema
 - Gate 6 queue d'enrichissement: execute sans evolution de contrat export/schema
 - Gate 7 confusions batch + agregats globaux: execute sans derive runtime temps reel
+- Gate 8 inspection/KPI/smoke/CI: execute sans changement de KPI verrouille ni derive Gate 9
 
 ---
 
@@ -51,6 +52,7 @@ Decision de pilotage appliquee:
 | Gate 5 - Politique distracteurs v2 | DONE | 2026-04-09 | similarites internes prioritaires + fallback deterministe |
 | Gate 6 - Queue d'enrichissement | DONE | 2026-04-09 | requetes+targets+executions asynchrones |
 | Gate 7 - Contrat batch confusions + agregats globaux | DONE | 2026-04-09 | ingestion batch + agregats globaux diriges |
+| Gate 8 - Inspection/KPI/smoke/CI etendus | DONE | 2026-04-09 | vues metriques operateur + discipline KPI verrouille |
 
 Etat schema applicatif observe:
 
@@ -71,14 +73,14 @@ Etat contrats observes:
 
 ## État réel
 
-Le repo est operationnel jusqu'au Gate 7 avec:
+Le repo est operationnel jusqu'au Gate 8 avec:
 
 - une surface playable latest reconstruite a chaque run
 - un historique run-level conserve pour auditabilite
 - des builds compiles conserves de maniere historique
 - des materializations figees immuables
 
-Le delta vers la cible finale est explicite; Gate 4.5, Gate 5, Gate 6 et Gate 7 sont executes.
+Le delta vers la cible finale est explicite; Gate 4.5, Gate 5, Gate 6, Gate 7 et Gate 8 sont executes.
 
 ## Cible
 
@@ -86,8 +88,8 @@ La cible d'evolution reste:
 
 - un playable corpus cumulatif incremental reel
 - des frontieres strictes entre database et runtime
-- une trajectoire sequentielle avec Gate 8 inspection et KPI puis Gate 9 retrait sidecar v3
-- une reduction de dette PostgresRepository planifiee sans lancer de refactor pendant Gate 7
+- une trajectoire sequentielle avec Gate 9 retrait sidecar v3
+- une reduction de dette PostgresRepository planifiee sans lancer de refactor pendant Gate 8
 
 ---
 
@@ -376,4 +378,27 @@ tests_run:
 residual_risks:
 - aggregates are recomputed on demand (no scheduler in this gate)
 - playable persistence target remains cumulative-incremental backlog item
-go_no_go: GO for Gate 7 closure, Gate 8 remains closed
+go_no_go: GO for Gate 7 closure, Gate 8 opened then closed
+
+## 15. Gate 8 closure evidence
+
+date: 2026-04-09
+owner: codex
+checklist_items_passed:
+- operator inspection surfaces extended with `enrichment-metrics` and `confusion-metrics`
+- runbook and KPI docs keep locked KPI names unchanged
+- smoke report KPI assembly now uses explicit locked registry in code
+- doc/code coherence checks enforce locked KPI names across README/docs
+- no schema/migration changes introduced in Gate 8
+- no Gate 9 sidecar retirement markers introduced
+tests_run:
+- tests/test_storage.py::test_fetch_enrichment_queue_metrics_includes_status_distribution
+- tests/test_storage.py::test_fetch_confusion_metrics_reports_top_pairs
+- tests/test_cli.py::test_inspect_cli_enrichment_metrics_outputs_text
+- tests/test_cli.py::test_inspect_cli_confusion_metrics_outputs_text
+- tests/test_smoke_report.py::test_generate_smoke_report_uses_locked_kpi_registry
+- tests/test_verify_repo.py
+residual_risks:
+- playable persistence target remains cumulative-incremental backlog item
+- PostgresRepository concentration remains strategic debt tracked for later work
+go_no_go: GO for Gate 8 closure, Gate 9 remains closed

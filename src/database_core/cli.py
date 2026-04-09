@@ -27,7 +27,9 @@ from database_core.inspect.summary import (
     render_canonical_state_events,
     render_confusion_aggregates_global,
     render_confusion_events,
+    render_confusion_metrics,
     render_enrichment_executions,
+    render_enrichment_metrics,
     render_enrichment_requests,
     render_exportables,
     render_review_queue,
@@ -141,8 +143,10 @@ def main() -> None:
             "pack-materializations",
             "enrichment-requests",
             "enrichment-executions",
+            "enrichment-metrics",
             "confusion-events",
             "confusion-aggregates-global",
+            "confusion-metrics",
         ],
     )
     inspect_parser.add_argument(
@@ -805,6 +809,8 @@ def main() -> None:
                 limit=args.limit,
             )
         )
+    elif args.view == "enrichment-metrics":
+        print(render_enrichment_metrics(repository))
     elif args.view == "confusion-events":
         print(
             render_confusion_events(
@@ -821,6 +827,8 @@ def main() -> None:
                 limit=args.limit,
             )
         )
+    elif args.view == "confusion-metrics":
+        print(render_confusion_metrics(repository))
     else:
         print(render_exportables(repository))
 

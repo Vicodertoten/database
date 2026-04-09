@@ -754,6 +754,53 @@ def test_pack_cli_compile_materialize_and_inspect(monkeypatch, database_url: str
     assert materializations[0]["pack_materialization_version"] == "pack.materialization.v1"
 
 
+def test_inspect_cli_enrichment_metrics_outputs_text(monkeypatch, database_url: str) -> None:
+    repository = PostgresRepository(database_url)
+    repository.initialize()
+
+    buffer = io.StringIO()
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "database-core",
+            "inspect",
+            "enrichment-metrics",
+            "--database-url",
+            database_url,
+        ],
+    )
+    with redirect_stdout(buffer):
+        cli.main()
+    output = buffer.getvalue()
+    assert "Enrichment metrics" in output
+    assert "requests_total:" in output
+    assert "status_counts" not in output
+
+
+def test_inspect_cli_confusion_metrics_outputs_text(monkeypatch, database_url: str) -> None:
+    repository = PostgresRepository(database_url)
+    repository.initialize()
+
+    buffer = io.StringIO()
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "database-core",
+            "inspect",
+            "confusion-metrics",
+            "--database-url",
+            database_url,
+        ],
+    )
+    with redirect_stdout(buffer):
+        cli.main()
+    output = buffer.getvalue()
+    assert "Confusion metrics" in output
+    assert "batches_total:" in output
+
+
 def _seed_pack_ready_data(
     repository: PostgresRepository,
     *,

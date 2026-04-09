@@ -3196,6 +3196,104 @@ class PostgresRepository:
             payload.append(aggregate.model_dump(mode="json"))
         return payload
 
+    def fetch_enrichment_queue_metrics(self) -> dict[str, object]:
+        with self.connect() as connection:
+            status_rows = connection.execute(
+                """
+                SELECT request_status, COUNT(*) AS count
+                FROM enrichment_requests
+                GROUP BY request_status
+                """
+            ).fetchall()
+            status_counts: dict[str, int] = {
+                "pending": 0,
+                "in_progress": 0,
+                "completed": 0,
+                "failed": 0,
+            }
+            for row in status_rows:
+                status_counts[str(row["request_status"])] = int(row["count"])
+
+            totals_row = connection.execute(
+                """
+                SELECT
+                    COUNT(*) AS requests_total,
+                    COALESCE(SUM(execution_attempt_count), 0) AS attempts_total
+                FROM enrichment_requests
+                """
+            ).fetchone()
+            executions_total = int(
+                connection.execute(
+                    "SELECT COUNT(*) AS count FROM enrichment_executions"
+                ).fetchone()["count"]
+            )
+            oldest_pending_row = connection.execute(
+                """
+                SELECT created_at
+                FROM enrichment_requests
+                WHERE request_status = 'pending'
+                ORDER BY created_at ASC
+                LIMIT 1
+                """
+            ).fetchone()
+            oldest_pending_age_hours = 0.0
+            if oldest_pending_row is not None:
+                created_at = oldest_pending_row["created_at"]
+                oldest_pending_age_hours = round(
+                    (datetime.now(UTC) - created_at).total_seconds() / 3600.0,
+                    2,
+                )
+
+            return {
+                "requests_total": int(totals_row["requests_total"]),
+                "executions_total": executions_total,
+                "attempts_total": int(totals_row["attempts_total"]),
+                "status_counts": status_counts,
+                "oldest_pending_age_hours": oldest_pending_age_hours,
+            }
+
+    def fetch_confusion_metrics(self, *, top_pair_limit: int = 5) -> dict[str, object]:
+        with self.connect() as connection:
+            counts_row = connection.execute(
+                """
+                SELECT
+                    (SELECT COUNT(*) FROM confusion_batches) AS batches_total,
+                    (SELECT COUNT(*) FROM confusion_events) AS events_total,
+                    (SELECT COUNT(*) FROM confusion_aggregates_global) AS aggregates_total
+                """
+            ).fetchone()
+            freshest_row = connection.execute(
+                "SELECT MAX(aggregated_at) AS aggregated_at FROM confusion_aggregates_global"
+            ).fetchone()
+            top_rows = connection.execute(
+                """
+                SELECT taxon_confused_for_id, taxon_correct_id, event_count
+                FROM confusion_aggregates_global
+                ORDER BY event_count DESC, taxon_confused_for_id, taxon_correct_id
+                LIMIT %s
+                """,
+                (top_pair_limit,),
+            ).fetchall()
+
+            return {
+                "batches_total": int(counts_row["batches_total"]),
+                "events_total": int(counts_row["events_total"]),
+                "aggregates_total": int(counts_row["aggregates_total"]),
+                "last_aggregated_at": (
+                    freshest_row["aggregated_at"].isoformat()
+                    if freshest_row["aggregated_at"] is not None
+                    else None
+                ),
+                "top_pairs": [
+                    {
+                        "taxon_confused_for_id": str(row["taxon_confused_for_id"]),
+                        "taxon_correct_id": str(row["taxon_correct_id"]),
+                        "event_count": int(row["event_count"]),
+                    }
+                    for row in top_rows
+                ],
+            }
+
     def _generate_pack_id(self) -> str:
         return f"pack:{datetime.now(UTC).strftime('%Y%m%dT%H%M%SZ')}:{uuid4().hex[:8]}"
 

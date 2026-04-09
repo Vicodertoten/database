@@ -59,3 +59,25 @@ def test_generate_smoke_report_includes_locked_kpis(tmp_path: Path, database_url
     assert isinstance(latest_run["started_at"], str)
     assert isinstance(latest_run["completed_at"], str)
     json.dumps(report)
+
+
+def test_generate_smoke_report_uses_locked_kpi_registry(tmp_path: Path, database_url: str) -> None:
+    run_pipeline(
+        database_url=database_url,
+        normalized_snapshot_path=tmp_path / "normalized_registry.json",
+        qualification_snapshot_path=tmp_path / "qualified_registry.json",
+        export_path=tmp_path / "export_registry.json",
+    )
+    repository = PostgresRepository(database_url)
+    report = generate_smoke_report(
+        repository,
+        snapshot_id=None,
+        database_url=database_url,
+    )
+
+    # Keep smoke report KPI names stable and sourced from the locked registry.
+    from database_core.ops.smoke_report import _LOCKED_KPIS
+
+    assert set(report["kpis"].keys()) == set(_LOCKED_KPIS.keys())
+    for name, expected_target in _LOCKED_KPIS.items():
+        assert report["kpis"][name]["target"] == expected_target

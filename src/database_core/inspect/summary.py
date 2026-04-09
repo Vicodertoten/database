@@ -117,6 +117,46 @@ def render_confusion_aggregates_global(
     return "\n".join(lines)
 
 
+def render_enrichment_metrics(repository: PostgresRepository) -> str:
+    metrics = repository.fetch_enrichment_queue_metrics()
+    status_counts = metrics["status_counts"]
+    return "\n".join(
+        [
+            "Enrichment metrics",
+            f"requests_total: {metrics['requests_total']}",
+            f"executions_total: {metrics['executions_total']}",
+            f"attempts_total: {metrics['attempts_total']}",
+            f"pending: {status_counts['pending']}",
+            f"in_progress: {status_counts['in_progress']}",
+            f"completed: {status_counts['completed']}",
+            f"failed: {status_counts['failed']}",
+            f"oldest_pending_age_hours: {metrics['oldest_pending_age_hours']}",
+        ]
+    )
+
+
+def render_confusion_metrics(repository: PostgresRepository) -> str:
+    metrics = repository.fetch_confusion_metrics()
+    lines = [
+        "Confusion metrics",
+        f"batches_total: {metrics['batches_total']}",
+        f"events_total: {metrics['events_total']}",
+        f"aggregates_total: {metrics['aggregates_total']}",
+        f"last_aggregated_at: {metrics['last_aggregated_at'] or 'none'}",
+    ]
+    top_pairs = metrics["top_pairs"]
+    if not top_pairs:
+        lines.append("top_pairs: none")
+    else:
+        lines.append("top_pairs:")
+        for row in top_pairs:
+            lines.append(
+                f"- {row['taxon_confused_for_id']} -> {row['taxon_correct_id']} "
+                f"(events={row['event_count']})"
+            )
+    return "\n".join(lines)
+
+
 def render_review_queue(
     repository: PostgresRepository,
     *,
