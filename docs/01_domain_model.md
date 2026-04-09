@@ -1,5 +1,12 @@
 # Domain Model
 
+Post-Gate 4 note:
+
+- Gate 2 to Gate 4 delivered a valid first operational backbone.
+- The final playable target remains a cumulative incremental living corpus.
+- The current implementation still materializes a latest rebuilt playable surface.
+- This gap is explicit and scheduled in the corrective Gate 4.5.
+
 ## CanonicalTaxon
 
 Internal taxon identity. Upstream identifiers are mappings, not product identity.
@@ -101,6 +108,16 @@ Qualification stays explicit. Unknown and review-required are first-class outcom
 
 Derived, queryable runtime-facing item persisted in database (without runtime session logic).
 
+Current implementation posture:
+
+- `playable_items` is managed as the latest serving surface rebuilt from current run output.
+- `playable_items_history` preserves immutable run snapshots for traceability.
+
+Target posture (not implemented yet):
+
+- a cumulative incremental playable corpus where items remain available until explicit invalidation.
+- explicit lifecycle transitions for serving availability, not only full latest-surface rebuild.
+
 Fields:
 
 - stable `playable_item_id` (derived from qualified resource)
@@ -116,7 +133,8 @@ Rules:
 
 - playable v1 is fed only from exportable qualified resources (`export_eligible=true`)
 - `common_names_i18n` is extensible; current bootstrap maps existing names to `en` and initializes `fr`/`nl` as empty arrays
-- playable is additive and does not replace `CanonicalTaxon`, `QualifiedResource`, or `export.bundle.v4`
+- playable does not replace `CanonicalTaxon`, `QualifiedResource`, or `export.bundle.v4`
+- Gate 4.5 clarifies the migration path from current latest surface to cumulative incremental target
 
 ## PackSpec / PackRevision / PackCompilationAttempt (Gate 3)
 
@@ -154,6 +172,7 @@ CompiledPackBuild (`pack.compiled.v1`):
   - exactly 3 distractors
   - distractor taxa distinct from each other and from target taxon
 - persisted with build traceability (`build_id`, `pack_id`, `revision`, `built_at`, `source_run_id`)
+- historical builds are kept and queryable for audit and operational reproducibility
 
 PackMaterialization (`pack.materialization.v1`):
 
@@ -162,4 +181,27 @@ PackMaterialization (`pack.materialization.v1`):
 - purpose-constrained:
   - `assignment`: no TTL, no expiration
   - `daily_challenge`: positive TTL and computed `expires_at`
+- immutable once written; later compiled builds do not retroactively mutate old materializations
 - materialization persistence is still in `database` scope; no runtime/session/scoring/progression object is introduced here
+
+## Similarity and distractor trajectory (post-Gate 4)
+
+Current state:
+
+- canonical taxa already carry `external_similarity_hints`, `similar_taxa`, and derived `similar_taxon_ids`.
+- Gate 4 distractor selection is deterministic and minimal.
+
+Next planned state:
+
+- a dedicated distractor policy v2 gate will strengthen pedagogical distractor quality.
+- iNaturalist similar species hints can be promoted to internal similarity only under controlled rules.
+- if a hinted target taxon already exists internally, promotion to `similar_taxon_ids` is straightforward and traceable.
+- if target taxon does not exist, any future automatic creation must remain constrained by canonical governance rules.
+- external sources can inform the system but can never freely define internal identity.
+
+## Architecture debt callout
+
+`PostgresRepository` currently aggregates too many responsibilities
+(storage, diagnostics, compile/materialize orchestration, metrics).
+This debt is now explicitly tracked as a dedicated strategic workstream,
+but no refactor is launched in this documentation-only cycle.

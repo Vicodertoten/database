@@ -11,6 +11,18 @@ The current implementation is an intentionally narrow pilot: birds-only, iNatura
 That narrow scope is a proving ground for a structure meant to scale toward a broader multi-taxa knowledge core.
 Canonical governance for phase 1 is defined in `docs/06_charte_canonique_v1.md`.
 
+## Post-Gate 4 reality check
+
+The repository is now at a useful post-Gate 4 baseline, with playable, pack,
+compiled build, and materialization layers implemented.
+
+This baseline is intentionally not yet the final shape for playable persistence.
+The final target remains a cumulative incremental playable corpus where playable
+items remain available until invalidated by explicit governance or qualification changes.
+
+Current implementation still relies on a latest materialized playable surface rebuilt per run.
+This gap is explicit and is treated as a strategic corrective milestone before old Gate 5.
+
 Current scope:
 
 - internal canonical bird taxonomy objects
@@ -19,6 +31,8 @@ Current scope:
 - explicit canonical enrichment from cached taxon payloads
 - qualification for pedagogical reuse
 - structured review queue plus snapshot-scoped review overrides
+- deterministic pack compilation and frozen materializations
+- explicit traceability of compiled build history and materialization lineage
 - export of only qualified resources
 - PostgreSQL/PostGIS storage and CLI inspection
 
@@ -30,6 +44,9 @@ Current non-goals:
 - business logic
 - institution features
 - full-scale ingestion
+- runtime session/scoring/progression
+- distractor policy v2 implementation in the current cycle
+- repository refactor implementation in the current cycle
 
 Phase 1 stays intentionally small:
 

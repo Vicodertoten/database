@@ -2,6 +2,13 @@
 
 The pipeline is deliberately small, versioned, and reproducible.
 
+Post-Gate 4 strategic context:
+
+- Gate 2 to Gate 4 are implemented and operational.
+- The final playable target is a cumulative incremental living corpus.
+- Current implementation still rebuilds a latest playable surface per run.
+- This gap is explicit and is addressed by a dedicated corrective Gate 4.5 before old Gate 5.
+
 ## 1. Ingest
 
 - either read a tiny local bird fixture or a cached iNaturalist snapshot
@@ -28,6 +35,12 @@ The pipeline is deliberately small, versioned, and reproducible.
 - resolve similarity into internal `similar_taxa` only when the target taxon already exists in the canonical seed
 - keep unresolved source hints separate from canonical relationships
 - never let AI or source hints mutate canonical identity fields directly
+
+Controlled promotion rule:
+
+- source-side similar species hints may be promoted to internal similarity indexes when canonical target taxa already exist.
+- any future automatic canonical creation path remains constrained by canonical governance rules.
+- external sources feed the system but do not define internal identity freely.
 
 ## 4. Qualify
 
@@ -85,7 +98,8 @@ The pipeline is deliberately small, versioned, and reproducible.
   - `what_to_look_at_specific` from qualified visible parts
   - `what_to_look_at_general` from canonical key identification features
   - `confusion_hint` from resolved similar canonical taxa when available
-- persist living surface in Postgres (`playable_items`) and append immutable snapshots in `playable_items_history`
+- current implementation: persist latest serving surface in Postgres (`playable_items`) and append immutable snapshots in `playable_items_history`
+- target model (future): cumulative incremental playable corpus with explicit invalidation lifecycle
 - keep contract isolation:
   - `export.bundle.v4` remains unchanged
   - no runtime/session/scoring/progression logic in this stage
@@ -109,11 +123,24 @@ The pipeline is deliberately small, versioned, and reproducible.
   - exactly three distractors
   - distractor taxa all distinct and different from the target taxon
 - persist each compiled build in `compiled_pack_builds` (`pack.compiled.v1`)
+- keep historical compiled builds for traceability and reproducibility
 - create optional frozen snapshots in `pack_materializations` (`pack.materialization.v1`)
+- materializations are immutable snapshots by design
 - keep strict boundaries:
-  - no queue d’enrichissement (Gate 5+) in this stage
+  - no queue d’enrichissement (Gate 6+) in this stage
   - no runtime/session/scoring/progression logic
   - no change to `export.bundle.v4`
+
+## 11. Corrective strategic alignment (Gate 4.5)
+
+- align doctrine and implementation posture before expanding the chain
+- clarify playable target vs current latest-surface implementation
+- formalize historical compiled-build traceability expectations
+- formalize immutable materialization expectations
+- frame repository responsibility debt as a dedicated workstream (without launching refactor)
+- prepare distractor policy v2 gate scope and constraints
+
+This is a documentation and strategic alignment gate, not a feature implementation gate.
 
 ## Versioning
 

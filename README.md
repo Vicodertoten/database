@@ -28,10 +28,32 @@ The current pilot stays narrow on purpose:
 
 The repository is not the quiz app, frontend, or product runtime.
 
+## Post-Gate 4 Strategic Reset (Current Context)
+
+The repository has reached Gate 4 (playable + packs + compilation + materialization).
+This is a strong milestone, but it is not yet the final target shape.
+
+The final playable target is a real cumulative incremental corpus:
+
+- playable items remain available over time until explicitly invalidated
+- the corpus evolves incrementally with traceable state transitions
+- latest views are consumer surfaces, not the only persistence strategy
+
+Current implementation status:
+
+- playable_items is currently rebuilt as a latest materialized surface at each pipeline run
+- playable_items_history and pipeline history preserve run snapshots
+- PostgresRepository currently concentrates too many responsibilities and is now tracked as a dedicated strategic debt workstream
+- this gap is now explicit and is treated as a strategic corrective step before old Gate 5
+
+A dedicated corrective gate (Gate 4.5) is now part of the execution plan to align doctrine,
+traceability contracts, and next-step architecture before further feature expansion.
+
 ## Reference docs
 
 - Documentation index: `docs/README.md`
 - Living audit reference: `docs/05_audit_reference.md`
+- Codex execution plan (sequential gates): `docs/codex_execution_plan.md`
 - Stable canonical charter v1: `docs/06_charte_canonique_v1.md`
 - Canonical implementation ADR: `docs/adr/0001-charte-canonique-v1.md`
 - Noyau canonique fort ADR: `docs/adr/0002-noyau-canonique-fort-execution-sequentielle.md`
@@ -84,6 +106,8 @@ Installed entrypoints mirror the script wrappers:
 - pack layer v1 with immutable revisions (`pack.spec.v1`) and deterministic compilability diagnostics (`pack.diagnostic.v1`)
 - deterministic compiled pack builds persisted as `pack.compiled.v1`
 - frozen pack materializations persisted as `pack.materialization.v1` for `assignment` and `daily_challenge`
+- compiled build history is preserved and queryable for traceability
+- materializations are frozen immutable snapshots derived from one compiled build
 - versioned normalized, qualification, and export artifacts
 - JSON export bundles validated against versioned JSON Schemas before write
 - lightweight inspection CLI
@@ -261,6 +285,17 @@ The important distinction is:
 - external mappings identify source records
 - external similarity hints remain source suggestions
 - resolved `similar_taxa` are internal canonical relationships
+
+Promotion rule in current doctrine:
+
+- source-side similar species hints can feed internal similarity only when the target canonical taxon already exists
+- external sources can feed and enrich, but they never define internal identity freely
+- any future controlled canonical creation remains governed by canonical charter rules
+
+Distractor policy note:
+
+- Gate 4 distractor selection is intentionally minimal and deterministic
+- a dedicated distractor policy v2 gate is planned after Gate 4.5 for stronger pedagogical quality
 
 The enrichment stage is offline and deterministic for cached snapshots: it reads only the local taxon payload cache stored in the snapshot.
 
