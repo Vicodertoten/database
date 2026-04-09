@@ -17,7 +17,12 @@ from database_core.domain.models import (
     SourceObservation,
     SourceQualityMetadata,
 )
-from database_core.pack import validate_pack_diagnostic, validate_pack_spec
+from database_core.pack import (
+    validate_compiled_pack,
+    validate_pack_diagnostic,
+    validate_pack_materialization,
+    validate_pack_spec,
+)
 from database_core.playable import validate_playable_corpus
 from database_core.storage.postgres import (
     PostgresRepository,
@@ -70,14 +75,14 @@ def test_initialize_can_reset_legacy_schema_version_with_explicit_flag(
         )
 
     assert "legacy_table" not in table_names
-    assert user_version == 10
+    assert user_version == 11
 
 
-def test_migrate_to_latest_initializes_v10_schema(database_url: str) -> None:
+def test_migrate_to_latest_initializes_v11_schema(database_url: str) -> None:
     repository = PostgresRepository(database_url)
     applied_versions = repository.migrate_to_latest()
-    assert applied_versions == (8, 9, 10)
-    assert repository.current_schema_version() == 10
+    assert applied_versions == (8, 9, 10, 11)
+    assert repository.current_schema_version() == 11
 
 
 def test_geospatial_queries_support_bbox_and_point_radius(database_url: str) -> None:
@@ -743,6 +748,317 @@ def test_pack_diagnostic_is_deterministic_for_same_revision(database_url: str) -
     assert first["deficits"] == second["deficits"]
     assert first["blocking_taxa"] == second["blocking_taxa"]
 
+
+def test_pack_diagnostic_questions_possible_requires_three_distinct_distractors(
+    database_url: str,
+) -> None:
+    repository = PostgresRepository(database_url)
+    repository.initialize()
+    canonical_taxon_ids = _seed_pack_ready_playable_items(
+        repository,
+        run_id="run:20260408T001000Z:qqqqqqqq",
+        taxon_count=3,
+        media_per_taxon=2,
+    )
+    payload = repository.create_pack(
+        pack_id="pack:diagnostic:distractors",
+        parameters={
+            "canonical_taxon_ids": canonical_taxon_ids,
+            "difficulty_policy": "mixed",
+            "country_code": None,
+            "location_bbox": None,
+            "location_point": None,
+            "location_radius_meters": None,
+            "observed_from": None,
+            "observed_to": None,
+            "owner_id": "owner:diagnostic",
+            "org_id": None,
+            "visibility": "private",
+            "intended_use": "training",
+        },
+    )
+
+    diagnostic = repository.diagnose_pack(pack_id=str(payload["pack_id"]))
+    assert diagnostic["measured"]["questions_possible"] == 0
+    assert diagnostic["compilable"] is False
+
+
+def test_compile_pack_persists_validated_payload_and_is_deterministic(
+    database_url: str,
+) -> None:
+    repository = PostgresRepository(database_url)
+    repository.initialize()
+    canonical_taxon_ids = _seed_pack_ready_playable_items(
+        repository,
+        run_id="run:20260408T001100Z:rrrrrrrr",
+        taxon_count=10,
+        media_per_taxon=2,
+    )
+    payload = repository.create_pack(
+        pack_id="pack:compile:deterministic",
+        parameters={
+            "canonical_taxon_ids": canonical_taxon_ids,
+            "difficulty_policy": "easy",
+            "country_code": None,
+            "location_bbox": None,
+            "location_point": None,
+            "location_radius_meters": None,
+            "observed_from": None,
+            "observed_to": None,
+            "owner_id": "owner:compile",
+            "org_id": None,
+            "visibility": "private",
+            "intended_use": "training",
+        },
+    )
+
+    first_build = repository.compile_pack(
+        pack_id=str(payload["pack_id"]),
+        question_count=20,
+    )
+    second_build = repository.compile_pack(
+        pack_id=str(payload["pack_id"]),
+        question_count=20,
+    )
+    validate_compiled_pack(first_build)
+    validate_compiled_pack(second_build)
+    assert first_build["question_count_built"] == 20
+    assert second_build["question_count_built"] == 20
+    assert first_build["questions"] == second_build["questions"]
+    assert first_build["build_id"] != second_build["build_id"]
+
+    builds = repository.fetch_compiled_pack_builds(
+        pack_id=str(payload["pack_id"]),
+        revision=1,
+    )
+    assert len(builds) == 2
+    for build in builds:
+        validate_compiled_pack(build)
+
+
+def test_compile_pack_rejects_non_compilable_pack_without_persisting_build(
+    database_url: str,
+) -> None:
+    repository = PostgresRepository(database_url)
+    repository.initialize()
+    payload = repository.create_pack(
+        pack_id="pack:compile:reject",
+        parameters={
+            "canonical_taxon_ids": ["taxon:birds:000001", "taxon:birds:000002"],
+            "difficulty_policy": "balanced",
+            "country_code": "BE",
+            "location_bbox": None,
+            "location_point": None,
+            "location_radius_meters": None,
+            "observed_from": None,
+            "observed_to": None,
+            "owner_id": "owner:compile",
+            "org_id": None,
+            "visibility": "private",
+            "intended_use": "training",
+        },
+    )
+
+    with pytest.raises(ValueError, match="not compilable"):
+        repository.compile_pack(pack_id=str(payload["pack_id"]), question_count=20)
+
+    assert repository.fetch_compiled_pack_builds(pack_id=str(payload["pack_id"])) == []
+
+
+def test_materialize_pack_daily_challenge_is_frozen_after_playable_change(
+    database_url: str,
+) -> None:
+    repository = PostgresRepository(database_url)
+    repository.initialize()
+    canonical_taxon_ids = _seed_pack_ready_playable_items(
+        repository,
+        run_id="run:20260408T001200Z:ssssssss",
+        taxon_count=10,
+        media_per_taxon=2,
+    )
+    payload = repository.create_pack(
+        pack_id="pack:materialize:freeze",
+        parameters={
+            "canonical_taxon_ids": canonical_taxon_ids,
+            "difficulty_policy": "easy",
+            "country_code": None,
+            "location_bbox": None,
+            "location_point": None,
+            "location_radius_meters": None,
+            "observed_from": None,
+            "observed_to": None,
+            "owner_id": "owner:materialize",
+            "org_id": None,
+            "visibility": "private",
+            "intended_use": "training",
+        },
+    )
+
+    first_build = repository.compile_pack(pack_id=str(payload["pack_id"]), question_count=20)
+    materialization = repository.materialize_pack(
+        pack_id=str(payload["pack_id"]),
+        question_count=20,
+        purpose="daily_challenge",
+    )
+    validate_pack_materialization(materialization)
+    assert materialization["purpose"] == "daily_challenge"
+    assert materialization["ttl_hours"] == 24
+    assert materialization["expires_at"] is not None
+
+    first_target = first_build["questions"][0]["target_playable_item_id"]
+    with repository.connect() as connection:
+        connection.execute(
+            """
+            UPDATE playable_items
+            SET difficulty_level = 'hard'
+            WHERE playable_item_id = %s
+            """,
+            (first_target,),
+        )
+
+    second_build = repository.compile_pack(pack_id=str(payload["pack_id"]), question_count=20)
+    assert second_build["questions"] != first_build["questions"]
+    assert materialization["questions"] == first_build["questions"]
+
+
+def test_materialize_pack_assignment_rejects_ttl(database_url: str) -> None:
+    repository = PostgresRepository(database_url)
+    repository.initialize()
+    canonical_taxon_ids = _seed_pack_ready_playable_items(
+        repository,
+        run_id="run:20260408T001300Z:tttttttt",
+        taxon_count=10,
+        media_per_taxon=2,
+    )
+    payload = repository.create_pack(
+        pack_id="pack:materialize:assignment",
+        parameters={
+            "canonical_taxon_ids": canonical_taxon_ids,
+            "difficulty_policy": "balanced",
+            "country_code": None,
+            "location_bbox": None,
+            "location_point": None,
+            "location_radius_meters": None,
+            "observed_from": None,
+            "observed_to": None,
+            "owner_id": "owner:materialize",
+            "org_id": None,
+            "visibility": "private",
+            "intended_use": "training",
+        },
+    )
+    repository.compile_pack(pack_id=str(payload["pack_id"]), question_count=20)
+    with pytest.raises(ValueError, match="assignment materialization cannot define ttl_hours"):
+        repository.materialize_pack(
+            pack_id=str(payload["pack_id"]),
+            question_count=20,
+            purpose="assignment",
+            ttl_hours=4,
+        )
+
+def _seed_pack_ready_playable_items(
+    repository: PostgresRepository,
+    *,
+    run_id: str,
+    taxon_count: int,
+    media_per_taxon: int,
+) -> list[str]:
+    captured_at = datetime(2026, 4, 8, 0, 0, tzinfo=UTC)
+    canonical_taxon_ids = [f"taxon:birds:{index + 1:06d}" for index in range(taxon_count)]
+    with repository.connect() as connection:
+        repository.start_pipeline_run(
+            run_id=run_id,
+            source_mode="fixture",
+            dataset_id=f"fixture:{run_id}",
+            snapshot_id=None,
+            started_at=captured_at,
+            connection=connection,
+        )
+        repository.save_canonical_taxa(
+            [
+                _canonical_taxon(canonical_taxon_id=canonical_taxon_id, name=canonical_taxon_id)
+                for canonical_taxon_id in canonical_taxon_ids
+            ],
+            run_id=run_id,
+            connection=connection,
+        )
+
+        observations: list[SourceObservation] = []
+        media_assets: list[MediaAsset] = []
+        qualified_resources: list[QualifiedResource] = []
+        playable_items: list[PlayableItem] = []
+        for canonical_taxon_id in canonical_taxon_ids:
+            for offset in range(media_per_taxon):
+                suffix = f"{canonical_taxon_id}:{offset + 1}"
+                observation_uid = f"obs:inaturalist:{suffix}"
+                source_observation_id = f"obs-{suffix}"
+                media_id = f"media:inaturalist:{suffix}"
+                qualified_resource_id = f"qr:{media_id}"
+                observations.append(
+                    SourceObservation(
+                        observation_uid=observation_uid,
+                        source_name=SourceName.INATURALIST,
+                        source_observation_id=source_observation_id,
+                        source_taxon_id=canonical_taxon_id,
+                        observed_at=captured_at,
+                        location=LocationMetadata(
+                            place_name="Brussels",
+                            latitude=50.8503,
+                            longitude=4.3517,
+                            country_code="BE",
+                        ),
+                        source_quality=SourceQualityMetadata(
+                            quality_grade="research",
+                            research_grade=True,
+                            observation_license="CC-BY",
+                            captive=False,
+                        ),
+                        raw_payload_ref=f"fixture://{suffix}",
+                        canonical_taxon_id=canonical_taxon_id,
+                    )
+                )
+                media_assets.append(
+                    _media_asset(
+                        media_id=media_id,
+                        source_media_id=source_observation_id,
+                        source_observation_uid=observation_uid,
+                        canonical_taxon_id=canonical_taxon_id,
+                    )
+                )
+                qualified_resources.append(
+                    _qualified_resource(
+                        qualified_resource_id=qualified_resource_id,
+                        media_asset_id=media_id,
+                        source_observation_uid=observation_uid,
+                        source_observation_id=source_observation_id,
+                        canonical_taxon_id=canonical_taxon_id,
+                    )
+                )
+                playable_items.append(
+                    _playable_item(
+                        run_id=run_id,
+                        qualified_resource_id=qualified_resource_id,
+                        canonical_taxon_id=canonical_taxon_id,
+                        media_asset_id=media_id,
+                        source_observation_uid=observation_uid,
+                        source_observation_id=source_observation_id,
+                        source_media_id=source_observation_id,
+                        difficulty_level="easy",
+                    )
+                )
+
+        repository.save_source_observations(observations, connection=connection)
+        repository.save_media_assets(media_assets, connection=connection)
+        repository.save_qualified_resources(qualified_resources, connection=connection)
+        repository.save_playable_items(playable_items, connection=connection)
+        repository.complete_pipeline_run(
+            run_id=run_id,
+            completed_at=captured_at,
+            connection=connection,
+        )
+    return canonical_taxon_ids
+
+
 def _canonical_taxon(
     *,
     canonical_taxon_id: str,
@@ -788,6 +1104,7 @@ def _playable_item(
     source_observation_uid: str,
     source_observation_id: str,
     source_media_id: str,
+    difficulty_level: str = "easy",
 ) -> PlayableItem:
     return PlayableItem(
         playable_item_id=f"playable:{qualified_resource_id}",
@@ -801,7 +1118,7 @@ def _playable_item(
         source_media_id=source_media_id,
         scientific_name="Parus major",
         common_names_i18n={"fr": [], "en": ["Great Tit"], "nl": []},
-        difficulty_level="easy",
+        difficulty_level=difficulty_level,
         media_role="primary_id",
         learning_suitability="high",
         confusion_relevance="medium",

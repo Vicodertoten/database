@@ -143,3 +143,23 @@ PackCompilationAttempt (deterministic diagnosis):
 - persisted trace of one diagnostic execution for a pack revision
 - includes `compilable`, `reason_code`, measured metrics, deficits, and blocking taxa
 - no external calls and no runtime/session/scoring/progression side effects
+
+## CompiledPackBuild / PackMaterialization (Gate 4)
+
+CompiledPackBuild (`pack.compiled.v1`):
+
+- dynamic build computed from current `playable_items` + one pack revision
+- deterministic question set:
+  - one target playable item
+  - exactly 3 distractors
+  - distractor taxa distinct from each other and from target taxon
+- persisted with build traceability (`build_id`, `pack_id`, `revision`, `built_at`, `source_run_id`)
+
+PackMaterialization (`pack.materialization.v1`):
+
+- frozen snapshot derived from one compiled build (`source_build_id`)
+- immutable question payload (targets + distractors exacts)
+- purpose-constrained:
+  - `assignment`: no TTL, no expiration
+  - `daily_challenge`: positive TTL and computed `expires_at`
+- materialization persistence is still in `database` scope; no runtime/session/scoring/progression object is introduced here

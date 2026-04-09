@@ -1,0 +1,156 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "pack_materialization_v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "pack_materialization_version",
+    "materialization_id",
+    "pack_id",
+    "revision",
+    "source_build_id",
+    "created_at",
+    "purpose",
+    "ttl_hours",
+    "expires_at",
+    "question_count",
+    "questions"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "pack_materialization_version": {
+      "type": "string",
+      "const": "pack.materialization.v1"
+    },
+    "materialization_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "pack_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "source_build_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "purpose": {
+      "type": "string",
+      "enum": ["assignment", "daily_challenge"]
+    },
+    "ttl_hours": {
+      "type": ["integer", "null"],
+      "minimum": 1
+    },
+    "expires_at": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "question_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "questions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "position",
+          "target_playable_item_id",
+          "target_canonical_taxon_id",
+          "distractor_playable_item_ids",
+          "distractor_canonical_taxon_ids"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "position": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "target_playable_item_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "target_canonical_taxon_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "distractor_playable_item_ids": {
+            "type": "array",
+            "minItems": 3,
+            "maxItems": 3,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "distractor_canonical_taxon_ids": {
+            "type": "array",
+            "minItems": 3,
+            "maxItems": 3,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "purpose": {
+            "const": "assignment"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "ttl_hours": {
+            "type": "null"
+          },
+          "expires_at": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "purpose": {
+            "const": "daily_challenge"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "ttl_hours": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    }
+  ]
+}

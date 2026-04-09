@@ -186,6 +186,11 @@ class PackVisibility(StrEnum):
     PUBLIC = "public"
 
 
+class PackMaterializationPurpose(StrEnum):
+    ASSIGNMENT = "assignment"
+    DAILY_CHALLENGE = "daily_challenge"
+
+
 class PackCompilationReasonCode(StrEnum):
     COMPILABLE = "compilable"
     NO_PLAYABLE_ITEMS = "no_playable_items"

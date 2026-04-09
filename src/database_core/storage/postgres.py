@@ -1,10 +1,10 @@
 from __future__ import annotations
 
 import json
-from collections import Counter
+from collections import Counter, defaultdict
 from collections.abc import Iterator, Sequence
 from contextlib import contextmanager
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from uuid import uuid4
 
 import psycopg
@@ -17,6 +17,7 @@ from database_core.domain.enums import (
     CanonicalEventType,
     CanonicalGovernanceDecisionStatus,
     PackCompilationReasonCode,
+    PackMaterializationPurpose,
     ReviewStatus,
 )
 from database_core.domain.models import (
@@ -24,6 +25,9 @@ from database_core.domain.models import (
     CanonicalTaxon,
     CanonicalTaxonEvent,
     CanonicalTaxonRelationship,
+    CompiledPackBuild,
+    CompiledPackQuestion,
+    MaterializedPack,
     MediaAsset,
     PackCompilationAttempt,
     PackCompilationDeficit,
@@ -36,7 +40,12 @@ from database_core.domain.models import (
     ReviewItem,
     SourceObservation,
 )
-from database_core.pack import validate_pack_diagnostic, validate_pack_spec
+from database_core.pack import (
+    validate_compiled_pack,
+    validate_pack_diagnostic,
+    validate_pack_materialization,
+    validate_pack_spec,
+)
 from database_core.playable import validate_playable_corpus
 from database_core.storage.postgres_migrations import (
     apply_migrations,
@@ -44,9 +53,11 @@ from database_core.storage.postgres_migrations import (
     reset_schema,
 )
 from database_core.versioning import (
+    COMPILED_PACK_VERSION,
     ENRICHMENT_VERSION,
     EXPORT_VERSION,
     PACK_DIAGNOSTIC_VERSION,
+    PACK_MATERIALIZATION_VERSION,
     PACK_SPEC_VERSION,
     PLAYABLE_CORPUS_VERSION,
     QUALIFICATION_VERSION,
@@ -344,8 +355,12 @@ class PostgresRepository:
             ) VALUES (
                 %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
                 CASE
-                    WHEN %s IS NOT NULL AND %s IS NOT NULL
-                    THEN ST_SetSRID(ST_MakePoint(%s, %s), 4326)
+                    WHEN %s::DOUBLE PRECISION IS NOT NULL
+                        AND %s::DOUBLE PRECISION IS NOT NULL
+                    THEN ST_SetSRID(
+                        ST_MakePoint(%s::DOUBLE PRECISION, %s::DOUBLE PRECISION),
+                        4326
+                    )
                     ELSE NULL
                 END,
                 NULL,
@@ -1028,6 +1043,8 @@ class PostgresRepository:
                 "qualified_resources",
                 "review_queue",
                 "playable_items",
+                "compiled_pack_builds",
+                "pack_materializations",
             ]
             return {
                 table: connection.execute(f"SELECT COUNT(*) AS count FROM {table}").fetchone()[
@@ -2037,110 +2054,25 @@ class PostgresRepository:
                     connection=owned_connection,
                 )
 
-        revision_payload = self._fetch_pack_revision_payload(
+        context = self._compute_pack_compilation_context(
             connection,
             pack_id=pack_id,
             revision=revision,
+            question_count_requested=MIN_PACK_TOTAL_QUESTIONS,
         )
-        parameters = PackRevisionParameters(**revision_payload["parameters"])
-        playable_rows = self._fetch_playable_rows_for_pack(connection, parameters=parameters)
-        media_count_by_taxon = Counter(str(row["canonical_taxon_id"]) for row in playable_rows)
-
-        requested_taxa = list(parameters.canonical_taxon_ids)
-        taxa_served = sum(
-            1 for taxon_id in requested_taxa if media_count_by_taxon.get(taxon_id, 0) > 0
-        )
-        min_media_count = (
-            min(media_count_by_taxon.get(taxon_id, 0) for taxon_id in requested_taxa)
-            if requested_taxa
-            else 0
-        )
-        total_playable_items = len(playable_rows)
-        questions_possible = total_playable_items
-
-        thresholds = {
-            "min_taxa_served": MIN_PACK_TAXA_SERVED,
-            "min_media_per_taxon": MIN_PACK_MEDIA_PER_TAXON,
-            "min_total_questions": MIN_PACK_TOTAL_QUESTIONS,
-        }
-        measured = {
-            "requested_taxa_count": len(requested_taxa),
-            "taxa_served": taxa_served,
-            "min_media_count_per_taxon": min_media_count,
-            "total_playable_items": total_playable_items,
-            "questions_possible": questions_possible,
-        }
-
-        deficits: list[PackCompilationDeficit] = []
-        if taxa_served < thresholds["min_taxa_served"]:
-            deficits.append(
-                PackCompilationDeficit(
-                    code="min_taxa_served",
-                    current=taxa_served,
-                    required=thresholds["min_taxa_served"],
-                    missing=thresholds["min_taxa_served"] - taxa_served,
-                )
-            )
-        if min_media_count < thresholds["min_media_per_taxon"]:
-            deficits.append(
-                PackCompilationDeficit(
-                    code="min_media_per_taxon",
-                    current=min_media_count,
-                    required=thresholds["min_media_per_taxon"],
-                    missing=thresholds["min_media_per_taxon"] - min_media_count,
-                )
-            )
-        if questions_possible < thresholds["min_total_questions"]:
-            deficits.append(
-                PackCompilationDeficit(
-                    code="min_total_questions",
-                    current=questions_possible,
-                    required=thresholds["min_total_questions"],
-                    missing=thresholds["min_total_questions"] - questions_possible,
-                )
-            )
-
-        blocking_taxa = sorted(
-            [
-                PackTaxonDeficit(
-                    canonical_taxon_id=taxon_id,
-                    media_count=media_count_by_taxon.get(taxon_id, 0),
-                    missing_media_count=max(
-                        0,
-                        thresholds["min_media_per_taxon"] - media_count_by_taxon.get(taxon_id, 0),
-                    ),
-                )
-                for taxon_id in requested_taxa
-                if media_count_by_taxon.get(taxon_id, 0) < thresholds["min_media_per_taxon"]
-            ],
-            key=lambda item: item.canonical_taxon_id,
-        )
-
-        reason_code: PackCompilationReasonCode
-        if total_playable_items == 0:
-            reason_code = PackCompilationReasonCode.NO_PLAYABLE_ITEMS
-        elif taxa_served < thresholds["min_taxa_served"]:
-            reason_code = PackCompilationReasonCode.INSUFFICIENT_TAXA_SERVED
-        elif min_media_count < thresholds["min_media_per_taxon"]:
-            reason_code = PackCompilationReasonCode.INSUFFICIENT_MEDIA_PER_TAXON
-        elif questions_possible < thresholds["min_total_questions"]:
-            reason_code = PackCompilationReasonCode.INSUFFICIENT_TOTAL_QUESTIONS
-        else:
-            reason_code = PackCompilationReasonCode.COMPILABLE
 
         attempted_at = datetime.now(UTC)
-        compilable = reason_code == PackCompilationReasonCode.COMPILABLE
         attempt = PackCompilationAttempt(
-            attempt_id=f"packdiag:{pack_id}:{revision_payload['revision']}:{uuid4().hex[:8]}",
+            attempt_id=f"packdiag:{pack_id}:{context['revision']}:{uuid4().hex[:8]}",
             pack_id=pack_id,
-            revision=int(revision_payload["revision"]),
+            revision=int(context["revision"]),
             attempted_at=attempted_at,
-            compilable=compilable,
-            reason_code=reason_code,
-            thresholds=thresholds,
-            measured=measured,
-            deficits=deficits,
-            blocking_taxa=blocking_taxa,
+            compilable=bool(context["compilable"]),
+            reason_code=context["reason_code"],
+            thresholds=context["thresholds"],
+            measured=context["measured"],
+            deficits=context["deficits"],
+            blocking_taxa=context["blocking_taxa"],
         )
         payload = {
             "schema_version": SCHEMA_VERSION_LABEL,
@@ -2184,6 +2116,213 @@ class PostgresRepository:
         )
         return payload
 
+    def compile_pack(
+        self,
+        *,
+        pack_id: str,
+        revision: int | None = None,
+        question_count: int = MIN_PACK_TOTAL_QUESTIONS,
+        connection: psycopg.Connection | None = None,
+    ) -> dict[str, object]:
+        if question_count < 1:
+            raise ValueError("question_count must be >= 1")
+
+        if connection is None:
+            with self.connect() as owned_connection:
+                return self.compile_pack(
+                    pack_id=pack_id,
+                    revision=revision,
+                    question_count=question_count,
+                    connection=owned_connection,
+                )
+
+        context = self._compute_pack_compilation_context(
+            connection,
+            pack_id=pack_id,
+            revision=revision,
+            question_count_requested=max(question_count, MIN_PACK_TOTAL_QUESTIONS),
+        )
+        if not context["compilable"]:
+            deficits = ", ".join(
+                f"{item.code}:{item.current}/{item.required}"
+                for item in context["deficits"]
+            ) or "none"
+            raise ValueError(
+                "Pack is not compilable for build persistence "
+                f"(reason_code={context['reason_code']}, deficits={deficits})"
+            )
+
+        build_id = f"packbuild:{pack_id}:{context['revision']}:{uuid4().hex[:8]}"
+        built_at = datetime.now(UTC)
+        built_questions = context["questions"][:question_count]
+        build = CompiledPackBuild(
+            build_id=build_id,
+            pack_id=pack_id,
+            revision=int(context["revision"]),
+            built_at=built_at,
+            question_count_requested=question_count,
+            question_count_built=len(built_questions),
+            distractor_count=3,
+            source_run_id=context["source_run_id"],
+            questions=built_questions,
+        )
+        payload = {
+            "schema_version": SCHEMA_VERSION_LABEL,
+            "pack_compiled_version": COMPILED_PACK_VERSION,
+            **build.model_dump(mode="json"),
+        }
+        validate_compiled_pack(payload)
+        connection.execute(
+            """
+            INSERT INTO compiled_pack_builds (
+                build_id,
+                pack_id,
+                revision,
+                built_at,
+                schema_version,
+                pack_compiled_version,
+                question_count_requested,
+                question_count_built,
+                distractor_count,
+                source_run_id,
+                payload_json
+            ) VALUES (
+                %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
+            )
+            """,
+            (
+                build.build_id,
+                build.pack_id,
+                build.revision,
+                build.built_at.isoformat(),
+                SCHEMA_VERSION_LABEL,
+                COMPILED_PACK_VERSION,
+                build.question_count_requested,
+                build.question_count_built,
+                build.distractor_count,
+                build.source_run_id,
+                _json(payload),
+            ),
+        )
+        return payload
+
+    def materialize_pack(
+        self,
+        *,
+        pack_id: str,
+        revision: int | None = None,
+        question_count: int = MIN_PACK_TOTAL_QUESTIONS,
+        purpose: str = "assignment",
+        ttl_hours: int | None = None,
+        connection: psycopg.Connection | None = None,
+    ) -> dict[str, object]:
+        if question_count < 1:
+            raise ValueError("question_count must be >= 1")
+
+        if connection is None:
+            with self.connect() as owned_connection:
+                return self.materialize_pack(
+                    pack_id=pack_id,
+                    revision=revision,
+                    question_count=question_count,
+                    purpose=purpose,
+                    ttl_hours=ttl_hours,
+                    connection=owned_connection,
+                )
+
+        revision_payload = self._fetch_pack_revision_payload(
+            connection,
+            pack_id=pack_id,
+            revision=revision,
+        )
+        revision_value = int(revision_payload["revision"])
+        latest_build = self._fetch_latest_compiled_payload(
+            connection,
+            pack_id=pack_id,
+            revision=revision_value,
+        )
+        if latest_build is None:
+            raise ValueError(
+                "No compiled build found for materialization. "
+                "Run `pack compile` first for this revision."
+            )
+
+        available_questions = list(latest_build["questions"])
+        if question_count > len(available_questions):
+            raise ValueError(
+                "Requested materialization question_count exceeds available compiled questions "
+                f"(requested={question_count}, available={len(available_questions)})"
+            )
+        selected_questions = available_questions[:question_count]
+        purpose_value = PackMaterializationPurpose(purpose)
+        created_at = datetime.now(UTC)
+
+        resolved_ttl_hours: int | None = None
+        expires_at: datetime | None = None
+        if purpose_value == PackMaterializationPurpose.DAILY_CHALLENGE:
+            resolved_ttl_hours = ttl_hours or 24
+            if resolved_ttl_hours <= 0:
+                raise ValueError("daily_challenge materialization requires ttl_hours > 0")
+            expires_at = created_at + timedelta(hours=resolved_ttl_hours)
+        elif ttl_hours is not None:
+            raise ValueError("assignment materialization cannot define ttl_hours")
+
+        materialization = MaterializedPack(
+            materialization_id=(
+                f"packmat:{pack_id}:{revision_value}:{purpose_value}:{uuid4().hex[:8]}"
+            ),
+            pack_id=pack_id,
+            revision=revision_value,
+            source_build_id=str(latest_build["build_id"]),
+            created_at=created_at,
+            purpose=purpose_value,
+            ttl_hours=resolved_ttl_hours,
+            expires_at=expires_at,
+            question_count=len(selected_questions),
+            questions=[CompiledPackQuestion(**item) for item in selected_questions],
+        )
+        payload = {
+            "schema_version": SCHEMA_VERSION_LABEL,
+            "pack_materialization_version": PACK_MATERIALIZATION_VERSION,
+            **materialization.model_dump(mode="json"),
+        }
+        validate_pack_materialization(payload)
+        connection.execute(
+            """
+            INSERT INTO pack_materializations (
+                materialization_id,
+                pack_id,
+                revision,
+                source_build_id,
+                created_at,
+                purpose,
+                ttl_hours,
+                expires_at,
+                schema_version,
+                pack_materialization_version,
+                question_count,
+                payload_json
+            ) VALUES (
+                %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
+            )
+            """,
+            (
+                materialization.materialization_id,
+                materialization.pack_id,
+                materialization.revision,
+                materialization.source_build_id,
+                materialization.created_at.isoformat(),
+                materialization.purpose,
+                materialization.ttl_hours,
+                materialization.expires_at.isoformat() if materialization.expires_at else None,
+                SCHEMA_VERSION_LABEL,
+                PACK_MATERIALIZATION_VERSION,
+                materialization.question_count,
+                _json(payload),
+            ),
+        )
+        return payload
+
     def fetch_pack_diagnostics(
         self,
         *,
@@ -2214,6 +2353,74 @@ class PostgresRepository:
             payloads = [json.loads(str(row["payload_json"])) for row in rows]
             for payload in payloads:
                 validate_pack_diagnostic(payload)
+            return payloads
+
+    def fetch_compiled_pack_builds(
+        self,
+        *,
+        pack_id: str | None = None,
+        revision: int | None = None,
+        limit: int = 100,
+    ) -> list[dict[str, object]]:
+        with self.connect() as connection:
+            clauses: list[str] = []
+            params: list[object] = []
+            if pack_id:
+                clauses.append("pack_id = %s")
+                params.append(pack_id)
+            if revision is not None:
+                clauses.append("revision = %s")
+                params.append(revision)
+            where_clause = f"WHERE {' AND '.join(clauses)}" if clauses else ""
+            rows = connection.execute(
+                f"""
+                SELECT payload_json
+                FROM compiled_pack_builds
+                {where_clause}
+                ORDER BY built_at DESC, build_id
+                LIMIT %s
+                """,
+                [*params, limit],
+            ).fetchall()
+            payloads = [json.loads(str(row["payload_json"])) for row in rows]
+            for payload in payloads:
+                validate_compiled_pack(payload)
+            return payloads
+
+    def fetch_pack_materializations(
+        self,
+        *,
+        pack_id: str | None = None,
+        revision: int | None = None,
+        purpose: str | None = None,
+        limit: int = 100,
+    ) -> list[dict[str, object]]:
+        with self.connect() as connection:
+            clauses: list[str] = []
+            params: list[object] = []
+            if pack_id:
+                clauses.append("pack_id = %s")
+                params.append(pack_id)
+            if revision is not None:
+                clauses.append("revision = %s")
+                params.append(revision)
+            if purpose:
+                clauses.append("purpose = %s")
+                params.append(purpose)
+            where_clause = f"WHERE {' AND '.join(clauses)}" if clauses else ""
+            rows = connection.execute(
+                f"""
+                SELECT payload_json
+                FROM pack_materializations
+                {where_clause}
+                ORDER BY created_at DESC, materialization_id
+                LIMIT %s
+                """,
+                [*params, limit],
+            ).fetchall()
+            payloads = [json.loads(str(row["payload_json"])) for row in rows]
+            for payload in payloads:
+                validate_pack_materialization(payload)
             return payloads
 
     def _generate_pack_id(self) -> str:
@@ -2516,13 +2723,265 @@ class PostgresRepository:
             dict(row)
             for row in connection.execute(
                 f"""
-                SELECT playable_item_id, canonical_taxon_id
+                SELECT
+                    playable_item_id,
+                    canonical_taxon_id,
+                    difficulty_level,
+                    run_id
                 FROM playable_corpus_v1
                 WHERE {where_sql}
+                ORDER BY canonical_taxon_id, playable_item_id
                 """,
                 query_params,
             ).fetchall()
         ]
+
+    def _fetch_latest_compiled_payload(
+        self,
+        connection: psycopg.Connection,
+        *,
+        pack_id: str,
+        revision: int,
+    ) -> dict[str, object] | None:
+        row = connection.execute(
+            """
+            SELECT payload_json
+            FROM compiled_pack_builds
+            WHERE pack_id = %s AND revision = %s
+            ORDER BY built_at DESC, build_id DESC
+            LIMIT 1
+            """,
+            (pack_id, revision),
+        ).fetchone()
+        if row is None:
+            return None
+        payload = json.loads(str(row["payload_json"]))
+        validate_compiled_pack(payload)
+        return payload
+
+    def _compute_pack_compilation_context(
+        self,
+        connection: psycopg.Connection,
+        *,
+        pack_id: str,
+        revision: int | None,
+        question_count_requested: int,
+    ) -> dict[str, object]:
+        revision_payload = self._fetch_pack_revision_payload(
+            connection,
+            pack_id=pack_id,
+            revision=revision,
+        )
+        revision_value = int(revision_payload["revision"])
+        parameters = PackRevisionParameters(**revision_payload["parameters"])
+        rows = self._fetch_playable_rows_for_pack(connection, parameters=parameters)
+        requested_taxa = list(parameters.canonical_taxon_ids)
+
+        items_per_taxon: dict[str, list[dict[str, object]]] = defaultdict(list)
+        for row in rows:
+            canonical_taxon_id = str(row["canonical_taxon_id"])
+            items_per_taxon[canonical_taxon_id].append(row)
+
+        for canonical_taxon_id in requested_taxa:
+            items_per_taxon.setdefault(canonical_taxon_id, [])
+
+        questions = self._build_compiled_questions(
+            items_per_taxon=items_per_taxon,
+            requested_taxa=requested_taxa,
+            difficulty_policy=str(parameters.difficulty_policy),
+            question_count_requested=question_count_requested,
+        )
+
+        taxa_served = sum(
+            1
+            for canonical_taxon_id in requested_taxa
+            if items_per_taxon[canonical_taxon_id]
+        )
+        media_counts = [
+            len(items_per_taxon[canonical_taxon_id]) for canonical_taxon_id in requested_taxa
+        ]
+        min_media_count_per_taxon = min(media_counts) if media_counts else 0
+        total_playable_items = sum(media_counts)
+        questions_possible = len(questions)
+
+        thresholds = {
+            "min_taxa_served": MIN_PACK_TAXA_SERVED,
+            "min_media_per_taxon": MIN_PACK_MEDIA_PER_TAXON,
+            "min_total_questions": MIN_PACK_TOTAL_QUESTIONS,
+        }
+        measured = {
+            "requested_taxa_count": len(requested_taxa),
+            "taxa_served": taxa_served,
+            "min_media_count_per_taxon": min_media_count_per_taxon,
+            "total_playable_items": total_playable_items,
+            "questions_possible": questions_possible,
+        }
+
+        deficits: list[PackCompilationDeficit] = []
+        if taxa_served < thresholds["min_taxa_served"]:
+            deficits.append(
+                PackCompilationDeficit(
+                    code="min_taxa_served",
+                    current=taxa_served,
+                    required=thresholds["min_taxa_served"],
+                    missing=thresholds["min_taxa_served"] - taxa_served,
+                )
+            )
+        if min_media_count_per_taxon < thresholds["min_media_per_taxon"]:
+            deficits.append(
+                PackCompilationDeficit(
+                    code="min_media_per_taxon",
+                    current=min_media_count_per_taxon,
+                    required=thresholds["min_media_per_taxon"],
+                    missing=thresholds["min_media_per_taxon"] - min_media_count_per_taxon,
+                )
+            )
+        if questions_possible < thresholds["min_total_questions"]:
+            deficits.append(
+                PackCompilationDeficit(
+                    code="min_total_questions",
+                    current=questions_possible,
+                    required=thresholds["min_total_questions"],
+                    missing=thresholds["min_total_questions"] - questions_possible,
+                )
+            )
+
+        blocking_taxa = [
+            PackTaxonDeficit(
+                canonical_taxon_id=canonical_taxon_id,
+                media_count=len(items_per_taxon[canonical_taxon_id]),
+                missing_media_count=max(
+                    thresholds["min_media_per_taxon"] - len(items_per_taxon[canonical_taxon_id]),
+                    0,
+                ),
+            )
+            for canonical_taxon_id in requested_taxa
+            if len(items_per_taxon[canonical_taxon_id]) < thresholds["min_media_per_taxon"]
+        ]
+
+        reason_code = PackCompilationReasonCode.COMPILABLE
+        if total_playable_items == 0:
+            reason_code = PackCompilationReasonCode.NO_PLAYABLE_ITEMS
+        elif taxa_served < thresholds["min_taxa_served"]:
+            reason_code = PackCompilationReasonCode.INSUFFICIENT_TAXA_SERVED
+        elif min_media_count_per_taxon < thresholds["min_media_per_taxon"]:
+            reason_code = PackCompilationReasonCode.INSUFFICIENT_MEDIA_PER_TAXON
+        elif questions_possible < thresholds["min_total_questions"]:
+            reason_code = PackCompilationReasonCode.INSUFFICIENT_TOTAL_QUESTIONS
+
+        source_run_id = str(rows[0]["run_id"]) if rows else None
+        compilable = reason_code == PackCompilationReasonCode.COMPILABLE
+
+        return {
+            "pack_id": pack_id,
+            "revision": revision_value,
+            "thresholds": thresholds,
+            "measured": measured,
+            "deficits": deficits,
+            "blocking_taxa": blocking_taxa,
+            "reason_code": reason_code,
+            "compilable": compilable,
+            "source_run_id": source_run_id,
+            "questions": questions,
+        }
+
+    def _build_compiled_questions(
+        self,
+        *,
+        items_per_taxon: dict[str, list[dict[str, object]]],
+        requested_taxa: Sequence[str],
+        difficulty_policy: str,
+        question_count_requested: int,
+    ) -> list[CompiledPackQuestion]:
+        sorted_taxon_ids = list(dict.fromkeys(requested_taxa))
+        for canonical_taxon_id in sorted_taxon_ids:
+            items_per_taxon[canonical_taxon_id].sort(
+                key=lambda row: self._pack_item_sort_key(
+                    difficulty_policy=difficulty_policy,
+                    canonical_taxon_id=str(row["canonical_taxon_id"]),
+                    playable_item_id=str(row["playable_item_id"]),
+                    difficulty_level=str(row["difficulty_level"]),
+                )
+            )
+
+        target_rows: list[dict[str, object]] = []
+        for canonical_taxon_id in sorted_taxon_ids:
+            target_rows.extend(items_per_taxon[canonical_taxon_id])
+        target_rows.sort(
+            key=lambda row: self._pack_item_sort_key(
+                difficulty_policy=difficulty_policy,
+                canonical_taxon_id=str(row["canonical_taxon_id"]),
+                playable_item_id=str(row["playable_item_id"]),
+                difficulty_level=str(row["difficulty_level"]),
+            )
+        )
+
+        questions: list[CompiledPackQuestion] = []
+        for target_row in target_rows:
+            target_taxon = str(target_row["canonical_taxon_id"])
+            distractor_candidates = [
+                items_per_taxon[canonical_taxon_id][0]
+                for canonical_taxon_id in sorted_taxon_ids
+                if canonical_taxon_id != target_taxon and items_per_taxon[canonical_taxon_id]
+            ]
+            distractor_candidates.sort(
+                key=lambda row: self._pack_item_sort_key(
+                    difficulty_policy=difficulty_policy,
+                    canonical_taxon_id=str(row["canonical_taxon_id"]),
+                    playable_item_id=str(row["playable_item_id"]),
+                    difficulty_level=str(row["difficulty_level"]),
+                )
+            )
+            if len(distractor_candidates) < 3:
+                continue
+            selected_distractors = distractor_candidates[:3]
+            questions.append(
+                CompiledPackQuestion(
+                    position=len(questions) + 1,
+                    target_playable_item_id=str(target_row["playable_item_id"]),
+                    target_canonical_taxon_id=target_taxon,
+                    distractor_playable_item_ids=[
+                        str(item["playable_item_id"]) for item in selected_distractors
+                    ],
+                    distractor_canonical_taxon_ids=[
+                        str(item["canonical_taxon_id"]) for item in selected_distractors
+                    ],
+                )
+            )
+            if len(questions) >= question_count_requested:
+                break
+        return questions
+
+    def _pack_item_sort_key(
+        self,
+        *,
+        difficulty_policy: str,
+        canonical_taxon_id: str,
+        playable_item_id: str,
+        difficulty_level: str,
+    ) -> tuple[int, str, str]:
+        if difficulty_policy == "easy":
+            difficulty_priority = {"easy": 0, "medium": 1, "hard": 2, "unknown": 3}
+            return (
+                difficulty_priority.get(difficulty_level, 99),
+                canonical_taxon_id,
+                playable_item_id,
+            )
+        if difficulty_policy == "balanced":
+            difficulty_priority = {"medium": 0, "easy": 1, "hard": 2, "unknown": 3}
+            return (
+                difficulty_priority.get(difficulty_level, 99),
+                canonical_taxon_id,
+                playable_item_id,
+            )
+        if difficulty_policy == "hard":
+            difficulty_priority = {"hard": 0, "medium": 1, "easy": 2, "unknown": 3}
+            return (
+                difficulty_priority.get(difficulty_level, 99),
+                canonical_taxon_id,
+                playable_item_id,
+            )
+        return (0, canonical_taxon_id, playable_item_id)
 
     def fetch_qualification_metrics(self, *, run_id: str | None = None) -> dict[str, object]:
         with self.connect() as connection:

@@ -133,6 +133,8 @@ def main() -> None:
             "pack-specs",
             "pack-revisions",
             "pack-diagnostics",
+            "compiled-pack-builds",
+            "pack-materializations",
         ],
     )
     inspect_parser.add_argument(
@@ -168,6 +170,11 @@ def main() -> None:
     )
     inspect_parser.add_argument("--pack-id", type=str)
     inspect_parser.add_argument("--revision", type=int)
+    inspect_parser.add_argument(
+        "--purpose",
+        choices=["assignment", "daily_challenge"],
+        type=str,
+    )
 
     pack_parser = subparsers.add_parser("pack")
     pack_subparsers = pack_parser.add_subparsers(dest="pack_command", required=True)
@@ -260,6 +267,32 @@ def main() -> None:
     )
     pack_diagnose_parser.add_argument("--pack-id", required=True)
     pack_diagnose_parser.add_argument("--revision", type=int)
+
+    pack_compile_parser = pack_subparsers.add_parser("compile")
+    pack_compile_parser.add_argument(
+        "--database-url",
+        type=str,
+        default=os.environ.get("DATABASE_URL", DEFAULT_DATABASE_URL),
+    )
+    pack_compile_parser.add_argument("--pack-id", required=True)
+    pack_compile_parser.add_argument("--revision", type=int)
+    pack_compile_parser.add_argument("--question-count", type=int, default=20)
+
+    pack_materialize_parser = pack_subparsers.add_parser("materialize")
+    pack_materialize_parser.add_argument(
+        "--database-url",
+        type=str,
+        default=os.environ.get("DATABASE_URL", DEFAULT_DATABASE_URL),
+    )
+    pack_materialize_parser.add_argument("--pack-id", required=True)
+    pack_materialize_parser.add_argument("--revision", type=int)
+    pack_materialize_parser.add_argument("--question-count", type=int, default=20)
+    pack_materialize_parser.add_argument(
+        "--purpose",
+        choices=["assignment", "daily_challenge"],
+        default="assignment",
+    )
+    pack_materialize_parser.add_argument("--ttl-hours", type=int)
 
     review_overrides_parser = subparsers.add_parser("review-overrides")
     review_overrides_subparsers = review_overrides_parser.add_subparsers(
@@ -416,6 +449,24 @@ def main() -> None:
             payload = repository.diagnose_pack(
                 pack_id=args.pack_id,
                 revision=args.revision,
+            )
+            print(json.dumps(payload, indent=2, sort_keys=True))
+            return
+        if args.pack_command == "compile":
+            payload = repository.compile_pack(
+                pack_id=args.pack_id,
+                revision=args.revision,
+                question_count=args.question_count,
+            )
+            print(json.dumps(payload, indent=2, sort_keys=True))
+            return
+        if args.pack_command == "materialize":
+            payload = repository.materialize_pack(
+                pack_id=args.pack_id,
+                revision=args.revision,
+                question_count=args.question_count,
+                purpose=args.purpose,
+                ttl_hours=args.ttl_hours,
             )
             print(json.dumps(payload, indent=2, sort_keys=True))
             return
@@ -622,6 +673,21 @@ def main() -> None:
         payload = repository.fetch_pack_diagnostics(
             pack_id=args.pack_id,
             revision=args.revision,
+            limit=args.limit,
+        )
+        print(json.dumps(payload, indent=2, sort_keys=True))
+    elif args.view == "compiled-pack-builds":
+        payload = repository.fetch_compiled_pack_builds(
+            pack_id=args.pack_id,
+            revision=args.revision,
+            limit=args.limit,
+        )
+        print(json.dumps(payload, indent=2, sort_keys=True))
+    elif args.view == "pack-materializations":
+        payload = repository.fetch_pack_materializations(
+            pack_id=args.pack_id,
+            revision=args.revision,
+            purpose=args.purpose,
             limit=args.limit,
         )
         print(json.dumps(payload, indent=2, sort_keys=True))

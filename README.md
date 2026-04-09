@@ -82,6 +82,8 @@ Installed entrypoints mirror the script wrappers:
 - snapshot-scoped review overrides that can be replayed on rerun
 - playable corpus surface (`playable_corpus.v1`) persisted in Postgres and queryable with geo/date filters
 - pack layer v1 with immutable revisions (`pack.spec.v1`) and deterministic compilability diagnostics (`pack.diagnostic.v1`)
+- deterministic compiled pack builds persisted as `pack.compiled.v1`
+- frozen pack materializations persisted as `pack.materialization.v1` for `assignment` and `daily_challenge`
 - versioned normalized, qualification, and export artifacts
 - JSON export bundles validated against versioned JSON Schemas before write
 - lightweight inspection CLI
@@ -127,9 +129,13 @@ python scripts/inspect_database.py playable-corpus --country-code BE --point-rad
 python scripts/manage_packs.py create --pack-id pack:birds:be:v1 --canonical-taxon-id taxon:birds:000014 --canonical-taxon-id taxon:birds:000009 --difficulty-policy balanced --country-code BE --visibility private --intended-use quiz
 python scripts/manage_packs.py revise --pack-id pack:birds:be:v1 --canonical-taxon-id taxon:birds:000014 --difficulty-policy hard --point-radius 4.35,50.85,5000 --visibility private --intended-use quiz
 python scripts/manage_packs.py diagnose --pack-id pack:birds:be:v1
+python scripts/manage_packs.py compile --pack-id pack:birds:be:v1 --question-count 20
+python scripts/manage_packs.py materialize --pack-id pack:birds:be:v1 --question-count 20 --purpose daily_challenge
 python scripts/inspect_database.py pack-specs --pack-id pack:birds:be:v1
 python scripts/inspect_database.py pack-revisions --pack-id pack:birds:be:v1
 python scripts/inspect_database.py pack-diagnostics --pack-id pack:birds:be:v1
+python scripts/inspect_database.py compiled-pack-builds --pack-id pack:birds:be:v1
+python scripts/inspect_database.py pack-materializations --pack-id pack:birds:be:v1 --purpose daily_challenge
 python scripts/review_overrides.py init --snapshot-id inaturalist-birds-20260408T123456Z
 python scripts/review_overrides.py upsert --snapshot-id inaturalist-birds-20260408T123456Z --media-asset-id media:inaturalist:810001 --status review_required --note "manual spot-check requested"
 python scripts/review_overrides.py list --snapshot-id inaturalist-birds-20260408T123456Z
@@ -180,6 +186,9 @@ Running the fixture pipeline writes:
   - `python scripts/inspect_database.py pack-specs`
   - `python scripts/inspect_database.py pack-revisions --pack-id <pack_id>`
   - `python scripts/inspect_database.py pack-diagnostics --pack-id <pack_id>`
+- compiled pack builds/materializations via inspect:
+  - `python scripts/inspect_database.py compiled-pack-builds --pack-id <pack_id>`
+  - `python scripts/inspect_database.py pack-materializations --pack-id <pack_id>`
 
 In `inat_snapshot` mode, the default derived outputs become snapshot-scoped:
 
@@ -207,7 +216,7 @@ The manifest records which sort was requested and which one was actually used.
 
 The repository now writes explicit stage versions into generated artifacts:
 
-- schema version: `database.schema.v10`
+- schema version: `database.schema.v11`
 - snapshot manifest version: `inaturalist.snapshot.v3`
 - normalized snapshot version: `normalized.snapshot.v3`
 - canonical enrichment version: `canonical.enrichment.v2`
@@ -218,6 +227,8 @@ The repository now writes explicit stage versions into generated artifacts:
 - playable corpus version: `playable_corpus.v1`
 - pack spec version: `pack.spec.v1`
 - pack diagnostic version: `pack.diagnostic.v1`
+- compiled pack version: `pack.compiled.v1`
+- pack materialization version: `pack.materialization.v1`
 
 Snapshot manifests without `manifest_version` are rejected.
 Unknown manifest versions are rejected explicitly.
@@ -229,6 +240,8 @@ The playable corpus payload is validated against
 `schemas/playable_corpus_v1.schema.json`.
 Pack specs and diagnostics are validated against
 `schemas/pack_spec_v1.schema.json` and `schemas/pack_diagnostic_v1.schema.json`.
+Compiled builds and materializations are validated against
+`schemas/pack_compiled_v1.schema.json` and `schemas/pack_materialization_v1.schema.json`.
 
 ## Canonical enrichment
 

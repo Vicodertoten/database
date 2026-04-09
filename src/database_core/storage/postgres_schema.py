@@ -471,3 +471,58 @@ CREATE INDEX IF NOT EXISTS idx_pack_compilation_attempts_reason
 CREATE INDEX IF NOT EXISTS idx_pack_specs_updated_at
     ON pack_specs (updated_at DESC);
 """
+
+POSTGRES_PACK_COMPILATION_V11_SQL = """
+CREATE TABLE IF NOT EXISTS compiled_pack_builds (
+    build_id TEXT PRIMARY KEY,
+    pack_id TEXT NOT NULL,
+    revision INTEGER NOT NULL,
+    built_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    schema_version TEXT NOT NULL,
+    pack_compiled_version TEXT NOT NULL,
+    question_count_requested INTEGER NOT NULL CHECK (question_count_requested >= 1),
+    question_count_built INTEGER NOT NULL CHECK (question_count_built >= 0),
+    distractor_count INTEGER NOT NULL CHECK (distractor_count = 3),
+    source_run_id TEXT,
+    payload_json TEXT NOT NULL,
+    FOREIGN KEY (pack_id, revision) REFERENCES pack_revisions (pack_id, revision) ON DELETE CASCADE,
+    FOREIGN KEY (source_run_id) REFERENCES pipeline_runs (run_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_compiled_pack_builds_pack_revision
+    ON compiled_pack_builds (pack_id, revision, built_at DESC);
+
+CREATE TABLE IF NOT EXISTS pack_materializations (
+    materialization_id TEXT PRIMARY KEY,
+    pack_id TEXT NOT NULL,
+    revision INTEGER NOT NULL,
+    source_build_id TEXT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    purpose TEXT NOT NULL CHECK (purpose IN ('assignment', 'daily_challenge')),
+    ttl_hours INTEGER,
+    expires_at TIMESTAMPTZ,
+    schema_version TEXT NOT NULL,
+    pack_materialization_version TEXT NOT NULL,
+    question_count INTEGER NOT NULL CHECK (question_count >= 0),
+    payload_json TEXT NOT NULL,
+    FOREIGN KEY (pack_id, revision) REFERENCES pack_revisions (pack_id, revision) ON DELETE CASCADE,
+    FOREIGN KEY (source_build_id) REFERENCES compiled_pack_builds (build_id) ON DELETE CASCADE,
+    CONSTRAINT pack_materializations_assignment_ttl
+        CHECK (
+            (purpose = 'assignment' AND ttl_hours IS NULL AND expires_at IS NULL)
+            OR
+            (
+                purpose = 'daily_challenge'
+                AND ttl_hours IS NOT NULL
+                AND ttl_hours > 0
+                AND expires_at IS NOT NULL
+            )
+        )
+);
+
+CREATE INDEX IF NOT EXISTS idx_pack_materializations_pack_revision
+    ON pack_materializations (pack_id, revision, created_at DESC);
+
+CREATE INDEX IF NOT EXISTS idx_pack_materializations_purpose_expires_at
+    ON pack_materializations (purpose, expires_at);
+"""

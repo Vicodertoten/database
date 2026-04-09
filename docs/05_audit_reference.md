@@ -27,11 +27,12 @@ Objectif de ce document: transformer cette base solide en trajectoire opération
 | Gate 1 — Verrou doctrinal + ADR de chaîne | DONE | `2026-04-09` | clôture documentaire/doctrinale uniquement; aucun changement de contrat technique ni implémentation des gates suivants |
 | Gate 2 — Playable corpus vivant v1 | DONE | `2026-04-09` | couche playable versionnée en base (`playable_corpus.v1`) livrée; aucun objet gate 3+ introduit |
 | Gate 3 — Modèle pack + révisions + diagnostic | DONE | `2026-04-09` | tables `pack_specs`/`pack_revisions`/`pack_compilation_attempts`, contrats `pack.spec.v1` + `pack.diagnostic.v1`, sans objets Gate 4+ |
+| Gate 4 — Compilation dynamique + materialization figée | DONE | `2026-04-09` | tables `compiled_pack_builds`/`pack_materializations`, contrats `pack.compiled.v1` + `pack.materialization.v1`, sans objets Gate 5+ |
 
 ### État réel (2026-04-09)
 
 - persistence hybride implémentée: historique append-only (`pipeline_runs` + tables `*_history`) et tables matérialisées `latest`.
-- schéma applicatif actuel: `database.schema.v10`.
+- schéma applicatif actuel: `database.schema.v11`.
 - backend storage principal: PostgreSQL/PostGIS (`DATABASE_URL`) avec migrations versionnées (`schema_migrations`).
 - export principal actuel: `export.bundle.v4`.
 - export de transition maintenu en mode opt-in: `export.bundle.v3` (désactivé par défaut).
@@ -39,12 +40,15 @@ Objectif de ce document: transformer cette base solide en trajectoire opération
 - contrat playable principal: `playable_corpus.v1` (payload validé par schéma dédié).
 - contrat pack principal: `pack.spec.v1` (payload validé par schéma dédié).
 - contrat diagnostic pack: `pack.diagnostic.v1` (payload validé par schéma dédié).
+- contrat compilation pack: `pack.compiled.v1` (payload validé par schéma dédié).
+- contrat materialization pack: `pack.materialization.v1` (payload validé par schéma dédié).
 - résiduel Gate 2: i18n `common_names_i18n` initialisé en `en` avec `fr`/`nl` vides tant qu’aucune source locale traduite n’est branchée.
 - résiduel Gate 3: seuils de compilabilité v1 (`10/2/20`) stricts et volontairement conservateurs pour le pilotage initial.
+- résiduel Gate 4: sélection des distracteurs v1 déterministe et minimale (3 taxons distincts), sans enrichissement asynchrone ni confusions runtime.
 
 ### Cible (prochaine étape)
 
-- introduire compilation dynamique + materialization figée (Gate 4), sans dériver runtime.
+- introduire la queue d’enrichissement (Gate 5), sans dériver runtime.
 - conserver la séparation stricte: pas de runtime/session/scoring/progression dans `database`.
 - préserver `export.bundle.v4` inchangé pendant la montée des surfaces playable/pack.
 
@@ -57,7 +61,8 @@ Objectif de ce document: transformer cette base solide en trajectoire opération
 | Qualification | champs V1+ intégrés (`difficulty_level`, `media_role`, `confusion_relevance`, `diagnostic_feature_visibility`, `learning_suitability`, `uncertainty_reason`) | étendre vers une ontologie pédagogique plus fine (learning sequencing, distractor planning) |
 | Export | `export.bundle.v4` principal + sidecar `v3` transition 2 releases | retrait planifié du sidecar `v3` après fenêtre de transition |
 | Playable | couche vivante `playable_corpus.v1` persistée en Postgres avec filtres geo/date/signaux | brancher packs/compilation (gates suivants) sans dériver runtime |
-| Packs | `pack_id + revision` immuable + diagnostics persistés (`pack.diagnostic.v1`) | brancher compilation dynamique/materialization figée (Gate 4) |
+| Packs | `pack_id + revision` immuable + diagnostics persistés (`pack.diagnostic.v1`) | brancher la queue d’enrichissement (Gate 5) sans dériver runtime |
+| Compilation/Materialization | builds dynamiques `pack.compiled.v1` + snapshots figés `pack.materialization.v1` persistés et inspectables | étendre couverture via enrichissement asynchrone (Gate 5) |
 | Ops | métriques run-level standardisées + `smoke.report.v1` | seuils opérationnels avancés (SLA review, alerting automatique) |
 
 ## Challenge Consolidé De L’Analyse Externe (2026-04-08)

@@ -26,6 +26,8 @@ def main() -> int:
         version_tokens["PLAYABLE_CORPUS_VERSION"],
         version_tokens["PACK_SPEC_VERSION"],
         version_tokens["PACK_DIAGNOSTIC_VERSION"],
+        version_tokens["COMPILED_PACK_VERSION"],
+        version_tokens["PACK_MATERIALIZATION_VERSION"],
     ):
         if token not in audit_doc:
             issues.append(f"docs/05 is missing version token: {token}")
@@ -46,6 +48,10 @@ def main() -> int:
         issues.append("README must reference schemas/pack_spec_v1.schema.json")
     if "schemas/pack_diagnostic_v1.schema.json" not in readme:
         issues.append("README must reference schemas/pack_diagnostic_v1.schema.json")
+    if "schemas/pack_compiled_v1.schema.json" not in readme:
+        issues.append("README must reference schemas/pack_compiled_v1.schema.json")
+    if "schemas/pack_materialization_v1.schema.json" not in readme:
+        issues.append("README must reference schemas/pack_materialization_v1.schema.json")
     if "database-migrate" not in readme:
         issues.append("README must document the database-migrate entrypoint")
     if "database-pack" not in readme:
@@ -81,6 +87,8 @@ def _extract_version_tokens(versioning_content: str) -> dict[str, str]:
         "PLAYABLE_CORPUS_VERSION",
         "PACK_SPEC_VERSION",
         "PACK_DIAGNOSTIC_VERSION",
+        "COMPILED_PACK_VERSION",
+        "PACK_MATERIALIZATION_VERSION",
     ):
         match = re.search(rf'^{key}\s*=\s*"([^"]+)"', versioning_content, flags=re.MULTILINE)
         if match:

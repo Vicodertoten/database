@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-SCHEMA_VERSION = 10
-SCHEMA_VERSION_LABEL = "database.schema.v10"
+SCHEMA_VERSION = 11
+SCHEMA_VERSION_LABEL = "database.schema.v11"
 SNAPSHOT_MANIFEST_VERSION = "inaturalist.snapshot.v3"
 NORMALIZED_SNAPSHOT_VERSION = "normalized.snapshot.v3"
 ENRICHMENT_VERSION = "canonical.enrichment.v2"
@@ -12,3 +12,5 @@ REVIEW_OVERRIDE_VERSION = "review.override.v1"
 PLAYABLE_CORPUS_VERSION = "playable_corpus.v1"
 PACK_SPEC_VERSION = "pack.spec.v1"
 PACK_DIAGNOSTIC_VERSION = "pack.diagnostic.v1"
+COMPILED_PACK_VERSION = "pack.compiled.v1"
+PACK_MATERIALIZATION_VERSION = "pack.materialization.v1"

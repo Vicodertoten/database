@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "pack_compiled_v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "pack_compiled_version",
+    "build_id",
+    "pack_id",
+    "revision",
+    "built_at",
+    "question_count_requested",
+    "question_count_built",
+    "distractor_count",
+    "source_run_id",
+    "questions"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "pack_compiled_version": {
+      "type": "string",
+      "const": "pack.compiled.v1"
+    },
+    "build_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "pack_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "built_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "question_count_requested": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "question_count_built": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "distractor_count": {
+      "type": "integer",
+      "const": 3
+    },
+    "source_run_id": {
+      "type": ["string", "null"]
+    },
+    "questions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "position",
+          "target_playable_item_id",
+          "target_canonical_taxon_id",
+          "distractor_playable_item_ids",
+          "distractor_canonical_taxon_ids"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "position": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "target_playable_item_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "target_canonical_taxon_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "distractor_playable_item_ids": {
+            "type": "array",
+            "minItems": 3,
+            "maxItems": 3,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "distractor_canonical_taxon_ids": {
+            "type": "array",
+            "minItems": 3,
+            "maxItems": 3,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    }
+  }
+}

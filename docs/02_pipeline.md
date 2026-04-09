@@ -101,6 +101,20 @@ The pipeline is deliberately small, versioned, and reproducible.
   - no enrichment queue or confusions runtime ingestion at this gate
   - no runtime/session/scoring/progression logic
 
+## 10. Compile and materialize packs (Gate 4)
+
+- compile a pack revision deterministically from `playable_items`
+- enforce question validity:
+  - one target playable item
+  - exactly three distractors
+  - distractor taxa all distinct and different from the target taxon
+- persist each compiled build in `compiled_pack_builds` (`pack.compiled.v1`)
+- create optional frozen snapshots in `pack_materializations` (`pack.materialization.v1`)
+- keep strict boundaries:
+  - no queue d’enrichissement (Gate 5+) in this stage
+  - no runtime/session/scoring/progression logic
+  - no change to `export.bundle.v4`
+
 ## Versioning
 
 Generated artifacts carry explicit stage versions:

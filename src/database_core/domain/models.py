@@ -21,6 +21,7 @@ from database_core.domain.enums import (
     MediaType,
     PackCompilationReasonCode,
     PackDifficultyPolicy,
+    PackMaterializationPurpose,
     PackVisibility,
     PedagogicalQuality,
     QualificationStage,
@@ -601,6 +602,99 @@ class PackCompilationAttempt(DomainModel):
             raise ValueError("compilable attempts must use reason_code=compilable")
         if not self.compilable and self.reason_code == PackCompilationReasonCode.COMPILABLE:
             raise ValueError("non compilable attempts cannot use reason_code=compilable")
+        return self
+
+
+class CompiledPackQuestion(DomainModel):
+    position: int = Field(ge=1)
+    target_playable_item_id: str
+    target_canonical_taxon_id: str
+    distractor_playable_item_ids: list[str] = Field(default_factory=list)
+    distractor_canonical_taxon_ids: list[str] = Field(default_factory=list)
+
+    @field_validator(
+        "target_playable_item_id",
+        "target_canonical_taxon_id",
+    )
+    @classmethod
+    def validate_non_blank_fields(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("field must not be blank")
+        return value
+
+    @model_validator(mode="after")
+    def validate_distractors(self) -> Self:
+        if len(self.distractor_playable_item_ids) != 3:
+            raise ValueError("compiled question must include exactly 3 distractor playable items")
+        if len(self.distractor_canonical_taxon_ids) != 3:
+            raise ValueError("compiled question must include exactly 3 distractor taxa")
+        if len(set(self.distractor_playable_item_ids)) != 3:
+            raise ValueError("distractor_playable_item_ids must be unique")
+        if len(set(self.distractor_canonical_taxon_ids)) != 3:
+            raise ValueError("distractor_canonical_taxon_ids must be unique")
+        if self.target_canonical_taxon_id in self.distractor_canonical_taxon_ids:
+            raise ValueError("distractor taxa must not include the target taxon")
+        return self
+
+
+class CompiledPackBuild(DomainModel):
+    build_id: str
+    pack_id: str
+    revision: int = Field(ge=1)
+    built_at: datetime
+    question_count_requested: int = Field(ge=1)
+    question_count_built: int = Field(ge=0)
+    distractor_count: int = Field(default=3, ge=3, le=3)
+    source_run_id: str | None = None
+    questions: list[CompiledPackQuestion] = Field(default_factory=list)
+
+    @field_validator("build_id", "pack_id")
+    @classmethod
+    def validate_build_ids(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("field must not be blank")
+        return value
+
+    @model_validator(mode="after")
+    def validate_question_counts(self) -> Self:
+        if self.question_count_built != len(self.questions):
+            raise ValueError("question_count_built must equal the number of questions")
+        if self.question_count_built > self.question_count_requested:
+            raise ValueError("question_count_built cannot exceed question_count_requested")
+        return self
+
+
+class MaterializedPack(DomainModel):
+    materialization_id: str
+    pack_id: str
+    revision: int = Field(ge=1)
+    source_build_id: str
+    created_at: datetime
+    purpose: PackMaterializationPurpose
+    ttl_hours: int | None = None
+    expires_at: datetime | None = None
+    question_count: int = Field(ge=0)
+    questions: list[CompiledPackQuestion] = Field(default_factory=list)
+
+    @field_validator("materialization_id", "pack_id", "source_build_id")
+    @classmethod
+    def validate_materialization_ids(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("field must not be blank")
+        return value
+
+    @model_validator(mode="after")
+    def validate_materialization_shape(self) -> Self:
+        if self.question_count != len(self.questions):
+            raise ValueError("question_count must equal the number of questions")
+        if self.purpose == PackMaterializationPurpose.ASSIGNMENT:
+            if self.ttl_hours is not None or self.expires_at is not None:
+                raise ValueError("assignment materializations cannot define ttl/expires_at")
+        if self.purpose == PackMaterializationPurpose.DAILY_CHALLENGE:
+            if self.ttl_hours is None or self.ttl_hours <= 0:
+                raise ValueError("daily_challenge materializations require ttl_hours > 0")
+            if self.expires_at is None:
+                raise ValueError("daily_challenge materializations require expires_at")
         return self
 
 
