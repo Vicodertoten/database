@@ -1,0 +1,98 @@
+{
+  "database_url": "postgresql://postgres:2gZ-3sd9EzHyJ%254@db.cduiheqceeghzrlbtwom.supabase.co:5432/postgres?sslmode=require",
+  "generated_at": "2026-04-09T09:32:19.763489+00:00",
+  "governance_review_alerts": {
+    "avg_open_age_alert": false,
+    "avg_open_age_hours": 0.0,
+    "open_backlog": 0,
+    "open_backlog_alert": false,
+    "thresholds": {
+      "avg_open_age_hours": 72.0,
+      "open_backlog": 25
+    }
+  },
+  "kpis": {
+    "export_trace_flags_uncertainty_coverage": {
+      "actual": 1.0,
+      "pass": true,
+      "stats": {
+        "coverage_ratio": 1.0,
+        "covered": 2,
+        "missing_flags": 0,
+        "missing_trace": 0,
+        "total": 2,
+        "untyped_uncertainty": 0
+      },
+      "target": "== 1.0"
+    },
+    "exportable_unresolved_or_provisional": {
+      "actual": 0,
+      "pass": true,
+      "target": "== 0"
+    },
+    "governance_reason_and_signal_coverage": {
+      "actual": 1.0,
+      "pass": true,
+      "stats": {
+        "coverage_ratio": 1.0,
+        "covered": 3,
+        "missing_reason": 0,
+        "missing_signal_breakdown": 0,
+        "missing_source_delta": 0,
+        "total": 3
+      },
+      "target": "== 1.0"
+    }
+  },
+  "latest_run": {
+    "completed_at": "2026-04-09T09:32:16.867338+00:00",
+    "run_id": "run:20260409T093214Z:9fcfb752",
+    "run_status": "completed",
+    "started_at": "2026-04-09T09:32:16.011851+00:00"
+  },
+  "overall_pass": true,
+  "report_version": "smoke.report.v1",
+  "run_metrics": {
+    "cost": {
+      "ai_qualified_images": 4,
+      "estimated_ai_cost_eur": 0.0048
+    },
+    "governance": {
+      "avg_open_governance_review_age_hours": 0.0,
+      "decision_reason_counts": {
+        "new_taxon_detected": 3
+      },
+      "decision_status_counts": {
+        "auto_clear": 3
+      },
+      "open_governance_backlog_by_reason": {},
+      "open_governance_review_items": 0,
+      "resolved_governance_backlog_by_reason": {},
+      "resolved_governance_review_items": 0
+    },
+    "quality": {
+      "accepted_resources": 2,
+      "rejected_resources": 1,
+      "review_required_resources": 1,
+      "top_rejection_flags": {
+        "insufficient_resolution": 1,
+        "insufficient_technical_quality": 1,
+        "low_ai_confidence": 1,
+        "unsafe_license": 1
+      }
+    },
+    "review_load": {
+      "avg_open_review_age_hours": 57.54,
+      "open_review_queue_items": 1
+    },
+    "run_id": null,
+    "volume": {
+      "canonical_taxa": 3,
+      "exportable_resources": 2,
+      "media_assets": 4,
+      "qualified_resources": 4,
+      "source_observations": 3
+    }
+  },
+  "snapshot_id": null
+}
