@@ -33,7 +33,7 @@ from database_core.qualification.ai import (
     MIN_AI_IMAGE_WIDTH,
     inspect_image_dimensions,
 )
-from database_core.storage.sqlite import SQLiteRepository
+from database_core.storage.postgres import PostgresRepository
 
 DEFAULT_GOLDSET_MANIFEST_PATH = Path("data/goldset/birds_v1/manifest.json")
 DEFAULT_PILOT_TAXA_PATH = Path("data/fixtures/inaturalist_pilot_taxa.json")
@@ -241,7 +241,7 @@ def main() -> int:
         qualifier_mode="cached",
         uncertain_policy=args.uncertain_policy,
     )
-    repository = SQLiteRepository(pipeline_result.database_path)
+    repository = PostgresRepository(pipeline_result.database_url)
     repository.initialize()
     summary = repository.fetch_summary()
 
@@ -257,7 +257,7 @@ def main() -> int:
     print(
         "goldset live artifacts | "
         f"snapshot_dir={snapshot_dir} | "
-        f"db={pipeline_result.database_path} | "
+        f"database_url={pipeline_result.database_url} | "
         f"normalized={pipeline_result.normalized_snapshot_path} | "
         f"qualified={pipeline_result.qualification_snapshot_path} | "
         f"export={pipeline_result.export_path}"

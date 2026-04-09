@@ -92,7 +92,10 @@ def test_r5_previous_accepted_name_is_added_to_synonyms_on_reconciliation() -> N
     assert reconciled[0].synonyms == ["Great tit", "Parus major"]
 
 
-def test_r6_rejects_new_media_assets_for_deprecated_taxon(tmp_path: Path) -> None:
+def test_r6_rejects_new_media_assets_for_deprecated_taxon(
+    tmp_path: Path,
+    database_url: str,
+) -> None:
     fixture_payload = {
         "dataset_id": "fixture:r6",
         "captured_at": "2026-04-08T00:00:00Z",
@@ -149,7 +152,7 @@ def test_r6_rejects_new_media_assets_for_deprecated_taxon(tmp_path: Path) -> Non
     with pytest.raises(ValueError, match="deprecated taxa cannot receive new media assets"):
         run_pipeline(
             fixture_path=fixture_path,
-            db_path=tmp_path / "r6.sqlite",
+            database_url=database_url,
             normalized_snapshot_path=tmp_path / "r6.normalized.json",
             qualification_snapshot_path=tmp_path / "r6.qualified.json",
             export_path=tmp_path / "r6.export.json",

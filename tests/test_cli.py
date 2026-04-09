@@ -9,7 +9,7 @@ import pytest
 
 import database_core.cli as cli
 from database_core.adapters.inaturalist_qualification import SnapshotQualificationResult
-from database_core.storage.sqlite import SQLiteRepository
+from database_core.storage.postgres import PostgresRepository
 
 
 def test_cli_qualify_inat_snapshot_loads_dotenv(monkeypatch, tmp_path: Path) -> None:
@@ -201,12 +201,12 @@ def test_review_overrides_cli_rejects_wrong_override_version(monkeypatch, tmp_pa
         cli.main()
 
 
-def test_migrate_cli_applies_pending_schema_migration(monkeypatch, tmp_path: Path) -> None:
-    db_path = tmp_path / "migrate.sqlite"
-    repository = SQLiteRepository(db_path)
+def test_migrate_cli_applies_pending_schema_migration(monkeypatch, database_url: str) -> None:
+    repository = PostgresRepository(database_url)
     repository.initialize()
     with repository.connect() as connection:
-        connection.execute("PRAGMA user_version = 3")
+        connection.execute("DELETE FROM schema_migrations")
+        connection.execute("INSERT INTO schema_migrations (version) VALUES (1)")
 
     monkeypatch.setattr(
         sys,
@@ -214,8 +214,8 @@ def test_migrate_cli_applies_pending_schema_migration(monkeypatch, tmp_path: Pat
         [
             "database-core",
             "migrate",
-            "--db-path",
-            str(db_path),
+            "--database-url",
+            database_url,
         ],
     )
 
@@ -224,12 +224,11 @@ def test_migrate_cli_applies_pending_schema_migration(monkeypatch, tmp_path: Pat
         cli.main()
 
     assert "Database migrated" in buffer.getvalue()
-    assert repository.current_schema_version() == 7
+    assert repository.current_schema_version() == 8
 
 
-def test_governance_review_cli_resolves_item(monkeypatch, tmp_path: Path) -> None:
-    db_path = tmp_path / "governance-review.sqlite"
-    repository = SQLiteRepository(db_path)
+def test_governance_review_cli_resolves_item(monkeypatch, database_url: str) -> None:
+    repository = PostgresRepository(database_url)
     repository.initialize()
 
     run_id = "run:20260408T000000Z:aaaaaaaa"
@@ -264,7 +263,7 @@ def test_governance_review_cli_resolves_item(monkeypatch, tmp_path: Path) -> Non
                 decision_reason,
                 payload_json,
                 created_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             """,
             (
                 governance_event_id,
@@ -293,7 +292,7 @@ def test_governance_review_cli_resolves_item(monkeypatch, tmp_path: Path) -> Non
                 resolved_at,
                 resolved_note,
                 resolved_by
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NULL, NULL, NULL)
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, NULL, NULL, NULL)
             """,
             (
                 review_item_id,
@@ -314,8 +313,8 @@ def test_governance_review_cli_resolves_item(monkeypatch, tmp_path: Path) -> Non
             "database-core",
             "governance-review",
             "resolve",
-            "--db-path",
-            str(db_path),
+            "--database-url",
+            database_url,
             "--governance-review-item-id",
             review_item_id,
             "--note",

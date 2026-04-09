@@ -28,7 +28,6 @@ Before adding a new document, update an existing one whenever possible.
 ## Audit And Execution Tracking
 
 - `docs/05_audit_reference.md`: single source of truth for current status and roadmap.
-- `docs/09_remediation_execution.md`: active remediation directive linked to the audit baseline.
 
 ## Documentation Hygiene Rules
 

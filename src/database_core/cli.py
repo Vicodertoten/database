@@ -30,8 +30,7 @@ from database_core.inspect.summary import (
     render_summary,
 )
 from database_core.pipeline.runner import (
-    DEFAULT_DATABASES_DIR,
-    DEFAULT_DB_PATH,
+    DEFAULT_DATABASE_URL,
     DEFAULT_EXPORT_PATH,
     DEFAULT_FIXTURE_PATH,
     DEFAULT_NORMALIZED_PATH,
@@ -45,7 +44,7 @@ from database_core.review.overrides import (
     resolve_review_overrides_path,
     upsert_review_override,
 )
-from database_core.storage.sqlite import SQLiteRepository
+from database_core.storage.postgres import PostgresRepository
 
 
 def default_snapshot_id(*, prefix: str = "inaturalist-birds") -> str:
@@ -64,7 +63,11 @@ def main() -> None:
     )
     pipeline_parser.add_argument("--snapshot-id", type=str)
     pipeline_parser.add_argument("--snapshot-root", type=Path, default=DEFAULT_INAT_SNAPSHOT_ROOT)
-    pipeline_parser.add_argument("--db-path", type=Path, default=DEFAULT_DB_PATH)
+    pipeline_parser.add_argument(
+        "--database-url",
+        type=str,
+        default=os.environ.get("DATABASE_URL", DEFAULT_DATABASE_URL),
+    )
     pipeline_parser.add_argument("--normalized-path", type=Path, default=DEFAULT_NORMALIZED_PATH)
     pipeline_parser.add_argument("--qualified-path", type=Path, default=DEFAULT_QUALIFIED_PATH)
     pipeline_parser.add_argument("--export-path", type=Path, default=DEFAULT_EXPORT_PATH)
@@ -126,7 +129,11 @@ def main() -> None:
             "run-metrics",
         ],
     )
-    inspect_parser.add_argument("--db-path", type=Path, default=DEFAULT_DB_PATH)
+    inspect_parser.add_argument(
+        "--database-url",
+        type=str,
+        default=os.environ.get("DATABASE_URL", DEFAULT_DATABASE_URL),
+    )
     inspect_parser.add_argument("--snapshot-id", type=str)
     inspect_parser.add_argument("--snapshot-root", type=Path, default=DEFAULT_INAT_SNAPSHOT_ROOT)
     inspect_parser.add_argument("--review-reason-code", type=str)
@@ -177,11 +184,19 @@ def main() -> None:
         help="mandatory operator closure note",
     )
     governance_review_resolve_parser.add_argument("--resolved-by", default="operator")
-    governance_review_resolve_parser.add_argument("--db-path", type=Path, default=DEFAULT_DB_PATH)
+    governance_review_resolve_parser.add_argument(
+        "--database-url",
+        type=str,
+        default=os.environ.get("DATABASE_URL", DEFAULT_DATABASE_URL),
+    )
     governance_review_resolve_parser.add_argument("--snapshot-id", type=str)
 
     migrate_parser = subparsers.add_parser("migrate")
-    migrate_parser.add_argument("--db-path", type=Path, default=DEFAULT_DB_PATH)
+    migrate_parser.add_argument(
+        "--database-url",
+        type=str,
+        default=os.environ.get("DATABASE_URL", DEFAULT_DATABASE_URL),
+    )
 
     args = parser.parse_args()
     if args.command == "run-pipeline":
@@ -195,7 +210,7 @@ def main() -> None:
             fixture_path=args.fixture_path,
             snapshot_id=args.snapshot_id,
             snapshot_root=args.snapshot_root,
-            db_path=args.db_path,
+            database_url=args.database_url,
             normalized_snapshot_path=args.normalized_path,
             qualification_snapshot_path=args.qualified_path,
             export_path=args.export_path,
@@ -262,26 +277,27 @@ def main() -> None:
         return
 
     if args.command == "migrate":
-        repository = SQLiteRepository(args.db_path)
-        if not args.db_path.exists():
-            repository.initialize()
+        repository = PostgresRepository(args.database_url)
+        version_before = repository.current_schema_version()
+        applied_versions = repository.migrate_to_latest()
+        version_after = repository.current_schema_version()
+        if version_before == 0 and version_after > 0:
             print(
                 "Database initialized at latest schema | "
-                f"db_path={args.db_path} | "
-                f"schema_version={repository.current_schema_version()}"
+                f"database_url={args.database_url} | "
+                f"schema_version={version_after}"
             )
             return
-        applied_versions = repository.migrate_to_latest()
         if applied_versions:
             print(
                 "Database migrated | "
-                f"db_path={args.db_path} | "
+                f"database_url={args.database_url} | "
                 f"applied={','.join(str(item) for item in applied_versions)}"
             )
         else:
             print(
                 "Database already up to date | "
-                f"db_path={args.db_path} | "
+                f"database_url={args.database_url} | "
                 f"schema_version={repository.current_schema_version()}"
             )
         return
@@ -350,9 +366,7 @@ def main() -> None:
             raise SystemExit(
                 f"Unsupported governance-review command: {args.governance_review_command}"
             )
-        repository = SQLiteRepository(
-            _resolve_inspect_db_path(args.db_path, args.snapshot_id)
-        )
+        repository = PostgresRepository(args.database_url)
         repository.initialize()
         try:
             updated = repository.resolve_canonical_governance_review_item(
@@ -372,7 +386,7 @@ def main() -> None:
         )
         return
 
-    repository = SQLiteRepository(_resolve_inspect_db_path(args.db_path, args.snapshot_id))
+    repository = PostgresRepository(args.database_url)
     repository.initialize()
     if args.view == "summary":
         print(render_summary(repository))
@@ -469,12 +483,6 @@ def governance_review_entrypoint() -> None:
 def migrate_entrypoint() -> None:
     sys.argv.insert(1, "migrate")
     main()
-
-
-def _resolve_inspect_db_path(db_path: Path, snapshot_id: str | None) -> Path:
-    if snapshot_id and db_path == DEFAULT_DB_PATH:
-        return DEFAULT_DATABASES_DIR / f"{snapshot_id}.sqlite"
-    return db_path
 
 
 if __name__ == "__main__":

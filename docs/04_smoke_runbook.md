@@ -135,7 +135,7 @@ After a successful live smoke, the main artifacts should be present:
 - `data/raw/inaturalist/<snapshot_id>/taxa/`
 - `data/raw/inaturalist/<snapshot_id>/images/`
 - `data/raw/inaturalist/<snapshot_id>/ai_outputs.json`
-- `data/databases/<snapshot_id>.sqlite`
+- PostgreSQL materialized/history state in the configured schema (`DATABASE_URL`)
 - `data/normalized/<snapshot_id>.json`
 - `data/qualified/<snapshot_id>.json`
 - `data/exports/<snapshot_id>.json`

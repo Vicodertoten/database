@@ -43,8 +43,9 @@ The repository is not the quiz app, frontend, or product runtime.
 python -m venv .venv
 source .venv/bin/activate
 pip install -e ".[dev]"
+export DATABASE_URL='postgresql://postgres:postgres@127.0.0.1:5432/postgres'
 python scripts/verify_repo.py
-python scripts/migrate_database.py --db-path data/database.sqlite
+python scripts/migrate_database.py --database-url "$DATABASE_URL"
 python scripts/run_pipeline.py
 python scripts/inspect_database.py summary
 ```
@@ -57,7 +58,8 @@ Installed entrypoints mirror the script wrappers:
 ## What works now
 
 - typed domain models for the four core objects
-- local SQLite storage with explicit schema versioning
+- PostgreSQL/PostGIS storage with explicit migration versioning
+- native geospatial columns and queries for `bbox` and `point + radius`
 - deterministic fixture-driven ingestion
 - manual iNaturalist snapshot harvesting with local raw cache
 - cached snapshot normalization without live network access
@@ -94,9 +96,9 @@ Cached AI outputs are version-governed through a prompt bundle version, so stale
 python scripts/fetch_inat_snapshot.py --snapshot-id inaturalist-birds-20260408T123456Z --max-observations-per-taxon 1
 python scripts/qualify_inat_snapshot.py --snapshot-id inaturalist-birds-20260408T123456Z
 python scripts/qualify_inat_snapshot.py --snapshot-id inaturalist-birds-20260408T123456Z --request-interval-seconds 0.5 --max-retries 2 --initial-backoff-seconds 1 --max-backoff-seconds 8
-python scripts/migrate_database.py --db-path data/database.sqlite
+python scripts/migrate_database.py --database-url "$DATABASE_URL"
 python scripts/run_pipeline.py
-python scripts/run_pipeline.py --db-path data/pilot.sqlite --qualifier-mode rules
+python scripts/run_pipeline.py --database-url "$DATABASE_URL" --qualifier-mode rules
 python scripts/run_pipeline.py --source-mode inat_snapshot --snapshot-id inaturalist-birds-20260408T123456Z --qualifier-mode cached --uncertain-policy reject
 python scripts/run_pipeline.py --source-mode inat_snapshot --snapshot-id inaturalist-birds-20260408T123456Z --allow-schema-reset --qualifier-mode cached --uncertain-policy reject
 python scripts/run_pipeline.py --source-mode inat_snapshot --snapshot-id inaturalist-birds-20260408T123456Z --qualifier-mode cached --uncertain-policy reject --apply-review-overrides
@@ -152,11 +154,10 @@ Running the fixture pipeline writes:
 - normalized snapshot to `data/normalized/normalized_snapshot.json`
 - qualification snapshot to `data/qualified/qualification_snapshot.json`
 - export bundle to `data/exports/qualified_resources_bundle.json`
-- SQLite database to `data/database.sqlite`
+- materialized/latest state + history into the configured PostgreSQL schema (`DATABASE_URL`)
 
 In `inat_snapshot` mode, the default derived outputs become snapshot-scoped:
 
-- SQLite: `data/databases/<snapshot_id>.sqlite`
 - normalized: `data/normalized/<snapshot_id>.json`
 - qualified: `data/qualified/<snapshot_id>.json`
 - export: `data/exports/<snapshot_id>.json`
@@ -181,7 +182,7 @@ The manifest records which sort was requested and which one was actually used.
 
 The repository now writes explicit stage versions into generated artifacts:
 
-- schema version: `database.schema.v7`
+- schema version: `database.schema.v8`
 - snapshot manifest version: `inaturalist.snapshot.v3`
 - normalized snapshot version: `normalized.snapshot.v3`
 - canonical enrichment version: `canonical.enrichment.v2`
@@ -288,4 +289,5 @@ For the live 15-taxon smoke workflow, see [docs/04_smoke_runbook.md](docs/04_smo
 ## Continuous integration
 
 GitHub Actions runs `python scripts/verify_repo.py` on pull requests and pushes to `main`
-via `.github/workflows/verify-repo.yml`.
+via `.github/workflows/verify-repo.yml`, with a PostGIS service and
+`python scripts/migrate_database.py --database-url "$DATABASE_URL"` before verification.

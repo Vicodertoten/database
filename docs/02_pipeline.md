@@ -16,7 +16,7 @@ The pipeline is deliberately small, versioned, and reproducible.
 - create a new canonical taxon only when an unknown iNaturalist taxon enters scope
 - do not auto-create canonical taxa from secondary unresolved hints
 - assign stable internal media IDs
-- persist normalized objects in SQLite
+- persist normalized objects in PostgreSQL/PostGIS
 - write a normalized JSON snapshot
 - use measured downloaded image dimensions for qualification decisions
 

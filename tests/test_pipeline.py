@@ -5,25 +5,28 @@ import pytest
 from jsonschema import validate
 
 from database_core.pipeline.runner import run_pipeline
-from database_core.storage.sqlite import SQLiteRepository
+from database_core.storage.postgres import PostgresRepository
 
 
-def test_pipeline_produces_reproducible_output(tmp_path: Path) -> None:
+def test_pipeline_produces_reproducible_output(
+    tmp_path: Path,
+    database_url_factory,
+) -> None:
     fixture_path = Path("data/fixtures/birds_pilot.json")
     fixed_run_id = "run:20260408T000000Z:aaaaaaaa"
 
-    first_db = tmp_path / "first.sqlite"
+    first_database_url = database_url_factory()
     first_normalized = tmp_path / "first_normalized.json"
     first_qualified = tmp_path / "first_qualified.json"
     first_export = tmp_path / "first_export.json"
-    second_db = tmp_path / "second.sqlite"
+    second_database_url = database_url_factory()
     second_normalized = tmp_path / "second_normalized.json"
     second_qualified = tmp_path / "second_qualified.json"
     second_export = tmp_path / "second_export.json"
 
     first_result = run_pipeline(
         fixture_path=fixture_path,
-        db_path=first_db,
+        database_url=first_database_url,
         normalized_snapshot_path=first_normalized,
         qualification_snapshot_path=first_qualified,
         export_path=first_export,
@@ -31,7 +34,7 @@ def test_pipeline_produces_reproducible_output(tmp_path: Path) -> None:
     )
     second_result = run_pipeline(
         fixture_path=fixture_path,
-        db_path=second_db,
+        database_url=second_database_url,
         normalized_snapshot_path=second_normalized,
         qualification_snapshot_path=second_qualified,
         export_path=second_export,
@@ -43,7 +46,7 @@ def test_pipeline_produces_reproducible_output(tmp_path: Path) -> None:
     assert first_result.review_queue_count == 1
     assert second_result == first_result.__class__(
         run_id=fixed_run_id,
-        database_path=second_db,
+        database_url=second_database_url,
         normalized_snapshot_path=second_normalized,
         qualification_snapshot_path=second_qualified,
         export_path=second_export,
@@ -66,7 +69,7 @@ def test_pipeline_produces_reproducible_output(tmp_path: Path) -> None:
     )
     validate(instance=export_payload, schema=export_schema)
 
-    assert export_payload["schema_version"] == "database.schema.v7"
+    assert export_payload["schema_version"] == "database.schema.v8"
     assert export_payload["export_version"] == "export.bundle.v4"
     assert export_payload["qualification_version"] == "qualification.staged.v1"
     assert export_payload["enrichment_version"] == "canonical.enrichment.v2"
@@ -86,17 +89,17 @@ def test_pipeline_produces_reproducible_output(tmp_path: Path) -> None:
     assert export_payload["qualified_resources"][0]["provenance"]["run_id"] == fixed_run_id
 
     normalized_payload = json.loads(first_normalized.read_text(encoding="utf-8"))
-    assert normalized_payload["schema_version"] == "database.schema.v7"
+    assert normalized_payload["schema_version"] == "database.schema.v8"
     assert normalized_payload["normalized_snapshot_version"] == "normalized.snapshot.v3"
     assert normalized_payload["enrichment_version"] == "canonical.enrichment.v2"
     assert not first_export.with_name(f"{first_export.stem}.v3{first_export.suffix}").exists()
 
 
-def test_pipeline_can_emit_v3_sidecar_when_opted_in(tmp_path: Path) -> None:
+def test_pipeline_can_emit_v3_sidecar_when_opted_in(tmp_path: Path, database_url: str) -> None:
     export_path = tmp_path / "optin_export.json"
     run_pipeline(
         fixture_path=Path("data/fixtures/birds_pilot.json"),
-        db_path=tmp_path / "optin.sqlite",
+        database_url=database_url,
         normalized_snapshot_path=tmp_path / "optin_normalized.json",
         qualification_snapshot_path=tmp_path / "optin_qualified.json",
         export_path=export_path,
@@ -112,11 +115,11 @@ def test_pipeline_can_emit_v3_sidecar_when_opted_in(tmp_path: Path) -> None:
     assert legacy_export_payload["export_version"] == "export.bundle.v3"
 
 
-def test_export_v4_matches_internal_golden_snapshot(tmp_path: Path) -> None:
+def test_export_v4_matches_internal_golden_snapshot(tmp_path: Path, database_url: str) -> None:
     export_path = tmp_path / "golden_export.json"
     run_pipeline(
         fixture_path=Path("data/fixtures/birds_pilot.json"),
-        db_path=tmp_path / "golden.sqlite",
+        database_url=database_url,
         normalized_snapshot_path=tmp_path / "golden_normalized.json",
         qualification_snapshot_path=tmp_path / "golden_qualified.json",
         export_path=export_path,
@@ -131,11 +134,15 @@ def test_export_v4_matches_internal_golden_snapshot(tmp_path: Path) -> None:
     assert payload == golden_payload
 
 
-def test_pipeline_rejects_invalid_export_bundle(monkeypatch, tmp_path: Path) -> None:
+def test_pipeline_rejects_invalid_export_bundle(
+    monkeypatch,
+    tmp_path: Path,
+    database_url: str,
+) -> None:
     def fake_build_export_bundle(**kwargs):
         del kwargs
         return {
-            "schema_version": "database.schema.v7",
+            "schema_version": "database.schema.v8",
             "export_version": "export.bundle.v4",
         }
 
@@ -147,7 +154,7 @@ def test_pipeline_rejects_invalid_export_bundle(monkeypatch, tmp_path: Path) -> 
     with pytest.raises(ValueError, match="Export bundle validation failed"):
         run_pipeline(
             fixture_path=Path("data/fixtures/birds_pilot.json"),
-            db_path=tmp_path / "invalid.sqlite",
+            database_url=database_url,
             normalized_snapshot_path=tmp_path / "invalid_normalized.json",
             qualification_snapshot_path=tmp_path / "invalid_qualified.json",
             export_path=export_path,
@@ -156,17 +163,19 @@ def test_pipeline_rejects_invalid_export_bundle(monkeypatch, tmp_path: Path) -> 
     assert not export_path.exists()
 
 
-def test_pipeline_overwrites_previous_run_outputs_on_same_database(tmp_path: Path) -> None:
-    db_path = tmp_path / "overwrite.sqlite"
+def test_pipeline_overwrites_previous_run_outputs_on_same_database(
+    tmp_path: Path,
+    database_url: str,
+) -> None:
     run_pipeline(
         fixture_path=Path("data/fixtures/birds_pilot.json"),
-        db_path=db_path,
+        database_url=database_url,
         normalized_snapshot_path=tmp_path / "overwrite.normalized.json",
         qualification_snapshot_path=tmp_path / "overwrite.qualified.json",
         export_path=tmp_path / "overwrite.export.json",
         uncertain_policy="review",
     )
-    repository = SQLiteRepository(db_path)
+    repository = PostgresRepository(database_url)
     repository.initialize()
     first_summary = repository.fetch_summary()
     assert first_summary["review_queue"] == 1
@@ -174,13 +183,13 @@ def test_pipeline_overwrites_previous_run_outputs_on_same_database(tmp_path: Pat
 
     run_pipeline(
         fixture_path=Path("data/fixtures/birds_pilot.json"),
-        db_path=db_path,
+        database_url=database_url,
         normalized_snapshot_path=tmp_path / "overwrite.normalized.json",
         qualification_snapshot_path=tmp_path / "overwrite.qualified.json",
         export_path=tmp_path / "overwrite.export.json",
         uncertain_policy="reject",
     )
-    repository = SQLiteRepository(db_path)
+    repository = PostgresRepository(database_url)
     repository.initialize()
     second_summary = repository.fetch_summary()
     assert second_summary["review_queue"] == 0
@@ -197,14 +206,13 @@ def test_pipeline_overwrites_previous_run_outputs_on_same_database(tmp_path: Pat
     assert governance_count > 0
 
 
-def test_run_metrics_support_run_scope(tmp_path: Path) -> None:
-    db_path = tmp_path / "metrics.sqlite"
+def test_run_metrics_support_run_scope(tmp_path: Path, database_url: str) -> None:
     first_run_id = "run:20260408T000000Z:aaaaaaaa"
     second_run_id = "run:20260408T000100Z:bbbbbbbb"
 
     run_pipeline(
         fixture_path=Path("data/fixtures/birds_pilot.json"),
-        db_path=db_path,
+        database_url=database_url,
         normalized_snapshot_path=tmp_path / "metrics_1.normalized.json",
         qualification_snapshot_path=tmp_path / "metrics_1.qualified.json",
         export_path=tmp_path / "metrics_1.export.json",
@@ -213,7 +221,7 @@ def test_run_metrics_support_run_scope(tmp_path: Path) -> None:
     )
     run_pipeline(
         fixture_path=Path("data/fixtures/birds_pilot.json"),
-        db_path=db_path,
+        database_url=database_url,
         normalized_snapshot_path=tmp_path / "metrics_2.normalized.json",
         qualification_snapshot_path=tmp_path / "metrics_2.qualified.json",
         export_path=tmp_path / "metrics_2.export.json",
@@ -221,7 +229,7 @@ def test_run_metrics_support_run_scope(tmp_path: Path) -> None:
         run_id=second_run_id,
     )
 
-    repository = SQLiteRepository(db_path)
+    repository = PostgresRepository(database_url)
     repository.initialize()
     first_metrics = repository.fetch_run_level_metrics(run_id=first_run_id)
     second_metrics = repository.fetch_run_level_metrics(run_id=second_run_id)
@@ -233,10 +241,10 @@ def test_run_metrics_support_run_scope(tmp_path: Path) -> None:
 
 
 def test_pipeline_rolls_back_database_on_artifact_write_failure(
-    monkeypatch, tmp_path: Path
+    monkeypatch,
+    tmp_path: Path,
+    database_url: str,
 ) -> None:
-    db_path = tmp_path / "rollback.sqlite"
-
     def fail_export_write(path, payload):  # noqa: ANN001
         del path, payload
         raise RuntimeError("synthetic export write failure")
@@ -249,13 +257,13 @@ def test_pipeline_rolls_back_database_on_artifact_write_failure(
     with pytest.raises(RuntimeError, match="synthetic export write failure"):
         run_pipeline(
             fixture_path=Path("data/fixtures/birds_pilot.json"),
-            db_path=db_path,
+            database_url=database_url,
             normalized_snapshot_path=tmp_path / "rollback.normalized.json",
             qualification_snapshot_path=tmp_path / "rollback.qualified.json",
             export_path=tmp_path / "rollback.export.json",
         )
 
-    repository = SQLiteRepository(db_path)
+    repository = PostgresRepository(database_url)
     repository.initialize()
     summary = repository.fetch_summary()
     assert summary == {

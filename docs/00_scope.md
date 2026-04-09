@@ -20,7 +20,7 @@ Current scope:
 - qualification for pedagogical reuse
 - structured review queue plus snapshot-scoped review overrides
 - export of only qualified resources
-- local SQLite storage and CLI inspection
+- PostgreSQL/PostGIS storage and CLI inspection
 
 Current non-goals:
 

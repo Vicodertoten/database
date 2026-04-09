@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import json
 from datetime import UTC, datetime
-from pathlib import Path
+from urllib.parse import urlsplit, urlunsplit
 
-from database_core.storage.sqlite import SQLiteRepository
+from database_core.storage.postgres import PostgresRepository
 
 _REPORT_VERSION = "smoke.report.v1"
 _SIGNAL_KEYS = {
@@ -30,10 +30,10 @@ _GOVERNANCE_AVG_AGE_HOURS_ALERT_THRESHOLD = 72.0
 
 
 def generate_smoke_report(
-    repository: SQLiteRepository,
+    repository: PostgresRepository,
     *,
     snapshot_id: str | None,
-    db_path: Path,
+    database_url: str,
     generated_at: datetime | None = None,
 ) -> dict[str, object]:
     timestamp = generated_at or datetime.now(UTC)
@@ -54,7 +54,7 @@ def generate_smoke_report(
                 FROM qualified_resources AS resource
                 LEFT JOIN canonical_taxa AS taxon
                     ON taxon.canonical_taxon_id = resource.canonical_taxon_id
-                WHERE resource.export_eligible = 1
+                WHERE resource.export_eligible = TRUE
                   AND (
                         taxon.canonical_taxon_id IS NULL
                         OR taxon.taxon_status = 'provisional'
@@ -111,12 +111,12 @@ def generate_smoke_report(
         "report_version": _REPORT_VERSION,
         "generated_at": timestamp.isoformat(),
         "snapshot_id": snapshot_id,
-        "db_path": str(db_path),
+        "database_url": _redact_database_url(database_url),
         "latest_run": (
             {
                 "run_id": latest_run["run_id"],
-                "started_at": latest_run["started_at"],
-                "completed_at": latest_run["completed_at"],
+                "started_at": _serialize_datetime(latest_run["started_at"]),
+                "completed_at": _serialize_datetime(latest_run["completed_at"]),
                 "run_status": latest_run["run_status"],
             }
             if latest_run
@@ -184,7 +184,7 @@ def _export_trace_flags_uncertainty_coverage(*, connection) -> dict[str, object]
         """
         SELECT provenance_summary_json, qualification_flags_json, uncertainty_reason
         FROM qualified_resources
-        WHERE export_eligible = 1
+        WHERE export_eligible = TRUE
         """
     ).fetchall()
     if not rows:
@@ -257,6 +257,24 @@ def _safe_load_json(raw_value: object) -> object:
         return json.loads(raw_value)
     except json.JSONDecodeError:
         return None
+
+
+def _serialize_datetime(value: object) -> object:
+    if isinstance(value, datetime):
+        return value.isoformat()
+    return value
+
+
+def _redact_database_url(database_url: str) -> str:
+    parsed = urlsplit(database_url)
+    if "@" not in parsed.netloc:
+        return database_url
+    user_info, host_info = parsed.netloc.rsplit("@", 1)
+    if ":" not in user_info:
+        return database_url
+    username, _password = user_info.split(":", 1)
+    safe_netloc = f"{username}:***@{host_info}"
+    return urlunsplit((parsed.scheme, safe_netloc, parsed.path, parsed.query, parsed.fragment))
 
 
 def _valid_source_delta(source_delta: object) -> bool:

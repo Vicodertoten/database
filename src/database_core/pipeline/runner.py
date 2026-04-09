@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -46,22 +47,24 @@ from database_core.review.overrides import (
     load_review_override_file,
     resolve_review_overrides_path,
 )
-from database_core.storage.sqlite import SQLiteRepository
+from database_core.storage.postgres import PostgresRepository
 from database_core.versioning import ENRICHMENT_VERSION, EXPORT_VERSION, LEGACY_EXPORT_VERSION
 
 DEFAULT_FIXTURE_PATH = Path("data/fixtures/birds_pilot.json")
-DEFAULT_DB_PATH = Path("data/database.sqlite")
+DEFAULT_DATABASE_URL = os.environ.get(
+    "DATABASE_URL",
+    "postgresql://postgres:postgres@127.0.0.1:5432/postgres",
+)
 DEFAULT_NORMALIZED_PATH = Path("data/normalized/normalized_snapshot.json")
 DEFAULT_QUALIFIED_PATH = Path("data/qualified/qualification_snapshot.json")
 DEFAULT_EXPORT_PATH = Path("data/exports/qualified_resources_bundle.json")
 DEFAULT_SIDECAR_EXPORT_SUFFIX = ".v3"
-DEFAULT_DATABASES_DIR = Path("data/databases")
 
 
 @dataclass(frozen=True)
 class PipelineResult:
     run_id: str
-    database_path: Path
+    database_url: str
     normalized_snapshot_path: Path
     qualification_snapshot_path: Path
     export_path: Path
@@ -91,7 +94,7 @@ def run_pipeline(
     snapshot_id: str | None = None,
     snapshot_root: Path = DEFAULT_INAT_SNAPSHOT_ROOT,
     snapshot_manifest_path: Path | None = None,
-    db_path: Path = DEFAULT_DB_PATH,
+    database_url: str | None = None,
     normalized_snapshot_path: Path = DEFAULT_NORMALIZED_PATH,
     qualification_snapshot_path: Path = DEFAULT_QUALIFIED_PATH,
     export_path: Path = DEFAULT_EXPORT_PATH,
@@ -107,6 +110,7 @@ def run_pipeline(
     allow_schema_reset: bool = False,
     run_id: str | None = None,
 ) -> PipelineResult:
+    resolved_database_url = database_url or os.environ.get("DATABASE_URL", DEFAULT_DATABASE_URL)
     dataset = _load_dataset(
         source_mode=source_mode,
         fixture_path=fixture_path,
@@ -123,12 +127,10 @@ def run_pipeline(
         source_mode=source_mode,
         snapshot_id=resolved_snapshot_id_input,
         snapshot_manifest_path=snapshot_manifest_path,
-        db_path=db_path,
         normalized_snapshot_path=normalized_snapshot_path,
         qualification_snapshot_path=qualification_snapshot_path,
         export_path=export_path,
     )
-    db_path = resolved_paths["db_path"]
     normalized_snapshot_path = resolved_paths["normalized_snapshot_path"]
     qualification_snapshot_path = resolved_paths["qualification_snapshot_path"]
     export_path = resolved_paths["export_path"]
@@ -149,7 +151,7 @@ def run_pipeline(
         review_overrides_path=review_overrides_path,
         snapshot_id=resolved_snapshot_id,
     )
-    repository = SQLiteRepository(db_path)
+    repository = PostgresRepository(resolved_database_url)
     repository.initialize(allow_schema_reset=allow_schema_reset)
     previous_canonical_taxa = repository.fetch_latest_completed_canonical_taxa()
     prepared_state = _prepare_pipeline_state(
@@ -220,7 +222,7 @@ def run_pipeline(
     )
     return PipelineResult(
         run_id=resolved_run_id,
-        database_path=db_path,
+        database_url=resolved_database_url,
         normalized_snapshot_path=normalized_snapshot_path,
         qualification_snapshot_path=qualification_snapshot_path,
         export_path=export_path,
@@ -389,14 +391,12 @@ def _resolve_output_paths(
     source_mode: str,
     snapshot_id: str | None,
     snapshot_manifest_path: Path | None,
-    db_path: Path,
     normalized_snapshot_path: Path,
     qualification_snapshot_path: Path,
     export_path: Path,
 ) -> dict[str, Path | str | None]:
     if source_mode != "inat_snapshot":
         return {
-            "db_path": db_path,
             "normalized_snapshot_path": normalized_snapshot_path,
             "qualification_snapshot_path": qualification_snapshot_path,
             "export_path": export_path,
@@ -408,7 +408,6 @@ def _resolve_output_paths(
     )
     if not resolved_snapshot_id:
         return {
-            "db_path": db_path,
             "normalized_snapshot_path": normalized_snapshot_path,
             "qualification_snapshot_path": qualification_snapshot_path,
             "export_path": export_path,
@@ -416,11 +415,6 @@ def _resolve_output_paths(
         }
 
     return {
-        "db_path": (
-            DEFAULT_DATABASES_DIR / f"{resolved_snapshot_id}.sqlite"
-            if db_path == DEFAULT_DB_PATH
-            else db_path
-        ),
         "normalized_snapshot_path": (
             Path("data/normalized") / f"{resolved_snapshot_id}.json"
             if normalized_snapshot_path == DEFAULT_NORMALIZED_PATH

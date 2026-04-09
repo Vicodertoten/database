@@ -22,7 +22,8 @@ Objectif de ce document: transformer cette base solide en trajectoire opération
 ### État réel (2026-04-08)
 
 - persistence hybride implémentée: historique append-only (`pipeline_runs` + tables `*_history`) et tables matérialisées `latest`.
-- schéma applicatif actuel: `database.schema.v7`.
+- schéma applicatif actuel: `database.schema.v8`.
+- backend storage principal: PostgreSQL/PostGIS (`DATABASE_URL`) avec migrations versionnées (`schema_migrations`).
 - export principal actuel: `export.bundle.v4`.
 - export de transition maintenu en mode opt-in: `export.bundle.v3` (désactivé par défaut).
 - version d’overrides opérateur: `review.override.v1` (validation stricte à la lecture).
@@ -86,7 +87,7 @@ Ces décisions sont la baseline d'exécution. Toute déviation doit être docume
 | AR4 | taxons non résolus tolérés en interne mais interdits à l'export |
 | AR5 | override vers `accepted` interdit si licence non `safe` |
 | AR6 | rétention snapshots bruts: 12 mois; snapshots promus conservés |
-| AR7 | SQLite maintenu à court terme; plan de migration préparé pour M3 |
+| AR7 | PostgreSQL/PostGIS est le storage principal; SQLite n’est plus une cible d’exécution |
 
 ### Data (acté)
 
@@ -165,7 +166,7 @@ Points solides:
 | A2 | table legacy `canonical_taxon_events` retirée du flux standard (drop en migration `v7`) | dette résiduelle: compatibilité des DB hors migration contrôlée | P3 |
 | A3 | Exceptions larges (`except Exception`) sur couche infrastructure | diagnostic moins précis en incident | P1 |
 | A4 | Canonical fallback `"unresolved"` | affaiblit l’autorité canonique | P1 |
-| A5 | Schéma SQLite sans index métier | dette de performance à l’échelle | P2 |
+| A5 | Indexation Postgres géo/métier à consolider selon charge réelle | dette de performance à l’échelle | P2 |
 
 ### Décisions architecture actées (rappel)
 
@@ -398,7 +399,7 @@ Objectif: préparer la montée en échelle contrôlée.
 
 Livrables:
 1. Plan migration persistence/migrations (post-reset strategy).
-2. Indexation SQLite ciblée et mesure de performance.
+2. Indexation Postgres ciblée et mesure de performance.
 3. Extension pilote vers sous-ensemble taxons additionnels (sans casser la doctrine).
 
 ### Backlog priorisé (référence)

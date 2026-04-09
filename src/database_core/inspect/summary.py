@@ -3,10 +3,10 @@ from __future__ import annotations
 from pathlib import Path
 
 from database_core.adapters import summarize_snapshot_manifest
-from database_core.storage.sqlite import SQLiteRepository
+from database_core.storage.postgres import PostgresRepository
 
 
-def render_summary(repository: SQLiteRepository) -> str:
+def render_summary(repository: PostgresRepository) -> str:
     summary = repository.fetch_summary()
     return "\n".join(
         [
@@ -21,7 +21,7 @@ def render_summary(repository: SQLiteRepository) -> str:
 
 
 def render_review_queue(
-    repository: SQLiteRepository,
+    repository: PostgresRepository,
     *,
     review_reason_code: str | None = None,
     stage_name: str | None = None,
@@ -49,7 +49,7 @@ def render_review_queue(
     return "\n".join(lines)
 
 
-def render_exportables(repository: SQLiteRepository) -> str:
+def render_exportables(repository: PostgresRepository) -> str:
     rows = repository.fetch_exportable_resources()
     if not rows:
         return "No exportable resources."
@@ -63,7 +63,7 @@ def render_exportables(repository: SQLiteRepository) -> str:
 
 
 def render_canonical_governance_review_queue(
-    repository: SQLiteRepository,
+    repository: PostgresRepository,
     *,
     run_id: str | None = None,
     reason_code: str | None = None,
@@ -107,7 +107,7 @@ def render_canonical_governance_review_queue(
 
 
 def render_canonical_state_events(
-    repository: SQLiteRepository,
+    repository: PostgresRepository,
     *,
     run_id: str | None = None,
     limit: int = 100,
@@ -125,7 +125,7 @@ def render_canonical_state_events(
 
 
 def render_canonical_change_events(
-    repository: SQLiteRepository,
+    repository: PostgresRepository,
     *,
     run_id: str | None = None,
     limit: int = 100,
@@ -143,7 +143,7 @@ def render_canonical_change_events(
 
 
 def render_canonical_governance_events(
-    repository: SQLiteRepository,
+    repository: PostgresRepository,
     *,
     run_id: str | None = None,
     limit: int = 100,
@@ -162,7 +162,7 @@ def render_canonical_governance_events(
 
 
 def render_run_metrics(
-    repository: SQLiteRepository,
+    repository: PostgresRepository,
     *,
     run_id: str | None = None,
 ) -> str:
@@ -181,7 +181,7 @@ def render_run_metrics(
 
 
 def render_snapshot_health(
-    repository: SQLiteRepository,
+    repository: PostgresRepository,
     *,
     snapshot_id: str | None,
     snapshot_root: Path,

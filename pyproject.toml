@@ -11,6 +11,7 @@ requires-python = ">=3.11"
 dependencies = [
   "jsonschema>=4.0,<5",
   "Pillow>=10,<12",
+  "psycopg[binary]>=3.2,<4",
   "pydantic>=2.7,<3",
   "python-dotenv>=1.0,<2",
 ]

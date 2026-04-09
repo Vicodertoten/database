@@ -1,3 +1,9 @@
-from database_core.storage.sqlite import SQLiteRepository
+from database_core.storage.postgres import (
+    PostgresRepository,
+    RepositorySchemaVersionMismatchError,
+)
 
-__all__ = ["SQLiteRepository"]
+__all__ = [
+    "PostgresRepository",
+    "RepositorySchemaVersionMismatchError",
+]

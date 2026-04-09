@@ -22,7 +22,7 @@ from database_core.domain.enums import (
 from database_core.domain.models import AIQualification
 from database_core.pipeline.runner import run_pipeline
 from database_core.qualification.ai import source_external_key
-from database_core.storage.sqlite import SQLiteRepository
+from database_core.storage.postgres import PostgresRepository
 
 SNAPSHOT_MANIFEST = Path("tests/fixtures/inaturalist_snapshot_smoke/manifest.json")
 
@@ -96,12 +96,16 @@ def test_snapshot_manifest_unknown_version_is_rejected(tmp_path: Path) -> None:
         load_snapshot_manifest(manifest_path=manifest_path)
 
 
-def test_snapshot_pipeline_is_reproducible_from_saved_snapshot(tmp_path: Path) -> None:
+def test_snapshot_pipeline_is_reproducible_from_saved_snapshot(
+    tmp_path: Path,
+    database_url_factory,
+) -> None:
     fixed_run_id = "run:20260408T000000Z:aaaaaaaa"
+    first_database_url = database_url_factory()
     first_result = run_pipeline(
         source_mode="inat_snapshot",
         snapshot_manifest_path=SNAPSHOT_MANIFEST,
-        db_path=tmp_path / "first.sqlite",
+        database_url=first_database_url,
         normalized_snapshot_path=tmp_path / "first_normalized.json",
         qualification_snapshot_path=tmp_path / "first_qualified.json",
         export_path=tmp_path / "first_export.json",
@@ -109,10 +113,11 @@ def test_snapshot_pipeline_is_reproducible_from_saved_snapshot(tmp_path: Path) -
         qualifier_mode="cached",
         uncertain_policy="reject",
     )
+    second_database_url = database_url_factory()
     second_result = run_pipeline(
         source_mode="inat_snapshot",
         snapshot_manifest_path=SNAPSHOT_MANIFEST,
-        db_path=tmp_path / "second.sqlite",
+        database_url=second_database_url,
         normalized_snapshot_path=tmp_path / "second_normalized.json",
         qualification_snapshot_path=tmp_path / "second_qualified.json",
         export_path=tmp_path / "second_export.json",
@@ -140,11 +145,12 @@ def test_snapshot_pipeline_is_reproducible_from_saved_snapshot(tmp_path: Path) -
 
 def test_snapshot_pipeline_enriches_canonical_taxa_from_cached_taxon_payloads(
     tmp_path: Path,
+    database_url: str,
 ) -> None:
     run_pipeline(
         source_mode="inat_snapshot",
         snapshot_manifest_path=SNAPSHOT_MANIFEST,
-        db_path=tmp_path / "enriched.sqlite",
+        database_url=database_url,
         normalized_snapshot_path=tmp_path / "enriched_normalized.json",
         qualification_snapshot_path=tmp_path / "enriched_qualified.json",
         export_path=tmp_path / "enriched_export.json",
@@ -178,7 +184,10 @@ def test_candidate_photo_sources_promote_square_url_to_higher_resolution_variant
     ]
 
 
-def test_missing_cached_image_is_rejected_when_uncertain_policy_is_reject(tmp_path: Path) -> None:
+def test_missing_cached_image_is_rejected_when_uncertain_policy_is_reject(
+    tmp_path: Path,
+    database_url: str,
+) -> None:
     snapshot_dir = tmp_path / "snapshot"
     shutil.copytree(SNAPSHOT_MANIFEST.parent, snapshot_dir)
     (snapshot_dir / "images/810001.jpg").unlink()
@@ -187,7 +196,7 @@ def test_missing_cached_image_is_rejected_when_uncertain_policy_is_reject(tmp_pa
     run_pipeline(
         source_mode="inat_snapshot",
         snapshot_manifest_path=snapshot_dir / "manifest.json",
-        db_path=tmp_path / "missing-image.sqlite",
+        database_url=database_url,
         normalized_snapshot_path=tmp_path / "missing-image-normalized.json",
         qualification_snapshot_path=tmp_path / "missing-image-qualified.json",
         export_path=tmp_path / "missing-image-export.json",
@@ -207,11 +216,14 @@ def test_missing_cached_image_is_rejected_when_uncertain_policy_is_reject(tmp_pa
     assert "missing_cached_image" in missing_image_resource["qualification_notes"]
 
 
-def test_invalid_gemini_json_is_rejected_with_traceable_notes(tmp_path: Path) -> None:
+def test_invalid_gemini_json_is_rejected_with_traceable_notes(
+    tmp_path: Path,
+    database_url: str,
+) -> None:
     run_pipeline(
         source_mode="inat_snapshot",
         snapshot_manifest_path=SNAPSHOT_MANIFEST,
-        db_path=tmp_path / "invalid-json.sqlite",
+        database_url=database_url,
         normalized_snapshot_path=tmp_path / "invalid-json-normalized.json",
         qualification_snapshot_path=tmp_path / "invalid-json-qualified.json",
         export_path=tmp_path / "invalid-json-export.json",
@@ -234,6 +246,7 @@ def test_invalid_gemini_json_is_rejected_with_traceable_notes(tmp_path: Path) ->
 
 def test_downloaded_dimensions_override_large_source_dimensions_for_acceptance(
     tmp_path: Path,
+    database_url: str,
 ) -> None:
     snapshot_dir = tmp_path / "snapshot"
     shutil.copytree(SNAPSHOT_MANIFEST.parent, snapshot_dir)
@@ -249,7 +262,7 @@ def test_downloaded_dimensions_override_large_source_dimensions_for_acceptance(
     run_pipeline(
         source_mode="inat_snapshot",
         snapshot_manifest_path=manifest_path,
-        db_path=tmp_path / "low-res.sqlite",
+        database_url=database_url,
         normalized_snapshot_path=tmp_path / "low-res-normalized.json",
         qualification_snapshot_path=tmp_path / "low-res-qualified.json",
         export_path=tmp_path / "low-res-export.json",
@@ -324,7 +337,10 @@ def test_qualify_inat_snapshot_prints_progress(tmp_path: Path) -> None:
     assert "Gemini qualification progress | 3/3 | source_media_id=810003 | status=ok" in output
 
 
-def test_prompt_version_mismatch_rejects_cached_ai_outputs(tmp_path: Path) -> None:
+def test_prompt_version_mismatch_rejects_cached_ai_outputs(
+    tmp_path: Path,
+    database_url: str,
+) -> None:
     snapshot_dir = tmp_path / "snapshot"
     shutil.copytree(SNAPSHOT_MANIFEST.parent, snapshot_dir)
     ai_outputs_path = snapshot_dir / "ai_outputs.json"
@@ -339,7 +355,7 @@ def test_prompt_version_mismatch_rejects_cached_ai_outputs(tmp_path: Path) -> No
     run_pipeline(
         source_mode="inat_snapshot",
         snapshot_manifest_path=snapshot_dir / "manifest.json",
-        db_path=tmp_path / "mismatch.sqlite",
+        database_url=database_url,
         normalized_snapshot_path=tmp_path / "mismatch_normalized.json",
         qualification_snapshot_path=tmp_path / "mismatch_qualified.json",
         export_path=tmp_path / "mismatch_export.json",
@@ -358,7 +374,10 @@ def test_prompt_version_mismatch_rejects_cached_ai_outputs(tmp_path: Path) -> No
     assert "cached_prompt_version_mismatch" in mismatched["qualification_flags"]
 
 
-def test_review_overrides_are_reapplied_after_qualification(tmp_path: Path) -> None:
+def test_review_overrides_are_reapplied_after_qualification(
+    tmp_path: Path,
+    database_url: str,
+) -> None:
     override_path = tmp_path / "review_overrides.json"
     override_path.write_text(
         json.dumps(
@@ -383,7 +402,7 @@ def test_review_overrides_are_reapplied_after_qualification(tmp_path: Path) -> N
     result = run_pipeline(
         source_mode="inat_snapshot",
         snapshot_manifest_path=SNAPSHOT_MANIFEST,
-        db_path=tmp_path / "override.sqlite",
+        database_url=database_url,
         normalized_snapshot_path=tmp_path / "override_normalized.json",
         qualification_snapshot_path=tmp_path / "override_qualified.json",
         export_path=tmp_path / "override_export.json",
@@ -403,14 +422,18 @@ def test_review_overrides_are_reapplied_after_qualification(tmp_path: Path) -> N
     assert review_item["priority"] == "high"
     assert "manual spot-check requested" in review_item["review_note"]
 
-    repository = SQLiteRepository(tmp_path / "override.sqlite")
+    repository = PostgresRepository(database_url)
     repository.initialize()
     filtered = repository.fetch_review_queue(review_reason_code="human_override", priority="high")
     assert len(filtered) == 1
     assert filtered[0]["media_asset_id"] == "media:inaturalist:810001"
 
 
-def test_review_overrides_are_not_applied_without_flag(tmp_path: Path, monkeypatch) -> None:
+def test_review_overrides_are_not_applied_without_flag(
+    tmp_path: Path,
+    monkeypatch,
+    database_url: str,
+) -> None:
     snapshot_dir = tmp_path / "snapshot"
     shutil.copytree(SNAPSHOT_MANIFEST.parent, snapshot_dir)
     override_dir = tmp_path / "data" / "review_overrides"
@@ -439,7 +462,7 @@ def test_review_overrides_are_not_applied_without_flag(tmp_path: Path, monkeypat
     result = run_pipeline(
         source_mode="inat_snapshot",
         snapshot_manifest_path=snapshot_dir / "manifest.json",
-        db_path=tmp_path / "no-override.sqlite",
+        database_url=database_url,
         normalized_snapshot_path=tmp_path / "no-override-normalized.json",
         qualification_snapshot_path=tmp_path / "no-override-qualified.json",
         export_path=tmp_path / "no-override-export.json",

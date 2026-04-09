@@ -44,6 +44,4 @@ Cet ADR verrouille la trajectoire d'exécution pour transformer le pilote en noy
 ## Références
 
 - `docs/05_audit_reference.md`
-- `docs/09_remediation_execution.md`
 - `docs/10_program_kpis.md`
-
