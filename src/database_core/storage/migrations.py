@@ -164,6 +164,27 @@ _MIGRATION_SQL: dict[int, str] = {
 
     PRAGMA user_version = 7;
     """,
+    8: """
+    PRAGMA user_version = 8;
+    """,
+    9: """
+    PRAGMA user_version = 9;
+    """,
+    10: """
+    PRAGMA user_version = 10;
+    """,
+    11: """
+    PRAGMA user_version = 11;
+    """,
+    12: """
+    PRAGMA user_version = 12;
+    """,
+    13: """
+    PRAGMA user_version = 13;
+    """,
+    14: """
+    PRAGMA user_version = 14;
+    """,
 }
 
 

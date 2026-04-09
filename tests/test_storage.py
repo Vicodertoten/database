@@ -76,14 +76,14 @@ def test_initialize_can_reset_legacy_schema_version_with_explicit_flag(
         )
 
     assert "legacy_table" not in table_names
-    assert user_version == 13
+    assert user_version == 14
 
 
-def test_migrate_to_latest_initializes_v13_schema(database_url: str) -> None:
+def test_migrate_to_latest_initializes_v14_schema(database_url: str) -> None:
     repository = PostgresRepository(database_url)
     applied_versions = repository.migrate_to_latest()
-    assert applied_versions == (8, 9, 10, 11, 12, 13)
-    assert repository.current_schema_version() == 13
+    assert applied_versions == (8, 9, 10, 11, 12, 13, 14)
+    assert repository.current_schema_version() == 14
 
 
 def test_geospatial_queries_support_bbox_and_point_radius(database_url: str) -> None:
@@ -623,6 +623,128 @@ def test_pack_creation_persists_non_compilable_pack_with_diagnostic(database_url
     diagnostics = repository.fetch_pack_diagnostics(pack_id=str(payload["pack_id"]))
     assert len(specs) == 1
     assert len(diagnostics) == 1
+
+
+def test_save_playable_items_supports_invalidation_and_automatic_reactivation(
+    database_url: str,
+) -> None:
+    repository = PostgresRepository(database_url)
+    repository.initialize()
+
+    run1 = "run:20260408T001000Z:play001aa"
+    run2 = "run:20260408T001100Z:play002bb"
+    run3 = "run:20260408T001200Z:play003cc"
+    captured_at = datetime(2026, 4, 8, 0, 0, tzinfo=UTC)
+
+    with repository.connect() as connection:
+        repository.start_pipeline_run(
+            run_id=run1,
+            source_mode="fixture",
+            dataset_id="fixture:playable:1",
+            snapshot_id=None,
+            started_at=captured_at,
+            connection=connection,
+        )
+        first_item = _playable_item(
+            run_id=run1,
+            qualified_resource_id="qr:media:inaturalist:incremental-1",
+            canonical_taxon_id="taxon:birds:000001",
+            media_asset_id="media:inaturalist:incremental-1",
+            source_observation_uid="obs:inaturalist:incremental-1",
+            source_observation_id="incremental-1",
+            source_media_id="incremental-1",
+        )
+        second_item = _playable_item(
+            run_id=run1,
+            qualified_resource_id="qr:media:inaturalist:incremental-2",
+            canonical_taxon_id="taxon:birds:000002",
+            media_asset_id="media:inaturalist:incremental-2",
+            source_observation_uid="obs:inaturalist:incremental-2",
+            source_observation_id="incremental-2",
+            source_media_id="incremental-2",
+        )
+        repository.save_playable_items([first_item, second_item], run_id=run1, connection=connection)
+        repository.complete_pipeline_run(
+            run_id=run1,
+            completed_at=captured_at,
+            connection=connection,
+        )
+
+        repository.start_pipeline_run(
+            run_id=run2,
+            source_mode="fixture",
+            dataset_id="fixture:playable:2",
+            snapshot_id=None,
+            started_at=captured_at,
+            connection=connection,
+        )
+        repository.save_playable_items([], run_id=run2, connection=connection)
+        repository.complete_pipeline_run(
+            run_id=run2,
+            completed_at=captured_at,
+            connection=connection,
+        )
+
+        repository.start_pipeline_run(
+            run_id=run3,
+            source_mode="fixture",
+            dataset_id="fixture:playable:3",
+            snapshot_id=None,
+            started_at=captured_at,
+            connection=connection,
+        )
+        reactivated_item = _playable_item(
+            run_id=run3,
+            qualified_resource_id="qr:media:inaturalist:incremental-1",
+            canonical_taxon_id="taxon:birds:000001",
+            media_asset_id="media:inaturalist:incremental-1",
+            source_observation_uid="obs:inaturalist:incremental-1",
+            source_observation_id="incremental-1",
+            source_media_id="incremental-1",
+        )
+        repository.save_playable_items([reactivated_item], run_id=run3, connection=connection)
+        repository.complete_pipeline_run(
+            run_id=run3,
+            completed_at=captured_at,
+            connection=connection,
+        )
+
+    payload = repository.fetch_playable_corpus_payload(limit=10)
+    assert [item["playable_item_id"] for item in payload["items"]] == [
+        "playable:qr:media:inaturalist:incremental-1"
+    ]
+    assert payload["items"][0]["qualified_resource_id"] == "qr:media:inaturalist:incremental-1"
+
+    with repository.connect() as connection:
+        rows = connection.execute(
+            """
+            SELECT
+                playable_item_id,
+                lifecycle_status,
+                created_run_id,
+                last_seen_run_id,
+                invalidated_run_id,
+                invalidation_reason
+            FROM playable_item_lifecycle
+            ORDER BY playable_item_id
+            """
+        ).fetchall()
+
+    assert [row["playable_item_id"] for row in rows] == [
+        "playable:qr:media:inaturalist:incremental-1",
+        "playable:qr:media:inaturalist:incremental-2",
+    ]
+    assert rows[0]["lifecycle_status"] == "active"
+    assert rows[0]["created_run_id"] == run1
+    assert rows[0]["last_seen_run_id"] == run3
+    assert rows[0]["invalidated_run_id"] is None
+    assert rows[0]["invalidation_reason"] is None
+
+    assert rows[1]["lifecycle_status"] == "invalidated"
+    assert rows[1]["created_run_id"] == run1
+    assert rows[1]["last_seen_run_id"] == run1
+    assert rows[1]["invalidated_run_id"] == run2
+    assert rows[1]["invalidation_reason"] == "qualification_not_exportable"
 
 
 def test_pack_revision_increments_monotonically(database_url: str) -> None:

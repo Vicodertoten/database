@@ -153,7 +153,7 @@ Priorite:
 
 Etat schema applicatif observe:
 
-- `database.schema.v13`
+- `database.schema.v14`
 
 Contrats observes:
 

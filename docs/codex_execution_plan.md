@@ -109,6 +109,14 @@ Critere de passage de 1 vers 2:
 - les causes d'invalidation sont explicites et testees
 - `playable_corpus.v1` reste stable pour les consommateurs
 
+Etat d'avancement constate (2026-04-09):
+
+- schema `database.schema.v14` introduit pour le lifecycle playable incremental
+- `playable_items` n'est plus supprime globalement dans le run nominal PostgreSQL
+- lifecycle `active`/`invalidated` persiste en base et `playable_corpus.v1` ne sert que les items actifs
+- reactivation automatique couverte en test storage
+- le mapping fin des causes d'invalidation reste volontairement minimal en P0-1
+
 ## 6. Discipline d'execution
 
 1. Un seul chantier structurant actif a la fois.

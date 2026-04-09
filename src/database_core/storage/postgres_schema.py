@@ -620,3 +620,98 @@ CREATE TABLE IF NOT EXISTS confusion_aggregates_global (
 CREATE INDEX IF NOT EXISTS idx_confusion_aggregates_global_event_count
     ON confusion_aggregates_global (event_count DESC, taxon_confused_for_id, taxon_correct_id);
 """
+
+POSTGRES_PLAYABLE_INCREMENTAL_V14_SQL = """
+ALTER TABLE playable_items
+    DROP CONSTRAINT IF EXISTS playable_items_qualified_resource_id_fkey;
+
+ALTER TABLE playable_items
+    DROP CONSTRAINT IF EXISTS playable_items_canonical_taxon_id_fkey;
+
+ALTER TABLE playable_items
+    DROP CONSTRAINT IF EXISTS playable_items_media_asset_id_fkey;
+
+ALTER TABLE playable_items
+    DROP CONSTRAINT IF EXISTS playable_items_source_observation_uid_fkey;
+
+CREATE TABLE IF NOT EXISTS playable_item_lifecycle (
+    playable_item_id TEXT PRIMARY KEY,
+    qualified_resource_id TEXT NOT NULL UNIQUE,
+    lifecycle_status TEXT NOT NULL CHECK (lifecycle_status IN ('active', 'invalidated')),
+    created_run_id TEXT NOT NULL,
+    last_seen_run_id TEXT NOT NULL,
+    invalidated_run_id TEXT,
+    invalidation_reason TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS idx_playable_item_lifecycle_status
+    ON playable_item_lifecycle (lifecycle_status);
+
+CREATE INDEX IF NOT EXISTS idx_playable_item_lifecycle_last_seen
+    ON playable_item_lifecycle (last_seen_run_id);
+
+CREATE INDEX IF NOT EXISTS idx_playable_item_lifecycle_invalidated_run
+    ON playable_item_lifecycle (invalidated_run_id);
+
+CREATE INDEX IF NOT EXISTS idx_playable_item_lifecycle_reason
+    ON playable_item_lifecycle (invalidation_reason);
+
+INSERT INTO playable_item_lifecycle (
+    playable_item_id,
+    qualified_resource_id,
+    lifecycle_status,
+    created_run_id,
+    last_seen_run_id,
+    invalidated_run_id,
+    invalidation_reason,
+    created_at,
+    updated_at
+)
+SELECT
+    playable_item_id,
+    qualified_resource_id,
+    'active',
+    run_id,
+    run_id,
+    NULL,
+    NULL,
+    created_at,
+    now()
+FROM playable_items
+ON CONFLICT (playable_item_id) DO NOTHING;
+
+CREATE OR REPLACE VIEW playable_corpus_v1 AS
+SELECT
+    p.playable_item_id,
+    p.run_id,
+    p.qualified_resource_id,
+    p.canonical_taxon_id,
+    p.media_asset_id,
+    p.source_observation_uid,
+    p.source_name,
+    p.source_observation_id,
+    p.source_media_id,
+    p.scientific_name,
+    p.common_names_i18n_json,
+    p.difficulty_level,
+    p.media_role,
+    p.learning_suitability,
+    p.confusion_relevance,
+    p.diagnostic_feature_visibility,
+    p.similar_taxon_ids_json,
+    p.what_to_look_at_specific_json,
+    p.what_to_look_at_general_json,
+    p.confusion_hint,
+    p.country_code,
+    p.observed_at,
+    p.location_point,
+    p.location_bbox,
+    p.location_radius_meters,
+    p.created_at
+FROM playable_items AS p
+JOIN playable_item_lifecycle AS l
+    ON l.playable_item_id = p.playable_item_id
+WHERE l.lifecycle_status = 'active';
+"""

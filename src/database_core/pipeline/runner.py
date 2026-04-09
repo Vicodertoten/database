@@ -179,7 +179,11 @@ def run_pipeline(
             connection=connection,
         )
         repository.save_review_items(prepared_state.review_items, connection=connection)
-        repository.save_playable_items(prepared_state.playable_items, connection=connection)
+        repository.save_playable_items(
+            prepared_state.playable_items,
+            run_id=resolved_run_id,
+            connection=connection,
+        )
         repository.append_run_history(
             run_id=resolved_run_id,
             governance_effective_at=dataset.captured_at,

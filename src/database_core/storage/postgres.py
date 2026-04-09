@@ -194,7 +194,6 @@ class PostgresRepository:
 
         for statement in (
             "DELETE FROM canonical_taxon_relationships",
-            "DELETE FROM playable_items",
             "DELETE FROM review_queue",
             "DELETE FROM qualified_resources",
             "DELETE FROM media_assets",
@@ -581,13 +580,19 @@ class PostgresRepository:
         self,
         playable_items: Sequence[PlayableItem],
         *,
+        run_id: str | None = None,
         connection: psycopg.Connection | None = None,
     ) -> None:
         if connection is None:
             with self.connect() as owned_connection:
-                self.save_playable_items(playable_items, connection=owned_connection)
+                self.save_playable_items(
+                    playable_items,
+                    run_id=run_id,
+                    connection=owned_connection,
+                )
             return
-        connection.execute("DELETE FROM playable_items")
+
+        current_run_id = run_id or (playable_items[0].run_id if playable_items else None)
 
         _executemany(
             connection,
@@ -645,6 +650,32 @@ class PostgresRepository:
                 END,
                 %s
             )
+            ON CONFLICT (playable_item_id)
+            DO UPDATE SET
+                run_id = EXCLUDED.run_id,
+                qualified_resource_id = EXCLUDED.qualified_resource_id,
+                canonical_taxon_id = EXCLUDED.canonical_taxon_id,
+                media_asset_id = EXCLUDED.media_asset_id,
+                source_observation_uid = EXCLUDED.source_observation_uid,
+                source_name = EXCLUDED.source_name,
+                source_observation_id = EXCLUDED.source_observation_id,
+                source_media_id = EXCLUDED.source_media_id,
+                scientific_name = EXCLUDED.scientific_name,
+                common_names_i18n_json = EXCLUDED.common_names_i18n_json,
+                difficulty_level = EXCLUDED.difficulty_level,
+                media_role = EXCLUDED.media_role,
+                learning_suitability = EXCLUDED.learning_suitability,
+                confusion_relevance = EXCLUDED.confusion_relevance,
+                diagnostic_feature_visibility = EXCLUDED.diagnostic_feature_visibility,
+                similar_taxon_ids_json = EXCLUDED.similar_taxon_ids_json,
+                what_to_look_at_specific_json = EXCLUDED.what_to_look_at_specific_json,
+                what_to_look_at_general_json = EXCLUDED.what_to_look_at_general_json,
+                confusion_hint = EXCLUDED.confusion_hint,
+                country_code = EXCLUDED.country_code,
+                observed_at = EXCLUDED.observed_at,
+                location_point = EXCLUDED.location_point,
+                location_bbox = EXCLUDED.location_bbox,
+                location_radius_meters = EXCLUDED.location_radius_meters
             """,
             [
                 (
@@ -686,6 +717,73 @@ class PostgresRepository:
                 )
                 for item in playable_items
             ],
+        )
+
+        _executemany(
+            connection,
+            """
+            INSERT INTO playable_item_lifecycle (
+                playable_item_id,
+                qualified_resource_id,
+                lifecycle_status,
+                created_run_id,
+                last_seen_run_id,
+                invalidated_run_id,
+                invalidation_reason,
+                created_at,
+                updated_at
+            ) VALUES (%s, %s, 'active', %s, %s, NULL, NULL, now(), now())
+            ON CONFLICT (playable_item_id)
+            DO UPDATE SET
+                qualified_resource_id = EXCLUDED.qualified_resource_id,
+                lifecycle_status = 'active',
+                last_seen_run_id = EXCLUDED.last_seen_run_id,
+                invalidated_run_id = NULL,
+                invalidation_reason = NULL,
+                updated_at = now()
+            """,
+            [
+                (
+                    item.playable_item_id,
+                    item.qualified_resource_id,
+                    item.run_id,
+                    item.run_id,
+                )
+                for item in playable_items
+            ],
+        )
+
+        if current_run_id is None:
+            return
+
+        active_ids = [item.playable_item_id for item in playable_items]
+        if active_ids:
+            connection.execute(
+                """
+                UPDATE playable_item_lifecycle
+                SET
+                    lifecycle_status = 'invalidated',
+                    invalidated_run_id = %s,
+                    invalidation_reason = 'qualification_not_exportable',
+                    updated_at = now()
+                WHERE lifecycle_status = 'active'
+                  AND NOT (playable_item_id = ANY(%s::TEXT[]))
+                """,
+                (current_run_id, active_ids),
+            )
+            return
+
+        connection.execute(
+            """
+            UPDATE playable_item_lifecycle
+            SET
+                lifecycle_status = 'invalidated',
+                invalidated_run_id = %s,
+                invalidation_reason = 'qualification_not_exportable',
+                updated_at = now()
+            WHERE lifecycle_status = 'active'
+            """,
+            (current_run_id,),
         )
 
     def start_pipeline_run(
