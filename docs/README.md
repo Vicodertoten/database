@@ -17,6 +17,7 @@ Before adding a new document, update an existing one whenever possible.
 - `docs/07_canonical_id_migration_v1.md`: canonical ID migration mapping and cutover policy.
 - `docs/adr/0001-charte-canonique-v1.md`: implementation ADR for canonical governance v1.
 - `docs/adr/0002-noyau-canonique-fort-execution-sequentielle.md`: execution ADR locking gates, canonical policy, and export transition.
+- `docs/adr/0003-playable-corpus-pack-compilation-enrichment-queue.md`: doctrinal boundaries for playable/pack compilation/enrichment chain.
 
 ## Operations
 

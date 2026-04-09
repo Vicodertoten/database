@@ -19,6 +19,13 @@ Le point de friction principal n’est pas la structure technique, mais la **gou
 
 Objectif de ce document: transformer cette base solide en trajectoire opérationnelle mesurable.
 
+## Statut d’exécution des gates
+
+| Gate | Statut | Date | Note |
+|---|---|---|---|
+| Gate 0 — Migration storage PostgreSQL/PostGIS | DONE | `2026-04-09` | backend principal basculé sur PostgreSQL/PostGIS, CI/tests alignés Postgres |
+| Gate 1 — Verrou doctrinal + ADR de chaîne | DONE | `2026-04-09` | clôture documentaire/doctrinale uniquement; aucun changement de contrat technique ni implémentation des gates suivants |
+
 ### État réel (2026-04-08)
 
 - persistence hybride implémentée: historique append-only (`pipeline_runs` + tables `*_history`) et tables matérialisées `latest`.

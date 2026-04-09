@@ -35,7 +35,16 @@ The repository is not the quiz app, frontend, or product runtime.
 - Stable canonical charter v1: `docs/06_charte_canonique_v1.md`
 - Canonical implementation ADR: `docs/adr/0001-charte-canonique-v1.md`
 - Noyau canonique fort ADR: `docs/adr/0002-noyau-canonique-fort-execution-sequentielle.md`
+- Chaîne playable/pack/compilation/enrichissement ADR: `docs/adr/0003-playable-corpus-pack-compilation-enrichment-queue.md`
 - Program KPI checklist: `docs/10_program_kpis.md`
+
+## Boundaries doctrinaux
+
+- runtime never reads `export.bundle.v4`
+- `database` owns canonical, qualification, export, and future playable/pack/materialization/enrichment/confusion aggregates
+- runtime owns session/question serving/answers/score/progression UX
+- pack is a durable specification object; a runtime game session is separate and ephemeral
+- compilation is deterministic on existing data (no external calls); enrichment is asynchronous and traceable
 
 ## Quickstart
 
