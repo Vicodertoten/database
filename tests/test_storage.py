@@ -25,6 +25,7 @@ from database_core.pack import (
     validate_pack_spec,
 )
 from database_core.playable import validate_playable_corpus
+from database_core.storage.pack_store import PostgresPackStore
 from database_core.storage.postgres import (
     PostgresRepository,
     RepositorySchemaVersionMismatchError,
@@ -623,6 +624,35 @@ def test_pack_creation_persists_non_compilable_pack_with_diagnostic(database_url
     diagnostics = repository.fetch_pack_diagnostics(pack_id=str(payload["pack_id"]))
     assert len(specs) == 1
     assert len(diagnostics) == 1
+
+
+def test_pack_store_creation_and_diagnostic_non_regression(database_url: str) -> None:
+    repository = PostgresRepository(database_url)
+    repository.initialize()
+    pack_store = PostgresPackStore(connect=repository.connect)
+
+    payload = pack_store.create_pack(
+        parameters={
+            "canonical_taxon_ids": ["taxon:birds:000101", "taxon:birds:000102"],
+            "difficulty_policy": "balanced",
+            "country_code": "BE",
+            "location_bbox": None,
+            "location_point": None,
+            "location_radius_meters": None,
+            "observed_from": None,
+            "observed_to": None,
+            "owner_id": "owner:store",
+            "org_id": "org:store",
+            "visibility": "private",
+            "intended_use": "quiz",
+        }
+    )
+    validate_pack_spec(payload)
+
+    diagnostic = pack_store.diagnose_pack(pack_id=str(payload["pack_id"]))
+    validate_pack_diagnostic(diagnostic)
+    assert diagnostic["compilable"] is False
+    assert diagnostic["reason_code"] == "no_playable_items"
 
 
 def test_save_playable_items_supports_invalidation_and_automatic_reactivation(

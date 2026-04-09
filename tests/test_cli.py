@@ -24,6 +24,7 @@ from database_core.domain.models import (
 )
 from database_core.pipeline.runner import run_pipeline
 from database_core.storage.postgres import PostgresRepository
+from database_core.versioning import SCHEMA_VERSION
 
 
 def test_cli_qualify_inat_snapshot_loads_dotenv(monkeypatch, tmp_path: Path) -> None:
@@ -238,7 +239,7 @@ def test_migrate_cli_applies_pending_schema_migration(monkeypatch, database_url:
         cli.main()
 
     assert "Database migrated" in buffer.getvalue()
-    assert repository.current_schema_version() == 13
+    assert repository.current_schema_version() == SCHEMA_VERSION
 
 
 def test_confusion_cli_ingest_and_recompute(monkeypatch, tmp_path: Path, database_url: str) -> None:

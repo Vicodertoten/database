@@ -52,6 +52,7 @@ from database_core.review.overrides import (
     resolve_review_overrides_path,
     upsert_review_override,
 )
+from database_core.storage.pack_store import PostgresPackStore
 from database_core.storage.postgres import PostgresRepository
 
 
@@ -483,9 +484,10 @@ def main() -> None:
     if args.command == "pack":
         repository = PostgresRepository(args.database_url)
         repository.initialize()
+        pack_store = PostgresPackStore(connect=repository.connect)
         if args.pack_command == "create":
             parameters = _build_pack_revision_parameters_from_args(args)
-            payload = repository.create_pack(
+            payload = pack_store.create_pack(
                 pack_id=args.pack_id,
                 parameters=parameters,
             )
@@ -493,21 +495,21 @@ def main() -> None:
             return
         if args.pack_command == "revise":
             parameters = _build_pack_revision_parameters_from_args(args)
-            payload = repository.revise_pack(
+            payload = pack_store.revise_pack(
                 pack_id=args.pack_id,
                 parameters=parameters,
             )
             print(json.dumps(payload, indent=2, sort_keys=True))
             return
         if args.pack_command == "diagnose":
-            payload = repository.diagnose_pack(
+            payload = pack_store.diagnose_pack(
                 pack_id=args.pack_id,
                 revision=args.revision,
             )
             print(json.dumps(payload, indent=2, sort_keys=True))
             return
         if args.pack_command == "compile":
-            payload = repository.compile_pack(
+            payload = pack_store.compile_pack(
                 pack_id=args.pack_id,
                 revision=args.revision,
                 question_count=args.question_count,
@@ -515,7 +517,7 @@ def main() -> None:
             print(json.dumps(payload, indent=2, sort_keys=True))
             return
         if args.pack_command == "materialize":
-            payload = repository.materialize_pack(
+            payload = pack_store.materialize_pack(
                 pack_id=args.pack_id,
                 revision=args.revision,
                 question_count=args.question_count,
@@ -676,6 +678,7 @@ def main() -> None:
 
     repository = PostgresRepository(args.database_url)
     repository.initialize()
+    pack_store = PostgresPackStore(connect=repository.connect)
     if args.view == "summary":
         print(render_summary(repository))
     elif args.view == "review-queue":
@@ -750,33 +753,33 @@ def main() -> None:
         )
         print(json.dumps(payload, indent=2, sort_keys=True))
     elif args.view == "pack-specs":
-        payload = repository.fetch_pack_specs(pack_id=args.pack_id, limit=args.limit)
+        payload = pack_store.fetch_pack_specs(pack_id=args.pack_id, limit=args.limit)
         print(json.dumps(payload, indent=2, sort_keys=True))
     elif args.view == "pack-revisions":
         if not args.pack_id:
             raise SystemExit("--pack-id is required for pack-revisions")
-        payload = repository.fetch_pack_revisions(
+        payload = pack_store.fetch_pack_revisions(
             pack_id=args.pack_id,
             revision=args.revision,
             limit=args.limit,
         )
         print(json.dumps(payload, indent=2, sort_keys=True))
     elif args.view == "pack-diagnostics":
-        payload = repository.fetch_pack_diagnostics(
+        payload = pack_store.fetch_pack_diagnostics(
             pack_id=args.pack_id,
             revision=args.revision,
             limit=args.limit,
         )
         print(json.dumps(payload, indent=2, sort_keys=True))
     elif args.view == "compiled-pack-builds":
-        payload = repository.fetch_compiled_pack_builds(
+        payload = pack_store.fetch_compiled_pack_builds(
             pack_id=args.pack_id,
             revision=args.revision,
             limit=args.limit,
         )
         print(json.dumps(payload, indent=2, sort_keys=True))
     elif args.view == "pack-materializations":
-        payload = repository.fetch_pack_materializations(
+        payload = pack_store.fetch_pack_materializations(
             pack_id=args.pack_id,
             revision=args.revision,
             purpose=args.purpose,
