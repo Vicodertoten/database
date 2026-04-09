@@ -37,7 +37,7 @@ def test_verify_repo_runs_compile_pytest_and_ruff_in_order(monkeypatch) -> None:
     assert "Repository verification complete" in buffer.getvalue()
 
 
-def test_gate_45_docs_keep_playable_gap_and_gate_ordering_visible() -> None:
+def test_gate_5_docs_keep_playable_gap_and_gate_ordering_visible() -> None:
     root = Path(".")
     readme = (root / "README.md").read_text(encoding="utf-8")
     scope = (root / "docs/00_scope.md").read_text(encoding="utf-8")
@@ -49,6 +49,7 @@ def test_gate_45_docs_keep_playable_gap_and_gate_ordering_visible() -> None:
     assert "cumulative incremental" in readme
     assert "latest materialized surface" in readme
     assert "Gate 4.5" in readme
+    assert "Gate 5" in readme
 
     assert "during Gate 4.5" in scope
     assert "cumulative incremental playable corpus" in scope
@@ -67,7 +68,7 @@ def test_gate_45_docs_keep_playable_gap_and_gate_ordering_visible() -> None:
     assert "Gate 6 - Queue d'enrichissement" in plan
 
 
-def test_gate_45_no_gate_5_plus_implementation_markers_in_storage_layers() -> None:
+def test_gate_5_no_gate_6_plus_implementation_markers_in_storage_layers() -> None:
     root = Path(".")
     storage_schema = (root / "src/database_core/storage/postgres_schema.py").read_text(
         encoding="utf-8"
@@ -82,7 +83,6 @@ def test_gate_45_no_gate_5_plus_implementation_markers_in_storage_layers() -> No
         "enrichment_executions",
         "confusion_events",
         "confusion_aggregates_global",
-        "distractor_policy_v2",
     )
 
     for marker in forbidden_markers:

@@ -2720,13 +2720,16 @@ class PostgresRepository:
             )
         where_sql = " AND ".join(where_clauses)
         return [
-            dict(row)
+            self._normalize_playable_pack_row(dict(row))
             for row in connection.execute(
                 f"""
                 SELECT
                     playable_item_id,
                     canonical_taxon_id,
                     difficulty_level,
+                    media_role,
+                    confusion_relevance,
+                    similar_taxon_ids_json,
                     run_id
                 FROM playable_corpus_v1
                 WHERE {where_sql}
@@ -2785,11 +2788,17 @@ class PostgresRepository:
         for canonical_taxon_id in requested_taxa:
             items_per_taxon.setdefault(canonical_taxon_id, [])
 
+        inat_similar_taxa_by_target = self._fetch_inat_similar_taxa_by_target(
+            connection,
+            canonical_taxon_ids=requested_taxa,
+        )
+
         questions = self._build_compiled_questions(
             items_per_taxon=items_per_taxon,
             requested_taxa=requested_taxa,
             difficulty_policy=str(parameters.difficulty_policy),
             question_count_requested=question_count_requested,
+            inat_similar_taxa_by_target=inat_similar_taxa_by_target,
         )
 
         taxa_served = sum(
@@ -2892,15 +2901,15 @@ class PostgresRepository:
         requested_taxa: Sequence[str],
         difficulty_policy: str,
         question_count_requested: int,
+        inat_similar_taxa_by_target: dict[str, list[str]] | None = None,
     ) -> list[CompiledPackQuestion]:
+        inat_similar_taxa_by_target = inat_similar_taxa_by_target or {}
         sorted_taxon_ids = list(dict.fromkeys(requested_taxa))
         for canonical_taxon_id in sorted_taxon_ids:
             items_per_taxon[canonical_taxon_id].sort(
-                key=lambda row: self._pack_item_sort_key(
+                key=lambda row: self._distractor_item_sort_key(
                     difficulty_policy=difficulty_policy,
-                    canonical_taxon_id=str(row["canonical_taxon_id"]),
-                    playable_item_id=str(row["playable_item_id"]),
-                    difficulty_level=str(row["difficulty_level"]),
+                    row=row,
                 )
             )
 
@@ -2919,22 +2928,51 @@ class PostgresRepository:
         questions: list[CompiledPackQuestion] = []
         for target_row in target_rows:
             target_taxon = str(target_row["canonical_taxon_id"])
+            target_similar_taxon_ids = {
+                taxon_id
+                for taxon_id in self._normalize_similar_taxon_ids(target_row)
+                if taxon_id != target_taxon
+            }
+            target_similar_taxon_ids.update(
+                taxon_id
+                for taxon_id in inat_similar_taxa_by_target.get(target_taxon, [])
+                if taxon_id != target_taxon
+            )
             distractor_candidates = [
                 items_per_taxon[canonical_taxon_id][0]
                 for canonical_taxon_id in sorted_taxon_ids
                 if canonical_taxon_id != target_taxon and items_per_taxon[canonical_taxon_id]
             ]
-            distractor_candidates.sort(
-                key=lambda row: self._pack_item_sort_key(
+            prioritized_candidates = [
+                row
+                for row in distractor_candidates
+                if str(row["canonical_taxon_id"]) in target_similar_taxon_ids
+            ]
+            fallback_candidates = [
+                row
+                for row in distractor_candidates
+                if str(row["canonical_taxon_id"]) not in target_similar_taxon_ids
+            ]
+            prioritized_candidates.sort(
+                key=lambda row: self._distractor_item_sort_key(
                     difficulty_policy=difficulty_policy,
-                    canonical_taxon_id=str(row["canonical_taxon_id"]),
-                    playable_item_id=str(row["playable_item_id"]),
-                    difficulty_level=str(row["difficulty_level"]),
+                    row=row,
                 )
             )
-            if len(distractor_candidates) < 3:
+            fallback_candidates.sort(
+                key=lambda row: self._distractor_item_sort_key(
+                    difficulty_policy=difficulty_policy,
+                    row=row,
+                )
+            )
+
+            selected_distractors = prioritized_candidates[:3]
+            if len(selected_distractors) < 3:
+                selected_distractors.extend(
+                    fallback_candidates[: 3 - len(selected_distractors)]
+                )
+            if len(selected_distractors) < 3:
                 continue
-            selected_distractors = distractor_candidates[:3]
             questions.append(
                 CompiledPackQuestion(
                     position=len(questions) + 1,
@@ -2951,6 +2989,145 @@ class PostgresRepository:
             if len(questions) >= question_count_requested:
                 break
         return questions
+
+    def _fetch_inat_similar_taxa_by_target(
+        self,
+        connection: psycopg.Connection,
+        *,
+        canonical_taxon_ids: Sequence[str],
+    ) -> dict[str, list[str]]:
+        unique_taxon_ids = list(dict.fromkeys(canonical_taxon_ids))
+        if not unique_taxon_ids:
+            return {}
+
+        rows = connection.execute(
+            """
+            SELECT
+                canonical_taxon_id,
+                external_source_mappings_json,
+                external_similarity_hints_json
+            FROM canonical_taxa
+            WHERE canonical_taxon_id = ANY(%s)
+            ORDER BY canonical_taxon_id
+            """,
+            (unique_taxon_ids,),
+        ).fetchall()
+
+        inat_external_id_to_canonical_taxon_id: dict[str, str] = {}
+        hints_by_canonical_taxon_id: dict[str, list[dict[str, object]]] = {}
+        for row in rows:
+            canonical_taxon_id = str(row["canonical_taxon_id"])
+            mappings = self._parse_json_list_of_dicts(row["external_source_mappings_json"])
+            for mapping in mappings:
+                source_name = str(mapping.get("source_name") or "")
+                external_id = str(mapping.get("external_id") or "").strip()
+                if source_name == "inaturalist" and external_id:
+                    inat_external_id_to_canonical_taxon_id[external_id] = canonical_taxon_id
+
+            hints_by_canonical_taxon_id[canonical_taxon_id] = self._parse_json_list_of_dicts(
+                row["external_similarity_hints_json"]
+            )
+
+        similar_taxa_by_target: dict[str, list[str]] = {}
+        for target_taxon_id in unique_taxon_ids:
+            seen: set[str] = set()
+            resolved_taxa: list[str] = []
+            for hint in hints_by_canonical_taxon_id.get(target_taxon_id, []):
+                source_name = str(hint.get("source_name") or "")
+                if source_name != "inaturalist":
+                    continue
+                external_taxon_id = str(hint.get("external_taxon_id") or "").strip()
+                if not external_taxon_id:
+                    continue
+                mapped_taxon_id = inat_external_id_to_canonical_taxon_id.get(external_taxon_id)
+                if (
+                    mapped_taxon_id is None
+                    or mapped_taxon_id == target_taxon_id
+                    or mapped_taxon_id in seen
+                ):
+                    continue
+                seen.add(mapped_taxon_id)
+                resolved_taxa.append(mapped_taxon_id)
+            similar_taxa_by_target[target_taxon_id] = sorted(resolved_taxa)
+
+        return similar_taxa_by_target
+
+    def _parse_json_list_of_dicts(self, raw_value: object) -> list[dict[str, object]]:
+        if isinstance(raw_value, str):
+            try:
+                parsed = json.loads(raw_value)
+            except json.JSONDecodeError:
+                return []
+        elif isinstance(raw_value, list):
+            parsed = raw_value
+        else:
+            return []
+
+        if not isinstance(parsed, list):
+            return []
+        return [item for item in parsed if isinstance(item, dict)]
+
+    def _normalize_playable_pack_row(self, row: dict[str, object]) -> dict[str, object]:
+        row["similar_taxon_ids"] = self._normalize_similar_taxon_ids(row)
+        return row
+
+    def _normalize_similar_taxon_ids(self, row: dict[str, object]) -> list[str]:
+        raw_value = row.get("similar_taxon_ids")
+        if raw_value is None:
+            raw_value = row.get("similar_taxon_ids_json")
+
+        parsed: list[object]
+        if isinstance(raw_value, str):
+            try:
+                decoded = json.loads(raw_value)
+            except json.JSONDecodeError:
+                decoded = []
+            parsed = decoded if isinstance(decoded, list) else []
+        elif isinstance(raw_value, list):
+            parsed = raw_value
+        else:
+            parsed = []
+
+        normalized: list[str] = []
+        for value in parsed:
+            text = str(value).strip()
+            if text and text not in normalized:
+                normalized.append(text)
+        return normalized
+
+    def _distractor_item_sort_key(
+        self,
+        *,
+        difficulty_policy: str,
+        row: dict[str, object],
+    ) -> tuple[int, int, int, str, str]:
+        media_role = str(row.get("media_role") or "")
+        media_role_priority = {
+            "primary_id": 0,
+            "context": 1,
+            "non_diagnostic": 2,
+            "distractor_risk": 3,
+        }
+        confusion_relevance = str(row.get("confusion_relevance") or "")
+        confusion_relevance_priority = {
+            "high": 0,
+            "medium": 1,
+            "low": 2,
+            "none": 3,
+        }
+        pack_sort_key = self._pack_item_sort_key(
+            difficulty_policy=difficulty_policy,
+            canonical_taxon_id=str(row["canonical_taxon_id"]),
+            playable_item_id=str(row["playable_item_id"]),
+            difficulty_level=str(row["difficulty_level"]),
+        )
+        return (
+            media_role_priority.get(media_role, 99),
+            confusion_relevance_priority.get(confusion_relevance, 99),
+            pack_sort_key[0],
+            pack_sort_key[1],
+            pack_sort_key[2],
+        )
 
     def _pack_item_sort_key(
         self,

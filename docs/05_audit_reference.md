@@ -1,15 +1,15 @@
 # Audit De Reference - database
 
 Statut: document vivant (reference d'execution)
-Version: v2
+Version: v3
 Date de mise a jour: 2026-04-09
-Perimetre: etat reel du repo apres Gate 4
+Perimetre: etat reel du repo apres Gate 5
 
 ---
 
 ## 1. Synthese executive
 
-Le repo est sur la bonne trajectoire et a livre une base operationnelle solide jusqu'au Gate 4.
+Le repo est sur la bonne trajectoire et a livre une base operationnelle solide jusqu'au Gate 5.
 
 Points forts confirmes:
 
@@ -18,18 +18,19 @@ Points forts confirmes:
 - gouvernance canonique v1 active et tracee
 - couche playable v1 en base, inspectable via CLI
 - couche pack v1, diagnostic v1, compilation v1, materialization v1
+- policy distracteurs v2 active dans la compilation pack
 - couverture tests structurants et smoke KPI verrouilles
 
-Point critique post-Gate 4:
+Point critique post-Gate 5:
 
 - la cible finale playable est un corpus cumulatif incremental reel
 - l'implementation actuelle reste une surface latest reconstruite a chaque run
-- cet ecart est maintenant explicite et doit etre traite avant l'ancien Gate 5
+- cet ecart reste explicite et constitue le chantier strategique avant Gate 6+
 
-Decision de pilotage:
+Decision de pilotage appliquee:
 
-- inserer un Gate 4.5 de remise a niveau documentaire et strategique
-- introduire ensuite un gate dedie distracteurs v2 avant la queue d'enrichissement
+- Gate 4.5 de remise a niveau documentaire et strategique: ferme
+- Gate 5 distracteurs v2: execute sans evolution de contrat export/schema
 
 ---
 
@@ -42,6 +43,8 @@ Decision de pilotage:
 | Gate 2 - Playable corpus vivant v1 | DONE | 2026-04-09 | surface playable v1 livree |
 | Gate 3 - Pack + revisions + diagnostic | DONE | 2026-04-09 | pack.spec.v1 + pack.diagnostic.v1 |
 | Gate 4 - Compilation + materialization | DONE | 2026-04-09 | pack.compiled.v1 + pack.materialization.v1 |
+| Gate 4.5 - Correctif strategique pre-extension | DONE | 2026-04-09 | alignement doctrine/docs/garde-fous |
+| Gate 5 - Politique distracteurs v2 | DONE | 2026-04-09 | similarites internes prioritaires + fallback deterministe |
 
 Etat schema applicatif observe:
 
@@ -60,14 +63,14 @@ Etat contrats observes:
 
 ## État réel
 
-Le repo est operationnel jusqu'au Gate 4 avec:
+Le repo est operationnel jusqu'au Gate 5 avec:
 
 - une surface playable latest reconstruite a chaque run
 - un historique run-level conserve pour auditabilite
 - des builds compiles conserves de maniere historique
 - des materializations figees immuables
 
-Le delta vers la cible finale est explicite et traite par Gate 4.5.
+Le delta vers la cible finale est explicite; Gate 4.5 est clos et Gate 5 est execute.
 
 ## Cible
 
@@ -75,8 +78,8 @@ La cible d'evolution reste:
 
 - un playable corpus cumulatif incremental reel
 - des frontieres strictes entre database et runtime
-- une trajectoire sequentielle avec Gate 5 dedie distracteurs v2 puis Gate 6 enrichissement
-- une reduction de dette PostgresRepository planifiee sans lancer de refactor dans Gate 4.5
+- une trajectoire sequentielle avec Gate 6 enrichissement puis Gate 7 confusions batch
+- une reduction de dette PostgresRepository planifiee sans lancer de refactor pendant Gate 5
 
 ---
 
@@ -114,21 +117,21 @@ Priorite:
 
 - P0 strategique (design d'extraction minimale a cadrer avant implementation)
 
-### E3 - Politique distracteurs v1 pedagogiquement minimale
+### E3 - Politique distracteurs v2 active, couverture a etendre
 
 Constat:
 
-- Gate 4 valide la forme technique (3 distracteurs taxons distincts)
-- la qualite pedagogique des distracteurs reste limitee
+- Gate 5 active une priorisation pedagogique: similarites internes d'abord, fallback deterministe ensuite
+- le cadre reste strictement hors runtime/session/scoring
 
 Impact:
 
-- limite de valeur didactique
-- faible exploitation des similarites canoniques
+- amelioration immediate de la qualite des distracteurs en compilation
+- exploitation explicite des similar_taxon_ids deja resolus
 
 Priorite:
 
-- P1 immediate (gate dedie distracteurs v2)
+- P1 continue (durcir les jeux de test et l'observabilite de fallback)
 
 ### E4 - Traceabilite historique a clarifier explicitement
 
@@ -164,7 +167,7 @@ Priorite:
 
 ## 5. Remise a niveau strategique avant la suite
 
-### Gate 4.5 - Correctif strategique pre-extension
+### Gate 4.5 - Correctif strategique pre-extension (clos)
 
 Objectif:
 
@@ -180,8 +183,7 @@ Perimetre:
 
 Hors perimetre:
 
-- aucune implementation Gate 5+
-- aucune nouvelle logique metier
+- aucune implementation Gate 6+
 - aucun refactor repository lance
 
 Criteres d'acceptation:
@@ -210,14 +212,14 @@ Criteres d'acceptation:
 
 ## 7. Arbitrages documentes
 
-1. Ne pas ouvrir Gate 5 directement.
-Raison: playable cible, dette repository, et trajectoire distracteurs doivent etre clarifies avant extension.
+1. Clore Gate 4.5 avant d'ouvrir Gate 5.
+Raison: playable cible, dette repository, et trajectoire distracteurs devaient etre clarifies avant implementation.
 
 2. Garder la charte canonique v1 stable.
 Raison: le probleme est d'alignement execution/trajectoire, pas de redefinition normative du canonique.
 
 3. Distinguer cadrage et implementation.
-Raison: Gate 4.5 cadre sans lancer refactor ni nouvelle feature metier.
+Raison: Gate 4.5 a cadre sans lancer refactor; Gate 5 implemente uniquement la policy distracteurs.
 
 4. Introduire un gate distracteurs v2 dedie.
 Raison: la politique actuelle est valide techniquement mais trop faible pedagogiquement.
@@ -229,14 +231,14 @@ Raison: pas de logique runtime/session/scoring/progression dans database.
 
 ## 8. Risques pour la suite
 
-- R1: confusion persistante entre surface latest et cible cumulative si Gate 4.5 reste superficiel
-- R2: amplification de dette repository si gates metier avancent sans extraction preparee
+- R1: confusion persistante entre surface latest et cible cumulative tant que le modele cumulatif n'est pas livre
+- R2: amplification de dette repository si Gate 6+ avance sans extraction preparee
 - R3: distracteurs v2 trop ambitieuse et hors discipline canonique
 - R4: derive de perimetre runtime dans les gates 5-7
 
 Mitigations:
 
-- accepter Gate 4.5 uniquement si criteres documentaires sont strictement tenus
+- conserver les garde-fous Gate 6+ dans la couche storage
 - conserver des criteres d'acceptation courts et testables par gate
 - lier chaque extension a ses frontieres explicites
 
@@ -298,3 +300,26 @@ tests_run:
 residual_risks:
 go_no_go:
 ```
+
+## 12. Gate 5 closure evidence
+
+date: 2026-04-09
+owner: codex
+checklist_items_passed:
+- distractor selection prioritizes internal similar_taxon_ids when available
+- iNaturalist similar species hints (external_similarity_hints) are used when they resolve to existing internal taxa
+- deterministic fallback selects remaining taxa when similar pool is insufficient
+- pedagogical ordering deprioritizes media_role=distractor_risk when alternatives exist
+- exactly three unique distractor taxa remain enforced by compiled question contract
+- no Gate 6+ storage markers introduced
+tests_run:
+- tests/test_storage.py::test_compile_pack_prefers_internal_similar_taxa_for_distractors
+- tests/test_storage.py::test_compile_pack_falls_back_when_similar_taxa_are_insufficient
+- tests/test_storage.py::test_compile_pack_prioritizes_non_distractor_risk_media_when_available
+- tests/test_storage.py::test_compile_pack_uses_inat_similar_species_hints_for_distractors
+- tests/test_storage.py::test_compile_pack_persists_validated_payload_and_is_deterministic
+- tests/test_verify_repo.py
+residual_risks:
+- playable persistence model remains latest-surface and not cumulative incremental yet
+- fallback observability remains inferred from payload selections (no new contract field added)
+go_no_go: GO for Gate 5 closure, Gate 6 remains closed

@@ -28,10 +28,12 @@ The current pilot stays narrow on purpose:
 
 The repository is not the quiz app, frontend, or product runtime.
 
-## Post-Gate 4 Strategic Reset (Current Context)
+## Post-Gate 5 Strategic Context
 
 The repository has reached Gate 4 (playable + packs + compilation + materialization).
 This is a strong milestone, but it is not yet the final target shape.
+
+Gate 5 (distractor policy v2) is now implemented for compiled packs.
 
 The final playable target is a real cumulative incremental corpus:
 
@@ -46,7 +48,7 @@ Current implementation status:
 - PostgresRepository currently concentrates too many responsibilities and is now tracked as a dedicated strategic debt workstream
 - this gap is now explicit and is treated as a strategic corrective step before old Gate 5
 
-A dedicated corrective gate (Gate 4.5) is now part of the execution plan to align doctrine,
+A dedicated corrective gate (Gate 4.5) remains part of the execution plan to align doctrine,
 traceability contracts, and next-step architecture before further feature expansion.
 
 Gate 4.5 closure artifacts are documentation and discipline checks only:
@@ -54,7 +56,14 @@ Gate 4.5 closure artifacts are documentation and discipline checks only:
 - cross-doc alignment on playable target vs current latest-surface implementation
 - explicit gate ordering with a dedicated distractor policy v2 gate after Gate 4.5
 - explicit strategic debt tracking for PostgresRepository without launching refactor work
-- non-regression checks that block accidental Gate 5+ implementation markers during Gate 4.5
+- non-regression checks that block accidental Gate 6+ implementation markers while Gate 5 is active
+
+Gate 5 execution artifacts:
+
+- compiled pack distractor selection now prioritizes internal `similar_taxon_ids` when available
+- deterministic fallback remains active when similarity candidates are insufficient
+- distractor ranking now prefers pedagogically safer media roles over `distractor_risk`
+- contracts remain unchanged: `pack.compiled.v1`, `pack.materialization.v1`, `playable_corpus.v1`, `export.bundle.v4`
 
 ## Reference docs
 
@@ -301,8 +310,10 @@ Promotion rule in current doctrine:
 
 Distractor policy note:
 
-- Gate 4 distractor selection is intentionally minimal and deterministic
-- a dedicated distractor policy v2 gate is planned after Gate 4.5 for stronger pedagogical quality
+- Gate 4 distractor selection was intentionally minimal and deterministic
+- Gate 5 now applies distractor policy v2 with similarity-first prioritization and deterministic fallback
+- Gate 5 uses iNaturalist `similar_species` hints stored in `external_similarity_hints` when they can be mapped to existing internal taxa
+- distractor traces remain inferable from compiled question payloads (`target_canonical_taxon_id`, `distractor_canonical_taxon_ids`) and source `similar_taxon_ids`
 
 The enrichment stage is offline and deterministic for cached snapshots: it reads only the local taxon payload cache stored in the snapshot.
 

@@ -46,13 +46,15 @@ Codex doit lire au minimum:
 
 ## 3. Etat reel du repo a respecter
 
-Le repo est deja operationnel jusqu'au Gate 4:
+Le repo est deja operationnel jusqu'au Gate 5:
 
 - Gate 0: PostgreSQL/PostGIS
 - Gate 1: verrou doctrinal
 - Gate 2: playable v1
 - Gate 3: pack + revisions + diagnostic
 - Gate 4: compilation + materialization
+- Gate 4.5: correctif strategique pre-extension
+- Gate 5: politique distracteurs v2
 
 Ce repo n'est pas a refondre abstraitement.
 
@@ -116,11 +118,11 @@ Point critique explicite:
 - Gate 2 - Playable corpus v1: DONE
 - Gate 3 - Pack + revisions + diagnostic: DONE
 - Gate 4 - Compilation dynamique + materialization figee: DONE
+- Gate 4.5 - Correctif strategique pre-extension: DONE
+- Gate 5 - Politique distracteurs v2 (dedie): DONE
 
 ### Suite reordonnee
 
-- Gate 4.5 - Correctif strategique pre-extension
-- Gate 5 - Politique distracteurs v2 (dedie)
 - Gate 6 - Queue d'enrichissement
 - Gate 7 - Contrat batch confusions + agregats globaux
 - Gate 8 - Inspection/KPI/smoke/CI etendus

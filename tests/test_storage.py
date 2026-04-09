@@ -865,6 +865,208 @@ def test_compile_pack_rejects_non_compilable_pack_without_persisting_build(
     assert repository.fetch_compiled_pack_builds(pack_id=str(payload["pack_id"])) == []
 
 
+def test_compile_pack_prefers_internal_similar_taxa_for_distractors(
+    database_url: str,
+) -> None:
+    repository = PostgresRepository(database_url)
+    repository.initialize()
+    canonical_taxon_ids = _seed_pack_ready_playable_items(
+        repository,
+        run_id="run:20260408T001150Z:gate5a01",
+        taxon_count=10,
+        media_per_taxon=2,
+    )
+    target_taxon_id = canonical_taxon_ids[0]
+    similar_taxon_ids = canonical_taxon_ids[1:4]
+    _configure_gate5_similarity(
+        repository,
+        target_taxon_id=target_taxon_id,
+        similar_taxon_ids=similar_taxon_ids,
+    )
+    payload = repository.create_pack(
+        pack_id="pack:compile:gate5:similarity-priority",
+        parameters={
+            "canonical_taxon_ids": canonical_taxon_ids,
+            "difficulty_policy": "easy",
+            "country_code": None,
+            "location_bbox": None,
+            "location_point": None,
+            "location_radius_meters": None,
+            "observed_from": None,
+            "observed_to": None,
+            "owner_id": "owner:compile",
+            "org_id": None,
+            "visibility": "private",
+            "intended_use": "training",
+        },
+    )
+
+    build = repository.compile_pack(pack_id=str(payload["pack_id"]), question_count=1)
+    first_question = build["questions"][0]
+
+    assert first_question["target_canonical_taxon_id"] == target_taxon_id
+    assert first_question["distractor_canonical_taxon_ids"] == similar_taxon_ids
+
+
+def test_compile_pack_falls_back_when_similar_taxa_are_insufficient(
+    database_url: str,
+) -> None:
+    repository = PostgresRepository(database_url)
+    repository.initialize()
+    canonical_taxon_ids = _seed_pack_ready_playable_items(
+        repository,
+        run_id="run:20260408T001151Z:gate5a02",
+        taxon_count=10,
+        media_per_taxon=2,
+    )
+    target_taxon_id = canonical_taxon_ids[0]
+    similar_taxon_ids = canonical_taxon_ids[1:3]
+    _configure_gate5_similarity(
+        repository,
+        target_taxon_id=target_taxon_id,
+        similar_taxon_ids=similar_taxon_ids,
+    )
+    payload = repository.create_pack(
+        pack_id="pack:compile:gate5:fallback",
+        parameters={
+            "canonical_taxon_ids": canonical_taxon_ids,
+            "difficulty_policy": "easy",
+            "country_code": None,
+            "location_bbox": None,
+            "location_point": None,
+            "location_radius_meters": None,
+            "observed_from": None,
+            "observed_to": None,
+            "owner_id": "owner:compile",
+            "org_id": None,
+            "visibility": "private",
+            "intended_use": "training",
+        },
+    )
+
+    build = repository.compile_pack(pack_id=str(payload["pack_id"]), question_count=1)
+    first_question = build["questions"][0]
+    selected_taxa = first_question["distractor_canonical_taxon_ids"]
+
+    assert first_question["target_canonical_taxon_id"] == target_taxon_id
+    assert len(selected_taxa) == 3
+    assert selected_taxa[:2] == similar_taxon_ids
+    assert selected_taxa[2] not in similar_taxon_ids
+    assert selected_taxa[2] != target_taxon_id
+
+
+def test_compile_pack_prioritizes_non_distractor_risk_media_when_available(
+    database_url: str,
+) -> None:
+    repository = PostgresRepository(database_url)
+    repository.initialize()
+    canonical_taxon_ids = _seed_pack_ready_playable_items(
+        repository,
+        run_id="run:20260408T001152Z:gate5a03",
+        taxon_count=10,
+        media_per_taxon=2,
+    )
+    target_taxon_id = canonical_taxon_ids[0]
+    similar_taxon_ids = canonical_taxon_ids[1:4]
+    _configure_gate5_similarity(
+        repository,
+        target_taxon_id=target_taxon_id,
+        similar_taxon_ids=similar_taxon_ids,
+    )
+    risk_taxon_id = similar_taxon_ids[0]
+
+    with repository.connect() as connection:
+        connection.execute(
+            """
+            UPDATE playable_items
+            SET media_role = 'distractor_risk', confusion_relevance = 'high'
+            WHERE canonical_taxon_id = %s
+              AND playable_item_id LIKE %s
+            """,
+            (risk_taxon_id, "%:1"),
+        )
+        connection.execute(
+            """
+            UPDATE playable_items
+            SET media_role = 'primary_id', confusion_relevance = 'high'
+            WHERE canonical_taxon_id = %s
+              AND playable_item_id LIKE %s
+            """,
+            (risk_taxon_id, "%:2"),
+        )
+
+    payload = repository.create_pack(
+        pack_id="pack:compile:gate5:media-role-priority",
+        parameters={
+            "canonical_taxon_ids": canonical_taxon_ids,
+            "difficulty_policy": "easy",
+            "country_code": None,
+            "location_bbox": None,
+            "location_point": None,
+            "location_radius_meters": None,
+            "observed_from": None,
+            "observed_to": None,
+            "owner_id": "owner:compile",
+            "org_id": None,
+            "visibility": "private",
+            "intended_use": "training",
+        },
+    )
+
+    build = repository.compile_pack(pack_id=str(payload["pack_id"]), question_count=1)
+    first_question = build["questions"][0]
+    risk_item_id = f"playable:qr:media:inaturalist:{risk_taxon_id}:1"
+    preferred_item_id = f"playable:qr:media:inaturalist:{risk_taxon_id}:2"
+
+    assert first_question["target_canonical_taxon_id"] == target_taxon_id
+    assert preferred_item_id in first_question["distractor_playable_item_ids"]
+    assert risk_item_id not in first_question["distractor_playable_item_ids"]
+
+
+def test_compile_pack_uses_inat_similar_species_hints_for_distractors(
+    database_url: str,
+) -> None:
+    repository = PostgresRepository(database_url)
+    repository.initialize()
+    canonical_taxon_ids = _seed_pack_ready_playable_items(
+        repository,
+        run_id="run:20260408T001153Z:gate5a04",
+        taxon_count=10,
+        media_per_taxon=2,
+    )
+    target_taxon_id = canonical_taxon_ids[0]
+    similar_taxon_ids = canonical_taxon_ids[1:4]
+    _configure_inat_similarity_hints(
+        repository,
+        canonical_taxon_ids=canonical_taxon_ids,
+        target_taxon_id=target_taxon_id,
+        hinted_taxon_ids=similar_taxon_ids,
+    )
+    payload = repository.create_pack(
+        pack_id="pack:compile:gate5:inat-similar-species",
+        parameters={
+            "canonical_taxon_ids": canonical_taxon_ids,
+            "difficulty_policy": "easy",
+            "country_code": None,
+            "location_bbox": None,
+            "location_point": None,
+            "location_radius_meters": None,
+            "observed_from": None,
+            "observed_to": None,
+            "owner_id": "owner:compile",
+            "org_id": None,
+            "visibility": "private",
+            "intended_use": "training",
+        },
+    )
+
+    build = repository.compile_pack(pack_id=str(payload["pack_id"]), question_count=1)
+    first_question = build["questions"][0]
+
+    assert first_question["target_canonical_taxon_id"] == target_taxon_id
+    assert first_question["distractor_canonical_taxon_ids"] == similar_taxon_ids
+
+
 def test_materialize_pack_daily_challenge_is_frozen_after_playable_change(
     database_url: str,
 ) -> None:
@@ -1057,6 +1259,82 @@ def _seed_pack_ready_playable_items(
             connection=connection,
         )
     return canonical_taxon_ids
+
+
+def _configure_gate5_similarity(
+    repository: PostgresRepository,
+    *,
+    target_taxon_id: str,
+    similar_taxon_ids: list[str],
+) -> None:
+    with repository.connect() as connection:
+        connection.execute(
+            """
+            UPDATE playable_items
+            SET similar_taxon_ids_json = %s
+            WHERE canonical_taxon_id = %s
+            """,
+            (json.dumps(similar_taxon_ids), target_taxon_id),
+        )
+        for taxon_id in similar_taxon_ids:
+            connection.execute(
+                """
+                UPDATE playable_items
+                SET media_role = 'primary_id', confusion_relevance = 'high'
+                WHERE canonical_taxon_id = %s
+                """,
+                (taxon_id,),
+            )
+
+
+def _configure_inat_similarity_hints(
+    repository: PostgresRepository,
+    *,
+    canonical_taxon_ids: list[str],
+    target_taxon_id: str,
+    hinted_taxon_ids: list[str],
+) -> None:
+    with repository.connect() as connection:
+        for canonical_taxon_id in canonical_taxon_ids:
+            source_taxon_id = f"inat-{canonical_taxon_id}"
+            connection.execute(
+                """
+                UPDATE canonical_taxa
+                SET external_source_mappings_json = %s
+                WHERE canonical_taxon_id = %s
+                """,
+                (
+                    json.dumps(
+                        [{"source_name": "inaturalist", "external_id": source_taxon_id}]
+                    ),
+                    canonical_taxon_id,
+                ),
+            )
+
+        hint_payload = [
+            {
+                "source_name": "inaturalist",
+                "external_taxon_id": f"inat-{taxon_id}",
+                "relation_type": "visual_lookalike",
+            }
+            for taxon_id in hinted_taxon_ids
+        ]
+        connection.execute(
+            """
+            UPDATE canonical_taxa
+            SET external_similarity_hints_json = %s
+            WHERE canonical_taxon_id = %s
+            """,
+            (json.dumps(hint_payload), target_taxon_id),
+        )
+        connection.execute(
+            """
+            UPDATE playable_items
+            SET similar_taxon_ids_json = '[]'
+            WHERE canonical_taxon_id = %s
+            """,
+            (target_taxon_id,),
+        )
 
 
 def _canonical_taxon(
