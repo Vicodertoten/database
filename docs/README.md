@@ -6,8 +6,14 @@ Before adding a new document, update an existing one whenever possible.
 ## Start Here
 
 - `README.md`: quickstart, operational commands, output contracts.
-- `docs/05_audit_reference.md`: living execution baseline and delivery priorities.
-- `docs/codex_execution_plan.md`: sequential execution plan with the post-Gate 4 corrective gate.
+- `docs/05_audit_reference.md`: living execution baseline, current structural gaps, and strategic priorities.
+- `docs/codex_execution_plan.md`: operating reference for future work after the Gate 9 baseline.
+
+Reading discipline:
+
+- use `docs/00_scope.md`, `docs/01_domain_model.md`, and `docs/02_pipeline.md` for stable scope, contracts, and pipeline behavior
+- use `docs/05_audit_reference.md` for current-state synthesis, explicit debt, and strategic posture
+- use `docs/codex_execution_plan.md` only for execution order and approved next workstreams
 
 ## Domain And Architecture
 
@@ -34,12 +40,14 @@ Before adding a new document, update an existing one whenever possible.
 
 ## Audit And Execution Tracking
 
-- `docs/05_audit_reference.md`: single source of truth for current status and roadmap.
-- `docs/codex_execution_plan.md`: actionable gate sequence (one gate at a time).
+- `docs/05_audit_reference.md`: current state, target posture, explicit debt, and decision baseline.
+- `docs/codex_execution_plan.md`: execution discipline and next approved workstreams.
 
 ## Documentation Hygiene Rules
 
 - Keep one source of truth per topic: update existing documents before creating new ones.
+- Keep stable contracts separate from evolving posture: avoid restating the same current-vs-target gap in every page.
 - Any change to canonical IDs, schema versions, export contract, or CI must update `README.md` and `docs/05_audit_reference.md`.
 - Any strategic gate reordering must update `README.md`, `docs/05_audit_reference.md`, and `docs/codex_execution_plan.md` together.
+- Do not keep obsolete gate-transition material once a gate is fully closed and absorbed into the baseline.
 - Keep document names stable; use ADRs for irreversible architecture decisions.

@@ -1,18 +1,15 @@
 # Domain Model
 
-Post-Gate 4 note:
+Post-Gate 9 note:
 
-- Gate 2 to Gate 4 delivered a valid first operational backbone.
-- The final playable target remains a cumulative incremental living corpus.
-- The current implementation still materializes a latest rebuilt playable surface.
-- This gap is explicit and scheduled in the corrective Gate 4.5.
+Gate 0 to Gate 9 delivered a valid operational backbone for canonical, qualification, playable, packs, compilation, materialization, enrichment queue, and confusion aggregates. The main remaining structural delta is outside the core object model itself: playable persistence still uses a latest rebuilt surface instead of a cumulative incremental lifecycle.
 
 ## CanonicalTaxon
 
 Internal taxon identity. Upstream identifiers are mappings, not product identity.
 Normative reference: `docs/06_charte_canonique_v1.md`.
 
-Canonical v1 target structure:
+Canonical v1 structure:
 
 Identity core (stable):
 
@@ -21,7 +18,7 @@ Identity core (stable):
 - `canonical_rank`
 - `taxon_status` (`active`, `deprecated`, `provisional`)
 
-Current taxonomy layer:
+Taxonomy layer:
 
 - `accepted_scientific_name`
 - `synonyms[]`
@@ -108,15 +105,11 @@ Qualification stays explicit. Unknown and review-required are first-class outcom
 
 Derived, queryable runtime-facing item persisted in database (without runtime session logic).
 
-Current implementation posture:
+Persistence posture:
 
-- `playable_items` is managed as the latest serving surface rebuilt from current run output.
-- `playable_items_history` preserves immutable run snapshots for traceability.
-
-Target posture (not implemented yet):
-
-- a cumulative incremental playable corpus where items remain available until explicit invalidation.
-- explicit lifecycle transitions for serving availability, not only full latest-surface rebuild.
+- today, `playable_items` is the latest serving surface rebuilt from current run output
+- `playable_items_history` preserves immutable run snapshots for traceability
+- the next structural correction is a cumulative incremental lifecycle without breaking `playable_corpus.v1`
 
 Fields:
 
@@ -134,14 +127,7 @@ Rules:
 - playable v1 is fed only from exportable qualified resources (`export_eligible=true`)
 - `common_names_i18n` is extensible; current bootstrap maps existing names to `en` and initializes `fr`/`nl` as empty arrays
 - playable does not replace `CanonicalTaxon`, `QualifiedResource`, or `export.bundle.v4`
-- Gate 4.5 clarifies the migration path from current latest surface to cumulative incremental target
-
-Gate 4.5 migration framing (documentation only):
-
-- keep current serving behavior stable while documenting target lifecycle semantics.
-- introduce explicit invalidation semantics at doctrine level before any schema or behavior change.
-- preserve contract stability for `playable_corpus.v1` during Gate 4.5.
-- defer all behavior changes to later gates after dedicated implementation work.
+- the migration path toward cumulative incremental serving remains to be implemented without breaking `playable_corpus.v1`
 
 ## PackSpec / PackRevision / PackCompilationAttempt (Gate 3)
 
@@ -191,20 +177,58 @@ PackMaterialization (`pack.materialization.v1`):
 - immutable once written; later compiled builds do not retroactively mutate old materializations
 - materialization persistence is still in `database` scope; no runtime/session/scoring/progression object is introduced here
 
-## Similarity and distractor trajectory (post-Gate 4)
+## EnrichmentRequest / EnrichmentExecution (Gate 6)
+
+Asynchronous remediation layer for non-compilable packs.
+
+EnrichmentRequest:
+
+- durable request keyed by pack revision and reason code
+- lifecycle status (`pending`, `in_progress`, `completed`, `failed`)
+- target-level traceability through `EnrichmentRequestTarget`
+
+EnrichmentExecution:
+
+- immutable execution trace attached to one request
+- execution outcome (`success`, `partial`, `failed`)
+- execution context and optional error information
+
+This layer is intentionally persistence-first: it records what must be enriched,
+how it was attempted, and whether recompilation should be retried later.
+
+## ConfusionBatch / ConfusionEvent / ConfusionAggregateGlobal (Gate 7)
+
+Batch-only ingestion of runtime confusion signals without introducing runtime state.
+
+ConfusionBatch:
+
+- durable ingestion unit identified by `batch_id`
+- event-count metadata for auditability and idempotent operator workflows
+
+ConfusionEvent:
+
+- directed confusion pair (`taxon_confused_for_id` -> `taxon_correct_id`)
+- one observed confusion event with occurrence timestamp
+
+ConfusionAggregateGlobal:
+
+- durable global aggregate by directed canonical pair
+- event count plus latest occurrence metadata
+- operator-driven recomputation, not real-time runtime adaptation
+
+## Similarity and distractor trajectory (post-Gate 9)
 
 Current state:
 
 - canonical taxa already carry `external_similarity_hints`, `similar_taxa`, and derived `similar_taxon_ids`.
-- Gate 4 distractor selection is deterministic and minimal.
+- compiled-pack distractor selection already prioritizes internal similarity when available and falls back deterministically otherwise.
 
-Next planned state:
+Policy notes:
 
-- a dedicated distractor policy v2 gate will strengthen pedagogical distractor quality.
-- iNaturalist similar species hints can be promoted to internal similarity only under controlled rules.
-- if a hinted target taxon already exists internally, promotion to `similar_taxon_ids` is straightforward and traceable.
-- if target taxon does not exist, any future automatic creation must remain constrained by canonical governance rules.
-- external sources can inform the system but can never freely define internal identity.
+- iNaturalist similar species hints can be promoted to internal similarity only under controlled rules
+- if a hinted target taxon already exists internally, promotion to `similar_taxon_ids` is straightforward and traceable
+- if target taxon does not exist, any future automatic creation must remain constrained by canonical governance rules
+- external sources can inform the system but can never freely define internal identity
 
 ## Architecture debt callout
 

@@ -28,72 +28,19 @@ The current pilot stays narrow on purpose:
 
 The repository is not the quiz app, frontend, or product runtime.
 
-## Post-Gate 9 Strategic Context
+## Current baseline
 
-The repository has reached Gate 4 (playable + packs + compilation + materialization).
-This is a strong milestone, but it is not yet the final target shape.
+The repository is already operational through the current Gate 9 baseline.
+It provides canonical governance, qualification, exports, playable serving data,
+packs, diagnostics, compiled builds, frozen materializations, asynchronous
+enrichment queue persistence, batch confusion ingestion, and operator metrics.
 
-Gate 5 (distractor policy v2) is implemented for compiled packs.
-Gate 6 (asynchronous enrichment queue) is now implemented for pack compilation deficits.
-Gate 7 (batch confusion ingestion + global aggregates) is now implemented.
-Gate 8 (inspection/KPI/smoke/CI extension) is now implemented.
-Gate 9 (v3 sidecar export retirement) is now implemented.
+Two structural gaps remain explicit:
 
-The final playable target is a real cumulative incremental corpus:
+- `playable_items` is still rebuilt as a latest serving surface instead of a cumulative incremental corpus with explicit invalidation
+- `PostgresRepository` still concentrates too many responsibilities
 
-- playable items remain available over time until explicitly invalidated
-- the corpus evolves incrementally with traceable state transitions
-- latest views are consumer surfaces, not the only persistence strategy
-
-Current implementation status:
-
-- playable_items is currently rebuilt as a latest materialized surface at each pipeline run
-- playable_items_history and pipeline history preserve run snapshots
-- PostgresRepository currently concentrates too many responsibilities and is now tracked as a dedicated strategic debt workstream
-- this gap is now explicit and is treated as a strategic corrective step before old Gate 5
-
-A dedicated corrective gate (Gate 4.5) remains part of the execution plan to align doctrine,
-traceability contracts, and next-step architecture before further feature expansion.
-
-Gate 4.5 closure artifacts are documentation and discipline checks only:
-
-- cross-doc alignment on playable target vs current latest-surface implementation
-- explicit gate ordering with a dedicated distractor policy v2 gate after Gate 4.5
-- explicit strategic debt tracking for PostgresRepository without launching refactor work
-- non-regression checks that block accidental Gate 8+ storage drift while Gate 7 is active
-
-Gate 5 execution artifacts:
-
-- compiled pack distractor selection now prioritizes internal `similar_taxon_ids` when available
-- deterministic fallback remains active when similarity candidates are insufficient
-- distractor ranking now prefers pedagogically safer media roles over `distractor_risk`
-- contracts remain unchanged: `pack.compiled.v1`, `pack.materialization.v1`, `playable_corpus.v1`, `export.bundle.v4`
-
-Gate 6 execution artifacts:
-
-- asynchronous enrichment request queue persisted in PostgreSQL (`enrichment_requests`)
-- strict merge of duplicate requests by `pack_id + revision + reason_code + targets`
-- target-level queue entries persisted in `enrichment_request_targets`
-- execution history persisted in `enrichment_executions`
-- optional asynchronous recompilation trigger after a successful/partial execution
-
-Gate 7 execution artifacts:
-
-- batch confusion ingestion persisted in PostgreSQL (`confusion_batches`, `confusion_events`)
-- idempotent batch contract (`batch_id`) with deterministic event ids (`{batch_id}:{index}`)
-- global directed-pair aggregates persisted in `confusion_aggregates_global`
-- aggregate recomputation is operator-driven and asynchronous (no real-time adaptation)
-- no gate drift into runtime session/scoring/progression logic
-
-Gate 8 execution artifacts:
-
-- new operator inspect metric views: `enrichment-metrics` and `confusion-metrics`
-- smoke report now builds KPIs from an explicit locked registry in code
-- locked KPIs remain unchanged:
-  - `exportable_unresolved_or_provisional`
-  - `governance_reason_and_signal_coverage`
-  - `export_trace_flags_uncertainty_coverage`
-- repository verification and doc/code coherence keep these KPI names and inspect views aligned
+Those are the two main architectural priorities before any significant new scope is added.
 
 ## Reference docs
 
@@ -113,6 +60,62 @@ Gate 8 execution artifacts:
 - runtime owns session/question serving/answers/score/progression UX
 - pack is a durable specification object; a runtime game session is separate and ephemeral
 - compilation is deterministic on existing data (no external calls); enrichment is asynchronous and traceable
+
+## Strategic positioning
+
+This repository should be treated as a specialized knowledge/database layer, not as the future product backend.
+
+What it is:
+
+- an internal canonical naturalist reference
+- a qualification and traceability engine for reusable pedagogical media
+- a serving-data layer for `playable_corpus.v1`, compiled builds, and frozen materializations
+- an editorial and operational backbone for packs, review, and governance
+
+What it is not:
+
+- the runtime quiz engine
+- the user/session/progression backend
+- the institution-facing product backend
+- the place to implement live scoring, personalization, or UX logic
+
+## Current structural gaps
+
+The repository is strong enough to be a strategic data core, but two structural gaps remain explicit:
+
+- `playable_items` is still rebuilt as a latest serving surface at each pipeline run; the target remains a cumulative incremental playable corpus with explicit invalidation semantics
+- `PostgresRepository` concentrates too many responsibilities and must be treated as a dedicated refactor workstream before major new scope is added
+
+Other intentional current limits remain in force:
+
+- birds-only
+- iNaturalist-first and single-source in implementation
+- image-only qualification
+- tiny pilot seed and limited multilingual coverage (`common_names_i18n` is structurally ready, but `fr`/`nl` bootstrap remains incomplete)
+
+## Locked program KPIs
+
+The smoke and promotion baseline keeps these locked KPIs unchanged:
+
+- `exportable_unresolved_or_provisional`
+- `governance_reason_and_signal_coverage`
+- `export_trace_flags_uncertainty_coverage`
+
+## Target product architecture
+
+Recommended target architecture around this repository:
+
+- `database`: canonical reference, qualification, playable serving data, pack data, compiled builds, frozen materializations, enrichment queue, confusion aggregates
+- `runtime backend`: live sessions, question serving, answers, scoring, progression, personalization, UX-facing APIs
+- `editorial backend`: pack creation/revision, review workflows, curation tooling, operational supervision over database-owned artifacts
+- `institutional backend`: cohorts, assignments, reporting, org/user management, integrations with schools and universities
+
+Recommended data boundaries:
+
+- runtime reads `playable_corpus.v1`, `pack.compiled.v1`, and `pack.materialization.v1`
+- editorial tooling reads and writes pack/review/governance operations against database-owned contracts
+- institutional systems consume runtime outputs and selected database analytics, not raw pipeline state
+- no consumer should use `export.bundle.v4` as the live quiz surface
 
 ## Quickstart
 
@@ -176,57 +179,29 @@ Snapshot qualification keeps a sequential flow, but the default Gemini pacing is
 `qualify_inat_snapshot.py` now prints per-image progress so long runs are observable.
 Cached AI outputs are version-governed through a prompt bundle version, so stale caches are rejected rather than silently mixed with current qualification logic.
 
-## Commands
+## Common commands
 
 ```bash
-python scripts/fetch_inat_snapshot.py --snapshot-id inaturalist-birds-20260408T123456Z --max-observations-per-taxon 1
-python scripts/qualify_inat_snapshot.py --snapshot-id inaturalist-birds-20260408T123456Z
-python scripts/qualify_inat_snapshot.py --snapshot-id inaturalist-birds-20260408T123456Z --request-interval-seconds 0.5 --max-retries 2 --initial-backoff-seconds 1 --max-backoff-seconds 8
 python scripts/migrate_database.py --database-url "$DATABASE_URL"
 python scripts/run_pipeline.py
-python scripts/run_pipeline.py --database-url "$DATABASE_URL" --qualifier-mode rules
 python scripts/run_pipeline.py --source-mode inat_snapshot --snapshot-id inaturalist-birds-20260408T123456Z --qualifier-mode cached --uncertain-policy reject
-python scripts/run_pipeline.py --source-mode inat_snapshot --snapshot-id inaturalist-birds-20260408T123456Z --allow-schema-reset --qualifier-mode cached --uncertain-policy reject
-python scripts/run_pipeline.py --source-mode inat_snapshot --snapshot-id inaturalist-birds-20260408T123456Z --qualifier-mode cached --uncertain-policy reject --apply-review-overrides
-python scripts/run_pipeline.py --source-mode inat_snapshot --snapshot-id inaturalist-birds-20260408T123456Z --qualifier-mode gemini --uncertain-policy reject
 python scripts/inspect_database.py summary
-python scripts/inspect_database.py run-metrics --snapshot-id inaturalist-birds-20260408T123456Z --run-id run:20260408T123456Z:aaaaaaaa
-python scripts/inspect_database.py review-queue --review-reason-code human_override
-python scripts/inspect_database.py canonical-governance-review-queue --snapshot-id inaturalist-birds-20260408T123456Z --review-status open
-python scripts/governance_review.py resolve --snapshot-id inaturalist-birds-20260408T123456Z --governance-review-item-id cgr:run:20260408T123456Z:aaaaaaaa:event:taxon:birds:000001:split:demo --note "validated against source delta" --resolved-by operator:alice
-python scripts/inspect_database.py snapshot-health --snapshot-id inaturalist-birds-20260408T123456Z
 python scripts/inspect_database.py playable-corpus --canonical-taxon-id taxon:birds:000014 --difficulty-level unknown --limit 20
-python scripts/inspect_database.py playable-corpus --country-code BE --point-radius 4.35,50.85,5000 --limit 20
 python scripts/manage_packs.py create --pack-id pack:birds:be:v1 --canonical-taxon-id taxon:birds:000014 --canonical-taxon-id taxon:birds:000009 --difficulty-policy balanced --country-code BE --visibility private --intended-use quiz
-python scripts/manage_packs.py revise --pack-id pack:birds:be:v1 --canonical-taxon-id taxon:birds:000014 --difficulty-policy hard --point-radius 4.35,50.85,5000 --visibility private --intended-use quiz
 python scripts/manage_packs.py diagnose --pack-id pack:birds:be:v1
 python scripts/manage_packs.py compile --pack-id pack:birds:be:v1 --question-count 20
 python scripts/manage_packs.py materialize --pack-id pack:birds:be:v1 --question-count 20 --purpose daily_challenge
-python scripts/manage_packs.py enrich-enqueue --pack-id pack:birds:be:v1
-python scripts/manage_packs.py enrich-execute --enrichment-request-id enrreq:pack:birds:be:v1:1:aaaaaaaa --execution-status success --trigger-recompile
-python scripts/manage_confusions.py ingest-batch --batch-id batch:birds:20260409T120000Z --events-file data/fixtures/confusions_sample.json
-python scripts/manage_confusions.py aggregate-recompute
-python scripts/inspect_database.py pack-specs --pack-id pack:birds:be:v1
-python scripts/inspect_database.py pack-revisions --pack-id pack:birds:be:v1
-python scripts/inspect_database.py pack-diagnostics --pack-id pack:birds:be:v1
-python scripts/inspect_database.py compiled-pack-builds --pack-id pack:birds:be:v1
-python scripts/inspect_database.py pack-materializations --pack-id pack:birds:be:v1 --purpose daily_challenge
-python scripts/inspect_database.py enrichment-requests --pack-id pack:birds:be:v1 --enrichment-status pending
-python scripts/inspect_database.py enrichment-executions --enrichment-request-id enrreq:pack:birds:be:v1:1:aaaaaaaa
 python scripts/inspect_database.py enrichment-metrics
-python scripts/inspect_database.py confusion-events --batch-id batch:birds:20260409T120000Z
-python scripts/inspect_database.py confusion-aggregates-global --taxon-confused-for-id taxon:birds:000014
 python scripts/inspect_database.py confusion-metrics
-python scripts/review_overrides.py init --snapshot-id inaturalist-birds-20260408T123456Z
-python scripts/review_overrides.py upsert --snapshot-id inaturalist-birds-20260408T123456Z --media-asset-id media:inaturalist:810001 --status review_required --note "manual spot-check requested"
-python scripts/review_overrides.py list --snapshot-id inaturalist-birds-20260408T123456Z
 python scripts/generate_smoke_report.py --snapshot-id inaturalist-birds-20260408T123456Z
-python scripts/generate_smoke_report.py --snapshot-id inaturalist-birds-20260408T123456Z --fail-on-kpi-breach
-python scripts/build_goldset_v1.py --clean
-python scripts/optimize_goldset_media.py
-python scripts/verify_goldset_v1.py
-python scripts/run_goldset_live_pipeline.py --snapshot-id goldset-birds-v1-live-$(date -u +%Y%m%dT%H%M%SZ)
 ```
+
+For the full operational command set, use the script wrappers and inspect help output:
+
+- `python scripts/inspect_database.py --help`
+- `python scripts/manage_packs.py --help`
+- `python scripts/manage_confusions.py --help`
+- `python scripts/review_overrides.py --help`
 
 ## Review workflow
 

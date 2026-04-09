@@ -11,17 +11,19 @@ The current implementation is an intentionally narrow pilot: birds-only, iNatura
 That narrow scope is a proving ground for a structure meant to scale toward a broader multi-taxa knowledge core.
 Canonical governance for phase 1 is defined in `docs/06_charte_canonique_v1.md`.
 
-## Post-Gate 4 reality check
+## Current baseline
 
-The repository is now at a useful post-Gate 4 baseline, with playable, pack,
-compiled build, and materialization layers implemented.
+The repository is at a useful Gate 9 baseline and already includes:
 
-This baseline is intentionally not yet the final shape for playable persistence.
-The final target remains a cumulative incremental playable corpus where playable
-items remain available until invalidated by explicit governance or qualification changes.
+- playable surface persistence and inspection
+- pack specifications, immutable revisions, and diagnostics
+- compiled pack builds and frozen materializations
+- asynchronous enrichment queue persistence
+- batch confusion ingestion and global aggregates
 
-Current implementation still relies on a latest materialized playable surface rebuilt per run.
-This gap is explicit and is treated as a strategic corrective milestone before old Gate 5.
+- KPI/smoke/CI discipline around the current contracts
+
+The main structural gap remains explicit: playable persistence is still a latest surface rebuilt per run, while the target product posture is a cumulative incremental corpus with explicit invalidation semantics.
 
 Current scope:
 
@@ -32,6 +34,8 @@ Current scope:
 - qualification for pedagogical reuse
 - structured review queue plus snapshot-scoped review overrides
 - deterministic pack compilation and frozen materializations
+- asynchronous enrichment request and execution tracking
+- batch confusion ingestion plus global confusion aggregates
 - explicit traceability of compiled build history and materialization lineage
 - export of only qualified resources
 - PostgreSQL/PostGIS storage and CLI inspection
@@ -45,8 +49,8 @@ Current non-goals:
 - institution features
 - full-scale ingestion
 - runtime session/scoring/progression
-- distractor policy v2 implementation during Gate 4.5
-- repository refactor implementation during Gate 4.5
+- adaptive runtime orchestration
+- user-facing serving APIs
 
 Phase 1 stays intentionally small:
 

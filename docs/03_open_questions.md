@@ -1,6 +1,6 @@
 # Open Questions
 
-Last update: `2026-04-08`
+Last update: `2026-04-09`
 
 Questions closed by canonical charter v1:
 
@@ -14,6 +14,11 @@ Questions closed by canonical charter v1:
 
 Active open questions:
 
+- Explicit lifecycle design for the cumulative incremental playable corpus: invalidation semantics, historical retention policy, and serving guarantees.
+- Target decomposition plan for `PostgresRepository`: extraction order, compatibility strategy, and minimum acceptable end-state.
+- Multilingual naming strategy for pedagogical serving (`fr`, `en`, `nl`): source of truth, editorial ownership, and quality thresholds.
+- Second-source and future authority strategy beyond phase-1 iNaturalist: sequence, governance rules, and conflict resolution policy.
+- How confusion aggregates should influence future pedagogical policies without leaking runtime adaptation logic into `database`.
 - Operator thresholds for promoting `provisional` taxa to `active` or `deprecated` after manual review.
 - Signal extraction depth from raw iNaturalist deltas: current implementation is explicit and deterministic, but still centered on pilot signals (future extension needed for richer taxon-change patterns).
 - Canonical governance operator policy after `manual_reviewed`: SLA and escalation path are still open; closure workflow is now implemented in CLI with mandatory note.

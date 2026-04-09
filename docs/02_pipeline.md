@@ -2,12 +2,9 @@
 
 The pipeline is deliberately small, versioned, and reproducible.
 
-Post-Gate 4 strategic context:
+Post-Gate 9 note:
 
-- Gate 2 to Gate 4 are implemented and operational.
-- The final playable target is a cumulative incremental living corpus.
-- Current implementation still rebuilds a latest playable surface per run.
-- This gap is explicit and is addressed by a dedicated corrective Gate 4.5 before old Gate 5.
+Gate 0 to Gate 9 are implemented and operational. The main structural correction still pending is playable persistence: the pipeline currently rebuilds a latest serving surface per run, while the target posture is cumulative incremental serving with explicit invalidation.
 
 ## 1. Ingest
 
@@ -97,8 +94,8 @@ Controlled promotion rule:
   - `what_to_look_at_specific` from qualified visible parts
   - `what_to_look_at_general` from canonical key identification features
   - `confusion_hint` from resolved similar canonical taxa when available
-- current implementation: persist latest serving surface in Postgres (`playable_items`) and append immutable snapshots in `playable_items_history`
-- target model (future): cumulative incremental playable corpus with explicit invalidation lifecycle
+- current persistence: latest serving surface in Postgres (`playable_items`) plus immutable snapshots in `playable_items_history`
+- next correction: cumulative incremental playable corpus with explicit invalidation lifecycle
 - keep contract isolation:
   - `export.bundle.v4` remains unchanged
   - no runtime/session/scoring/progression logic in this stage
@@ -130,16 +127,27 @@ Controlled promotion rule:
   - no runtime/session/scoring/progression logic
   - no change to `export.bundle.v4`
 
-## 11. Corrective strategic alignment (Gate 4.5)
+## 11. Manage asynchronous enrichment
 
-- align doctrine and implementation posture before expanding the chain
-- clarify playable target vs current latest-surface implementation
-- formalize historical compiled-build traceability expectations
-- formalize immutable materialization expectations
-- frame repository responsibility debt as a dedicated workstream (without launching refactor)
-- prepare distractor policy v2 gate scope and constraints
+- persist non-compilable pack remediation requests in `enrichment_requests`
+- persist resource-level remediation targets in `enrichment_request_targets`
+- persist execution attempts and outcomes in `enrichment_executions`
+- keep enrichment asynchronous and traceable rather than inlining external work into compilation
 
-This is a documentation and strategic alignment gate, not a feature implementation gate.
+## 12. Ingest confusion batches and recompute aggregates
+
+- ingest runtime-originated confusion batches without importing runtime session state
+- persist one directed event per confusion pair observation
+- recompute global directed aggregates in an operator-driven manner
+- keep confusion data as a strategic signal layer, not a real-time scoring engine
+
+## 13. Standing strategic corrections
+
+- implement cumulative incremental playable persistence with explicit invalidation semantics
+- reduce `PostgresRepository` responsibility concentration without breaking existing contracts
+- extend multilingual naming and editorial quality before broad public use
+
+See `docs/05_audit_reference.md` for priority, order of execution, and expected acceptance criteria for these corrections.
 
 ## Versioning
 
