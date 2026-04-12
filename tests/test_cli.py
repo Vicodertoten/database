@@ -483,6 +483,64 @@ def test_inspect_cli_playable_corpus_supports_filters(
     assert payload["items"][0]["canonical_taxon_id"] == "taxon:birds:000014"
 
 
+def test_inspect_cli_playable_invalidations_outputs_lifecycle_lines(
+    monkeypatch,
+    database_url: str,
+) -> None:
+    repository = PostgresRepository(database_url)
+    repository.initialize()
+    _seed_pack_ready_data(
+        repository,
+        run_id="run:20260408T003000Z:inv001aa",
+        taxon_count=1,
+        media_per_taxon=1,
+    )
+
+    with repository.connect() as connection:
+        repository.start_pipeline_run(
+            run_id="run:20260408T003100Z:inv002bb",
+            source_mode="fixture",
+            dataset_id="fixture:cli:invalidations",
+            snapshot_id=None,
+            started_at=real_datetime(2026, 4, 8, 0, 0, tzinfo=UTC),
+            connection=connection,
+        )
+        connection.execute("UPDATE qualified_resources SET export_eligible = FALSE")
+        repository.save_playable_items(
+            [],
+            run_id="run:20260408T003100Z:inv002bb",
+            connection=connection,
+        )
+        repository.complete_pipeline_run(
+            run_id="run:20260408T003100Z:inv002bb",
+            completed_at=real_datetime(2026, 4, 8, 0, 0, tzinfo=UTC),
+            connection=connection,
+        )
+
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "database-core",
+            "inspect",
+            "playable-invalidations",
+            "--database-url",
+            database_url,
+            "--run-id",
+            "run:20260408T003100Z:inv002bb",
+            "--limit",
+            "10",
+        ],
+    )
+    buffer = io.StringIO()
+    with redirect_stdout(buffer):
+        cli.main()
+
+    output = buffer.getvalue()
+    assert "Playable lifecycle invalidations" in output
+    assert "reason=qualification_not_exportable" in output
+
+
 def test_pack_cli_create_revise_diagnose_and_inspect(monkeypatch, database_url: str) -> None:
     create_buffer = io.StringIO()
     monkeypatch.setattr(

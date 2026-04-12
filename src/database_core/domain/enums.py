@@ -173,6 +173,13 @@ class ReviewPriority(StrEnum):
     HIGH = "high"
 
 
+class InvalidationReason(StrEnum):
+    QUALIFICATION_NOT_EXPORTABLE = "qualification_not_exportable"
+    CANONICAL_TAXON_NOT_ACTIVE = "canonical_taxon_not_active"
+    SOURCE_RECORD_REMOVED = "source_record_removed"
+    POLICY_FILTERED = "policy_filtered"
+
+
 class PackDifficultyPolicy(StrEnum):
     EASY = "easy"
     BALANCED = "balanced"

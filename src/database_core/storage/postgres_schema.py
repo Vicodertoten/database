@@ -715,3 +715,36 @@ JOIN playable_item_lifecycle AS l
     ON l.playable_item_id = p.playable_item_id
 WHERE l.lifecycle_status = 'active';
 """
+
+POSTGRES_PLAYABLE_INVALIDATION_REASONS_V15_SQL = """
+UPDATE playable_item_lifecycle
+SET invalidation_reason = 'qualification_not_exportable'
+WHERE lifecycle_status = 'invalidated' AND invalidation_reason IS NULL;
+
+ALTER TABLE playable_item_lifecycle
+    DROP CONSTRAINT IF EXISTS playable_item_lifecycle_invalidation_consistency;
+
+ALTER TABLE playable_item_lifecycle
+    ADD CONSTRAINT playable_item_lifecycle_invalidation_consistency
+    CHECK (
+        (
+            lifecycle_status = 'active'
+            AND invalidated_run_id IS NULL
+            AND invalidation_reason IS NULL
+        )
+        OR
+        (
+            lifecycle_status = 'invalidated'
+            AND invalidated_run_id IS NOT NULL
+            AND invalidation_reason IN (
+                'qualification_not_exportable',
+                'canonical_taxon_not_active',
+                'source_record_removed',
+                'policy_filtered'
+            )
+        )
+    );
+
+CREATE INDEX IF NOT EXISTS idx_playable_item_lifecycle_status_reason_run
+    ON playable_item_lifecycle (lifecycle_status, invalidation_reason, invalidated_run_id);
+"""

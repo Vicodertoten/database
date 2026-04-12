@@ -85,7 +85,7 @@ What it is not:
 
 The repository is strong enough to be a strategic data core, but two structural priorities remain explicit:
 
-- `playable_items` now persists an incremental lifecycle (`active`/`invalidated`) while keeping `playable_corpus.v1` stable for consumers; invalidation reason mapping remains intentionally conservative in this stage
+- `playable_items` now persists an incremental lifecycle (`active`/`invalidated`) while keeping `playable_corpus.v1` stable for consumers; invalidations are now traceable with explicit reason codes (`qualification_not_exportable`, `canonical_taxon_not_active`, `source_record_removed`, `policy_filtered`)
 - `PostgresRepository` still concentrates too many responsibilities and remains a dedicated refactor workstream before major new scope is added
 
 Other intentional current limits remain in force:
@@ -131,6 +131,7 @@ python scripts/migrate_database.py --database-url "$DATABASE_URL"
 python scripts/run_pipeline.py
 python scripts/inspect_database.py summary
 python scripts/inspect_database.py playable-corpus --limit 20
+python scripts/inspect_database.py playable-invalidations --run-id <run_id> --limit 20
 ```
 
 Installed entrypoints mirror the script wrappers:
@@ -161,7 +162,8 @@ Installed entrypoints mirror the script wrappers:
 - enrichment queue operations extracted in `storage/enrichment_store.py` (`PostgresEnrichmentStore`)
 - confusion batch ingestion and aggregates extracted in `storage/confusion_store.py` (`PostgresConfusionStore`)
 - qualification inspection metrics extracted in `storage/inspection_store.py` (`PostgresInspectionStore`)
-- `storage/postgres.py` reduced from 3985 to 2422 lines via P0-2 domain extraction; `PostgresRepository` retains thin delegation facade for backward compatibility
+- playable corpus lifecycle (write + read) extracted in `storage/playable_store.py` (`PostgresPlayableStore`)
+- `storage/postgres.py` reduced from 3985 to 2034 lines via P0-2 domain extraction; `PostgresRepository` retains thin delegation facade for backward compatibility
 - asynchronous enrichment request queue with execution tracking for non-compilable packs
 - batch confusion ingestion with directed global confusion aggregates
 - compiled build history is preserved and queryable for traceability
@@ -194,6 +196,7 @@ python scripts/run_pipeline.py
 python scripts/run_pipeline.py --source-mode inat_snapshot --snapshot-id inaturalist-birds-20260408T123456Z --qualifier-mode cached --uncertain-policy reject
 python scripts/inspect_database.py summary
 python scripts/inspect_database.py playable-corpus --canonical-taxon-id taxon:birds:000014 --difficulty-level unknown --limit 20
+python scripts/inspect_database.py playable-invalidations --invalidation-reason qualification_not_exportable --limit 20
 python scripts/manage_packs.py create --pack-id pack:birds:be:v1 --canonical-taxon-id taxon:birds:000014 --canonical-taxon-id taxon:birds:000009 --difficulty-policy balanced --country-code BE --visibility private --intended-use quiz
 python scripts/manage_packs.py diagnose --pack-id pack:birds:be:v1
 python scripts/manage_packs.py compile --pack-id pack:birds:be:v1 --question-count 20
@@ -278,7 +281,7 @@ The manifest records which sort was requested and which one was actually used.
 
 The repository now writes explicit stage versions into generated artifacts:
 
-- schema version: `database.schema.v14`
+- schema version: `database.schema.v15`
 - snapshot manifest version: `inaturalist.snapshot.v3`
 - normalized snapshot version: `normalized.snapshot.v3`
 - canonical enrichment version: `canonical.enrichment.v2`

@@ -32,6 +32,7 @@ from database_core.inspect.summary import (
     render_enrichment_metrics,
     render_enrichment_requests,
     render_exportables,
+    render_playable_invalidations,
     render_review_queue,
     render_run_metrics,
     render_snapshot_health,
@@ -131,6 +132,7 @@ def main() -> None:
             "snapshot-health",
             "run-metrics",
             "playable-corpus",
+            "playable-invalidations",
             "pack-specs",
             "pack-revisions",
             "pack-diagnostics",
@@ -161,6 +163,8 @@ def main() -> None:
     inspect_parser.add_argument("--canonical-taxon-id", type=str)
     inspect_parser.add_argument("--priority", type=str)
     inspect_parser.add_argument("--run-id", type=str)
+    inspect_parser.add_argument("--invalidation-reason", type=str)
+    inspect_parser.add_argument("--lifecycle-status", type=str)
     inspect_parser.add_argument("--limit", type=int, default=100)
     inspect_parser.add_argument("--difficulty-level", type=str)
     inspect_parser.add_argument("--media-role", type=str)
@@ -752,6 +756,16 @@ def main() -> None:
             limit=args.limit,
         )
         print(json.dumps(payload, indent=2, sort_keys=True))
+    elif args.view == "playable-invalidations":
+        print(
+            render_playable_invalidations(
+                repository,
+                invalidated_run_id=args.run_id,
+                invalidation_reason=args.invalidation_reason,
+                lifecycle_status=args.lifecycle_status or "invalidated",
+                limit=args.limit,
+            )
+        )
     elif args.view == "pack-specs":
         payload = pack_store.fetch_pack_specs(pack_id=args.pack_id, limit=args.limit)
         print(json.dumps(payload, indent=2, sort_keys=True))

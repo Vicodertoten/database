@@ -145,7 +145,7 @@ Controlled promotion rule:
 
 ## 13. Standing strategic corrections
 
-- improve invalidation reason precision and lifecycle explainability for operators
+- maintain explicit invalidation reason precision and lifecycle explainability for operators (inspect includes playable invalidations by run/cause)
 - reduce `PostgresRepository` responsibility concentration without breaking existing contracts
 - extend multilingual naming and editorial quality before broad public use
 

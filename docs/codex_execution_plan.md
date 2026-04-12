@@ -119,11 +119,17 @@ Critere de passage de 1 vers 2:
 
 Etat d'avancement constate (2026-04-09):
 
-- schema `database.schema.v14` introduit pour le lifecycle playable incremental
+- schema `database.schema.v15` actif pour le lifecycle playable incremental
 - `playable_items` n'est plus supprime globalement dans le run nominal PostgreSQL
 - lifecycle `active`/`invalidated` persiste en base et `playable_corpus.v1` ne sert que les items actifs
 - reactivation automatique couverte en test storage
-- le mapping fin des causes d'invalidation reste volontairement minimal en P0-1
+- causes d'invalidation explicites et testees en P0-1 (`qualification_not_exportable`, `canonical_taxon_not_active`, `source_record_removed`, `policy_filtered`)
+
+Etat d'avancement P0-2 (2026-04-12):
+
+- phase 1 pack (`pack_store.py`): complete
+- phase 2 enrichment/confusion/inspection (`enrichment_store.py`, `confusion_store.py`, `inspection_store.py`): complete
+- phase 3 playable corpus (`playable_store.py`): complete — bloc playable lifecycle write+read extrait, facades delegation conservees, `-388` lignes de `postgres.py`, total `3985 -> 2034` lignes
 
 ## 6. Discipline d'execution
 

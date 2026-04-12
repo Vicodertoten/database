@@ -133,7 +133,7 @@ Rules:
 - playable v1 is fed only from exportable qualified resources (`export_eligible=true`)
 - `common_names_i18n` is extensible; current bootstrap maps existing names to `en` and initializes `fr`/`nl` as empty arrays
 - playable does not replace `CanonicalTaxon`, `QualifiedResource`, or `export.bundle.v4`
-- invalidation reason taxonomy is still intentionally minimal and can be refined without breaking `playable_corpus.v1`
+- invalidation reason taxonomy is explicit in v1 (`qualification_not_exportable`, `canonical_taxon_not_active`, `source_record_removed`, `policy_filtered`) and can be refined without breaking `playable_corpus.v1`
 
 ## PackSpec / PackRevision / PackCompilationAttempt (Gate 3)
 

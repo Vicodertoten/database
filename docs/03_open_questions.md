@@ -1,6 +1,6 @@
 # Open Questions
 
-Last update: `2026-04-09`
+Last update: `2026-04-12`
 
 Questions closed by canonical charter v1:
 
@@ -11,10 +11,10 @@ Questions closed by canonical charter v1:
 - AI canonical governance scope is now explicit (AI enriches, AI does not govern)
 - canonical ID migration hard cutover is complete (mapping in `docs/07_canonical_id_migration_v1.md`)
 - no transitional legacy-read window is maintained in v1
+- invalidation reason taxonomy for incremental playable lifecycle is now implemented with explicit v1 codes (`qualification_not_exportable`, `canonical_taxon_not_active`, `source_record_removed`, `policy_filtered`) and a backward-compatible serving contract (`playable_corpus.v1`)
 
 Active open questions:
 
-- Invalidation reason taxonomy for the incremental playable lifecycle: target granularity, operator semantics, and backward-compatible evolution path.
 - Target decomposition plan for `PostgresRepository`: extraction order, compatibility strategy, and minimum acceptable end-state.
 - Multilingual naming strategy for pedagogical serving (`fr`, `en`, `nl`): source of truth, editorial ownership, and quality thresholds.
 - Second-source and future authority strategy beyond phase-1 iNaturalist: sequence, governance rules, and conflict resolution policy.

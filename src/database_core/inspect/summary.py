@@ -317,6 +317,34 @@ def render_run_metrics(
     )
 
 
+def render_playable_invalidations(
+    repository: PostgresRepository,
+    *,
+    invalidated_run_id: str | None = None,
+    invalidation_reason: str | None = None,
+    lifecycle_status: str = "invalidated",
+    limit: int = 100,
+) -> str:
+    rows = repository.fetch_playable_invalidations(
+        invalidated_run_id=invalidated_run_id,
+        invalidation_reason=invalidation_reason,
+        lifecycle_status=lifecycle_status,
+        limit=limit,
+    )
+    if not rows:
+        return "Playable invalidations are empty."
+    lines = ["Playable lifecycle invalidations"]
+    for row in rows:
+        lines.append(
+            f"{row['playable_item_id']} | status={row['lifecycle_status']} | "
+            f"reason={row['invalidation_reason']} | "
+            f"invalidated_run={row['invalidated_run_id']} | "
+            f"last_seen_run={row['last_seen_run_id']} | "
+            f"canonical_taxon_id={row['canonical_taxon_id']}"
+        )
+    return "\n".join(lines)
+
+
 def render_snapshot_health(
     repository: PostgresRepository,
     *,

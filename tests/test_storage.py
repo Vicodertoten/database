@@ -77,14 +77,14 @@ def test_initialize_can_reset_legacy_schema_version_with_explicit_flag(
         )
 
     assert "legacy_table" not in table_names
-    assert user_version == 14
+    assert user_version == 15
 
 
-def test_migrate_to_latest_initializes_v14_schema(database_url: str) -> None:
+def test_migrate_to_latest_initializes_v15_schema(database_url: str) -> None:
     repository = PostgresRepository(database_url)
     applied_versions = repository.migrate_to_latest()
-    assert applied_versions == (8, 9, 10, 11, 12, 13, 14)
-    assert repository.current_schema_version() == 14
+    assert applied_versions == (8, 9, 10, 11, 12, 13, 14, 15)
+    assert repository.current_schema_version() == 15
 
 
 def test_geospatial_queries_support_bbox_and_point_radius(database_url: str) -> None:
@@ -778,7 +778,139 @@ def test_save_playable_items_supports_invalidation_and_automatic_reactivation(
     assert rows[1]["created_run_id"] == run1
     assert rows[1]["last_seen_run_id"] == run1
     assert rows[1]["invalidated_run_id"] == run2
-    assert rows[1]["invalidation_reason"] == "qualification_not_exportable"
+    assert rows[1]["invalidation_reason"] == "source_record_removed"
+
+
+def test_save_playable_items_invalidation_reason_tracks_canonical_state(
+    database_url: str,
+) -> None:
+    repository = PostgresRepository(database_url)
+    repository.initialize()
+
+    run1 = "run:20260408T002000Z:playcnaa"
+    run2 = "run:20260408T002100Z:playcnbb"
+    captured_at = datetime(2026, 4, 8, 0, 0, tzinfo=UTC)
+    canonical_taxon_id = "taxon:birds:000099"
+    source_observation_uid = "obs:inaturalist:canonical-reason-1"
+    source_observation_id = "canonical-reason-1"
+    media_asset_id = "media:inaturalist:canonical-reason-1"
+    qualified_resource_id = "qr:media:inaturalist:canonical-reason-1"
+
+    with repository.connect() as connection:
+        repository.start_pipeline_run(
+            run_id=run1,
+            source_mode="fixture",
+            dataset_id="fixture:canonical-reason:1",
+            snapshot_id=None,
+            started_at=captured_at,
+            connection=connection,
+        )
+        repository.save_canonical_taxa(
+            [_canonical_taxon(canonical_taxon_id=canonical_taxon_id, name="Parus major")],
+            run_id=run1,
+            connection=connection,
+        )
+        repository.save_source_observations(
+            [
+                SourceObservation(
+                    observation_uid=source_observation_uid,
+                    source_name=SourceName.INATURALIST,
+                    source_observation_id=source_observation_id,
+                    source_taxon_id="12716",
+                    observed_at=captured_at,
+                    location=LocationMetadata(
+                        place_name="Brussels",
+                        latitude=50.8503,
+                        longitude=4.3517,
+                        country_code="BE",
+                    ),
+                    source_quality=SourceQualityMetadata(
+                        quality_grade="research",
+                        research_grade=True,
+                        observation_license="CC-BY",
+                        captive=False,
+                    ),
+                    raw_payload_ref="fixture://playable/canonical-reason",
+                    canonical_taxon_id=canonical_taxon_id,
+                )
+            ],
+            connection=connection,
+        )
+        repository.save_media_assets(
+            [
+                _media_asset(
+                    media_id=media_asset_id,
+                    source_media_id=source_observation_id,
+                    source_observation_uid=source_observation_uid,
+                    canonical_taxon_id=canonical_taxon_id,
+                )
+            ],
+            connection=connection,
+        )
+        repository.save_qualified_resources(
+            [
+                _qualified_resource(
+                    qualified_resource_id=qualified_resource_id,
+                    media_asset_id=media_asset_id,
+                    source_observation_uid=source_observation_uid,
+                    source_observation_id=source_observation_id,
+                    canonical_taxon_id=canonical_taxon_id,
+                )
+            ],
+            connection=connection,
+        )
+        repository.save_playable_items(
+            [
+                _playable_item(
+                    run_id=run1,
+                    qualified_resource_id=qualified_resource_id,
+                    canonical_taxon_id=canonical_taxon_id,
+                    media_asset_id=media_asset_id,
+                    source_observation_uid=source_observation_uid,
+                    source_observation_id=source_observation_id,
+                    source_media_id=source_observation_id,
+                )
+            ],
+            run_id=run1,
+            connection=connection,
+        )
+        repository.complete_pipeline_run(
+            run_id=run1,
+            completed_at=captured_at,
+            connection=connection,
+        )
+
+        repository.start_pipeline_run(
+            run_id=run2,
+            source_mode="fixture",
+            dataset_id="fixture:canonical-reason:2",
+            snapshot_id=None,
+            started_at=captured_at,
+            connection=connection,
+        )
+        connection.execute(
+            """
+            UPDATE canonical_taxa
+            SET taxon_status = 'deprecated'
+            WHERE canonical_taxon_id = %s
+            """,
+            (canonical_taxon_id,),
+        )
+        repository.save_playable_items([], run_id=run2, connection=connection)
+        repository.complete_pipeline_run(
+            run_id=run2,
+            completed_at=captured_at,
+            connection=connection,
+        )
+
+    invalidations = repository.fetch_playable_invalidations(
+        invalidated_run_id=run2,
+        invalidation_reason="canonical_taxon_not_active",
+        limit=10,
+    )
+    assert len(invalidations) == 1
+    assert invalidations[0]["playable_item_id"] == f"playable:{qualified_resource_id}"
+    assert invalidations[0]["invalidation_reason"] == "canonical_taxon_not_active"
 
 
 def test_save_playable_items_rejects_mixed_run_ids_without_explicit_run_id(

@@ -153,7 +153,7 @@ Priorite:
 
 Etat schema applicatif observe:
 
-- `database.schema.v14`
+- `database.schema.v15`
 
 Contrats observes:
 
@@ -237,16 +237,16 @@ Criteres d'acceptation:
 
 - aucun `DELETE FROM playable_items` global dans le run nominal
 - un item valide au run N reste disponible au run N+1 tant qu'aucune invalidation explicite ne l'exclut
-- les invalidations sont traceables par cause (qualification, gouvernance canonique, suppression source, autre regle explicite)
+- les invalidations sont traceables par cause explicite (`qualification_not_exportable`, `canonical_taxon_not_active`, `source_record_removed`, `policy_filtered`)
 - `playable_corpus.v1` reste compatible pour les consommateurs actuels
 - tests d'integration couvrent ajout, maintien, invalidation et non-regression des filtres geo/date/pedagogie
 
 Impacts techniques:
 
-- migration schema probable sur `playable_items`
-- ajustement de `pipeline/runner.py`
-- extraction ou reecriture de la logique `save_playable_items`
-- nouveaux tests de persistance et de lineage
+- migration schema `database.schema.v15` sur `playable_item_lifecycle` (coherence statut/raison + index inspection)
+- ajustement de `save_playable_items` pour raison explicite
+- ajout d'une surface inspect dediee aux invalidations playable
+- tests de persistance/lifecycle et CLI inspect couverts
 
 ### P0-2 - Extraction minimale de `PostgresRepository`
 
@@ -301,6 +301,17 @@ Phase 2 — domaines enrichment, confusion, inspection:
 - `PostgresRepository` conserve les delegations minces pour compatibilite de surface publique
 - reduction totale de `storage/postgres.py`: `3985 -> 2422` lignes (`-1563` depuis le debut du gate P0-2)
 - 52 tests storage + CLI verts apres extraction complete (aucune regression)
+
+Phase 3 — domaine playable corpus (2026-04-12):
+- extraction du bloc playable lifecycle write+read vers `src/database_core/storage/playable_store.py` (`PostgresPlayableStore`)
+  - methodes migrees: `save_playable_items`, `fetch_playable_corpus`, `fetch_playable_corpus_payload`, `fetch_playable_invalidations`
+  - helper prive `_invalidate_missing_playable_items` integre dans le store (non expose)
+  - helper module-level `_resolve_playable_run_id` migre dans `playable_store.py` et supprime de `postgres.py`
+  - imports devenus inutiles retires de `postgres.py`: `InvalidationReason`, `validate_playable_corpus`, `PLAYABLE_CORPUS_VERSION`
+- `PostgresRepository` conserve des facades de delegation strictes pour les 4 methodes — aucun changement de contrat public
+- reduction de `storage/postgres.py` sur cette phase: `2422 -> 2034` lignes (`-388`)
+- `PostgresPlayableStore` exporte depuis `storage/__init__.py`
+- suites `tests/test_storage.py`, `tests/test_pipeline.py`, `tests/test_cli.py` vertes apres extraction
 
 ## 11. Architecture cible autour du repo
 

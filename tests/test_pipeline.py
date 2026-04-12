@@ -68,7 +68,7 @@ def test_pipeline_produces_reproducible_output(
     )
     validate(instance=export_payload, schema=export_schema)
 
-    assert export_payload["schema_version"] == "database.schema.v14"
+    assert export_payload["schema_version"] == "database.schema.v15"
     assert export_payload["export_version"] == "export.bundle.v4"
     assert export_payload["qualification_version"] == "qualification.staged.v1"
     assert export_payload["enrichment_version"] == "canonical.enrichment.v2"
@@ -88,7 +88,7 @@ def test_pipeline_produces_reproducible_output(
     assert export_payload["qualified_resources"][0]["provenance"]["run_id"] == fixed_run_id
 
     normalized_payload = json.loads(first_normalized.read_text(encoding="utf-8"))
-    assert normalized_payload["schema_version"] == "database.schema.v14"
+    assert normalized_payload["schema_version"] == "database.schema.v15"
     assert normalized_payload["normalized_snapshot_version"] == "normalized.snapshot.v3"
     assert normalized_payload["enrichment_version"] == "canonical.enrichment.v2"
 
@@ -119,7 +119,7 @@ def test_pipeline_rejects_invalid_export_bundle(
     def fake_build_export_bundle(**kwargs):
         del kwargs
         return {
-            "schema_version": "database.schema.v14",
+            "schema_version": "database.schema.v15",
             "export_version": "export.bundle.v4",
         }
 
