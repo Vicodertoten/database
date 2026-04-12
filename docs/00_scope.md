@@ -23,7 +23,13 @@ The repository is at a useful Gate 9 baseline and already includes:
 
 - KPI/smoke/CI discipline around the current contracts
 
-The main structural gap remains explicit: playable persistence is still a latest surface rebuilt per run, while the target product posture is a cumulative incremental corpus with explicit invalidation semantics.
+The cumulative incremental playable lifecycle is now implemented (`active`/`invalidated`) and served through `playable_corpus.v1` without global reset semantics.
+The remaining structural focus is improving invalidation reason precision and keeping storage responsibilities decomposed.
+
+Historical checkpoint:
+
+- during Gate 4.5, corrective sequencing was locked before extension work.
+- cumulative incremental playable corpus remains the reference posture for serving stability.
 
 Current scope:
 

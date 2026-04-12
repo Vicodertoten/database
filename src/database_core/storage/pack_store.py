@@ -702,8 +702,15 @@ class PostgresPackStore:
             inat_similar_taxa_by_target=inat_similar_taxa_by_target,
         )
 
-        taxa_served = sum(1 for canonical_taxon_id in requested_taxa if items_per_taxon[canonical_taxon_id])
-        media_counts = [len(items_per_taxon[canonical_taxon_id]) for canonical_taxon_id in requested_taxa]
+        taxa_served = sum(
+            1
+            for canonical_taxon_id in requested_taxa
+            if items_per_taxon[canonical_taxon_id]
+        )
+        media_counts = [
+            len(items_per_taxon[canonical_taxon_id])
+            for canonical_taxon_id in requested_taxa
+        ]
         min_media_count_per_taxon = min(media_counts) if media_counts else 0
         total_playable_items = sum(media_counts)
         questions_possible = len(questions)

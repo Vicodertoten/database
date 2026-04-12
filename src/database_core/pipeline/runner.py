@@ -156,58 +156,81 @@ def run_pipeline(
         snapshot_id=resolved_snapshot_id,
     )
 
-    with repository.connect() as connection:
-        run_started_at = datetime.now(UTC)
-        repository.start_pipeline_run(
-            run_id=resolved_run_id,
-            source_mode=source_mode,
-            dataset_id=dataset.dataset_id,
-            snapshot_id=resolved_snapshot_id,
-            started_at=run_started_at,
-            connection=connection,
-        )
-        repository.reset_materialized_state(connection=connection)
-        repository.save_canonical_taxa(
-            prepared_state.canonical_taxa,
-            run_id=resolved_run_id,
-            connection=connection,
-        )
-        repository.save_source_observations(prepared_state.observations, connection=connection)
-        repository.save_media_assets(prepared_state.media_assets, connection=connection)
-        repository.save_qualified_resources(
-            prepared_state.qualified_resources,
-            connection=connection,
-        )
-        repository.save_review_items(prepared_state.review_items, connection=connection)
-        repository.save_playable_items(
-            prepared_state.playable_items,
-            run_id=resolved_run_id,
-            connection=connection,
-        )
-        repository.append_run_history(
-            run_id=resolved_run_id,
-            governance_effective_at=dataset.captured_at,
-            canonical_taxa=prepared_state.canonical_taxa,
-            observations=prepared_state.observations,
-            media_assets=prepared_state.media_assets,
-            qualified_resources=prepared_state.qualified_resources,
-            review_items=prepared_state.review_items,
-            playable_items=prepared_state.playable_items,
-            connection=connection,
-        )
-        _write_pipeline_artifacts(
-            normalized_snapshot_path=normalized_snapshot_path,
-            qualification_snapshot_path=qualification_snapshot_path,
-            export_path=export_path,
-            normalized_snapshot=prepared_state.normalized_snapshot,
-            qualification_snapshot=prepared_state.qualification_snapshot,
-            export_bundle=prepared_state.export_bundle,
-        )
+    staged_artifacts = _stage_pipeline_artifacts(
+        normalized_snapshot_path=normalized_snapshot_path,
+        qualification_snapshot_path=qualification_snapshot_path,
+        export_path=export_path,
+        normalized_snapshot=prepared_state.normalized_snapshot,
+        qualification_snapshot=prepared_state.qualification_snapshot,
+        export_bundle=prepared_state.export_bundle,
+    )
+
+    repository.start_pipeline_run(
+        run_id=resolved_run_id,
+        source_mode=source_mode,
+        dataset_id=dataset.dataset_id,
+        snapshot_id=resolved_snapshot_id,
+        started_at=datetime.now(UTC),
+    )
+
+    try:
+        with repository.connect() as connection:
+            repository.reset_materialized_state(connection=connection)
+            repository.save_canonical_taxa(
+                prepared_state.canonical_taxa,
+                run_id=resolved_run_id,
+                connection=connection,
+            )
+            repository.save_source_observations(prepared_state.observations, connection=connection)
+            repository.save_media_assets(prepared_state.media_assets, connection=connection)
+            repository.save_qualified_resources(
+                prepared_state.qualified_resources,
+                connection=connection,
+            )
+            repository.save_review_items(prepared_state.review_items, connection=connection)
+            repository.save_playable_items(
+                prepared_state.playable_items,
+                run_id=resolved_run_id,
+                connection=connection,
+            )
+            repository.append_run_history(
+                run_id=resolved_run_id,
+                governance_effective_at=dataset.captured_at,
+                canonical_taxa=prepared_state.canonical_taxa,
+                observations=prepared_state.observations,
+                media_assets=prepared_state.media_assets,
+                qualified_resources=prepared_state.qualified_resources,
+                review_items=prepared_state.review_items,
+                playable_items=prepared_state.playable_items,
+                connection=connection,
+            )
+    except Exception:
+        _cleanup_staged_pipeline_artifacts(staged_artifacts)
         repository.complete_pipeline_run(
             run_id=resolved_run_id,
             completed_at=datetime.now(UTC),
-            connection=connection,
+            run_status="failed",
         )
+        raise
+
+    try:
+        _promote_staged_pipeline_artifacts(staged_artifacts)
+    except Exception:
+        _cleanup_staged_pipeline_artifacts(staged_artifacts)
+        repository.complete_pipeline_run(
+            run_id=resolved_run_id,
+            completed_at=datetime.now(UTC),
+            run_status="artifact_write_failed",
+        )
+        raise
+    finally:
+        _cleanup_staged_pipeline_artifacts(staged_artifacts)
+
+    repository.complete_pipeline_run(
+        run_id=resolved_run_id,
+        completed_at=datetime.now(UTC),
+        run_status="completed",
+    )
 
     exportable_resource_count = len(
         [item for item in prepared_state.qualified_resources if item.export_eligible]
@@ -549,7 +572,7 @@ def _resolve_review_overrides_path(
     return resolve_review_overrides_path(snapshot_id)
 
 
-def _write_pipeline_artifacts(
+def _stage_pipeline_artifacts(
     *,
     normalized_snapshot_path: Path,
     qualification_snapshot_path: Path,
@@ -557,21 +580,28 @@ def _write_pipeline_artifacts(
     normalized_snapshot: dict[str, object],
     qualification_snapshot: dict[str, object],
     export_bundle: dict[str, object],
-) -> None:
+) -> list[tuple[Path, Path]]:
     temporary_normalized = _temporary_output_path(normalized_snapshot_path)
     temporary_qualification = _temporary_output_path(qualification_snapshot_path)
     temporary_export = _temporary_output_path(export_path)
-    temporary_paths = [temporary_normalized, temporary_qualification, temporary_export]
-    try:
-        write_json(temporary_normalized, normalized_snapshot)
-        write_json(temporary_qualification, qualification_snapshot)
-        write_export_bundle(temporary_export, export_bundle)
-        temporary_normalized.replace(normalized_snapshot_path)
-        temporary_qualification.replace(qualification_snapshot_path)
-        temporary_export.replace(export_path)
-    finally:
-        for item in temporary_paths:
-            item.unlink(missing_ok=True)
+    write_json(temporary_normalized, normalized_snapshot)
+    write_json(temporary_qualification, qualification_snapshot)
+    write_export_bundle(temporary_export, export_bundle)
+    return [
+        (temporary_normalized, normalized_snapshot_path),
+        (temporary_qualification, qualification_snapshot_path),
+        (temporary_export, export_path),
+    ]
+
+
+def _promote_staged_pipeline_artifacts(staged_artifacts: list[tuple[Path, Path]]) -> None:
+    for temporary_path, final_path in staged_artifacts:
+        temporary_path.replace(final_path)
+
+
+def _cleanup_staged_pipeline_artifacts(staged_artifacts: list[tuple[Path, Path]]) -> None:
+    for temporary_path, _ in staged_artifacts:
+        temporary_path.unlink(missing_ok=True)
 
 
 def _temporary_output_path(path: Path) -> Path:

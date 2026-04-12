@@ -4,8 +4,6 @@ import json
 from collections import Counter
 from collections.abc import Callable
 
-import psycopg
-
 
 class PostgresInspectionStore:
     def __init__(self, *, connect: Callable[[], object]) -> None:

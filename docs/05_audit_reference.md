@@ -186,6 +186,14 @@ ni le format de ces KPI.
 
 Il n'y a pas de gate actif a ce stade de reference.
 
+Gate 4.5 closure checklist:
+
+- sequencage correctif applique avant extension
+- posture cumulative incremental playable maintenue
+- extraction progressive de `PostgresRepository` engagee sans rupture contractuelle
+
+Gate 5 - Politique distracteurs v2
+
 Les prochains travaux ne doivent etre ouverts que si leur cadrage respecte les points suivants:
 
 1. priorite absolue au playable cumulatif incremental

@@ -4,7 +4,9 @@ The pipeline is deliberately small, versioned, and reproducible.
 
 Post-Gate 9 note:
 
-Gate 0 to Gate 9 are implemented and operational. The main structural correction still pending is playable persistence: the pipeline currently rebuilds a latest serving surface per run, while the target posture is cumulative incremental serving with explicit invalidation.
+Gate 0 to Gate 9 are implemented and operational. Playable persistence now uses a cumulative incremental lifecycle with explicit invalidation while preserving `playable_corpus.v1` as a stable serving contract.
+
+Corrective strategic alignment (Gate 4.5): contracts stayed stable while the sequencing was tightened before opening new structural workstreams.
 
 ## 1. Ingest
 
@@ -94,8 +96,8 @@ Controlled promotion rule:
   - `what_to_look_at_specific` from qualified visible parts
   - `what_to_look_at_general` from canonical key identification features
   - `confusion_hint` from resolved similar canonical taxa when available
-- current persistence: latest serving surface in Postgres (`playable_items`) plus immutable snapshots in `playable_items_history`
-- next correction: cumulative incremental playable corpus with explicit invalidation lifecycle
+- current persistence: durable serving payload in `playable_items`, lifecycle state in `playable_item_lifecycle`, plus immutable snapshots in `playable_items_history`
+- current contract behavior: `playable_corpus_v1` serves only lifecycle-active rows
 - keep contract isolation:
   - `export.bundle.v4` remains unchanged
   - no runtime/session/scoring/progression logic in this stage
@@ -143,7 +145,7 @@ Controlled promotion rule:
 
 ## 13. Standing strategic corrections
 
-- implement cumulative incremental playable persistence with explicit invalidation semantics
+- improve invalidation reason precision and lifecycle explainability for operators
 - reduce `PostgresRepository` responsibility concentration without breaking existing contracts
 - extend multilingual naming and editorial quality before broad public use
 

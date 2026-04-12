@@ -693,7 +693,11 @@ def test_save_playable_items_supports_invalidation_and_automatic_reactivation(
             source_observation_id="incremental-2",
             source_media_id="incremental-2",
         )
-        repository.save_playable_items([first_item, second_item], run_id=run1, connection=connection)
+        repository.save_playable_items(
+            [first_item, second_item],
+            run_id=run1,
+            connection=connection,
+        )
         repository.complete_pipeline_run(
             run_id=run1,
             completed_at=captured_at,
@@ -775,6 +779,35 @@ def test_save_playable_items_supports_invalidation_and_automatic_reactivation(
     assert rows[1]["last_seen_run_id"] == run1
     assert rows[1]["invalidated_run_id"] == run2
     assert rows[1]["invalidation_reason"] == "qualification_not_exportable"
+
+
+def test_save_playable_items_rejects_mixed_run_ids_without_explicit_run_id(
+    database_url: str,
+) -> None:
+    repository = PostgresRepository(database_url)
+    repository.initialize()
+
+    first = _playable_item(
+        run_id="run:20260408T001000Z:mix001aa",
+        qualified_resource_id="qr:media:inaturalist:mixed-run-1",
+        canonical_taxon_id="taxon:birds:000001",
+        media_asset_id="media:inaturalist:mixed-run-1",
+        source_observation_uid="obs:inaturalist:mixed-run-1",
+        source_observation_id="mixed-run-1",
+        source_media_id="mixed-run-1",
+    )
+    second = _playable_item(
+        run_id="run:20260408T001100Z:mix002bb",
+        qualified_resource_id="qr:media:inaturalist:mixed-run-2",
+        canonical_taxon_id="taxon:birds:000002",
+        media_asset_id="media:inaturalist:mixed-run-2",
+        source_observation_uid="obs:inaturalist:mixed-run-2",
+        source_observation_id="mixed-run-2",
+        source_media_id="mixed-run-2",
+    )
+
+    with pytest.raises(ValueError, match="share the same run_id"):
+        repository.save_playable_items([first, second])
 
 
 def test_pack_revision_increments_monotonically(database_url: str) -> None:

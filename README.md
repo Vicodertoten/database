@@ -35,9 +35,12 @@ It provides canonical governance, qualification, exports, playable serving data,
 packs, diagnostics, compiled builds, frozen materializations, asynchronous
 enrichment queue persistence, batch confusion ingestion, and operator metrics.
 
-One structural gap remains explicit:
+Current structural priorities remain explicit:
 
-- `playable_items` is still rebuilt as a latest serving surface instead of a cumulative incremental corpus with explicit invalidation (P0-1)
+- enforce a strict Postgres-only storage perimeter (remove legacy SQLite remnants from code and docs)
+- continue reducing `PostgresRepository` responsibility concentration without contract breakage
+
+Historical note: `playable_items` started as a latest materialized surface and is now operated as a cumulative incremental lifecycle with explicit invalidation.
 
 That is the main architectural priority before any significant new scope is added.
 
@@ -80,10 +83,10 @@ What it is not:
 
 ## Current structural gaps
 
-The repository is strong enough to be a strategic data core, but two structural gaps remain explicit:
+The repository is strong enough to be a strategic data core, but two structural priorities remain explicit:
 
-- `playable_items` is still rebuilt as a latest serving surface at each pipeline run; the target remains a cumulative incremental playable corpus with explicit invalidation semantics
-- `PostgresRepository` concentrates too many responsibilities and must be treated as a dedicated refactor workstream before major new scope is added
+- `playable_items` now persists an incremental lifecycle (`active`/`invalidated`) while keeping `playable_corpus.v1` stable for consumers; invalidation reason mapping remains intentionally conservative in this stage
+- `PostgresRepository` still concentrates too many responsibilities and remains a dedicated refactor workstream before major new scope is added
 
 Other intentional current limits remain in force:
 
@@ -376,6 +379,14 @@ python scripts/verify_goldset_v1.py
 
 Pipeline writes use overwrite semantics for run-output tables in one transaction
 to avoid stale rows between runs.
+
+## Gate Traceability Markers
+
+- Gate 4.5 established the corrective strategic frame before extension work.
+- Gate 5 delivered distractor policy v2.
+- Gate 6 delivered asynchronous enrichment queue persistence.
+- Gate 7 delivered confusion batch ingestion plus global aggregates.
+- Gate 8 delivered inspection/KPI/smoke/CI hardening.
 
 Gold set full live E2E (Gemini + pipeline):
 

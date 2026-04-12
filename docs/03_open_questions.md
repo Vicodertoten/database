@@ -14,7 +14,7 @@ Questions closed by canonical charter v1:
 
 Active open questions:
 
-- Explicit lifecycle design for the cumulative incremental playable corpus: invalidation semantics, historical retention policy, and serving guarantees.
+- Invalidation reason taxonomy for the incremental playable lifecycle: target granularity, operator semantics, and backward-compatible evolution path.
 - Target decomposition plan for `PostgresRepository`: extraction order, compatibility strategy, and minimum acceptable end-state.
 - Multilingual naming strategy for pedagogical serving (`fr`, `en`, `nl`): source of truth, editorial ownership, and quality thresholds.
 - Second-source and future authority strategy beyond phase-1 iNaturalist: sequence, governance rules, and conflict resolution policy.

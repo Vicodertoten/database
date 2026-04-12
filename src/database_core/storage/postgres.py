@@ -566,7 +566,7 @@ class PostgresRepository:
                 )
             return
 
-        current_run_id = run_id or (playable_items[0].run_id if playable_items else None)
+        current_run_id = _resolve_playable_run_id(playable_items, explicit_run_id=run_id)
 
         _executemany(
             connection,
@@ -654,7 +654,7 @@ class PostgresRepository:
             [
                 (
                     item.playable_item_id,
-                    item.run_id,
+                    current_run_id,
                     item.qualified_resource_id,
                     item.canonical_taxon_id,
                     item.media_asset_id,
@@ -2336,6 +2336,34 @@ def _executemany(
         return
     with connection.cursor() as cursor:
         cursor.executemany(query, params_seq)
+
+
+def _resolve_playable_run_id(
+    playable_items: Sequence[PlayableItem],
+    *,
+    explicit_run_id: str | None,
+) -> str | None:
+    if explicit_run_id is not None:
+        mismatched_ids = sorted(
+            {item.run_id for item in playable_items if item.run_id != explicit_run_id}
+        )
+        if mismatched_ids:
+            raise ValueError(
+                "save_playable_items requires a single run_id. "
+                f"explicit run_id={explicit_run_id} mismatches item run_ids={mismatched_ids}"
+            )
+        return explicit_run_id
+
+    if not playable_items:
+        return None
+
+    run_ids = sorted({item.run_id for item in playable_items})
+    if len(run_ids) != 1:
+        raise ValueError(
+            "save_playable_items requires all playable items to share the same run_id "
+            f"when no explicit run_id is provided; got run_ids={run_ids}"
+        )
+    return run_ids[0]
 
 
 def _build_canonical_relationships_and_state_events(

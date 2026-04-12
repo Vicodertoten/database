@@ -264,6 +264,46 @@ def test_pipeline_rolls_back_database_on_artifact_write_failure(
     assert not (tmp_path / "rollback.export.v3.json").exists()
 
 
+def test_pipeline_marks_run_as_artifact_write_failed_when_promotion_fails(
+    monkeypatch,
+    tmp_path: Path,
+    database_url: str,
+) -> None:
+    def fail_promotion(staged_artifacts):  # noqa: ANN001
+        del staged_artifacts
+        raise RuntimeError("synthetic promotion failure")
+
+    monkeypatch.setattr(
+        "database_core.pipeline.runner._promote_staged_pipeline_artifacts",
+        fail_promotion,
+    )
+
+    with pytest.raises(RuntimeError, match="synthetic promotion failure"):
+        run_pipeline(
+            fixture_path=Path("data/fixtures/birds_pilot.json"),
+            database_url=database_url,
+            normalized_snapshot_path=tmp_path / "promotion_fail.normalized.json",
+            qualification_snapshot_path=tmp_path / "promotion_fail.qualified.json",
+            export_path=tmp_path / "promotion_fail.export.json",
+        )
+
+    repository = PostgresRepository(database_url)
+    repository.initialize()
+
+    with repository.connect() as connection:
+        run_row = connection.execute(
+            """
+            SELECT run_status
+            FROM pipeline_runs
+            ORDER BY started_at DESC
+            LIMIT 1
+            """
+        ).fetchone()
+
+    assert run_row is not None
+    assert run_row["run_status"] == "artifact_write_failed"
+
+
 def test_pipeline_populates_playable_corpus_with_exportable_resources(
     tmp_path: Path,
     database_url: str,

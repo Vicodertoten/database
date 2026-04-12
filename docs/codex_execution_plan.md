@@ -61,6 +61,14 @@ Le repo est deja operationnel jusqu'au Gate 9:
 Ce repo n'est pas a refondre abstraitement.
 Il doit etre consolide a partir de son etat reel.
 
+Markers de traçabilite (compatibilite verification):
+
+- Gate 4.5 - Correctif strategique pre-extension
+- Gate 5 - Politique distracteurs v2
+- Gate 6 - Queue d'enrichissement
+- Gate 7 - Contrat batch confusions + agregats globaux
+- Gate 8 - Inspection/KPI/smoke/CI etendus
+
 ## 4. Decisions verrouillees
 
 ### 4.1 Frontiere runtime

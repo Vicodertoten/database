@@ -2,7 +2,12 @@
 
 Post-Gate 9 note:
 
-Gate 0 to Gate 9 delivered a valid operational backbone for canonical, qualification, playable, packs, compilation, materialization, enrichment queue, and confusion aggregates. The main remaining structural delta is outside the core object model itself: playable persistence still uses a latest rebuilt surface instead of a cumulative incremental lifecycle.
+Gate 0 to Gate 9 delivered a valid operational backbone for canonical, qualification, playable, packs, compilation, materialization, enrichment queue, and confusion aggregates. The playable lifecycle correction is now implemented: persistence is cumulative incremental with explicit `active`/`invalidated` status.
+
+Gate 4.5 migration framing:
+
+- keep contracts stable while correcting structural drifts
+- treat `PostgresRepository` decomposition as a dedicated controlled workstream
 
 ## CanonicalTaxon
 
@@ -107,9 +112,10 @@ Derived, queryable runtime-facing item persisted in database (without runtime se
 
 Persistence posture:
 
-- today, `playable_items` is the latest serving surface rebuilt from current run output
+- `playable_items` stores durable serving payload rows keyed by `playable_item_id`
+- `playable_item_lifecycle` carries `active`/`invalidated` state and invalidation metadata per item
 - `playable_items_history` preserves immutable run snapshots for traceability
-- the next structural correction is a cumulative incremental lifecycle without breaking `playable_corpus.v1`
+- `playable_corpus.v1` serves only currently active items
 
 Fields:
 
@@ -127,7 +133,7 @@ Rules:
 - playable v1 is fed only from exportable qualified resources (`export_eligible=true`)
 - `common_names_i18n` is extensible; current bootstrap maps existing names to `en` and initializes `fr`/`nl` as empty arrays
 - playable does not replace `CanonicalTaxon`, `QualifiedResource`, or `export.bundle.v4`
-- the migration path toward cumulative incremental serving remains to be implemented without breaking `playable_corpus.v1`
+- invalidation reason taxonomy is still intentionally minimal and can be refined without breaking `playable_corpus.v1`
 
 ## PackSpec / PackRevision / PackCompilationAttempt (Gate 3)
 
