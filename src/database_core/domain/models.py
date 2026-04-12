@@ -181,7 +181,9 @@ class CanonicalTaxon(DomainModel):
     display_slug: str | None = None
     synonyms: list[str] = Field(default_factory=list)
     common_names: list[str] = Field(default_factory=list)
+    common_names_by_language: dict[str, list[str]] | None = None
     key_identification_features: list[str] = Field(default_factory=list)
+    key_identification_features_by_language: dict[str, list[str]] | None = None
     source_enrichment_status: EnrichmentStatus = EnrichmentStatus.SEEDED
     bird_scope_compatible: bool = True
     external_source_mappings: list[ExternalMapping] = Field(default_factory=list)
@@ -213,6 +215,45 @@ class CanonicalTaxon(DomainModel):
         if not value.strip():
             raise ValueError("accepted_scientific_name must not be blank")
         return value
+
+    @field_validator("common_names_by_language")
+    @classmethod
+    def validate_common_names_by_language(
+        cls, value: dict[str, list[str]] | None
+    ) -> dict[str, list[str]] | None:
+        if value is None:
+            return value
+        if not isinstance(value, dict):
+            raise ValueError("common_names_by_language must be a dict or None")
+        normalized: dict[str, list[str]] = {}
+        for language, names in value.items():
+            if not isinstance(names, list):
+                raise ValueError(f"common_names_by_language['{language}'] must be a list")
+            normalized[language] = [str(name).strip() for name in names if str(name).strip()]
+        return normalized if normalized else None
+
+    @field_validator("key_identification_features_by_language")
+    @classmethod
+    def validate_key_identification_features_by_language(
+        cls, value: dict[str, list[str]] | None
+    ) -> dict[str, list[str]] | None:
+        if value is None:
+            return value
+        if not isinstance(value, dict):
+            raise ValueError("key_identification_features_by_language must be a dict or None")
+        normalized: dict[str, list[str]] = {}
+        for language, features in value.items():
+            if not isinstance(features, list):
+                raise ValueError(
+                    "key_identification_features_by_language"
+                    f"['{language}'] must be a list"
+                )
+            normalized[language] = [
+                str(feature).strip()
+                for feature in features
+                if str(feature).strip()
+            ]
+        return normalized if normalized else None
 
     @model_validator(mode="after")
     def normalize_canonical_fields(self) -> Self:
@@ -255,6 +296,28 @@ class CanonicalTaxon(DomainModel):
             and (self.split_into or self.merged_into or self.replaced_by)
         ):
             object.__setattr__(self, "taxon_status", TaxonStatus.DEPRECATED)
+
+        # Ensure fallback for multilingual fields (backward compatibility)
+        if (
+            self.common_names_by_language is None
+            and self.common_names
+        ):
+            object.__setattr__(
+                self,
+                "common_names_by_language",
+                {"en": self.common_names},
+            )
+
+        if (
+            self.key_identification_features_by_language is None
+            and self.key_identification_features
+        ):
+            object.__setattr__(
+                self,
+                "key_identification_features_by_language",
+                {"en": self.key_identification_features},
+            )
+
         return self
 
 

@@ -131,6 +131,14 @@ Etat d'avancement P0-2 (2026-04-12):
 - phase 2 enrichment/confusion/inspection (`enrichment_store.py`, `confusion_store.py`, `inspection_store.py`): complete
 - phase 3 playable corpus (`playable_store.py`): complete — bloc playable lifecycle write+read extrait, facades delegation conservees, `-388` lignes de `postgres.py`, total `3985 -> 2034` lignes
 
+Etat d'avancement P3 (2026-04-12):
+
+- extension `CanonicalTaxon` avec surfaces multilingues optionnelles (`common_names_by_language`, `key_identification_features_by_language`) et fallback compatibilite vers `en`
+- enrichissement iNaturalist: extraction des noms par langue depuis `names[]` + merge dedup par langue
+- serving playable: alimentation `common_names_i18n` depuis les champs multilingues enrichis, avec fallback legacy
+- signal pedagogique: `confusion_hint` enrichi avec nom scientifique + nom commun (si disponible)
+- non-regression: tests gate dedies + suites structurantes + `verify_repo` verts
+
 ## 6. Discipline d'execution
 
 1. Un seul chantier structurant actif a la fois.

@@ -1,8 +1,8 @@
 # Audit De Reference - database
 
 Statut: document vivant (reference d'execution)
-Version: v7
-Date de mise a jour: 2026-04-09
+Version: v8
+Date de mise a jour: 2026-04-12
 Perimetre: etat reel du repo apres Gate 9 et synthese des constats structurants
 
 ---
@@ -62,7 +62,7 @@ Contraintes volontaires toujours en vigueur:
 - iNaturalist-first et seule source active en implementation
 - image-only
 - pilot seed de 15 taxons
-- couverture multilingue pedagogique encore partielle
+- couverture multilingue pedagogique en progression: extraction iNaturalist branchee, gouvernance editoriale encore partielle
 
 ## 3. Cible
 
@@ -120,16 +120,16 @@ Priorite:
 
 - P0 strategique
 
-### E3 - Editorialisation et multilingue encore incompletes
+### E3 - Editorialisation et multilingue partiellement consolides
 
 Constat:
 
-- `common_names_i18n` est structurellement pret mais bootstrap `fr`/`nl` incomplet
-- `key_identification_features` reste une couche enrichie encore pilote
+- `common_names_i18n` est desormais alimente depuis l'enrichissement multilingue iNaturalist quand les noms langues sont presents
+- `key_identification_features_by_language` existe en structure, mais la source amont reste limitee
 
 Impact:
 
-- limite immediate pour un produit grand public ou institutionnel multilingue
+- progression tangible pour le serving pedagogique multilingue, mais couverture/qualite editoriale encore inegales selon taxons
 
 Priorite:
 

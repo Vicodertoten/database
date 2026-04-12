@@ -413,11 +413,7 @@ def _build_playable_items(
                 source_observation_id=observation.source_observation_id,
                 source_media_id=media_asset.source_media_id,
                 scientific_name=taxon.accepted_scientific_name,
-                common_names_i18n={
-                    "fr": [],
-                    "en": _dedupe_non_blank_strings(taxon.common_names),
-                    "nl": [],
-                },
+                common_names_i18n=_build_common_names_i18n(taxon),
                 difficulty_level=resource.difficulty_level,
                 media_role=resource.media_role,
                 learning_suitability=resource.learning_suitability,
@@ -439,21 +435,71 @@ def _build_playable_items(
     return sorted(playable_items, key=lambda item: item.playable_item_id)
 
 
+def _build_common_names_i18n(taxon: CanonicalTaxon) -> dict[str, list[str]]:
+    """Build multilingual common names dict for PlayableItem.
+    
+    Uses common_names_by_language if available (from enrichment),
+    otherwise falls back to monolingual common_names populated under 'en'.
+    """
+    # Start with any multilingual names from enrichment
+    if taxon.common_names_by_language:
+        base = {lang: list(names) for lang, names in taxon.common_names_by_language.items()}
+    else:
+        base = {}
+    
+    # Ensure required keys exist with at minimum English names
+    for lang in ("fr", "en", "nl"):
+        if lang not in base:
+            base[lang] = []
+    
+    # If English wasn't populated from multilingual data, use monolingual fallback
+    if not base["en"] and taxon.common_names:
+        base["en"] = _dedupe_non_blank_strings(taxon.common_names)
+    
+    return base
+
+
 def _build_confusion_hint(
     *,
     taxon: CanonicalTaxon,
     canonical_by_id: dict[str, CanonicalTaxon],
 ) -> str | None:
+    """Build a pedagogical confusion hint with species names in multiple languages where available.
+    
+    Enhanced to include both scientific names and common names, prioritizing
+    English common names but noting multilingual variants for pedagogical clarity.
+    """
     if not taxon.similar_taxon_ids:
         return None
-    similar_names = [
-        canonical_by_id[item].accepted_scientific_name
-        for item in sorted(set(taxon.similar_taxon_ids))
-        if item in canonical_by_id
-    ]
-    if not similar_names:
+    
+    similar_species: list[str] = []
+    for taxon_id in sorted(set(taxon.similar_taxon_ids)):
+        if taxon_id not in canonical_by_id:
+            continue
+        similar_taxon = canonical_by_id[taxon_id]
+        
+        # Build entry with scientific name
+        entry_parts = [similar_taxon.accepted_scientific_name]
+        
+        # Add English common name if available
+        if (
+            similar_taxon.common_names_by_language
+            and "en" in similar_taxon.common_names_by_language
+        ):
+            en_names = similar_taxon.common_names_by_language["en"]
+            if en_names:
+                entry_parts.append(f"({en_names[0]})")
+        elif similar_taxon.common_names:
+            # Fallback to monolingual common name
+            entry_parts.append(f"({similar_taxon.common_names[0]})")
+        
+        similar_species.append(" ".join(entry_parts))
+    
+    if not similar_species:
         return None
-    return f"Compare with: {', '.join(similar_names[:3])}."
+    
+    # Format hint: limit to 3 species for clarity
+    return f"Compare with: {'; '.join(similar_species[:3])}."
 
 
 def _dedupe_non_blank_strings(values: list[str]) -> list[str]:

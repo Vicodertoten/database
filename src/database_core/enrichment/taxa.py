@@ -49,6 +49,15 @@ def _enrich_single_taxon(
             taxon.key_identification_features,
             _extract_key_identification_features(record),
         )
+        # Extract multilingual names and features
+        common_names_by_language = _merge_common_names_by_language(
+            taxon.common_names_by_language,
+            _extract_common_names_by_language(record),
+        )
+        key_identification_features_by_language = _merge_key_identification_features_by_language(
+            taxon.key_identification_features_by_language,
+            _extract_key_identification_features_by_language(record),
+        )
         external_similarity_hints = _merge_similarity_hints(
             taxon.external_similarity_hints,
             _extract_similarity_hints(record),
@@ -65,7 +74,9 @@ def _enrich_single_taxon(
             {
                 **taxon.model_dump(mode="python"),
                 "common_names": merged_common_names,
+                "common_names_by_language": common_names_by_language,
                 "key_identification_features": key_identification_features,
+                "key_identification_features_by_language": key_identification_features_by_language,
                 "external_similarity_hints": external_similarity_hints,
                 "similar_taxa": _merge_similar_taxa(taxon.similar_taxa, resolved),
                 "source_enrichment_status": source_enrichment_status,
@@ -88,6 +99,67 @@ def _extract_taxon_record(payload: Mapping[str, object]) -> Mapping[str, object]
         if isinstance(first, Mapping):
             return first
     return payload
+
+
+def _extract_common_names_by_language(record: Mapping[str, object]) -> dict[str, list[str]] | None:
+    """Extract common names grouped by language from iNaturalist taxonomy names array.
+    
+    iNaturalist provides a 'names' array with structure:
+    [
+        {"name": "Common Blackbird", "language": "en", ...},
+        {"name": "Merle noir", "language": "fr", ...},
+        {"name": "Merel", "language": "nl", ...},
+    ]
+    """
+    names_by_language: dict[str, list[str]] = {}
+    names_array = record.get("names")
+    
+    if not isinstance(names_array, Sequence) or isinstance(names_array, str):
+        return None
+    
+    for item in names_array:
+        if not isinstance(item, Mapping):
+            continue
+        language = item.get("language")
+        name = item.get("name")
+        if language and name:
+            language_code = str(language).strip().lower()
+            name_text = str(name).strip()
+            if language_code and name_text:
+                if language_code not in names_by_language:
+                    names_by_language[language_code] = []
+                if name_text not in names_by_language[language_code]:
+                    names_by_language[language_code].append(name_text)
+    
+    return names_by_language if names_by_language else None
+
+
+def _extract_key_identification_features_by_language(
+    record: Mapping[str, object]
+) -> dict[str, list[str]] | None:
+    """Extract key identification features grouped by language.
+    
+    Currently iNaturalist doesn't provide multilingual identification features,
+    so this reserves the structure for future use. If a 'features_by_language'
+    field is added to the API, extract from it; otherwise return None.
+    """
+    features_by_language: dict[str, list[str]] = {}
+    
+    # Check for a potential future multilingual features structure
+    features_array = record.get("features_by_language")
+    if isinstance(features_array, Mapping):
+        for language, features in features_array.items():
+            if isinstance(features, (list, str)):
+                language_code = str(language).strip().lower()
+                if isinstance(features, str):
+                    feature_list = [f.strip() for f in features.split("|") if f.strip()]
+                else:
+                    feature_list = [str(f).strip() for f in features if str(f).strip()]
+                
+                if language_code and feature_list:
+                    features_by_language[language_code] = feature_list
+    
+    return features_by_language if features_by_language else None
 
 
 def _extract_common_names(record: Mapping[str, object]) -> list[str]:
@@ -219,6 +291,66 @@ def _merge_strings(*collections: Sequence[str]) -> list[str]:
     for values in collections:
         merged.extend(str(value).strip() for value in values if str(value).strip())
     return _dedupe_preserve_order(merged)
+
+
+def _merge_common_names_by_language(
+    left: dict[str, list[str]] | None,
+    right: dict[str, list[str]] | None,
+) -> dict[str, list[str]] | None:
+    """Merge two multilingual common name dicts, deduplicating within each language."""
+    if left is None and right is None:
+        return None
+    
+    merged: dict[str, list[str]] = {}
+    
+    # Merge left
+    if left:
+        for language, names in left.items():
+            merged[language] = list(names) if names else []
+    
+    # Merge right, deduplicating
+    if right:
+        for language, names in right.items():
+            if language not in merged:
+                merged[language] = []
+            for name in names:
+                if name not in merged[language]:
+                    merged[language].append(name)
+    
+    # Clean up empty languages
+    merged = {lang: names for lang, names in merged.items() if names}
+    
+    return merged if merged else None
+
+
+def _merge_key_identification_features_by_language(
+    left: dict[str, list[str]] | None,
+    right: dict[str, list[str]] | None,
+) -> dict[str, list[str]] | None:
+    """Merge two multilingual KIF dicts, deduplicating within each language."""
+    if left is None and right is None:
+        return None
+    
+    merged: dict[str, list[str]] = {}
+    
+    # Merge left
+    if left:
+        for language, features in left.items():
+            merged[language] = list(features) if features else []
+    
+    # Merge right, deduplicating
+    if right:
+        for language, features in right.items():
+            if language not in merged:
+                merged[language] = []
+            for feature in features:
+                if feature not in merged[language]:
+                    merged[language].append(feature)
+    
+    # Clean up empty languages
+    merged = {lang: features for lang, features in merged.items() if features}
+    
+    return merged if merged else None
 
 
 def _merge_similarity_hints(

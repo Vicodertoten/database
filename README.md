@@ -93,7 +93,7 @@ Other intentional current limits remain in force:
 - birds-only
 - iNaturalist-first and single-source in implementation
 - image-only qualification
-- tiny pilot seed and limited multilingual coverage (`common_names_i18n` is structurally ready, but `fr`/`nl` bootstrap remains incomplete)
+- tiny pilot seed and still-partial multilingual coverage (`common_names_i18n` now ingests iNaturalist multilingual names when available, but editorial ownership/quality thresholds remain open)
 
 ## Locked program KPIs
 

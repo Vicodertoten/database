@@ -16,7 +16,7 @@ Questions closed by canonical charter v1:
 Active open questions:
 
 - Target decomposition plan for `PostgresRepository`: extraction order, compatibility strategy, and minimum acceptable end-state.
-- Multilingual naming strategy for pedagogical serving (`fr`, `en`, `nl`): source of truth, editorial ownership, and quality thresholds.
+- Multilingual naming governance for pedagogical serving (`fr`, `en`, `nl`): extraction path is now implemented, but source-of-truth hierarchy, editorial ownership, and quality thresholds remain open.
 - Second-source and future authority strategy beyond phase-1 iNaturalist: sequence, governance rules, and conflict resolution policy.
 - How confusion aggregates should influence future pedagogical policies without leaking runtime adaptation logic into `database`.
 - Operator thresholds for promoting `provisional` taxa to `active` or `deprecated` after manual review.
