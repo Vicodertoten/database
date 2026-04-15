@@ -112,18 +112,20 @@ runtime consumption boundary locked owner-side.
 
 - database: 20da705
 - database: 1f03803
+- runtime-app: f9f556a
 
 ### Verification
 
 - owner-side doctrinal coherence review completed against README.md and docs/runtime_consumption_v1.md
+- consumer-side: `runtime-app/docs/database_integration_v1.md` verified as aligned with locked owner wording; no modification required
 
 ### Next step
 
-mirror wording in runtime-app
+none
 
 ### Closed at
 
-open
+2026-04-15
 
 ## Fictitious examples
 
