@@ -17,7 +17,7 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
 
 ## Last validated state
 
-- Last validated commit or tag: none
+- Last validated commit or tag: 1f03803
 - Validation date: 2026-04-15
 - What is already validated: official runtime-consumable surfaces confirmed; prohibition on export.bundle.v4 confirmed; ownership boundary confirmed
 - What is not validated yet: consumer-side mirrored wording; cross-repo closure
