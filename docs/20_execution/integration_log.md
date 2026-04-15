@@ -127,6 +127,64 @@ INT-002
 
 2026-04-15
 
+---
+
+### Chantier ID
+
+INT-002
+
+### Title
+
+Align runtime-app/packages/contracts with official database schemas
+
+### Status
+
+in_progress
+
+### Owner repo
+
+database
+
+### Consumer repo
+
+runtime-app
+
+### Summary
+
+Owner step complete: three v1 schemas confirmed as official source of truth, no changes needed. Consumer must align TypeScript types field-for-field with these schemas.
+
+### Decisions
+
+- `schemas/playable_corpus_v1.schema.json` is the authoritative contract for `playable_corpus.v1`.
+- `schemas/pack_compiled_v1.schema.json` is the authoritative contract for `pack.compiled.v1`.
+- `schemas/pack_materialization_v1.schema.json` is the authoritative contract for `pack.materialization.v1`.
+- No local field renaming is permitted in `runtime-app/packages/contracts`.
+
+### Affected files
+
+- database: docs/runtime_consumption_v1.md
+- database: docs/20_execution/chantiers/INT-002.md
+- database: docs/20_execution/handoff.md
+- runtime-app: packages/contracts/src/ (pending)
+
+### Linked commits
+
+- database: d921a9b
+- runtime-app: pending
+
+### Verification
+
+- owner-side: schemas verified as stable and complete on 2026-04-15
+- consumer-side: pending
+
+### Next step
+
+align runtime-app/packages/contracts with owner schemas
+
+### Closed at
+
+open
+
 ## Fictitious examples
 
 Les exemples ci-dessous sont fictifs. Ils illustrent la forme attendue du journal et ne decrivent pas un etat reel du repo.

@@ -4,9 +4,9 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
 
 ## Current active chantier
 
-- ID: INT-001
-- Title: Lock runtime consumption doctrine v1
-- Status: closed
+- ID: INT-002
+- Title: Align runtime-app/packages/contracts with official database schemas
+- Status: in_progress
 
 ## Repo role in current chantier
 
@@ -17,10 +17,10 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
 
 ## Last validated state
 
-- Last validated commit or tag: 1f03803 (database), f9f556a (runtime-app)
+- Last validated commit or tag: d921a9b (database)
 - Validation date: 2026-04-15
-- What is already validated: official runtime-consumable surfaces confirmed; prohibition on export.bundle.v4 confirmed; ownership boundary confirmed; consumer-side wording verified as aligned
-- What is not validated yet: nothing — INT-001 is fully closed
+- What is already validated: three owner schemas confirmed as official source of truth; no schema changes needed; chantier brief published
+- What is not validated yet: consumer contracts aligned; cross-repo closure
 
 ## Decisions already locked
 
@@ -38,22 +38,23 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
 
 ## Next exact step
 
-- Open INT-002 chantier brief and begin owner-side work.
+- align runtime-app consumer contracts with these schemas: schemas/playable_corpus_v1.schema.json, schemas/pack_compiled_v1.schema.json, schemas/pack_materialization_v1.schema.json
 
 ## Files to read first in this repo
 
 - README.md
-- docs/README.md
-- docs/codex_execution_plan.md
 - docs/runtime_consumption_v1.md
 - docs/20_execution/handoff.md
-- docs/20_execution/chantiers/INT-001.md
+- docs/20_execution/chantiers/INT-002.md
+- schemas/playable_corpus_v1.schema.json
+- schemas/pack_compiled_v1.schema.json
+- schemas/pack_materialization_v1.schema.json
 
 ## Files to read first in the other repo
 
 - README.md
-- docs/database_integration_v1.md (INT-001, already closed)
-- docs/20_execution/chantiers/INT-002.md (when available)
+- packages/contracts/src/ (all contract type files)
+- docs/20_execution/chantiers/INT-002.md
 
 ## Verification commands
 
@@ -61,7 +62,7 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
 
 ## Notes for next IA session
 
-- Commencer par INT-001 uniquement; ne pas ouvrir de second chantier structurant.
-- Relire d'abord la doctrine owner dans docs/runtime_consumption_v1.md.
-- Aligner ensuite runtime-app sans redefinir ownership.
-- Cloturer inter-repos seulement apres validation explicite des deux cotes.
+- INT-002 est le seul chantier structurant actif.
+- Source de verite = les 3 fichiers schemas/*.json de database. Aucun renommage local autorise.
+- Corriger uniquement cote consumer (runtime-app/packages/contracts); ne rien changer dans database.
+- Cloturer inter-repos seulement apres alignement confirme et tests consumer verts.

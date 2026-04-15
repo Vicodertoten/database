@@ -24,6 +24,21 @@ Ce bundle peut servir a des usages d'export ou d'inspection, mais pas a la lectu
 - `runtime-app` consomme ces artefacts, mais ne les redefinit pas
 - toute evolution d'une surface officielle doit d'abord etre verrouillee dans `database`
 
+## Schemas de reference officielle
+
+Les schemas JSON suivants sont la source de verite officielle pour les types de consommation runtime.
+Tout type consumer (TypeScript ou autre) doit refleter ces schemas champ par champ, sans renommage local.
+
+- `schemas/playable_corpus_v1.schema.json` — reference pour `playable_corpus.v1`
+- `schemas/pack_compiled_v1.schema.json` — reference pour `pack.compiled.v1`
+- `schemas/pack_materialization_v1.schema.json` — reference pour `pack.materialization.v1`
+
+## Regle de non-renommage
+
+Aucun consommateur n'est autorise a renommer, abrevger ou simplifier les champs de ces schemas.
+Les noms de champs definis dans `database` sont les noms officiels.
+Toute deviation locale constitue une derive qui doit etre corrigee du cote consumer.
+
 ## Consequence pratique
 
 Les futures operations editoriales ou institutionnelles doivent respecter cette frontiere.
