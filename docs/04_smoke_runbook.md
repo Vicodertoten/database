@@ -126,6 +126,12 @@ observed_cost:
 notes:
 ```
 
+## Security guardrail for versioned reports
+
+- Any report committed under `docs/smoke_reports/` must redact credential-bearing fields.
+- `database_url` values must be redacted (`user:***@host`) before commit.
+- If a raw secret is committed, follow `docs/security_incident_runbook.md` immediately.
+
 ## Expected artifacts
 
 After a successful live smoke, the main artifacts should be present:

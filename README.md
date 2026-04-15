@@ -256,6 +256,11 @@ Running the fixture pipeline writes:
   - `python scripts/inspect_database.py compiled-pack-builds --pack-id <pack_id>`
   - `python scripts/inspect_database.py pack-materializations --pack-id <pack_id>`
 
+Security guardrail:
+
+- Versioned smoke reports in `docs/smoke_reports/` must never include raw credentials.
+- Any persisted `database_url` must be redacted.
+
 In `inat_snapshot` mode, the default derived outputs become snapshot-scoped:
 
 - normalized: `data/normalized/<snapshot_id>.json`

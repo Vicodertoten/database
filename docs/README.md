@@ -34,6 +34,7 @@ Reading discipline:
 ## Operations
 
 - `docs/04_smoke_runbook.md`: weekly live smoke process and reporting template.
+- `docs/security_incident_runbook.md`: mandatory response for leaked credentials and repository remediation.
 - `docs/08_goldset_v1.md`: AI gold set build, verification, and live E2E usage.
 - `docs/10_program_kpis.md`: locked KPI definitions and smoke acceptance thresholds.
 - `docs/smoke_reports/`: versioned smoke reports (`smoke.report.v1`).
@@ -51,3 +52,4 @@ Reading discipline:
 - Any strategic gate reordering must update `README.md`, `docs/05_audit_reference.md`, and `docs/codex_execution_plan.md` together.
 - Do not keep obsolete gate-transition material once a gate is fully closed and absorbed into the baseline.
 - Keep document names stable; use ADRs for irreversible architecture decisions.
+- Versioned reports must never contain raw secrets or non-redacted `database_url` values.
