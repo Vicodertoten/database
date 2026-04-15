@@ -206,6 +206,12 @@ python scripts/inspect_database.py confusion-metrics
 python scripts/generate_smoke_report.py --snapshot-id inaturalist-birds-20260408T123456Z
 ```
 
+Local secret-scan pre-check:
+
+```bash
+gitleaks detect --source . --config .gitleaks.toml --redact --verbose
+```
+
 For the full operational command set, use the script wrappers and inspect help output:
 
 - `python scripts/inspect_database.py --help`

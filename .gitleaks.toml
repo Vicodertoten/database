@@ -1,0 +1,7 @@
+title = "database-repo-gitleaks-config"
+
+[[allowlists]]
+description = "Allow explicit redacted credential placeholders"
+regexes = [
+  '''postgresql:\/\/[a-zA-Z0-9_]+:\*\*\*@'''
+]

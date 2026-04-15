@@ -46,3 +46,5 @@ Before closing the incident:
 - Never commit raw credentials in docs, reports, fixtures, or logs.
 - Always redact database URLs before output or persistence.
 - Keep secret scanning blocking in CI for PRs and default branch pushes.
+- Run local pre-check before opening a PR:
+  - `gitleaks detect --source . --config .gitleaks.toml --redact --verbose`
