@@ -239,8 +239,8 @@ Owner-side fixture strategy is now explicit and first official minimal fixtures 
 
 ### Linked commits
 
-- database: `feat/INT-003-runtime-reference-fixtures` (commit pending in this workspace)
-- runtime-app: open
+- database: 444188a
+- runtime-app: open (INT-004 not started)
 
 ### Verification
 

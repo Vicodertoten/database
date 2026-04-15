@@ -17,7 +17,7 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
 
 ## Last validated state
 
-- Last validated commit or tag: 17f8349 (database), 1868923 (runtime-app)
+- Last validated commit or tag: 444188a (database), 1868923 (runtime-app)
 - Validation date: 2026-04-15
 - What is already validated: INT-003 owner-side closed; official runtime fixture trio published, schema-validated, and cross-checked for ID coherence
 - What is not validated yet: consumer-side adoption in INT-004 (`runtime-app`)
