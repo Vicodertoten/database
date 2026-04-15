@@ -70,6 +70,60 @@ Utilisation:
 
 ---
 
+## Active entries
+
+### Chantier ID
+
+INT-001
+
+### Title
+
+Lock runtime consumption doctrine v1
+
+### Status
+
+in_progress
+
+### Owner repo
+
+database
+
+### Consumer repo
+
+runtime-app
+
+### Summary
+
+runtime consumption boundary locked owner-side.
+
+### Decisions
+
+- `runtime-app` runtime surfaces are limited to `playable_corpus.v1`, `pack.compiled.v1`, and `pack.materialization.v1`.
+- `export.bundle.v4` remains prohibited as a live runtime surface.
+- `database` owns contract and artifact truth; `runtime-app` consumes without redefining ownership.
+
+### Affected files
+
+- database: docs/runtime_consumption_v1.md
+- database: docs/20_execution/chantiers/INT-001.md
+- database: docs/20_execution/handoff.md
+
+### Linked commits
+
+- database: pending
+
+### Verification
+
+- owner-side doctrinal coherence review completed against README.md and docs/runtime_consumption_v1.md
+
+### Next step
+
+mirror wording in runtime-app
+
+### Closed at
+
+open
+
 ## Fictitious examples
 
 Les exemples ci-dessous sont fictifs. Ils illustrent la forme attendue du journal et ne decrivent pas un etat reel du repo.

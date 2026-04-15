@@ -28,3 +28,4 @@ Ce bundle peut servir a des usages d'export ou d'inspection, mais pas a la lectu
 
 Les futures operations editoriales ou institutionnelles doivent respecter cette frontiere.
 Elles peuvent s'appuyer sur les artefacts publies par `database`, mais ne doivent pas deplacer la source de verite hors du knowledge core.
+Tout besoin runtime non couvert par ces surfaces doit d'abord etre formalise et verrouille dans `database`.

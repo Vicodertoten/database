@@ -1,71 +1,66 @@
-# Handoff Template
+# Handoff State
 
-Ce document est un modele operationnel de reprise de travail pour une session IA ou humaine.
-Remplir les crochets avant de transmettre le contexte.
+Ce document capture l'etat operationnel reel de passation pour le chantier actif.
 
 ## Current active chantier
 
-- ID: [INT-000]
-- Title: [Titre court et stable du chantier]
-- Status: [not_started | in_progress | blocked | validated | closed]
+- ID: INT-001
+- Title: Lock runtime consumption doctrine v1
+- Status: validated_by_owner
 
 ## Repo role in current chantier
 
-- Current repo: [database]
-- Role: [owner | consumer]
-- Other repo: [runtime-app]
-- Expected dependency order: [database first, runtime-app second]
+- Current repo: database
+- Role: owner
+- Other repo: runtime-app
+- Expected dependency order: database first, runtime-app second
 
 ## Last validated state
 
-- Last validated commit or tag: [abc1234 or none]
-- Validation date: [YYYY-MM-DD]
-- What is already validated: [contrat confirme, doc mise a jour, integration locale verifiee]
-- What is not validated yet: [adaptation runtime, verification inter-repos, revue finale]
+- Last validated commit or tag: none
+- Validation date: 2026-04-15
+- What is already validated: official runtime-consumable surfaces confirmed; prohibition on export.bundle.v4 confirmed; ownership boundary confirmed
+- What is not validated yet: consumer-side mirrored wording; cross-repo closure
 
 ## Decisions already locked
 
-- [`database` reste owner des contrats et artefacts data concernes]
-- [`runtime-app` consomme les surfaces officielles et ne les redefinit pas]
-- [`export.bundle.v4` n'est pas une surface live runtime]
-- [Autre decision verrouillee utile a la reprise]
+- `database` reste owner des contrats et artefacts data concernes.
+- `runtime-app` consomme les surfaces officielles et ne les redefinit pas.
+- `export.bundle.v4` n'est pas une surface live runtime.
+- Les besoins runtime hors surfaces officielles doivent etre formalises d'abord dans `database`.
 
 ## Important constraints
 
-- [Ne pas toucher aux schemas existants]
-- [Ne pas modifier la logique pipeline]
-- [Rester strictement sequentiel et traçable]
-- [Autre contrainte bloquante]
+- Ne pas toucher aux schemas existants.
+- Ne pas modifier la logique pipeline.
+- Ne pas sur-specifier transport, auth, session, endpoints, ou UX runtime.
+- Rester strictement sequentiel et tracable.
 
 ## Next exact step
 
-- [Exemple: relire docs/runtime_consumption_v1.md puis verifier que runtime-app lit uniquement pack.materialization.v1 pour le cas cible]
+- Open runtime-app and align docs/database_integration_v1.md with the locked owner wording.
 
 ## Files to read first in this repo
 
-- [README.md]
-- [docs/README.md]
-- [docs/codex_execution_plan.md]
-- [docs/03_open_questions.md]
-- [docs/runtime_consumption_v1.md]
-- [docs/20_execution/chantiers/INT-000.md]
+- README.md
+- docs/README.md
+- docs/codex_execution_plan.md
+- docs/runtime_consumption_v1.md
+- docs/20_execution/handoff.md
+- docs/20_execution/chantiers/INT-001.md
 
 ## Files to read first in the other repo
 
-- [README.md]
-- [docs/integration/runtime_contracts.md]
-- [src/runtime/contracts/loaders.ts]
-- [docs/handshake_with_database.md]
+- README.md
+- docs/database_integration_v1.md
 
 ## Verification commands
 
-- [python scripts/check_doc_code_coherence.py]
-- [python -m pytest -q -m "not integration_db" -p no:capture]
-- [commandes de verification du repo consumer]
+- python scripts/check_doc_code_coherence.py (optional)
 
 ## Notes for next IA session
 
-- [Commencer par verifier si le chantier courant est toujours le seul chantier structurant actif]
-- [Ne pas ouvrir un second chantier tant que le statut n'est pas `validated` ou `closed`]
-- [Relire les decisions verrouillees avant toute proposition de changement inter-repos]
-- [Si un ecart apparait entre owner et consumer, corriger d'abord le repo owner ou la documentation de reference]
+- Commencer par INT-001 uniquement; ne pas ouvrir de second chantier structurant.
+- Relire d'abord la doctrine owner dans docs/runtime_consumption_v1.md.
+- Aligner ensuite runtime-app sans redefinir ownership.
+- Cloturer inter-repos seulement apres validation explicite des deux cotes.
