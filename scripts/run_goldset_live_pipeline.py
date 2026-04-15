@@ -33,6 +33,7 @@ from database_core.qualification.ai import (
     MIN_AI_IMAGE_WIDTH,
     inspect_image_dimensions,
 )
+from database_core.security import redact_database_url
 from database_core.storage.postgres import PostgresRepository
 
 DEFAULT_GOLDSET_MANIFEST_PATH = Path("data/goldset/birds_v1/manifest.json")
@@ -257,7 +258,7 @@ def main() -> int:
     print(
         "goldset live artifacts | "
         f"snapshot_dir={snapshot_dir} | "
-        f"database_url={pipeline_result.database_url} | "
+        f"database_url={redact_database_url(pipeline_result.database_url)} | "
         f"normalized={pipeline_result.normalized_snapshot_path} | "
         f"qualified={pipeline_result.qualification_snapshot_path} | "
         f"export={pipeline_result.export_path}"

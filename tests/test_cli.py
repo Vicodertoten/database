@@ -23,6 +23,7 @@ from database_core.domain.models import (
     SourceQualityMetadata,
 )
 from database_core.pipeline.runner import run_pipeline
+from database_core.security import redact_database_url
 from database_core.storage.postgres import PostgresRepository
 from database_core.versioning import SCHEMA_VERSION
 
@@ -238,7 +239,10 @@ def test_migrate_cli_applies_pending_schema_migration(monkeypatch, database_url:
     with redirect_stdout(buffer):
         cli.main()
 
-    assert "Database migrated" in buffer.getvalue()
+    output = buffer.getvalue()
+    assert "Database migrated" in output
+    assert f"database_url={redact_database_url(database_url)}" in output
+    assert f"database_url={database_url}" not in output
     assert repository.current_schema_version() == SCHEMA_VERSION
 
 

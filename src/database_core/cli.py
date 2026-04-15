@@ -53,6 +53,7 @@ from database_core.review.overrides import (
     resolve_review_overrides_path,
     upsert_review_override,
 )
+from database_core.security import redact_database_url
 from database_core.storage.pack_store import PostgresPackStore
 from database_core.storage.postgres import PostgresRepository
 
@@ -572,26 +573,27 @@ def main() -> None:
 
     if args.command == "migrate":
         repository = PostgresRepository(args.database_url)
+        redacted_database_url = redact_database_url(args.database_url)
         version_before = repository.current_schema_version()
         applied_versions = repository.migrate_to_latest()
         version_after = repository.current_schema_version()
         if version_before == 0 and version_after > 0:
             print(
                 "Database initialized at latest schema | "
-                f"database_url={args.database_url} | "
+                f"database_url={redacted_database_url} | "
                 f"schema_version={version_after}"
             )
             return
         if applied_versions:
             print(
                 "Database migrated | "
-                f"database_url={args.database_url} | "
+                f"database_url={redacted_database_url} | "
                 f"applied={','.join(str(item) for item in applied_versions)}"
             )
         else:
             print(
                 "Database already up to date | "
-                f"database_url={args.database_url} | "
+                f"database_url={redacted_database_url} | "
                 f"schema_version={repository.current_schema_version()}"
             )
         return
