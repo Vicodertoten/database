@@ -4,7 +4,11 @@ from urllib.parse import urlsplit
 
 from database_core.ops import generate_smoke_report
 from database_core.pipeline.runner import run_pipeline
-from database_core.storage.postgres import PostgresRepository
+from database_core.storage.services import build_storage_services
+
+
+def _build_repository(database_url: str):
+    return build_storage_services(database_url).pipeline_store
 
 
 def test_generate_smoke_report_includes_locked_kpis(tmp_path: Path, database_url: str) -> None:
@@ -14,7 +18,7 @@ def test_generate_smoke_report_includes_locked_kpis(tmp_path: Path, database_url
         qualification_snapshot_path=tmp_path / "qualified.json",
         export_path=tmp_path / "export.json",
     )
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     report = generate_smoke_report(
         repository,
         snapshot_id=None,
@@ -68,7 +72,7 @@ def test_generate_smoke_report_uses_locked_kpi_registry(tmp_path: Path, database
         qualification_snapshot_path=tmp_path / "qualified_registry.json",
         export_path=tmp_path / "export_registry.json",
     )
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     report = generate_smoke_report(
         repository,
         snapshot_id=None,

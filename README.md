@@ -38,7 +38,7 @@ enrichment queue persistence, batch confusion ingestion, and operator metrics.
 Current structural priorities remain explicit:
 
 - enforce a strict Postgres-only storage perimeter (remove legacy SQLite remnants from code and docs)
-- continue reducing `PostgresRepository` responsibility concentration without contract breakage
+- keep orchestration boundaries explicit through service composition (`PostgresDatabase`, `PostgresPipelineStore`, specialized stores)
 
 Historical note: `playable_items` started as a latest materialized surface and is now operated as a cumulative incremental lifecycle with explicit invalidation.
 
@@ -83,10 +83,10 @@ What it is not:
 
 ## Current structural gaps
 
-The repository is strong enough to be a strategic data core, but two structural priorities remain explicit:
+The repository is strong enough to be a strategic data core, with structural guardrails still in force:
 
 - `playable_items` now persists an incremental lifecycle (`active`/`invalidated`) while keeping `playable_corpus.v1` stable for consumers; invalidations are now traceable with explicit reason codes (`qualification_not_exportable`, `canonical_taxon_not_active`, `source_record_removed`, `policy_filtered`)
-- `PostgresRepository` still concentrates too many responsibilities and remains a dedicated refactor workstream before major new scope is added
+- orchestration now routes through `storage/services.py`; storage internals remain an ongoing simplification workstream before major new scope is added
 
 Other intentional current limits remain in force:
 
@@ -163,7 +163,7 @@ Installed entrypoints mirror the script wrappers:
 - confusion batch ingestion and aggregates extracted in `storage/confusion_store.py` (`PostgresConfusionStore`)
 - qualification inspection metrics extracted in `storage/inspection_store.py` (`PostgresInspectionStore`)
 - playable corpus lifecycle (write + read) extracted in `storage/playable_store.py` (`PostgresPlayableStore`)
-- `storage/postgres.py` reduced from 3985 to 2034 lines via P0-2 domain extraction; `PostgresRepository` retains thin delegation facade for backward compatibility
+- `storage/postgres.py` was reduced substantially via domain extraction; orchestration now routes through `storage/services.py` with explicit service composition
 - asynchronous enrichment request queue with execution tracking for non-compilable packs
 - batch confusion ingestion with directed global confusion aggregates
 - compiled build history is preserved and queryable for traceability

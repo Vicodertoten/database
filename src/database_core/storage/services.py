@@ -19,13 +19,13 @@ from database_core.storage.enrichment_store import PostgresEnrichmentStore
 from database_core.storage.inspection_store import PostgresInspectionStore
 from database_core.storage.pack_store import PostgresPackStore
 from database_core.storage.playable_store import PostgresPlayableStore
-from database_core.storage.postgres import PostgresRepository
+from database_core.storage.postgres import PostgresStorageInternal
 
 
 class PostgresDatabase:
-	"""Transitional DB lifecycle service extracted from PostgresRepository."""
+	"""Transitional DB lifecycle service extracted from storage internals."""
 
-	def __init__(self, repository: PostgresRepository) -> None:
+	def __init__(self, repository: PostgresStorageInternal) -> None:
 		self._repository = repository
 
 	@property
@@ -46,9 +46,9 @@ class PostgresDatabase:
 
 
 class PostgresPipelineStore:
-	"""Transitional pipeline persistence service extracted from PostgresRepository."""
+	"""Transitional pipeline persistence service extracted from storage internals."""
 
-	def __init__(self, repository: PostgresRepository) -> None:
+	def __init__(self, repository: PostgresStorageInternal) -> None:
 		self._repository = repository
 
 	def connect(self):
@@ -189,11 +189,11 @@ class StorageServices:
 	confusion_store: PostgresConfusionStore
 	inspection_store: PostgresInspectionStore
 	playable_store: PostgresPlayableStore
-	repository: PostgresRepository
+	repository: PostgresStorageInternal
 
 
 def build_storage_services(database_url: str) -> StorageServices:
-	repository = PostgresRepository(database_url)
+	repository = PostgresStorageInternal(database_url)
 	return StorageServices(
 		database=PostgresDatabase(repository),
 		pipeline_store=PostgresPipelineStore(repository),

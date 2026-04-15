@@ -22,7 +22,11 @@ from database_core.domain.enums import (
 from database_core.domain.models import AIQualification
 from database_core.pipeline.runner import run_pipeline
 from database_core.qualification.ai import source_external_key
-from database_core.storage.postgres import PostgresRepository
+from database_core.storage.services import build_storage_services
+
+
+def _build_repository(database_url: str):
+    return build_storage_services(database_url).repository
 
 SNAPSHOT_MANIFEST = Path("tests/fixtures/inaturalist_snapshot_smoke/manifest.json")
 
@@ -422,7 +426,7 @@ def test_review_overrides_are_reapplied_after_qualification(
     assert review_item["priority"] == "high"
     assert "manual spot-check requested" in review_item["review_note"]
 
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
     filtered = repository.fetch_review_queue(review_reason_code="human_override", priority="high")
     assert len(filtered) == 1

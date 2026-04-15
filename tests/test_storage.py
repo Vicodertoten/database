@@ -26,16 +26,18 @@ from database_core.pack import (
 )
 from database_core.playable import validate_playable_corpus
 from database_core.storage.pack_store import PostgresPackStore
-from database_core.storage.postgres import (
-    PostgresRepository,
-    RepositorySchemaVersionMismatchError,
-)
+from database_core.storage.postgres import RepositorySchemaVersionMismatchError
+from database_core.storage.services import build_storage_services
+
+
+def _build_repository(database_url: str):
+    return build_storage_services(database_url).repository
 
 
 def test_initialize_rejects_legacy_schema_version_without_explicit_reset(
     database_url: str,
 ) -> None:
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
 
     with repository.connect() as connection:
@@ -49,7 +51,7 @@ def test_initialize_rejects_legacy_schema_version_without_explicit_reset(
 def test_initialize_can_reset_legacy_schema_version_with_explicit_flag(
     database_url: str,
 ) -> None:
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
 
     with repository.connect() as connection:
@@ -81,14 +83,14 @@ def test_initialize_can_reset_legacy_schema_version_with_explicit_flag(
 
 
 def test_migrate_to_latest_initializes_v15_schema(database_url: str) -> None:
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     applied_versions = repository.migrate_to_latest()
     assert applied_versions == (8, 9, 10, 11, 12, 13, 14, 15)
     assert repository.current_schema_version() == 15
 
 
 def test_geospatial_queries_support_bbox_and_point_radius(database_url: str) -> None:
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
     repository.save_source_observations(
         [
@@ -135,7 +137,7 @@ def test_geospatial_queries_support_bbox_and_point_radius(database_url: str) -> 
 def test_append_run_history_creates_governance_review_queue_item_for_ambiguous_transition(
     database_url: str,
 ) -> None:
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
 
     first_run_id = "run:20260408T000000Z:aaaaaaaa"
@@ -215,7 +217,7 @@ def test_append_run_history_creates_governance_review_queue_item_for_ambiguous_t
 def test_append_run_history_routes_ambiguous_mapping_conflicts_to_governance_review_queue(
     database_url: str,
 ) -> None:
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
 
     first_run_id = "run:20260408T000000Z:aaaaaaaa"
@@ -298,7 +300,7 @@ def test_append_run_history_routes_ambiguous_mapping_conflicts_to_governance_rev
 
 
 def test_state_change_and_governance_logs_are_separated(database_url: str) -> None:
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
 
     run_1 = "run:20260408T000000Z:aaaaaaaa"
@@ -365,7 +367,7 @@ def test_state_change_and_governance_logs_are_separated(database_url: str) -> No
 
 
 def test_governance_review_item_can_be_resolved_with_audit_metadata(database_url: str) -> None:
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
 
     first_run_id = "run:20260408T000000Z:aaaaaaaa"
@@ -451,7 +453,7 @@ def test_governance_review_item_can_be_resolved_with_audit_metadata(database_url
 
 
 def test_governance_review_resolution_requires_non_blank_note(database_url: str) -> None:
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
 
     with pytest.raises(ValueError, match="resolved_note must not be blank"):
@@ -463,7 +465,7 @@ def test_governance_review_resolution_requires_non_blank_note(database_url: str)
 
 
 def test_playable_items_persist_and_support_filters(database_url: str) -> None:
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
     captured_at = datetime(2026, 4, 8, 0, 0, tzinfo=UTC)
     run_id = "run:20260408T000000Z:aaaaaaaa"
@@ -584,7 +586,7 @@ def test_playable_items_persist_and_support_filters(database_url: str) -> None:
 
 
 def test_pack_creation_persists_non_compilable_pack_with_diagnostic(database_url: str) -> None:
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
 
     payload = repository.create_pack(
@@ -627,7 +629,7 @@ def test_pack_creation_persists_non_compilable_pack_with_diagnostic(database_url
 
 
 def test_pack_store_creation_and_diagnostic_non_regression(database_url: str) -> None:
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
     pack_store = PostgresPackStore(connect=repository.connect)
 
@@ -658,7 +660,7 @@ def test_pack_store_creation_and_diagnostic_non_regression(database_url: str) ->
 def test_save_playable_items_supports_invalidation_and_automatic_reactivation(
     database_url: str,
 ) -> None:
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
 
     run1 = "run:20260408T001000Z:play001aa"
@@ -784,7 +786,7 @@ def test_save_playable_items_supports_invalidation_and_automatic_reactivation(
 def test_save_playable_items_invalidation_reason_tracks_canonical_state(
     database_url: str,
 ) -> None:
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
 
     run1 = "run:20260408T002000Z:playcnaa"
@@ -916,7 +918,7 @@ def test_save_playable_items_invalidation_reason_tracks_canonical_state(
 def test_save_playable_items_rejects_mixed_run_ids_without_explicit_run_id(
     database_url: str,
 ) -> None:
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
 
     first = _playable_item(
@@ -943,7 +945,7 @@ def test_save_playable_items_rejects_mixed_run_ids_without_explicit_run_id(
 
 
 def test_pack_revision_increments_monotonically(database_url: str) -> None:
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
 
     initial = repository.create_pack(
@@ -1037,7 +1039,7 @@ def test_pack_revision_parameters_validate_geo_and_date_constraints() -> None:
 
 
 def test_pack_diagnostic_is_deterministic_for_same_revision(database_url: str) -> None:
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
     payload = repository.create_pack(
         pack_id="pack:deterministic:test",
@@ -1070,7 +1072,7 @@ def test_pack_diagnostic_is_deterministic_for_same_revision(database_url: str) -
 def test_pack_diagnostic_questions_possible_requires_three_distinct_distractors(
     database_url: str,
 ) -> None:
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
     canonical_taxon_ids = _seed_pack_ready_playable_items(
         repository,
@@ -1104,7 +1106,7 @@ def test_pack_diagnostic_questions_possible_requires_three_distinct_distractors(
 def test_compile_pack_persists_validated_payload_and_is_deterministic(
     database_url: str,
 ) -> None:
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
     canonical_taxon_ids = _seed_pack_ready_playable_items(
         repository,
@@ -1157,7 +1159,7 @@ def test_compile_pack_persists_validated_payload_and_is_deterministic(
 def test_compile_pack_rejects_non_compilable_pack_without_persisting_build(
     database_url: str,
 ) -> None:
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
     payload = repository.create_pack(
         pack_id="pack:compile:reject",
@@ -1184,7 +1186,7 @@ def test_compile_pack_rejects_non_compilable_pack_without_persisting_build(
 
 
 def test_enqueue_enrichment_for_pack_creates_request_and_targets(database_url: str) -> None:
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
     payload = repository.create_pack(
         pack_id="pack:enrichment:queue-create",
@@ -1214,7 +1216,7 @@ def test_enqueue_enrichment_for_pack_creates_request_and_targets(database_url: s
 
 
 def test_enqueue_enrichment_for_pack_merges_same_request_signature(database_url: str) -> None:
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
     payload = repository.create_pack(
         pack_id="pack:enrichment:queue-merge",
@@ -1246,7 +1248,7 @@ def test_enqueue_enrichment_for_pack_merges_same_request_signature(database_url:
 def test_record_enrichment_execution_updates_status_and_attempt_count(
     database_url: str,
 ) -> None:
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
     payload = repository.create_pack(
         pack_id="pack:enrichment:execution-status",
@@ -1286,7 +1288,7 @@ def test_record_enrichment_execution_updates_status_and_attempt_count(
 
 
 def test_record_enrichment_execution_failed_requires_error_info(database_url: str) -> None:
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
     payload = repository.create_pack(
         pack_id="pack:enrichment:execution-failed",
@@ -1317,7 +1319,7 @@ def test_record_enrichment_execution_failed_requires_error_info(database_url: st
 
 
 def test_ingest_confusion_batch_creates_events(database_url: str) -> None:
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
 
     payload = repository.ingest_confusion_batch(
@@ -1343,7 +1345,7 @@ def test_ingest_confusion_batch_creates_events(database_url: str) -> None:
 
 
 def test_ingest_confusion_batch_duplicate_batch_rejected(database_url: str) -> None:
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
     events = [
         {
@@ -1367,7 +1369,7 @@ def test_ingest_confusion_batch_duplicate_batch_rejected(database_url: str) -> N
 
 
 def test_ingest_confusion_batch_assigns_deterministic_event_ids(database_url: str) -> None:
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
 
     repository.ingest_confusion_batch(
@@ -1394,7 +1396,7 @@ def test_ingest_confusion_batch_assigns_deterministic_event_ids(database_url: st
 
 
 def test_recompute_confusion_aggregates_global_counts_directed_pairs(database_url: str) -> None:
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
     repository.ingest_confusion_batch(
         batch_id="batch:confusions:agg",
@@ -1431,7 +1433,7 @@ def test_recompute_confusion_aggregates_global_counts_directed_pairs(database_ur
 
 
 def test_recompute_confusion_aggregates_global_is_idempotent(database_url: str) -> None:
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
     repository.ingest_confusion_batch(
         batch_id="batch:confusions:idempotent",
@@ -1453,7 +1455,7 @@ def test_recompute_confusion_aggregates_global_is_idempotent(database_url: str) 
 
 
 def test_ingest_confusion_batch_rejects_same_taxon_pair(database_url: str) -> None:
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
 
     with pytest.raises(ValidationError, match="must differ"):
@@ -1470,7 +1472,7 @@ def test_ingest_confusion_batch_rejects_same_taxon_pair(database_url: str) -> No
 
 
 def test_fetch_summary_confusion_counts_only_global_mode(database_url: str) -> None:
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
     repository.ingest_confusion_batch(
         batch_id="batch:confusions:summary",
@@ -1494,7 +1496,7 @@ def test_fetch_summary_confusion_counts_only_global_mode(database_url: str) -> N
 
 
 def test_fetch_enrichment_queue_metrics_includes_status_distribution(database_url: str) -> None:
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
     payload = repository.create_pack(
         pack_id="pack:enrichment:metrics",
@@ -1531,7 +1533,7 @@ def test_fetch_enrichment_queue_metrics_includes_status_distribution(database_ur
 
 
 def test_fetch_confusion_metrics_reports_top_pairs(database_url: str) -> None:
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
     repository.ingest_confusion_batch(
         batch_id="batch:confusions:metrics",
@@ -1571,7 +1573,7 @@ def test_fetch_confusion_metrics_reports_top_pairs(database_url: str) -> None:
 def test_compile_pack_prefers_internal_similar_taxa_for_distractors(
     database_url: str,
 ) -> None:
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
     canonical_taxon_ids = _seed_pack_ready_playable_items(
         repository,
@@ -1614,7 +1616,7 @@ def test_compile_pack_prefers_internal_similar_taxa_for_distractors(
 def test_compile_pack_falls_back_when_similar_taxa_are_insufficient(
     database_url: str,
 ) -> None:
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
     canonical_taxon_ids = _seed_pack_ready_playable_items(
         repository,
@@ -1661,7 +1663,7 @@ def test_compile_pack_falls_back_when_similar_taxa_are_insufficient(
 def test_compile_pack_prioritizes_non_distractor_risk_media_when_available(
     database_url: str,
 ) -> None:
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
     canonical_taxon_ids = _seed_pack_ready_playable_items(
         repository,
@@ -1729,7 +1731,7 @@ def test_compile_pack_prioritizes_non_distractor_risk_media_when_available(
 def test_compile_pack_uses_inat_similar_species_hints_for_distractors(
     database_url: str,
 ) -> None:
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
     canonical_taxon_ids = _seed_pack_ready_playable_items(
         repository,
@@ -1773,7 +1775,7 @@ def test_compile_pack_uses_inat_similar_species_hints_for_distractors(
 def test_materialize_pack_daily_challenge_is_frozen_after_playable_change(
     database_url: str,
 ) -> None:
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
     canonical_taxon_ids = _seed_pack_ready_playable_items(
         repository,
@@ -1827,7 +1829,7 @@ def test_materialize_pack_daily_challenge_is_frozen_after_playable_change(
 
 
 def test_materialize_pack_assignment_rejects_ttl(database_url: str) -> None:
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
     canonical_taxon_ids = _seed_pack_ready_playable_items(
         repository,
@@ -1862,7 +1864,7 @@ def test_materialize_pack_assignment_rejects_ttl(database_url: str) -> None:
         )
 
 def _seed_pack_ready_playable_items(
-    repository: PostgresRepository,
+    repository: object,
     *,
     run_id: str,
     taxon_count: int,
@@ -1965,7 +1967,7 @@ def _seed_pack_ready_playable_items(
 
 
 def _configure_gate5_similarity(
-    repository: PostgresRepository,
+    repository: object,
     *,
     target_taxon_id: str,
     similar_taxon_ids: list[str],
@@ -1991,7 +1993,7 @@ def _configure_gate5_similarity(
 
 
 def _configure_inat_similarity_hints(
-    repository: PostgresRepository,
+    repository: object,
     *,
     canonical_taxon_ids: list[str],
     target_taxon_id: str,

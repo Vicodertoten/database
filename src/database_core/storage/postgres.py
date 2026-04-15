@@ -52,7 +52,7 @@ class RepositorySchemaVersionMismatchError(ValueError):
     """Raised when an existing PostgreSQL schema has a schema version mismatch."""
 
 
-class PostgresRepository:
+class PostgresStorageInternal:
     def __init__(self, database_url: str) -> None:
         self.database_url = database_url
         self.pack_store = PostgresPackStore(connect=self.connect)

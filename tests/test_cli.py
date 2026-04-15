@@ -24,8 +24,12 @@ from database_core.domain.models import (
 )
 from database_core.pipeline.runner import run_pipeline
 from database_core.security import redact_database_url
-from database_core.storage.postgres import PostgresRepository
+from database_core.storage.services import build_storage_services
 from database_core.versioning import SCHEMA_VERSION
+
+
+def _build_repository(database_url: str):
+    return build_storage_services(database_url).repository
 
 
 def test_cli_qualify_inat_snapshot_loads_dotenv(monkeypatch, tmp_path: Path) -> None:
@@ -218,7 +222,7 @@ def test_review_overrides_cli_rejects_wrong_override_version(monkeypatch, tmp_pa
 
 
 def test_migrate_cli_applies_pending_schema_migration(monkeypatch, database_url: str) -> None:
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
     with repository.connect() as connection:
         connection.execute("DELETE FROM schema_migrations")
@@ -308,7 +312,7 @@ def test_confusion_cli_ingest_and_recompute(monkeypatch, tmp_path: Path, databas
 
 
 def test_governance_review_cli_resolves_item(monkeypatch, database_url: str) -> None:
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
 
     run_id = "run:20260408T000000Z:aaaaaaaa"
@@ -491,7 +495,7 @@ def test_inspect_cli_playable_invalidations_outputs_lifecycle_lines(
     monkeypatch,
     database_url: str,
 ) -> None:
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
     _seed_pack_ready_data(
         repository,
@@ -693,7 +697,7 @@ def test_pack_cli_create_revise_diagnose_and_inspect(monkeypatch, database_url: 
 
 
 def test_pack_cli_compile_materialize_and_inspect(monkeypatch, database_url: str) -> None:
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
     canonical_taxon_ids = _seed_pack_ready_data(
         repository,
@@ -818,7 +822,7 @@ def test_pack_cli_compile_materialize_and_inspect(monkeypatch, database_url: str
 
 
 def test_inspect_cli_enrichment_metrics_outputs_text(monkeypatch, database_url: str) -> None:
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
 
     buffer = io.StringIO()
@@ -842,7 +846,7 @@ def test_inspect_cli_enrichment_metrics_outputs_text(monkeypatch, database_url: 
 
 
 def test_inspect_cli_confusion_metrics_outputs_text(monkeypatch, database_url: str) -> None:
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
 
     buffer = io.StringIO()
@@ -865,7 +869,7 @@ def test_inspect_cli_confusion_metrics_outputs_text(monkeypatch, database_url: s
 
 
 def _seed_pack_ready_data(
-    repository: PostgresRepository,
+    repository: object,
     *,
     run_id: str,
     taxon_count: int,

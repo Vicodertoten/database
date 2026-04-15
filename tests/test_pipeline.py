@@ -6,7 +6,11 @@ import pytest
 from jsonschema import validate
 
 from database_core.pipeline.runner import ArtifactPromotionError, run_pipeline
-from database_core.storage.postgres import PostgresRepository
+from database_core.storage.services import build_storage_services
+
+
+def _build_repository(database_url: str):
+    return build_storage_services(database_url).repository
 
 
 def test_pipeline_produces_reproducible_output(
@@ -153,7 +157,7 @@ def test_pipeline_overwrites_previous_run_outputs_on_same_database(
         export_path=tmp_path / "overwrite.export.json",
         uncertain_policy="review",
     )
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
     first_summary = repository.fetch_summary()
     assert first_summary["review_queue"] == 1
@@ -167,7 +171,7 @@ def test_pipeline_overwrites_previous_run_outputs_on_same_database(
         export_path=tmp_path / "overwrite.export.json",
         uncertain_policy="reject",
     )
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
     second_summary = repository.fetch_summary()
     assert second_summary["review_queue"] == 0
@@ -208,7 +212,7 @@ def test_run_metrics_support_run_scope(tmp_path: Path, database_url: str) -> Non
         run_id=second_run_id,
     )
 
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
     first_metrics = repository.fetch_run_level_metrics(run_id=first_run_id)
     second_metrics = repository.fetch_run_level_metrics(run_id=second_run_id)
@@ -242,7 +246,7 @@ def test_pipeline_rolls_back_database_on_artifact_write_failure(
             export_path=tmp_path / "rollback.export.json",
         )
 
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
     summary = repository.fetch_summary()
     assert summary == {
@@ -288,7 +292,7 @@ def test_pipeline_marks_run_as_artifact_write_failed_when_promotion_fails(
             export_path=tmp_path / "promotion_fail.export.json",
         )
 
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
     summary = repository.fetch_summary()
 
@@ -367,7 +371,7 @@ def test_pipeline_restores_previous_artifacts_on_partial_promotion_failure(
     assert qualified_path.read_text(encoding="utf-8") == sentinel_payload
     assert export_path.read_text(encoding="utf-8") == sentinel_payload
 
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     repository.initialize()
     summary = repository.fetch_summary()
     assert summary == {
@@ -398,7 +402,7 @@ def test_pipeline_populates_playable_corpus_with_exportable_resources(
         export_path=tmp_path / "playable.export.json",
         run_id="run:20260408T000000Z:aaaaaaaa",
     )
-    repository = PostgresRepository(database_url)
+    repository = _build_repository(database_url)
     payload = repository.fetch_playable_corpus_payload(limit=100)
 
     assert payload["playable_corpus_version"] == "playable_corpus.v1"

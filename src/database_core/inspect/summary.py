@@ -1,12 +1,12 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Any
 
 from database_core.adapters import summarize_snapshot_manifest
-from database_core.storage.postgres import PostgresRepository
 
 
-def render_summary(repository: PostgresRepository) -> str:
+def render_summary(repository: Any) -> str:
     summary = repository.fetch_summary()
     return "\n".join(
         [
@@ -28,7 +28,7 @@ def render_summary(repository: PostgresRepository) -> str:
 
 
 def render_enrichment_requests(
-    repository: PostgresRepository,
+    repository: Any,
     *,
     request_status: str | None = None,
     pack_id: str | None = None,
@@ -54,7 +54,7 @@ def render_enrichment_requests(
 
 
 def render_enrichment_executions(
-    repository: PostgresRepository,
+    repository: Any,
     *,
     enrichment_request_id: str | None = None,
     limit: int = 100,
@@ -76,7 +76,7 @@ def render_enrichment_executions(
 
 
 def render_confusion_events(
-    repository: PostgresRepository,
+    repository: Any,
     *,
     batch_id: str | None = None,
     limit: int = 100,
@@ -95,7 +95,7 @@ def render_confusion_events(
 
 
 def render_confusion_aggregates_global(
-    repository: PostgresRepository,
+    repository: Any,
     *,
     taxon_confused_for_id: str | None = None,
     limit: int = 100,
@@ -117,7 +117,7 @@ def render_confusion_aggregates_global(
     return "\n".join(lines)
 
 
-def render_enrichment_metrics(repository: PostgresRepository) -> str:
+def render_enrichment_metrics(repository: Any) -> str:
     metrics = repository.fetch_enrichment_queue_metrics()
     status_counts = metrics["status_counts"]
     return "\n".join(
@@ -135,7 +135,7 @@ def render_enrichment_metrics(repository: PostgresRepository) -> str:
     )
 
 
-def render_confusion_metrics(repository: PostgresRepository) -> str:
+def render_confusion_metrics(repository: Any) -> str:
     metrics = repository.fetch_confusion_metrics()
     lines = [
         "Confusion metrics",
@@ -158,7 +158,7 @@ def render_confusion_metrics(repository: PostgresRepository) -> str:
 
 
 def render_review_queue(
-    repository: PostgresRepository,
+    repository: Any,
     *,
     review_reason_code: str | None = None,
     stage_name: str | None = None,
@@ -186,7 +186,7 @@ def render_review_queue(
     return "\n".join(lines)
 
 
-def render_exportables(repository: PostgresRepository) -> str:
+def render_exportables(repository: Any) -> str:
     rows = repository.fetch_exportable_resources()
     if not rows:
         return "No exportable resources."
@@ -200,7 +200,7 @@ def render_exportables(repository: PostgresRepository) -> str:
 
 
 def render_canonical_governance_review_queue(
-    repository: PostgresRepository,
+    repository: Any,
     *,
     run_id: str | None = None,
     reason_code: str | None = None,
@@ -244,7 +244,7 @@ def render_canonical_governance_review_queue(
 
 
 def render_canonical_state_events(
-    repository: PostgresRepository,
+    repository: Any,
     *,
     run_id: str | None = None,
     limit: int = 100,
@@ -262,7 +262,7 @@ def render_canonical_state_events(
 
 
 def render_canonical_change_events(
-    repository: PostgresRepository,
+    repository: Any,
     *,
     run_id: str | None = None,
     limit: int = 100,
@@ -280,7 +280,7 @@ def render_canonical_change_events(
 
 
 def render_canonical_governance_events(
-    repository: PostgresRepository,
+    repository: Any,
     *,
     run_id: str | None = None,
     limit: int = 100,
@@ -299,7 +299,7 @@ def render_canonical_governance_events(
 
 
 def render_run_metrics(
-    repository: PostgresRepository,
+    repository: Any,
     *,
     run_id: str | None = None,
 ) -> str:
@@ -318,7 +318,7 @@ def render_run_metrics(
 
 
 def render_playable_invalidations(
-    repository: PostgresRepository,
+    repository: Any,
     *,
     invalidated_run_id: str | None = None,
     invalidation_reason: str | None = None,
@@ -346,7 +346,7 @@ def render_playable_invalidations(
 
 
 def render_snapshot_health(
-    repository: PostgresRepository,
+    repository: Any,
     *,
     snapshot_id: str | None,
     snapshot_root: Path,
