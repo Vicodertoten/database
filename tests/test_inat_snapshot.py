@@ -69,7 +69,7 @@ def test_snapshot_loader_rebuilds_records_without_network() -> None:
     ]
 
 
-def test_snapshot_manifest_v2_is_accepted() -> None:
+def test_snapshot_manifest_v3_is_accepted() -> None:
     manifest, snapshot_dir = load_snapshot_manifest(manifest_path=SNAPSHOT_MANIFEST)
 
     assert manifest.manifest_version == "inaturalist.snapshot.v3"
