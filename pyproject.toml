@@ -19,6 +19,7 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
   "pytest>=8.0,<9",
+  "pytest-xdist>=3.6,<4",
   "ruff>=0.4,<1",
 ]
 
@@ -41,6 +42,9 @@ where = ["src"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+markers = [
+  "integration_db: tests that require a live PostgreSQL connection",
+]
 
 [tool.ruff]
 line-length = 100

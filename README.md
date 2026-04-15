@@ -219,6 +219,36 @@ For the full operational command set, use the script wrappers and inspect help o
 - `python scripts/manage_confusions.py --help`
 - `python scripts/review_overrides.py --help`
 
+## Test execution profiles
+
+Use a local PostgreSQL endpoint for test runs to avoid network latency from remote managed DBs.
+
+Recommended baseline:
+
+```bash
+export TEST_DATABASE_URL='postgresql://postgres:postgres@127.0.0.1:5432/postgres'
+```
+
+Fast local loop (keeps DB integration coverage but parallelizes safely):
+
+```bash
+python -m pytest -q -n auto -p no:capture
+```
+
+Ultra-fast edit loop (non-DB tests only):
+
+```bash
+python -m pytest -q -m "not integration_db" -p no:capture
+```
+
+Release-grade local verification (full suite + docs + lint):
+
+```bash
+python -m pytest -q -p no:capture
+python scripts/check_doc_code_coherence.py
+python -m ruff check src tests scripts
+```
+
 ## Review workflow
 
 The review queue is no longer audit-only.

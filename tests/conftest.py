@@ -62,3 +62,10 @@ def database_url_factory() -> Callable[[], str]:
 @pytest.fixture
 def database_url(database_url_factory: Callable[[], str]) -> str:
     return database_url_factory()
+
+
+def pytest_collection_modifyitems(items: list[pytest.Item]) -> None:
+    for item in items:
+        fixture_names = set(getattr(item, "fixturenames", []))
+        if {"database_url", "database_url_factory"} & fixture_names:
+            item.add_marker("integration_db")
