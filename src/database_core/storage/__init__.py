@@ -9,6 +9,12 @@ from database_core.storage.postgres import (
     PostgresRepository,
     RepositorySchemaVersionMismatchError,
 )
+from database_core.storage.services import (
+    PostgresDatabase,
+    PostgresPipelineStore,
+    StorageServices,
+    build_storage_services,
+)
 
 __all__ = [
     "MIN_PACK_MEDIA_PER_TAXON",
@@ -16,6 +22,10 @@ __all__ = [
     "MIN_PACK_TOTAL_QUESTIONS",
     "PostgresPlayableStore",
     "PostgresRepository",
+    "PostgresDatabase",
+    "PostgresPipelineStore",
     "PostgresPackStore",
     "RepositorySchemaVersionMismatchError",
+    "StorageServices",
+    "build_storage_services",
 ]

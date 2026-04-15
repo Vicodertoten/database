@@ -34,7 +34,7 @@ from database_core.qualification.ai import (
     inspect_image_dimensions,
 )
 from database_core.security import redact_database_url
-from database_core.storage.postgres import PostgresRepository
+from database_core.storage.services import build_storage_services
 
 DEFAULT_GOLDSET_MANIFEST_PATH = Path("data/goldset/birds_v1/manifest.json")
 DEFAULT_PILOT_TAXA_PATH = Path("data/fixtures/inaturalist_pilot_taxa.json")
@@ -242,9 +242,9 @@ def main() -> int:
         qualifier_mode="cached",
         uncertain_policy=args.uncertain_policy,
     )
-    repository = PostgresRepository(pipeline_result.database_url)
-    repository.initialize()
-    summary = repository.fetch_summary()
+    services = build_storage_services(pipeline_result.database_url)
+    services.database.initialize()
+    summary = services.pipeline_store.fetch_summary()
 
     print(
         "goldset live pipeline complete | "

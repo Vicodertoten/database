@@ -49,7 +49,7 @@ from database_core.review.overrides import (
     load_review_override_file,
     resolve_review_overrides_path,
 )
-from database_core.storage.postgres import PostgresRepository
+from database_core.storage.services import build_storage_services
 from database_core.versioning import ENRICHMENT_VERSION, EXPORT_VERSION
 
 DEFAULT_FIXTURE_PATH = Path("data/fixtures/birds_pilot.json")
@@ -144,9 +144,11 @@ def run_pipeline(
         review_overrides_path=review_overrides_path,
         snapshot_id=resolved_snapshot_id,
     )
-    repository = PostgresRepository(resolved_database_url)
-    repository.initialize(allow_schema_reset=allow_schema_reset)
-    previous_canonical_taxa = repository.fetch_latest_completed_canonical_taxa()
+    storage_services = build_storage_services(resolved_database_url)
+    database = storage_services.database
+    pipeline_store = storage_services.pipeline_store
+    database.initialize(allow_schema_reset=allow_schema_reset)
+    previous_canonical_taxa = pipeline_store.fetch_latest_completed_canonical_taxa()
     prepared_state = _prepare_pipeline_state(
         dataset=dataset,
         previous_canonical_taxa=previous_canonical_taxa,
@@ -169,7 +171,7 @@ def run_pipeline(
         export_bundle=prepared_state.export_bundle,
     )
 
-    repository.start_pipeline_run(
+    pipeline_store.start_pipeline_run(
         run_id=resolved_run_id,
         source_mode=source_mode,
         dataset_id=dataset.dataset_id,
@@ -178,26 +180,32 @@ def run_pipeline(
     )
 
     try:
-        with repository.connect() as connection:
-            repository.reset_materialized_state(connection=connection)
-            repository.save_canonical_taxa(
+        with pipeline_store.connect() as connection:
+            pipeline_store.reset_materialized_state(connection=connection)
+            pipeline_store.save_canonical_taxa(
                 prepared_state.canonical_taxa,
                 run_id=resolved_run_id,
                 connection=connection,
             )
-            repository.save_source_observations(prepared_state.observations, connection=connection)
-            repository.save_media_assets(prepared_state.media_assets, connection=connection)
-            repository.save_qualified_resources(
+            pipeline_store.save_source_observations(
+                prepared_state.observations,
+                connection=connection,
+            )
+            pipeline_store.save_media_assets(
+                prepared_state.media_assets,
+                connection=connection,
+            )
+            pipeline_store.save_qualified_resources(
                 prepared_state.qualified_resources,
                 connection=connection,
             )
-            repository.save_review_items(prepared_state.review_items, connection=connection)
-            repository.save_playable_items(
+            pipeline_store.save_review_items(prepared_state.review_items, connection=connection)
+            pipeline_store.save_playable_items(
                 prepared_state.playable_items,
                 run_id=resolved_run_id,
                 connection=connection,
             )
-            repository.append_run_history(
+            pipeline_store.append_run_history(
                 run_id=resolved_run_id,
                 governance_effective_at=dataset.captured_at,
                 canonical_taxa=prepared_state.canonical_taxa,
@@ -216,21 +224,21 @@ def run_pipeline(
                 raise ArtifactPromotionError(
                     "Failed to promote staged pipeline artifacts"
                 ) from exc
-            repository.complete_pipeline_run(
+            pipeline_store.complete_pipeline_run(
                 run_id=resolved_run_id,
                 completed_at=datetime.now(UTC),
                 run_status="completed",
                 connection=connection,
             )
     except ArtifactPromotionError:
-        repository.complete_pipeline_run(
+        pipeline_store.complete_pipeline_run(
             run_id=resolved_run_id,
             completed_at=datetime.now(UTC),
             run_status="artifact_write_failed",
         )
         raise
     except Exception:
-        repository.complete_pipeline_run(
+        pipeline_store.complete_pipeline_run(
             run_id=resolved_run_id,
             completed_at=datetime.now(UTC),
             run_status="failed",

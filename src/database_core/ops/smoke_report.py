@@ -4,7 +4,7 @@ import json
 from datetime import UTC, datetime
 
 from database_core.security import redact_database_url
-from database_core.storage.postgres import PostgresRepository
+from database_core.storage.services import PostgresPipelineStore
 
 _REPORT_VERSION = "smoke.report.v1"
 _SIGNAL_KEYS = {
@@ -35,7 +35,7 @@ _LOCKED_KPIS = {
 
 
 def generate_smoke_report(
-    repository: PostgresRepository,
+    repository: PostgresPipelineStore,
     *,
     snapshot_id: str | None,
     database_url: str,

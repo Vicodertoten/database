@@ -54,8 +54,7 @@ from database_core.review.overrides import (
     upsert_review_override,
 )
 from database_core.security import redact_database_url
-from database_core.storage.pack_store import PostgresPackStore
-from database_core.storage.postgres import PostgresRepository
+from database_core.storage.services import build_storage_services
 
 
 def default_snapshot_id(*, prefix: str = "inaturalist-birds") -> str:
@@ -487,9 +486,9 @@ def main() -> None:
         return
 
     if args.command == "pack":
-        repository = PostgresRepository(args.database_url)
-        repository.initialize()
-        pack_store = PostgresPackStore(connect=repository.connect)
+        services = build_storage_services(args.database_url)
+        services.database.initialize()
+        pack_store = services.pack_store
         if args.pack_command == "create":
             parameters = _build_pack_revision_parameters_from_args(args)
             payload = pack_store.create_pack(
@@ -532,7 +531,7 @@ def main() -> None:
             print(json.dumps(payload, indent=2, sort_keys=True))
             return
         if args.pack_command == "enrich-enqueue":
-            payload = repository.enqueue_enrichment_for_pack(
+            payload = services.enrichment_store.enqueue_enrichment_for_pack(
                 pack_id=args.pack_id,
                 revision=args.revision,
                 question_count=args.question_count,
@@ -540,7 +539,7 @@ def main() -> None:
             print(json.dumps(payload, indent=2, sort_keys=True))
             return
         if args.pack_command == "enrich-execute":
-            payload = repository.record_enrichment_execution(
+            payload = services.enrichment_store.record_enrichment_execution(
                 enrichment_request_id=args.enrichment_request_id,
                 execution_status=args.execution_status,
                 execution_context={
@@ -555,28 +554,28 @@ def main() -> None:
         raise SystemExit(f"Unsupported pack command: {args.pack_command}")
 
     if args.command == "confusion":
-        repository = PostgresRepository(args.database_url)
-        repository.initialize()
+        services = build_storage_services(args.database_url)
+        services.database.initialize()
         if args.confusion_command == "ingest-batch":
             events = _load_confusion_events_from_file(args.events_file)
-            payload = repository.ingest_confusion_batch(
+            payload = services.confusion_store.ingest_confusion_batch(
                 batch_id=args.batch_id,
                 events=events,
             )
             print(json.dumps(payload, indent=2, sort_keys=True))
             return
         if args.confusion_command == "aggregate-recompute":
-            payload = repository.recompute_confusion_aggregates_global()
+            payload = services.confusion_store.recompute_confusion_aggregates_global()
             print(json.dumps(payload, indent=2, sort_keys=True))
             return
         raise SystemExit(f"Unsupported confusion command: {args.confusion_command}")
 
     if args.command == "migrate":
-        repository = PostgresRepository(args.database_url)
+        services = build_storage_services(args.database_url)
         redacted_database_url = redact_database_url(args.database_url)
-        version_before = repository.current_schema_version()
-        applied_versions = repository.migrate_to_latest()
-        version_after = repository.current_schema_version()
+        version_before = services.database.current_schema_version()
+        applied_versions = services.database.migrate_to_latest()
+        version_after = services.database.current_schema_version()
         if version_before == 0 and version_after > 0:
             print(
                 "Database initialized at latest schema | "
@@ -594,7 +593,7 @@ def main() -> None:
             print(
                 "Database already up to date | "
                 f"database_url={redacted_database_url} | "
-                f"schema_version={repository.current_schema_version()}"
+                f"schema_version={services.database.current_schema_version()}"
             )
         return
 
@@ -662,10 +661,10 @@ def main() -> None:
             raise SystemExit(
                 f"Unsupported governance-review command: {args.governance_review_command}"
             )
-        repository = PostgresRepository(args.database_url)
-        repository.initialize()
+        services = build_storage_services(args.database_url)
+        services.database.initialize()
         try:
-            updated = repository.resolve_canonical_governance_review_item(
+            updated = services.repository.resolve_canonical_governance_review_item(
                 governance_review_item_id=args.governance_review_item_id,
                 resolved_note=args.note,
                 resolved_by=args.resolved_by,
@@ -682,9 +681,10 @@ def main() -> None:
         )
         return
 
-    repository = PostgresRepository(args.database_url)
-    repository.initialize()
-    pack_store = PostgresPackStore(connect=repository.connect)
+    services = build_storage_services(args.database_url)
+    services.database.initialize()
+    repository = services.repository
+    pack_store = services.pack_store
     if args.view == "summary":
         print(render_summary(repository))
     elif args.view == "review-queue":

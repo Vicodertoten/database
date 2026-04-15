@@ -24,7 +24,7 @@ def main() -> None:
     _bootstrap_src_path()
     from database_core.ops import generate_smoke_report
     from database_core.pipeline.runner import DEFAULT_DATABASE_URL
-    from database_core.storage.postgres import PostgresRepository
+    from database_core.storage.services import build_storage_services
 
     parser = argparse.ArgumentParser(prog="generate-smoke-report")
     parser.add_argument("--snapshot-id", type=str)
@@ -41,10 +41,10 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    repository = PostgresRepository(args.database_url)
-    repository.initialize()
+    services = build_storage_services(args.database_url)
+    services.database.initialize()
     report = generate_smoke_report(
-        repository,
+        services.pipeline_store,
         snapshot_id=args.snapshot_id,
         database_url=args.database_url,
     )
