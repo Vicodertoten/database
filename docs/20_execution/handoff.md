@@ -6,7 +6,7 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
 
 - ID: INT-002
 - Title: Align runtime-app/packages/contracts with official database schemas
-- Status: in_progress
+- Status: closed
 
 ## Repo role in current chantier
 
@@ -17,10 +17,10 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
 
 ## Last validated state
 
-- Last validated commit or tag: d921a9b (database)
+- Last validated commit or tag: 17f8349 (database), 1868923 (runtime-app)
 - Validation date: 2026-04-15
-- What is already validated: three owner schemas confirmed as official source of truth; no schema changes needed; chantier brief published
-- What is not validated yet: consumer contracts aligned; cross-repo closure
+- What is already validated: three owner schemas confirmed as official source of truth; consumer contracts aligned field-for-field; consumer check command green; inter-repo closure complete
+- What is not validated yet: nothing — INT-002 is fully closed
 
 ## Decisions already locked
 
@@ -38,7 +38,7 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
 
 ## Next exact step
 
-- align runtime-app consumer contracts with these schemas: schemas/playable_corpus_v1.schema.json, schemas/pack_compiled_v1.schema.json, schemas/pack_materialization_v1.schema.json
+- open INT-003 only after explicit owner/consumer scope definition and sequencing
 
 ## Files to read first in this repo
 
@@ -62,7 +62,6 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
 
 ## Notes for next IA session
 
-- INT-002 est le seul chantier structurant actif.
-- Source de verite = les 3 fichiers schemas/*.json de database. Aucun renommage local autorise.
-- Corriger uniquement cote consumer (runtime-app/packages/contracts); ne rien changer dans database.
-- Cloturer inter-repos seulement apres alignement confirme et tests consumer verts.
+- INT-002 is closed.
+- Keep source of truth anchored in `database/schemas/*.json` for runtime contract surfaces.
+- Any future consumer divergence must be fixed consumer-side unless owner schemas are intentionally evolved first.

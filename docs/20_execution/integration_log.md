@@ -139,7 +139,7 @@ Align runtime-app/packages/contracts with official database schemas
 
 ### Status
 
-in_progress
+closed
 
 ### Owner repo
 
@@ -151,7 +151,7 @@ runtime-app
 
 ### Summary
 
-Owner step complete: three v1 schemas confirmed as official source of truth, no changes needed. Consumer must align TypeScript types field-for-field with these schemas.
+Owner and consumer steps complete: runtime-app contracts are aligned 1:1 with owner schemas and the cross-repo closure criteria are met.
 
 ### Decisions
 
@@ -165,25 +165,33 @@ Owner step complete: three v1 schemas confirmed as official source of truth, no 
 - database: docs/runtime_consumption_v1.md
 - database: docs/20_execution/chantiers/INT-002.md
 - database: docs/20_execution/handoff.md
-- runtime-app: packages/contracts/src/ (pending)
+- runtime-app: packages/contracts/src/index.ts
+- runtime-app: packages/contracts/src/guards.ts
+- runtime-app: packages/contracts/src/examples.ts
+- runtime-app: packages/contracts/README.md
+- runtime-app: docs/20_execution/chantiers/INT-002.md
+- runtime-app: docs/20_execution/handoff.md
+- runtime-app: docs/20_execution/integration_log.md
 
 ### Linked commits
 
 - database: d921a9b
-- runtime-app: pending
+- database: 17f8349
+- runtime-app: 1868923
 
 ### Verification
 
 - owner-side: schemas verified as stable and complete on 2026-04-15
-- consumer-side: pending
+- consumer-side: field-level alignment verified against owner schemas; no local renaming or semantic transformation
+- consumer-side command: `npx -y pnpm run check` passed (exit 0)
 
 ### Next step
 
-align runtime-app/packages/contracts with owner schemas
+INT-003
 
 ### Closed at
 
-open
+2026-04-15
 
 ## Fictitious examples
 
