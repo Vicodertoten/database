@@ -1,10 +1,11 @@
 import json
+import os
 from pathlib import Path
 
 import pytest
 from jsonschema import validate
 
-from database_core.pipeline.runner import run_pipeline
+from database_core.pipeline.runner import ArtifactPromotionError, run_pipeline
 from database_core.storage.postgres import PostgresRepository
 
 
@@ -278,7 +279,7 @@ def test_pipeline_marks_run_as_artifact_write_failed_when_promotion_fails(
         fail_promotion,
     )
 
-    with pytest.raises(RuntimeError, match="synthetic promotion failure"):
+    with pytest.raises(ArtifactPromotionError, match="Failed to promote staged pipeline artifacts"):
         run_pipeline(
             fixture_path=Path("data/fixtures/birds_pilot.json"),
             database_url=database_url,
@@ -289,6 +290,7 @@ def test_pipeline_marks_run_as_artifact_write_failed_when_promotion_fails(
 
     repository = PostgresRepository(database_url)
     repository.initialize()
+    summary = repository.fetch_summary()
 
     with repository.connect() as connection:
         run_row = connection.execute(
@@ -302,6 +304,86 @@ def test_pipeline_marks_run_as_artifact_write_failed_when_promotion_fails(
 
     assert run_row is not None
     assert run_row["run_status"] == "artifact_write_failed"
+    assert summary == {
+        "canonical_taxa": 0,
+        "source_observations": 0,
+        "media_assets": 0,
+        "qualified_resources": 0,
+        "review_queue": 0,
+        "playable_items": 0,
+        "compiled_pack_builds": 0,
+        "pack_materializations": 0,
+        "enrichment_requests": 0,
+        "enrichment_executions": 0,
+        "confusion_events": 0,
+        "confusion_aggregates_global": 0,
+    }
+
+
+def test_pipeline_restores_previous_artifacts_on_partial_promotion_failure(
+    monkeypatch,
+    tmp_path: Path,
+    database_url: str,
+) -> None:
+    normalized_path = tmp_path / "partial_fail.normalized.json"
+    qualified_path = tmp_path / "partial_fail.qualified.json"
+    export_path = tmp_path / "partial_fail.export.json"
+    sentinel_payload = '{"sentinel": true}\n'
+
+    normalized_path.write_text(sentinel_payload, encoding="utf-8")
+    qualified_path.write_text(sentinel_payload, encoding="utf-8")
+    export_path.write_text(sentinel_payload, encoding="utf-8")
+
+    original_replace = os.replace
+    has_failed = {"value": False}
+
+    def fail_during_second_final_promotion(src, target):  # noqa: ANN001
+        source_path = Path(src)
+        target_path = Path(target)
+        if (
+            not has_failed["value"]
+            and target_path == qualified_path
+            and ".tmp-" in source_path.name
+        ):
+            has_failed["value"] = True
+            raise RuntimeError("synthetic partial promotion failure")
+        return original_replace(src, target)
+
+    monkeypatch.setattr(
+        "database_core.pipeline.runner.os.replace",
+        fail_during_second_final_promotion,
+    )
+
+    with pytest.raises(ArtifactPromotionError, match="Failed to promote staged pipeline artifacts"):
+        run_pipeline(
+            fixture_path=Path("data/fixtures/birds_pilot.json"),
+            database_url=database_url,
+            normalized_snapshot_path=normalized_path,
+            qualification_snapshot_path=qualified_path,
+            export_path=export_path,
+        )
+
+    assert normalized_path.read_text(encoding="utf-8") == sentinel_payload
+    assert qualified_path.read_text(encoding="utf-8") == sentinel_payload
+    assert export_path.read_text(encoding="utf-8") == sentinel_payload
+
+    repository = PostgresRepository(database_url)
+    repository.initialize()
+    summary = repository.fetch_summary()
+    assert summary == {
+        "canonical_taxa": 0,
+        "source_observations": 0,
+        "media_assets": 0,
+        "qualified_resources": 0,
+        "review_queue": 0,
+        "playable_items": 0,
+        "compiled_pack_builds": 0,
+        "pack_materializations": 0,
+        "enrichment_requests": 0,
+        "enrichment_executions": 0,
+        "confusion_events": 0,
+        "confusion_aggregates_global": 0,
+    }
 
 
 def test_pipeline_populates_playable_corpus_with_exportable_resources(

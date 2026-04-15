@@ -87,6 +87,10 @@ class PreparedPipelineState:
     export_bundle: dict[str, object]
 
 
+class ArtifactPromotionError(RuntimeError):
+    """Raised when staged artifact promotion fails."""
+
+
 def run_pipeline(
     *,
     source_mode: str = "fixture",
@@ -204,33 +208,36 @@ def run_pipeline(
                 playable_items=prepared_state.playable_items,
                 connection=connection,
             )
-    except Exception:
-        _cleanup_staged_pipeline_artifacts(staged_artifacts)
-        repository.complete_pipeline_run(
-            run_id=resolved_run_id,
-            completed_at=datetime.now(UTC),
-            run_status="failed",
-        )
-        raise
-
-    try:
-        _promote_staged_pipeline_artifacts(staged_artifacts)
-    except Exception:
-        _cleanup_staged_pipeline_artifacts(staged_artifacts)
+            try:
+                _promote_staged_pipeline_artifacts(staged_artifacts)
+            except ArtifactPromotionError:
+                raise
+            except Exception as exc:
+                raise ArtifactPromotionError(
+                    "Failed to promote staged pipeline artifacts"
+                ) from exc
+            repository.complete_pipeline_run(
+                run_id=resolved_run_id,
+                completed_at=datetime.now(UTC),
+                run_status="completed",
+                connection=connection,
+            )
+    except ArtifactPromotionError:
         repository.complete_pipeline_run(
             run_id=resolved_run_id,
             completed_at=datetime.now(UTC),
             run_status="artifact_write_failed",
         )
         raise
+    except Exception:
+        repository.complete_pipeline_run(
+            run_id=resolved_run_id,
+            completed_at=datetime.now(UTC),
+            run_status="failed",
+        )
+        raise
     finally:
         _cleanup_staged_pipeline_artifacts(staged_artifacts)
-
-    repository.complete_pipeline_run(
-        run_id=resolved_run_id,
-        completed_at=datetime.now(UTC),
-        run_status="completed",
-    )
 
     exportable_resource_count = len(
         [item for item in prepared_state.qualified_resources if item.export_eligible]
@@ -641,8 +648,28 @@ def _stage_pipeline_artifacts(
 
 
 def _promote_staged_pipeline_artifacts(staged_artifacts: list[tuple[Path, Path]]) -> None:
-    for temporary_path, final_path in staged_artifacts:
-        temporary_path.replace(final_path)
+    backup_by_final_path: dict[Path, Path] = {}
+    promoted_paths_without_backup: list[Path] = []
+
+    try:
+        for temporary_path, final_path in staged_artifacts:
+            final_path.parent.mkdir(parents=True, exist_ok=True)
+            if final_path.exists():
+                backup_path = _temporary_backup_path(final_path)
+                os.replace(final_path, backup_path)
+                backup_by_final_path[final_path] = backup_path
+            os.replace(temporary_path, final_path)
+            if final_path not in backup_by_final_path:
+                promoted_paths_without_backup.append(final_path)
+    except Exception as exc:
+        _rollback_promoted_pipeline_artifacts(
+            backup_by_final_path=backup_by_final_path,
+            promoted_paths_without_backup=promoted_paths_without_backup,
+        )
+        raise ArtifactPromotionError("Failed to promote staged pipeline artifacts") from exc
+    finally:
+        for backup_path in backup_by_final_path.values():
+            backup_path.unlink(missing_ok=True)
 
 
 def _cleanup_staged_pipeline_artifacts(staged_artifacts: list[tuple[Path, Path]]) -> None:
@@ -652,6 +679,23 @@ def _cleanup_staged_pipeline_artifacts(staged_artifacts: list[tuple[Path, Path]]
 
 def _temporary_output_path(path: Path) -> Path:
     return path.with_name(f".{path.name}.tmp-{uuid4().hex}")
+
+
+def _temporary_backup_path(path: Path) -> Path:
+    return path.with_name(f".{path.name}.bak-{uuid4().hex}")
+
+
+def _rollback_promoted_pipeline_artifacts(
+    *,
+    backup_by_final_path: dict[Path, Path],
+    promoted_paths_without_backup: list[Path],
+) -> None:
+    for final_path in promoted_paths_without_backup:
+        final_path.unlink(missing_ok=True)
+
+    for final_path, backup_path in backup_by_final_path.items():
+        if backup_path.exists():
+            os.replace(backup_path, final_path)
 
 
 def _generate_run_id() -> str:
