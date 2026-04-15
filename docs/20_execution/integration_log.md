@@ -110,7 +110,7 @@ runtime consumption boundary locked owner-side.
 
 ### Linked commits
 
-- database: pending
+- database: 20da705
 
 ### Verification
 
