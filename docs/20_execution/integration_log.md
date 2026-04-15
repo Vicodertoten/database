@@ -82,7 +82,7 @@ Lock runtime consumption doctrine v1
 
 ### Status
 
-in_progress
+closed
 
 ### Owner repo
 
@@ -94,7 +94,7 @@ runtime-app
 
 ### Summary
 
-runtime consumption boundary locked owner-side.
+runtime consumption boundary locked owner-side and consumer-side verified as aligned.
 
 ### Decisions
 
@@ -121,7 +121,7 @@ runtime consumption boundary locked owner-side.
 
 ### Next step
 
-none
+INT-002
 
 ### Closed at
 

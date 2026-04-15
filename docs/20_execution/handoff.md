@@ -6,7 +6,7 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
 
 - ID: INT-001
 - Title: Lock runtime consumption doctrine v1
-- Status: validated_by_owner
+- Status: closed
 
 ## Repo role in current chantier
 
@@ -17,10 +17,10 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
 
 ## Last validated state
 
-- Last validated commit or tag: 1f03803
+- Last validated commit or tag: 1f03803 (database), f9f556a (runtime-app)
 - Validation date: 2026-04-15
-- What is already validated: official runtime-consumable surfaces confirmed; prohibition on export.bundle.v4 confirmed; ownership boundary confirmed
-- What is not validated yet: consumer-side mirrored wording; cross-repo closure
+- What is already validated: official runtime-consumable surfaces confirmed; prohibition on export.bundle.v4 confirmed; ownership boundary confirmed; consumer-side wording verified as aligned
+- What is not validated yet: nothing — INT-001 is fully closed
 
 ## Decisions already locked
 
@@ -38,7 +38,7 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
 
 ## Next exact step
 
-- Open runtime-app and align docs/database_integration_v1.md with the locked owner wording.
+- Open INT-002 chantier brief and begin owner-side work.
 
 ## Files to read first in this repo
 
@@ -52,7 +52,8 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
 ## Files to read first in the other repo
 
 - README.md
-- docs/database_integration_v1.md
+- docs/database_integration_v1.md (INT-001, already closed)
+- docs/20_execution/chantiers/INT-002.md (when available)
 
 ## Verification commands
 
