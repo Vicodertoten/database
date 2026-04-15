@@ -4,8 +4,8 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
 
 ## Current active chantier
 
-- ID: INT-002
-- Title: Align runtime-app/packages/contracts with official database schemas
+- ID: INT-003
+- Title: Runtime reference fixtures strategy v1 (owner-side)
 - Status: closed
 
 ## Repo role in current chantier
@@ -19,8 +19,8 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
 
 - Last validated commit or tag: 17f8349 (database), 1868923 (runtime-app)
 - Validation date: 2026-04-15
-- What is already validated: three owner schemas confirmed as official source of truth; consumer contracts aligned field-for-field; consumer check command green; inter-repo closure complete
-- What is not validated yet: nothing — INT-002 is fully closed
+- What is already validated: INT-003 owner-side closed; official runtime fixture trio published, schema-validated, and cross-checked for ID coherence
+- What is not validated yet: consumer-side adoption in INT-004 (`runtime-app`)
 
 ## Decisions already locked
 
@@ -34,18 +34,19 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
 - Ne pas toucher aux schemas existants.
 - Ne pas modifier la logique pipeline.
 - Ne pas sur-specifier transport, auth, session, endpoints, ou UX runtime.
+- Ne pas produire de code consumer dans `runtime-app` a ce stade.
 - Rester strictement sequentiel et tracable.
 
 ## Next exact step
 
-- open INT-003 only after explicit owner/consumer scope definition and sequencing
+- INT-004 (consumer): integrate `fixtures/runtime/*.sample.json` in runtime-app local tests without field transformation
 
 ## Files to read first in this repo
 
 - README.md
 - docs/runtime_consumption_v1.md
 - docs/20_execution/handoff.md
-- docs/20_execution/chantiers/INT-002.md
+- docs/20_execution/chantiers/INT-003.md
 - schemas/playable_corpus_v1.schema.json
 - schemas/pack_compiled_v1.schema.json
 - schemas/pack_materialization_v1.schema.json
@@ -54,7 +55,7 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
 
 - README.md
 - packages/contracts/src/ (all contract type files)
-- docs/20_execution/chantiers/INT-002.md
+- docs/20_execution/chantiers/INT-003.md
 
 ## Verification commands
 
@@ -62,6 +63,8 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
 
 ## Notes for next IA session
 
-- INT-002 is closed.
+- INT-002 and INT-003 are closed owner-side in `database`.
 - Keep source of truth anchored in `database/schemas/*.json` for runtime contract surfaces.
-- Any future consumer divergence must be fixed consumer-side unless owner schemas are intentionally evolved first.
+- Official runtime fixture strategy is now locked in `docs/20_execution/chantiers/INT-003.md`.
+- First official fixture trio is published in `fixtures/runtime/`.
+- Next inter-repo step is explicitly INT-004 on `runtime-app` (consumer).

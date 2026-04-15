@@ -193,6 +193,70 @@ INT-003
 
 2026-04-15
 
+---
+
+### Chantier ID
+
+INT-003
+
+### Title
+
+Runtime reference fixtures strategy v1 (owner-side)
+
+### Status
+
+closed
+
+### Owner repo
+
+database
+
+### Consumer repo
+
+runtime-app
+
+### Summary
+
+Owner-side fixture strategy is now explicit and first official minimal fixtures are published from real runtime surfaces (`playable_corpus.v1`, `pack.compiled.v1`, `pack.materialization.v1`) for local runtime consumption.
+
+### Decisions
+
+- Only `playable_corpus.v1`, `pack.compiled.v1`, and `pack.materialization.v1` are eligible as official runtime fixtures.
+- `export.bundle.v4` is forbidden as a live runtime fixture source.
+- Official fixture publication starts in `database`; `runtime-app` mirrors without semantic transformation.
+- Published minimal fixture policy: playable subset of 4 coherent items + compiled(1 question) + materialization daily_challenge(1 question).
+- No schema change and no runtime consumer code change in this owner step.
+
+### Affected files
+
+- database: docs/20_execution/chantiers/INT-003.md
+- database: docs/20_execution/handoff.md
+- database: docs/20_execution/integration_log.md
+- database: fixtures/runtime/playable_corpus.sample.json
+- database: fixtures/runtime/pack_compiled.sample.json
+- database: fixtures/runtime/pack_materialization.sample.json
+- runtime-app: docs/20_execution/chantiers/INT-003.md
+
+### Linked commits
+
+- database: `feat/INT-003-runtime-reference-fixtures` (commit pending in this workspace)
+- runtime-app: open
+
+### Verification
+
+- owner-side doctrinal consistency reviewed against `README.md`, `docs/runtime_consumption_v1.md`, and the three runtime schemas on 2026-04-15
+- real DB state reused after schema migration to v15; pack compiled with `question_count=1`; materialized with `purpose=daily_challenge`; playable sample subset count verified at 4 items
+- all three fixture files validated against official schemas (`playable_corpus_v1`, `pack_compiled_v1`, `pack_materialization_v1`)
+- cross-ID coherence verified (`playable_item_id` and `canonical_taxon_id` references aligned across playable/compiled/materialization)
+
+### Next step
+
+- INT-004 (runtime-app consumer): adopt the published fixture trio in local integration tests, keeping strict field-level mirror semantics
+
+### Closed at
+
+2026-04-15
+
 ## Fictitious examples
 
 Les exemples ci-dessous sont fictifs. Ils illustrent la forme attendue du journal et ne decrivent pas un etat reel du repo.

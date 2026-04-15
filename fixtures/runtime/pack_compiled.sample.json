@@ -1,0 +1,29 @@
+{
+  "build_id": "packbuild:pack:int003:runtime-fixtures:v1:2:b0894fd6",
+  "built_at": "2026-04-15T15:17:47.274734Z",
+  "distractor_count": 3,
+  "pack_compiled_version": "pack.compiled.v1",
+  "pack_id": "pack:int003:runtime-fixtures:v1",
+  "question_count_built": 1,
+  "question_count_requested": 1,
+  "questions": [
+    {
+      "distractor_canonical_taxon_ids": [
+        "taxon:birds:000015",
+        "taxon:birds:000020",
+        "taxon:birds:000013"
+      ],
+      "distractor_playable_item_ids": [
+        "playable:qr:media:inaturalist:263030195",
+        "playable:qr:media:inaturalist:244861382",
+        "playable:qr:media:inaturalist:123587450"
+      ],
+      "position": 1,
+      "target_canonical_taxon_id": "taxon:birds:000008",
+      "target_playable_item_id": "playable:qr:media:inaturalist:377623743"
+    }
+  ],
+  "revision": 2,
+  "schema_version": "database.schema.v15",
+  "source_run_id": "run:20260409T131842Z:4dbcf974"
+}
