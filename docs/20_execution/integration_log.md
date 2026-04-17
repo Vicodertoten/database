@@ -322,6 +322,69 @@ runtime-app
 
 2026-04-17
 
+---
+
+### Chantier ID
+
+INT-007
+
+### Title
+
+Runtime consumption transport V1 doctrine
+
+### Status
+
+closed
+
+### Owner repo
+
+database
+
+### Consumer repo
+
+runtime-app
+
+### Summary
+
+Owner-side ADR now locks the shared transport narrative between repos without redefining existing runtime surfaces.
+
+### Decisions
+
+- Sequence is explicitly locked: V1 artifacts/fixtures, V1.5 minimal read API, later richer editorial operations.
+- `apps/api` is the product entry point for runtime reads; web/mobile stay blind to data origin.
+- `export.bundle.v4` remains excluded from live runtime surfaces.
+- No schema, pipeline, or owner/consumer boundary change is introduced by INT-007.
+
+### Affected files
+
+- database: docs/adr/0004-runtime-consumption-transport-v1.md
+- database: docs/20_execution/chantiers/INT-007.md
+- database: docs/20_execution/handoff.md
+- database: docs/20_execution/integration_log.md
+- runtime-app: docs/adr/0001-runtime-database-transport-v1.md
+- runtime-app: docs/20_execution/chantiers/INT-007.md
+- runtime-app: docs/20_execution/handoff.md
+- runtime-app: docs/20_execution/integration_log.md
+
+### Linked commits
+
+- database: this INT-007 closure commit (`[INT-007][database] add runtime consumption transport v1 ADR`)
+- runtime-app: mirror closure commit (`[INT-007][runtime] add runtime-database transport v1 ADR`)
+
+### Verification
+
+- owner-side ADR text reviewed for strict non-regression vs existing runtime surface doctrine
+- runtime mirror ADR aligned phrase-by-phrase on sequence and normative reminders
+- no code or schema changes introduced
+
+### Next step
+
+- INT-008 or next planned inter-repo chantier from the ADR-0004 baseline
+
+### Closed at
+
+2026-04-17
+
 ## Fictitious examples
 
 Les exemples ci-dessous sont fictifs. Ils illustrent la forme attendue du journal et ne decrivent pas un etat reel du repo.
