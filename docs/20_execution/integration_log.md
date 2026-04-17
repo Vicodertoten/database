@@ -426,12 +426,12 @@ Owner-side documentation now formalizes the real pack/enrichment operation loop 
 - database: docs/20_execution/chantiers/INT-008.md
 - database: docs/20_execution/handoff.md
 - database: docs/20_execution/integration_log.md
-- runtime-app: docs/20_execution/chantiers/INT-008.md (mirror docs-only, planned next)
+- runtime-app: docs/20_execution/chantiers/INT-008.md (mirror docs-only, closed)
 
 ### Linked commits
 
-- database: this INT-008 closure commit (`[INT-008][database] document v1 pack and enrichment operations`)
-- runtime-app: pending mirror docs-only commit (INT-008 consumer mirror)
+- database: 1e42da7
+- runtime-app: 4f87665
 
 ### Verification
 
@@ -445,7 +445,7 @@ Owner-side documentation now formalizes the real pack/enrichment operation loop 
 
 ### Next step
 
-- runtime-app closes INT-008 mirror docs-only entry, then opens INT-009 for consumer-side orchestration facades
+- runtime-app opens INT-009 for consumer-side orchestration facades over database-owned operations
 
 ### Closed at
 

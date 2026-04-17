@@ -17,16 +17,17 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
 
 ## Last validated state
 
-- Last validated commit or tag: f15d7f9 (INT-007 owner doctrinal baseline)
+- Last validated commit or tag: 1e42da7 (INT-008 owner closure)
 - Validation date: 2026-04-17
 - What is already validated:
   - owner reference doc added: `docs/pack_enrichment_operations_v1.md`
   - operation inventory is aligned with real commands in `src/database_core/cli.py`
   - canonical outputs are explicit where versioned artifacts already exist (`pack.spec.v1`, `pack.diagnostic.v1`, `pack.compiled.v1`, `pack.materialization.v1`)
   - enrichment status/request flows are explicitly documented as owner-side operational flows (non public schema-versioned contract at this stage)
+  - runtime-app INT-008 consumer mirror is closed (`4f87665`)
   - no schema, pipeline, or runtime-surface change introduced by INT-008
 - What is not validated yet:
-  - runtime-app mirror docs update for INT-008
+  - none for INT-008 scope
 
 ## Decisions already locked
 
@@ -49,7 +50,7 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
 
 ## Next exact step
 
-- runtime-app: close INT-008 consumer mirror docs-only chantier, then open INT-009 for consumer facades planning
+- runtime-app: open INT-009 and implement consumer editorial facades over database-owned operations
 
 ## Files to read first in this repo
 
