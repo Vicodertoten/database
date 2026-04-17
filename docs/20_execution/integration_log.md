@@ -368,8 +368,8 @@ Owner-side ADR now locks the shared transport narrative between repos without re
 
 ### Linked commits
 
-- database: this INT-007 closure commit (`[INT-007][database] add runtime consumption transport v1 ADR`)
-- runtime-app: mirror closure commit (`[INT-007][runtime] add runtime-database transport v1 ADR`)
+- database: f15d7f9
+- runtime-app: 3fb6557
 
 ### Verification
 
@@ -380,6 +380,72 @@ Owner-side ADR now locks the shared transport narrative between repos without re
 ### Next step
 
 - INT-008 or next planned inter-repo chantier from the ADR-0004 baseline
+
+### Closed at
+
+2026-04-17
+
+---
+
+### Chantier ID
+
+INT-008
+
+### Title
+
+Document v1 pack and enrichment operations (owner-side)
+
+### Status
+
+closed
+
+### Owner repo
+
+database
+
+### Consumer repo
+
+runtime-app
+
+### Summary
+
+Owner-side documentation now formalizes the real pack/enrichment operation loop from current CLI/storage behavior, while preserving strict owner/consumer boundaries and avoiding false public contracts where schemas do not yet exist.
+
+### Decisions
+
+- Canonical versioned outputs are locked where they already exist: `pack.spec.v1`, `pack.diagnostic.v1`, `pack.compiled.v1`, `pack.materialization.v1`.
+- Pack listing is documented as a view over `pack.spec.v1` payloads (`pack-specs`, `pack-revisions`).
+- Enrichment status and enqueue/execute flows are documented as owner-side operational flows (not yet public schema-versioned contracts).
+- `runtime-app` may orchestrate later but does not own semantic truth for pack/enrichment.
+- No schema/pipeline/runtime-surface change is introduced in INT-008.
+
+### Affected files
+
+- database: docs/pack_enrichment_operations_v1.md
+- database: docs/README.md
+- database: docs/20_execution/chantiers/INT-008.md
+- database: docs/20_execution/handoff.md
+- database: docs/20_execution/integration_log.md
+- runtime-app: docs/20_execution/chantiers/INT-008.md (mirror docs-only, planned next)
+
+### Linked commits
+
+- database: this INT-008 closure commit (`[INT-008][database] document v1 pack and enrichment operations`)
+- runtime-app: pending mirror docs-only commit (INT-008 consumer mirror)
+
+### Verification
+
+- operation inventory checked against `src/database_core/cli.py`, `src/database_core/storage/pack_store.py`, `src/database_core/storage/enrichment_store.py`
+- versioned outputs cross-checked against official schemas:
+  - `schemas/pack_spec_v1.schema.json`
+  - `schemas/pack_diagnostic_v1.schema.json`
+  - `schemas/pack_compiled_v1.schema.json`
+  - `schemas/pack_materialization_v1.schema.json`
+- doctrine consistency preserved with `docs/runtime_consumption_v1.md`, ADR-0003, and ADR-0004
+
+### Next step
+
+- runtime-app closes INT-008 mirror docs-only entry, then opens INT-009 for consumer-side orchestration facades
 
 ### Closed at
 

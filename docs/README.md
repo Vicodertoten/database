@@ -34,6 +34,7 @@ Reading discipline:
 ## Operations
 
 - `docs/04_smoke_runbook.md`: weekly live smoke process and reporting template.
+- `docs/pack_enrichment_operations_v1.md`: owner-side reference for real pack/enrichment operations, canonical outputs, and owner/consumer boundaries.
 - `docs/security_incident_runbook.md`: mandatory response for leaked credentials and repository remediation.
 - `docs/08_goldset_v1.md`: AI gold set build, verification, and live E2E usage.
 - `docs/10_program_kpis.md`: locked KPI definitions and smoke acceptance thresholds.
