@@ -257,6 +257,71 @@ Owner-side fixture strategy is now explicit and first official minimal fixtures 
 
 2026-04-15
 
+---
+
+### Chantier ID
+
+INT-004
+
+### Title
+
+Consumer integration closure on owner fixtures
+
+### Status
+
+closed
+
+### Owner repo
+
+database
+
+### Consumer repo
+
+runtime-app
+
+### Summary
+
+`runtime-app` consumed the official fixture trio published by `database` in INT-003 and validated runtime surface ingestion through consumer integration tests, with no new owner-side data surface required.
+
+### Decisions
+
+- INT-004 execution stayed consumer-side in `runtime-app`.
+- `database` remained source of truth for runtime fixture payloads and contracts.
+- No new runtime surface was introduced.
+- No owner-side fixture/schema/pipeline/business logic change was required.
+
+### Affected files
+
+- database: docs/20_execution/chantiers/INT-004.md
+- database: docs/20_execution/handoff.md
+- database: docs/20_execution/integration_log.md
+- runtime-app: apps/api/fixtures/playable_corpus.sample.json
+- runtime-app: apps/api/fixtures/pack_compiled.sample.json
+- runtime-app: apps/api/fixtures/pack_materialization.sample.json
+- runtime-app: apps/api/src/tests/contracts.integration.test.ts
+- runtime-app: docs/20_execution/chantiers/INT-004.md
+- runtime-app: docs/20_execution/handoff.md
+- runtime-app: docs/20_execution/integration_log.md
+
+### Linked commits
+
+- database: 444188a (owner fixture publication baseline, from INT-003)
+- runtime-app: 36a8741
+
+### Verification
+
+- owner-side baseline confirmed: official fixtures from INT-003 remained unchanged
+- consumer-side evidence (`runtime-app` 36a8741): fixture import completed, contract integration test added, checks passed
+- inter-repo boundary preserved: runtime consumed official surfaces (`playable_corpus.v1`, `pack.compiled.v1`, `pack.materialization.v1`) with no owner contract drift
+
+### Next step
+
+- INT-005
+
+### Closed at
+
+2026-04-17
+
 ## Fictitious examples
 
 Les exemples ci-dessous sont fictifs. Ils illustrent la forme attendue du journal et ne decrivent pas un etat reel du repo.
