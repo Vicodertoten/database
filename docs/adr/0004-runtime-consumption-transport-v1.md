@@ -66,6 +66,9 @@ Rappels normatifs:
   - `media_attribution`
   - `media_license`
   Ces champs restent owner-side et sont consommés en miroir strict côté runtime.
+- Phase 4 runtime-side confirmée:
+  - `runtime-app` peut projeter des DTOs player-ready (question/correction/progrès) à partir de ces champs
+  - sans introduire de nouveau contrat owner-side dans `database`
 
 ## Références
 

@@ -76,6 +76,15 @@ Extension additive Phase 3 (sans changement de version de contrat):
 
 Ces champs restent prepares owner-side dans `database`; `runtime-app` les consomme sans redefinition semantique.
 
+Etat Phase 4 (runtime-side, sans changement owner-side additionnel):
+
+- `runtime-app/apps/api` projette maintenant ces champs dans des DTOs player-ready pour:
+  - `GET /sessions/:sessionId/question`
+  - `POST /sessions/:sessionId/answers`
+- cette phase ne change pas la frontiere owner/consumer:
+  - `database` reste owner des surfaces et de leur semantique
+  - `runtime-app` reste assembleur de session/UX a partir des surfaces officielles
+
 ## Regle de non-renommage
 
 Aucun consommateur n'est autorise a renommer, abrevger ou simplifier les champs de ces schemas.
