@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "enrichment.enqueue.v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "operation_version",
+    "operation",
+    "status",
+    "payload"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "database.schema.v15"
+    },
+    "operation_version": {
+      "type": "string",
+      "const": "enrichment.enqueue.v1"
+    },
+    "operation": {
+      "type": "string",
+      "const": "enqueue_enrichment"
+    },
+    "status": {
+      "type": "string",
+      "const": "succeeded"
+    },
+    "payload": {
+      "type": "object",
+      "required": ["enqueued", "pack_id", "revision"],
+      "properties": {
+        "enqueued": {
+          "type": "boolean"
+        },
+        "pack_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "pack.compile.v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "operation_version",
+    "operation",
+    "status",
+    "payload"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "database.schema.v15"
+    },
+    "operation_version": {
+      "type": "string",
+      "const": "pack.compile.v1"
+    },
+    "operation": {
+      "type": "string",
+      "const": "compile_pack"
+    },
+    "status": {
+      "type": "string",
+      "const": "succeeded"
+    },
+    "payload": {
+      "type": "object",
+      "required": ["pack_compiled_version"],
+      "properties": {
+        "pack_compiled_version": {
+          "type": "string",
+          "const": "pack.compiled.v1"
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

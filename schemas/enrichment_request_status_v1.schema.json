@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "enrichment.request.status.v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "operation_version",
+    "operation",
+    "status",
+    "payload"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "database.schema.v15"
+    },
+    "operation_version": {
+      "type": "string",
+      "const": "enrichment.request.status.v1"
+    },
+    "operation": {
+      "type": "string",
+      "const": "enrichment_request_status"
+    },
+    "status": {
+      "type": "string",
+      "const": "succeeded"
+    },
+    "payload": {
+      "type": "object",
+      "required": [
+        "enrichment_request_id",
+        "request_status",
+        "execution_attempt_count"
+      ],
+      "properties": {
+        "enrichment_request_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "request_status": {
+          "type": "string",
+          "enum": ["pending", "in_progress", "completed", "failed"]
+        },
+        "execution_attempt_count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

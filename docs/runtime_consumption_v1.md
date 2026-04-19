@@ -42,13 +42,20 @@ Implementation owner-side:
 - serveur HTTP minimal: `src/database_core/runtime_read/http_server.py`
 - entree script: `database-runtime-read-owner`
 
-Cette implementation reste volontairement minimale:
+Write/editorial owner-side transport (separe du runtime-read):
 
-- aucun write/editorial transport
+- facade write: `src/database_core/editorial_write/service.py`
+- serveur HTTP write: `src/database_core/editorial_write/http_server.py`
+- entree script: `database-editorial-write-owner`
+
+Ces implementations restent volontairement minimales:
+
+- read runtime: borne aux 3 surfaces officielles
+- write/editorial: borne aux operations pack/enrichment owner-side formalisees
 - aucune logique session/scoring/progression
 - aucune exposition du brut pipeline
 - observabilite operationnelle minimale incluse:
-  - `/health` enrichi (`service_version`, `ready`, `limits`)
+  - runtime-read `/health` enrichi (`service_version`, `ready`, `limits`)
   - logs requete JSON (`method`, `path`, `status`, `error_category`, `latency_ms`)
 
 ## Surfaces officiellement consommables
@@ -113,5 +120,6 @@ Tout besoin runtime non couvert par ces surfaces doit d'abord etre formalise et 
 
 Rappel de perimetre:
 
-- cette phase couvre uniquement la lecture des 3 surfaces officielles
-- auth, cache distribue, sync avancee et write/editorial transport restent hors scope
+- le runtime-read couvre uniquement la lecture des 3 surfaces officielles
+- le transport write/editorial owner-side est separe et borne a l'orchestration pack/enrichment
+- auth forte, cache distribue et sync avancee restent hors scope

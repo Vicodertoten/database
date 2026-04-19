@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "enrichment.execute.v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "operation_version",
+    "operation",
+    "status",
+    "payload"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "database.schema.v15"
+    },
+    "operation_version": {
+      "type": "string",
+      "const": "enrichment.execute.v1"
+    },
+    "operation": {
+      "type": "string",
+      "const": "execute_enrichment"
+    },
+    "status": {
+      "type": "string",
+      "const": "succeeded"
+    },
+    "payload": {
+      "type": "object",
+      "required": [
+        "enrichment_execution_id",
+        "enrichment_request_id",
+        "execution_status",
+        "request_status",
+        "trigger_recompile"
+      ],
+      "properties": {
+        "enrichment_execution_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "enrichment_request_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "execution_status": {
+          "type": "string",
+          "enum": ["success", "partial", "failed"]
+        },
+        "request_status": {
+          "type": "string",
+          "enum": ["pending", "in_progress", "completed", "failed"]
+        },
+        "trigger_recompile": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

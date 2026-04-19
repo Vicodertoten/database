@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "pack.diagnose.v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "operation_version",
+    "operation",
+    "status",
+    "payload"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "database.schema.v15"
+    },
+    "operation_version": {
+      "type": "string",
+      "const": "pack.diagnose.v1"
+    },
+    "operation": {
+      "type": "string",
+      "const": "diagnose_pack"
+    },
+    "status": {
+      "type": "string",
+      "const": "succeeded"
+    },
+    "payload": {
+      "type": "object",
+      "required": ["pack_diagnostic_version"],
+      "properties": {
+        "pack_diagnostic_version": {
+          "type": "string",
+          "const": "pack.diagnostic.v1"
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

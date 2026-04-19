@@ -25,11 +25,19 @@ Reading discipline:
 - `schemas/pack_diagnostic_v1.schema.json`: contract schema for `pack.diagnostic.v1`.
 - `schemas/pack_compiled_v1.schema.json`: contract schema for `pack.compiled.v1`.
 - `schemas/pack_materialization_v1.schema.json`: contract schema for `pack.materialization.v1`.
+- `schemas/pack_create_v1.schema.json`: operation envelope schema for `pack.create.v1`.
+- `schemas/pack_diagnose_operation_v1.schema.json`: operation envelope schema for `pack.diagnose.v1`.
+- `schemas/pack_compile_operation_v1.schema.json`: operation envelope schema for `pack.compile.v1`.
+- `schemas/pack_materialize_operation_v1.schema.json`: operation envelope schema for `pack.materialize.v1`.
+- `schemas/enrichment_request_status_v1.schema.json`: operation envelope schema for `enrichment.request.status.v1`.
+- `schemas/enrichment_enqueue_v1.schema.json`: operation envelope schema for `enrichment.enqueue.v1`.
+- `schemas/enrichment_execute_v1.schema.json`: operation envelope schema for `enrichment.execute.v1`.
 - `docs/06_charte_canonique_v1.md`: canonical governance policy (normative).
 - `docs/07_canonical_id_migration_v1.md`: canonical ID migration mapping and cutover policy.
 - `docs/adr/0001-charte-canonique-v1.md`: implementation ADR for canonical governance v1.
 - `docs/adr/0002-noyau-canonique-fort-execution-sequentielle.md`: execution ADR locking gates, canonical policy, and export transition.
 - `docs/adr/0003-playable-corpus-pack-compilation-enrichment-queue.md`: doctrinal boundaries for playable/pack compilation/enrichment chain.
+- `docs/adr/0005-editorial-write-transport-v1.md`: owner-side write transport doctrine for editorial operations.
 
 ## Operations
 

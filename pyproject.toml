@@ -34,6 +34,7 @@ database-migrate = "database_core.cli:migrate_entrypoint"
 database-pack = "database_core.cli:pack_entrypoint"
 database-confusion = "database_core.cli:confusion_entrypoint"
 database-runtime-read-owner = "database_core.runtime_read.http_server:main"
+database-editorial-write-owner = "database_core.editorial_write.http_server:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}

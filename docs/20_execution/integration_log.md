@@ -611,3 +611,50 @@ Les exemples fictifs ont ete deplaces vers:
   - `corepack pnpm --filter @runtime-app/api test:runtime-read` passed
 - Next step: phase 7 planning
 - Closed at: 2026-04-19
+
+## Chantier ID: INT-019
+
+- Title: Formalisation owner-side des operations editoriales critiques (Phase 3)
+- Status: closed
+- Owner repo: database
+- Consumer repo: runtime-app
+- Summary: owner-side write transport is now formalized with versioned operation envelopes and a dedicated minimal HTTP service; runtime-app delegates `/editorial/*` to this real transport.
+- Source of truth:
+  - `docs/adr/0005-editorial-write-transport-v1.md`
+  - `docs/20_execution/chantiers/INT-019.md`
+  - `runtime-app/docs/20_execution/chantiers/INT-019.md`
+- Decisions:
+  - keep write transport separated from runtime-read transport
+  - formalize operation envelopes per critical editorial operation
+  - preserve existing owner artifacts (`pack.spec.v1`, `pack.diagnostic.v1`, `pack.compiled.v1`, `pack.materialization.v1`) as payload truth
+  - keep service perimeter strict (pack/enrichment orchestration only)
+- Affected files:
+  - database: `docs/adr/0005-editorial-write-transport-v1.md`
+  - database: `src/database_core/editorial_write/contract.py`
+  - database: `src/database_core/editorial_write/service.py`
+  - database: `src/database_core/editorial_write/http_server.py`
+  - database: `tests/test_editorial_write_owner_service.py`
+  - database: `schemas/pack_create_v1.schema.json`
+  - database: `schemas/pack_diagnose_operation_v1.schema.json`
+  - database: `schemas/pack_compile_operation_v1.schema.json`
+  - database: `schemas/pack_materialize_operation_v1.schema.json`
+  - database: `schemas/enrichment_request_status_v1.schema.json`
+  - database: `schemas/enrichment_enqueue_v1.schema.json`
+  - database: `schemas/enrichment_execute_v1.schema.json`
+  - runtime-app: `apps/api/src/integrations/database/owner-http-editorial-provider.ts`
+  - runtime-app: `apps/api/src/routes/editorial-pack-flows.ts`
+  - runtime-app: `apps/api/src/tests/editorial-pack-flows.integration.test.ts`
+- Linked commits:
+  - database: pending
+  - runtime-app: pending
+- Verification:
+  - `ruff check .` passed
+  - `python -m compileall -q src tests/test_editorial_write_owner_service.py` passed
+  - manual owner-write smoke passed on isolated schema (Supabase): create/diagnose/materialize/enqueue/status/execute
+  - `corepack pnpm --filter @runtime-app/contracts build` passed
+  - `corepack pnpm --filter @runtime-app/contracts type-check` passed
+  - `corepack pnpm --filter @runtime-app/api type-check` passed
+  - `corepack pnpm --filter @runtime-app/api lint` passed
+  - `corepack pnpm --filter @runtime-app/api test:editorial` passed
+- Next step: institutional minimum planning and bounded write expansion sequencing
+- Closed at: 2026-04-19
