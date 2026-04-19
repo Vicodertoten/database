@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 import threading
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from urllib.error import HTTPError
 from urllib.parse import quote
@@ -347,6 +347,9 @@ def _seed_owner_runtime_read_data(database_url: str) -> dict[str, object]:
         pack_id = str(compiled_fixture["pack_id"])
         revision = int(compiled_fixture["revision"])
         built_at = datetime.fromisoformat(str(compiled_fixture["built_at"]).replace("Z", "+00:00"))
+        next_revision = revision + 1
+        next_built_at = built_at + timedelta(minutes=1)
+        next_build_id = f"{compiled_fixture['build_id']}:next"
 
         connection.execute(
             """
@@ -389,6 +392,37 @@ def _seed_owner_runtime_read_data(database_url: str) -> dict[str, object]:
 
         connection.execute(
             """
+            INSERT INTO pack_revisions (
+                pack_id,
+                revision,
+                canonical_taxon_ids_json,
+                difficulty_policy,
+                country_code,
+                location_bbox,
+                location_point,
+                location_radius_meters,
+                observed_from,
+                observed_to,
+                owner_id,
+                org_id,
+                visibility,
+                intended_use,
+                created_at
+            ) VALUES (%s, %s, %s, %s, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, %s, %s, %s)
+            """,
+            (
+                pack_id,
+                next_revision,
+                json.dumps([str(first_playable["canonical_taxon_id"])], ensure_ascii=True),
+                "balanced",
+                "private",
+                "training",
+                next_built_at,
+            ),
+        )
+
+        connection.execute(
+            """
             INSERT INTO compiled_pack_builds (
                 build_id,
                 pack_id,
@@ -415,6 +449,43 @@ def _seed_owner_runtime_read_data(database_url: str) -> dict[str, object]:
                 compiled_fixture["distractor_count"],
                 run_id,
                 json.dumps(compiled_fixture, ensure_ascii=True),
+            ),
+        )
+
+        compiled_fixture_next = {
+            **compiled_fixture,
+            "build_id": next_build_id,
+            "revision": next_revision,
+            "built_at": next_built_at.isoformat().replace("+00:00", "Z"),
+        }
+        connection.execute(
+            """
+            INSERT INTO compiled_pack_builds (
+                build_id,
+                pack_id,
+                revision,
+                built_at,
+                schema_version,
+                pack_compiled_version,
+                question_count_requested,
+                question_count_built,
+                distractor_count,
+                source_run_id,
+                payload_json
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """,
+            (
+                compiled_fixture_next["build_id"],
+                pack_id,
+                compiled_fixture_next["revision"],
+                next_built_at,
+                compiled_fixture_next["schema_version"],
+                compiled_fixture_next["pack_compiled_version"],
+                compiled_fixture_next["question_count_requested"],
+                compiled_fixture_next["question_count_built"],
+                compiled_fixture_next["distractor_count"],
+                run_id,
+                json.dumps(compiled_fixture_next, ensure_ascii=True),
             ),
         )
 
@@ -458,10 +529,58 @@ def _seed_owner_runtime_read_data(database_url: str) -> dict[str, object]:
             ),
         )
 
+        materialization_fixture_next = {
+            **materialization_fixture,
+            "materialization_id": f"{materialization_fixture['materialization_id']}:next",
+            "revision": next_revision,
+            "source_build_id": next_build_id,
+            "created_at": (created_at + timedelta(minutes=1)).isoformat().replace("+00:00", "Z"),
+            "expires_at": (expires_at + timedelta(minutes=1)).isoformat().replace("+00:00", "Z"),
+        }
+        connection.execute(
+            """
+            INSERT INTO pack_materializations (
+                materialization_id,
+                pack_id,
+                revision,
+                source_build_id,
+                created_at,
+                purpose,
+                ttl_hours,
+                expires_at,
+                schema_version,
+                pack_materialization_version,
+                question_count,
+                payload_json
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """,
+            (
+                materialization_fixture_next["materialization_id"],
+                pack_id,
+                next_revision,
+                materialization_fixture_next["source_build_id"],
+                created_at + timedelta(minutes=1),
+                materialization_fixture_next["purpose"],
+                materialization_fixture_next["ttl_hours"],
+                expires_at + timedelta(minutes=1),
+                materialization_fixture_next["schema_version"],
+                materialization_fixture_next["pack_materialization_version"],
+                materialization_fixture_next["question_count"],
+                json.dumps(materialization_fixture_next, ensure_ascii=True),
+            ),
+        )
+
+        connection.execute(
+            "UPDATE pack_specs SET latest_revision = %s, updated_at = %s WHERE pack_id = %s",
+            (next_revision, next_built_at, pack_id),
+        )
+
     return {
         "pack_id": pack_id,
         "revision": revision,
+        "next_revision": next_revision,
         "materialization_id": str(materialization_fixture["materialization_id"]),
+        "next_materialization_id": f"{materialization_fixture['materialization_id']}:next",
     }
 
 
@@ -484,8 +603,12 @@ def test_runtime_read_owner_service_reads_official_surfaces(database_url: str) -
         pack_id=str(seeded["pack_id"]),
         revision=int(seeded["revision"]),
     )
+    latest_compiled_payload = service.find_compiled_pack(pack_id=str(seeded["pack_id"]))
     materialization_payload = service.find_pack_materialization(
         materialization_id=str(seeded["materialization_id"])
+    )
+    latest_materialization_payload = service.find_pack_materialization(
+        materialization_id=str(seeded["next_materialization_id"])
     )
 
     assert playable_payload["playable_corpus_version"] == "playable_corpus.v1"
@@ -494,10 +617,16 @@ def test_runtime_read_owner_service_reads_official_surfaces(database_url: str) -
     assert compiled_payload is not None
     assert compiled_payload["pack_compiled_version"] == "pack.compiled.v1"
     validate_compiled_pack(compiled_payload)
+    assert latest_compiled_payload is not None
+    assert int(latest_compiled_payload["revision"]) == int(seeded["next_revision"])
+    validate_compiled_pack(latest_compiled_payload)
 
     assert materialization_payload is not None
     assert materialization_payload["pack_materialization_version"] == "pack.materialization.v1"
     validate_pack_materialization(materialization_payload)
+    assert latest_materialization_payload is not None
+    assert int(latest_materialization_payload["revision"]) == int(seeded["next_revision"])
+    validate_pack_materialization(latest_materialization_payload)
 
     assert service.find_compiled_pack(pack_id="pack:unknown") is None
     assert service.find_pack_materialization(materialization_id="packmat:unknown") is None
@@ -524,6 +653,13 @@ def test_runtime_read_owner_http_server_serves_runtime_surfaces(database_url: st
         )
         assert status == 200
         assert compiled_payload["pack_compiled_version"] == "pack.compiled.v1"
+        assert int(compiled_payload["revision"]) == int(seeded["revision"])
+
+        status, latest_compiled_payload = _http_get_json(
+            f"http://{host}:{port}/packs/{encoded_pack_id}/compiled"
+        )
+        assert status == 200
+        assert int(latest_compiled_payload["revision"]) == int(seeded["next_revision"])
 
         encoded_materialization_id = quote(str(seeded["materialization_id"]), safe="")
         status, materialization_payload = _http_get_json(
@@ -532,11 +668,70 @@ def test_runtime_read_owner_http_server_serves_runtime_surfaces(database_url: st
         assert status == 200
         assert materialization_payload["pack_materialization_version"] == "pack.materialization.v1"
 
+        status, invalid_limit_payload = _http_get_json(
+            f"http://{host}:{port}/playable-corpus?limit=invalid"
+        )
+        assert status == 400
+        assert invalid_limit_payload == {"error": "invalid_limit"}
+
+        status, invalid_revision_payload = _http_get_json(
+            f"http://{host}:{port}/packs/{encoded_pack_id}/compiled/not-a-number"
+        )
+        assert status == 400
+        assert invalid_revision_payload == {"error": "invalid_revision"}
+
         status, not_found_payload = _http_get_json(
             f"http://{host}:{port}/materializations/{quote('packmat:unknown', safe='')}"
         )
         assert status == 404
         assert not_found_payload == {"error": "not_found"}
+    finally:
+        server.shutdown()
+        thread.join(timeout=5)
+        server.server_close()
+
+
+def test_runtime_read_owner_http_server_handles_internal_errors() -> None:
+    class _FailingRuntimeReadService:
+        def read_playable_corpus(self, *, limit: int | None = None) -> dict[str, object]:
+            raise RuntimeError("boom")
+
+        def find_compiled_pack(
+            self,
+            *,
+            pack_id: str,
+            revision: int | None = None,
+        ) -> dict[str, object] | None:
+            raise RuntimeError("boom")
+
+        def find_pack_materialization(
+            self,
+            *,
+            materialization_id: str,
+        ) -> dict[str, object] | None:
+            raise RuntimeError("boom")
+
+    server = RuntimeReadHTTPServer(("127.0.0.1", 0), _FailingRuntimeReadService())  # type: ignore[arg-type]
+    host, port = server.server_address
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+
+    try:
+        status, playable_payload = _http_get_json(f"http://{host}:{port}/playable-corpus")
+        assert status == 500
+        assert playable_payload == {"error": "internal_error"}
+
+        status, compiled_payload = _http_get_json(
+            f"http://{host}:{port}/packs/{quote('pack:demo', safe='')}/compiled"
+        )
+        assert status == 500
+        assert compiled_payload == {"error": "internal_error"}
+
+        status, materialization_payload = _http_get_json(
+            f"http://{host}:{port}/materializations/{quote('packmat:demo', safe='')}"
+        )
+        assert status == 500
+        assert materialization_payload == {"error": "internal_error"}
     finally:
         server.shutdown()
         thread.join(timeout=5)

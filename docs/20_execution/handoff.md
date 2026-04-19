@@ -4,8 +4,8 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
 
 ## Current active chantier
 
-- ID: INT-008
-- Title: Pack and enrichment operations V1 owner documentation
+- ID: INT-016
+- Title: Runtime-read owner-side proof hardening (Phase 6)
 - Status: closed
 
 ## Repo role in current chantier
@@ -13,68 +13,56 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
 - Current repo: database
 - Role: owner
 - Other repo: runtime-app
-- Expected dependency order: database owner documentation -> runtime-app consumer mirror docs
+- Expected dependency order: owner-side proofs -> consumer-side proof log alignment
 
 ## Last validated state
 
-- Last validated commit or tag: 1e42da7 (INT-008 owner closure)
-- Validation date: 2026-04-17
+- Last validated context: INT-016 closure (2026-04-19)
 - What is already validated:
-  - owner reference doc added: `docs/pack_enrichment_operations_v1.md`
-  - operation inventory is aligned with real commands in `src/database_core/cli.py`
-  - canonical outputs are explicit where versioned artifacts already exist (`pack.spec.v1`, `pack.diagnostic.v1`, `pack.compiled.v1`, `pack.materialization.v1`)
-  - enrichment status/request flows are explicitly documented as owner-side operational flows (non public schema-versioned contract at this stage)
-  - runtime-app INT-008 consumer mirror is closed (`4f87665`)
-  - no schema, pipeline, or runtime-surface change introduced by INT-008
+  - owner-side runtime-read tests now cover series behavior on compiled/materialization
+  - latest compiled read path is explicitly proven (`/packs/{pack_id}/compiled`)
+  - HTTP error matrix is explicit (`400 invalid_limit`, `400 invalid_revision`, `404 not_found`, `500 internal_error`)
+  - runtime-read boundary remains unchanged (read-only, 3 official surfaces)
 - What is not validated yet:
-  - none for INT-008 scope
+  - full-suite execution in this pass (only targeted owner-read test run)
 
 ## Decisions already locked
 
-- `database` remains owner of pack/enrichment truth:
-  - valid parameters
-  - compilability criteria
-  - diagnostics semantics
-  - produced artifacts
-  - enrichment status semantics
-- `runtime-app` may pilot these operations later but must not redefine owner truth
-- versioned artifacts are canonical outputs when they already exist
-- non-versioned enrichment/status zones remain documented as operational owner flows only
+- no owner-side contract version bump for Phase 6
+- no write/editorial transport introduced here
+- runtime consumers still depend only on `playable_corpus.v1`, `pack.compiled.v1`, `pack.materialization.v1`
 
 ## Important constraints
 
-- Do not touch existing schemas.
-- Do not modify pipeline logic.
-- Do not create a new network/API surface in INT-008.
-- Do not transfer semantic ownership of pack/enrichment logic to runtime-app.
+- keep owner/consumer boundary strict
+- keep runtime-read service minimal and read-only
+- do not introduce runtime session/scoring logic in `database`
 
 ## Next exact step
 
-- runtime-app: open INT-009 and implement consumer editorial facades over database-owned operations
+- Open phase 7 planning and formalization sequence (editorial write contracts + institutional minimum), after runtime-app closure sync.
 
 ## Files to read first in this repo
 
 - README.md
-- docs/README.md
 - docs/runtime_consumption_v1.md
-- docs/adr/0003-playable-corpus-pack-compilation-enrichment-queue.md
 - docs/adr/0004-runtime-consumption-transport-v1.md
-- docs/pack_enrichment_operations_v1.md
-- docs/20_execution/chantiers/INT-008.md
+- docs/20_execution/chantiers/INT-016.md
 - docs/20_execution/integration_log.md
+- tests/test_runtime_read_owner_service.py
 
 ## Files to read first in the other repo
 
-- runtime-app/docs/20_execution/chantiers/INT-008.md
-- runtime-app/docs/20_execution/handoff.md
+- runtime-app/docs/20_execution/chantiers/INT-015.md
+- runtime-app/docs/20_execution/chantiers/INT-016.md
 - runtime-app/docs/20_execution/integration_log.md
 
 ## Verification commands
 
-- `python scripts/check_doc_code_coherence.py` (optional doc coherence check)
+- `python -m pytest -q tests/test_runtime_read_owner_service.py -p no:capture`
 
 ## Notes for next IA session
 
-- INT-008 owner-side is docs/contractual only.
-- Keep enrichment described as operational owner flow until a public versioned contract is explicitly introduced.
-- Keep `apps/api` and future consumer facades as orchestration surfaces, never as truth ownership surfaces.
+- INT-016 closed owner-side
+- runtime-app INT-015/016 closed consumer-side
+- next structural step is phase 7, not a new read-transport expansion

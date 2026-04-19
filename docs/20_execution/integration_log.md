@@ -615,3 +615,60 @@ Exemple fictif: definition d'une sequence de publication et de consommation pour
 ### Closed at
 
 open
+
+---
+
+### Chantier ID
+
+INT-016
+
+### Title
+
+Runtime-read owner-side proof hardening (Phase 6)
+
+### Status
+
+closed
+
+### Owner repo
+
+database
+
+### Consumer repo
+
+runtime-app
+
+### Summary
+
+Owner-side runtime-read tests now cover non-trivial series behavior and explicit HTTP error matrix while keeping the same read-only 3-surface boundary.
+
+### Decisions
+
+- No new runtime surface and no contract version bump.
+- Latest compiled retrieval (`/packs/{pack_id}/compiled`) must be explicitly proven against revision series.
+- HTTP mapping remains strict: `400` parse errors, `404` not found, `500` owner internal errors.
+
+### Affected files
+
+- database: `tests/test_runtime_read_owner_service.py`
+- database: `docs/20_execution/chantiers/INT-016.md`
+- database: `docs/20_execution/integration_log.md`
+- runtime-app: `docs/20_execution/chantiers/INT-016.md`
+- runtime-app: `docs/20_execution/integration_log.md`
+
+### Linked commits
+
+- database: pending
+- runtime-app: pending
+
+### Verification
+
+- `python -m pytest -q tests/test_runtime_read_owner_service.py -p no:capture` passed
+
+### Next step
+
+- Continue phase 7 sequencing after runtime-app INT-015/016 closure.
+
+### Closed at
+
+2026-04-19
