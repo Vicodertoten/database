@@ -658,8 +658,8 @@ Owner-side runtime-read tests now cover non-trivial series behavior and explicit
 
 ### Linked commits
 
-- database: pending
-- runtime-app: pending
+- database: edf8e13
+- runtime-app: 06c7f5d
 
 ### Verification
 
