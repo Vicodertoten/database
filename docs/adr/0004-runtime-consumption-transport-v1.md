@@ -35,6 +35,11 @@ La doctrine de transport suivante est adoptée:
 - usage: faire de `apps/api` le point d'entrée unique produit
 - `web` et `mobile` ne doivent pas être exposés à l'origine réelle des données
 
+2.5. Phase 1: transport owner-side réel minimal en lecture
+- usage: sortir du mode nominal fixtures-only pour les lectures runtime
+- portée: uniquement `playable_corpus.v1`, `pack.compiled.v1`, `pack.materialization.v1`
+- implementation owner-side minimale dans `database` (facade + HTTP borné)
+
 3. Plus tard: opérations éditoriales plus riches
 - ces capacités restent owned par `database`
 - elles ne sont pas réinventées dans `runtime-app`
@@ -48,6 +53,9 @@ Rappels normatifs:
 ## Conséquences
 
 - Cette ADR formalise une séquence de transport; elle n'introduit aucune nouvelle vérité de surface.
+- L'état courant conserve les étapes transitoires utiles (`fixtures owner-side` + `API minimale côté runtime`) et ajoute un transport owner-side réel minimal en lecture.
+- Le mode nominal runtime n'est plus limité à des fixtures locales consumer-side: une lecture owner-side réelle minimale est en place.
+- Les fixtures restent utiles pour tests/dev et fallback explicite, sans redevenir la jonction nominale.
 - Les futurs besoins éditoriaux doivent être explicités par des contrats et flows dédiés, adossés aux capacités owned par `database`.
 - Toute évolution de transport ultérieure doit partir de cette base et ne pas la contredire.
 - `apps/api` est le point d'entrée produit, pas un lieu de redéfinition de la vérité data.

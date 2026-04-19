@@ -663,6 +663,27 @@ class PostgresPackStore:
                 validate_pack_materialization(payload)
             return payloads
 
+    def fetch_pack_materialization_by_id(
+        self,
+        *,
+        materialization_id: str,
+    ) -> dict[str, object] | None:
+        with self._connect() as connection:
+            row = connection.execute(
+                """
+                SELECT payload_json
+                FROM pack_materializations
+                WHERE materialization_id = %s
+                LIMIT 1
+                """,
+                (materialization_id,),
+            ).fetchone()
+            if row is None:
+                return None
+            payload = json.loads(str(row["payload_json"]))
+            validate_pack_materialization(payload)
+            return payload
+
     def compute_pack_compilation_context(
         self,
         connection: psycopg.Connection,

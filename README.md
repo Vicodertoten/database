@@ -197,6 +197,7 @@ python scripts/run_pipeline.py --source-mode inat_snapshot --snapshot-id inatura
 python scripts/inspect_database.py summary
 python scripts/inspect_database.py playable-corpus --canonical-taxon-id taxon:birds:000014 --difficulty-level unknown --limit 20
 python scripts/inspect_database.py playable-invalidations --invalidation-reason qualification_not_exportable --limit 20
+database-runtime-read-owner --database-url "$DATABASE_URL" --host 127.0.0.1 --port 8081
 python scripts/manage_packs.py create --pack-id pack:birds:be:v1 --canonical-taxon-id taxon:birds:000014 --canonical-taxon-id taxon:birds:000009 --difficulty-policy balanced --country-code BE --visibility private --intended-use quiz
 python scripts/manage_packs.py diagnose --pack-id pack:birds:be:v1
 python scripts/manage_packs.py compile --pack-id pack:birds:be:v1 --question-count 20

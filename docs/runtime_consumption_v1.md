@@ -5,6 +5,38 @@ Cette note fixe la frontiere de consommation entre `database` et `runtime-app`.
 `database` porte la verite des contrats et des artefacts de reference.
 `runtime-app` consomme ces surfaces officielles; il ne les redefinit pas.
 
+## Etat de transport actuel
+
+Le transport inter-repos suit la sequence suivante:
+
+- V1: fixtures de reference publiees cote owner et validees cote consumer
+- V1.5: API minimale de lecture cote `runtime-app/apps/api`
+- Phase 1: service HTTP owner-side minimal de lecture runtime cote `database`
+
+Le mode nominal de lecture runtime n'est plus fixture-only.
+Le provider owner-side est maintenant la jonction nominale; les fixtures restent un fallback explicite dev/test.
+
+## Phase 1 - read transport owner-side minimal (en place)
+
+Un service owner-side de lecture runtime est maintenant en place dans `database`,
+borne strictement aux 3 surfaces officielles:
+
+- `GET /playable-corpus` -> `playable_corpus.v1`
+- `GET /packs/{pack_id}/compiled/{revision?}` -> `pack.compiled.v1`
+- `GET /materializations/{materialization_id}` -> `pack.materialization.v1`
+
+Implementation owner-side:
+
+- facade de lecture: `src/database_core/runtime_read/service.py`
+- serveur HTTP minimal: `src/database_core/runtime_read/http_server.py`
+- entree script: `database-runtime-read-owner`
+
+Cette implementation reste volontairement minimale:
+
+- aucun write/editorial transport
+- aucune logique session/scoring/progression
+- aucune exposition du brut pipeline
+
 ## Surfaces officiellement consommables
 
 `runtime-app` peut consommer les surfaces suivantes comme surfaces runtime officielles:
@@ -44,3 +76,8 @@ Toute deviation locale constitue une derive qui doit etre corrigee du cote consu
 Les futures operations editoriales ou institutionnelles doivent respecter cette frontiere.
 Elles peuvent s'appuyer sur les artefacts publies par `database`, mais ne doivent pas deplacer la source de verite hors du knowledge core.
 Tout besoin runtime non couvert par ces surfaces doit d'abord etre formalise et verrouille dans `database`.
+
+Rappel de perimetre:
+
+- cette phase couvre uniquement la lecture des 3 surfaces officielles
+- auth, cache distribue, sync avancee et write/editorial transport restent hors scope

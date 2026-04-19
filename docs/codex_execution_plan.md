@@ -90,31 +90,31 @@ Markers de traçabilite (compatibilite verification):
 
 ### 4.4 Dettes structurelles explicites
 
-- cible finale playable: corpus cumulatif incremental reel
-- etat actuel: surface latest reconstruite a chaque run
-- `PostgresRepository` concentre trop de responsabilites
+- playable cumulatif incremental: implemente (`active`/`invalidated`) avec causes explicites
+- decomposition storage: largement implementee via stores specialises + `storage/services.py`
+- statut restant: facade `PostgresRepository` encore transitoire, a simplifier sans rupture de contrat
 
 ## 5. Chantiers prioritaires admissibles
 
 Il n'y a pas de gate actif par defaut dans ce plan.
 Si un nouveau chantier structurant est ouvert, il doit appartenir a l'un des axes suivants:
 
-1. playable cumulatif incremental avec invalidation explicite
-2. extraction minimale de responsabilites hors `PostgresRepository`
+1. consolidation operatoire du playable cumulatif incremental implemente
+2. consolidation finale de l'extraction de responsabilites hors `PostgresRepository`
 3. qualite editoriale et multilingue des surfaces pedagogiques
 4. extension multi-source ou multi-taxa seulement apres 1 et 2
 
 Tout autre chantier doit etre considere comme secondaire ou hors-sequence.
 
-Ordre recommande pour les deux dettes P0:
+Ordre de consolidation recommande:
 
-1. stabiliser d'abord le modele de persistance playable
-2. extraire ensuite les responsabilites de `PostgresRepository` contre cette cible stabilisee
+1. maintenir la stabilite du modele playable deja migre
+2. poursuivre la simplification de la facade `PostgresRepository` sur base des extractions deja en place
 
-Critere de passage de 1 vers 2:
+Critere de maintien de la phase transitoire:
 
-- la surface de serving playable n'est plus reconstruite par reset global
-- les causes d'invalidation sont explicites et testees
+- pas de retour a une reconstruction latest-only du serving playable
+- causes d'invalidation conservees explicites et testees
 - `playable_corpus.v1` reste stable pour les consommateurs
 
 Etat d'avancement constate (2026-04-09):

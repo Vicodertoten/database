@@ -20,16 +20,17 @@ Etat confirme:
 - playable v1, packs, diagnostics, compilation, materialization, enrichissement queue, confusions batch en place
 - tests structurants + CI + smoke KPI verrouilles
 
-Deux ecarts structurants restent prioritaires:
+Etat de transition confirme:
 
-- la cible playable est cumulative/incrementale, alors que l'implementation reste une surface latest reconstruite a chaque run
-- `PostgresRepository` concentre trop de responsabilites et constitue la principale dette d'architecture
+- le lifecycle playable cumulatif/incremental (`active`/`invalidated`) est implemente et visible en schema + code
+- la decomposition storage en stores specialises est deja engagee et operationnelle, avec `storage/services.py` comme point d'orchestration
+- `storage/postgres.py` reste une facade de compatibilite encore transitoire (responsabilites reduites, mais simplification a poursuivre)
 
 Positionnement recommande:
 
 - proteger ce repo comme couche data specialisee
 - maintenir la frontiere stricte avec le runtime
-- corriger les deux dettes P0 avant toute extension de scope majeure
+- consolider l'operationnel deja implemente (lifecycle playable, decomposition storage) avant extension de scope majeure
 
 ## 2. État réel
 
@@ -88,37 +89,41 @@ Le runtime lit des surfaces dediees derivees de la database.
 
 ## 5. Ecarts structurants et priorites
 
-### E1 - Playable cible vs implementation
+### E1 - Playable lifecycle implemente, stabilisation operationnelle a poursuivre
 
 Constat:
 
-- cible: corpus cumulatif incremental
-- implementation: reset + reconstruction de `playable_items`
+- lifecycle cumulatif incremental en place: `playable_item_lifecycle` porte `active`/`invalidated`
+- `playable_corpus.v1` sert uniquement les items actifs
+- invalidations explicites presentes (`qualification_not_exportable`, `canonical_taxon_not_active`, `source_record_removed`, `policy_filtered`)
 
 Impact:
 
-- surface de serving instable
-- difficulte a considerer `playable_items` comme contrat runtime de production
+- reduction nette du risque de serving latest-only
+- meilleure explicabilite operateur via causes d'invalidation explicites
+- point transitoire restant: stabiliser les pratiques d'exploitation et de monitoring sur cette base
 
 Priorite:
 
-- P0 strategique
+- consolidation P0 deja en place, suivi operatoire continu
 
-### E2 - Concentration de responsabilites dans `PostgresRepository`
+### E2 - Decomposition storage en place, facade `PostgresRepository` encore transitoire
 
 Constat:
 
-- persistance, historique, diagnostics, compilation, materialization, metriques et confusions cohabitent dans un meme composant
+- separation reelle en modules specialises: `pack_store`, `playable_store`, `enrichment_store`, `confusion_store`, `inspection_store`
+- orchestration explicite via `storage/services.py`
+- `storage/postgres.py` conserve une surface de delegation/facade pour compatibilite
 
 Impact:
 
-- couplage fort
-- surface de regression elevee
-- cout d'evolution croissant
+- dette d'architecture reduite de maniere tangible
+- migration plus lisible pour les consommateurs internes
+- residuel: simplification progressive de la facade et clarification finale de la topologie publique
 
 Priorite:
 
-- P0 strategique
+- consolidation transitoire (pas une refonte)
 
 ### E3 - Editorialisation et multilingue partiellement consolides
 
@@ -207,12 +212,12 @@ Les prochains travaux ne doivent etre ouverts que si leur cadrage respecte les p
 - les sections de transition de gates closes ne doivent pas etre conservees si elles n'apportent plus de valeur operative
 - tout changement de contrat versionne, CI, KPI, ou doctrine structurante met a jour `README.md`, `docs/05_audit_reference.md`, et `docs/codex_execution_plan.md`
 
-## 10. Plan d'execution concret des dettes P0
+## 10. Plan d'execution concret apres implementation des dettes P0
 
 Ordre recommande:
 
-1. P0-1: playable cumulatif incremental
-2. P0-2: extraction minimale de `PostgresRepository`
+1. P0-1: playable cumulatif incremental (implante)
+2. P0-2: extraction minimale de `PostgresRepository` (largement implemente)
 
 Raison d'ordre:
 
@@ -222,7 +227,9 @@ Raison d'ordre:
 
 ### P0-1 - Playable cumulatif incremental
 
-Objectif:
+Statut: implemente (base operationnelle en place)
+
+Objectif (atteint):
 
 - remplacer la logique latest-surface reconstruite par un corpus durable avec invalidation explicite
 
@@ -250,7 +257,9 @@ Impacts techniques:
 
 ### P0-2 - Extraction minimale de `PostgresRepository`
 
-Objectif:
+Statut: implemente en grande partie, reste transitoire sur facade
+
+Objectif (largement atteint):
 
 - reduire le couplage sans lancer une refonte abstraite du repo
 
