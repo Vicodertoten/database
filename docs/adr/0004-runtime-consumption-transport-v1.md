@@ -59,6 +59,13 @@ Rappels normatifs:
 - Les futurs besoins éditoriaux doivent être explicités par des contrats et flows dédiés, adossés aux capacités owned par `database`.
 - Toute évolution de transport ultérieure doit partir de cette base et ne pas la contredire.
 - `apps/api` est le point d'entrée produit, pas un lieu de redéfinition de la vérité data.
+- Extension additive phase 3 validée sur `playable_corpus.v1` (sans bump de version):
+  - `taxon_label`
+  - `feedback_short`
+  - `media_render_url`
+  - `media_attribution`
+  - `media_license`
+  Ces champs restent owner-side et sont consommés en miroir strict côté runtime.
 
 ## Références
 

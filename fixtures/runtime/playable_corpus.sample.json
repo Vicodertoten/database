@@ -39,7 +39,12 @@
         "tail",
         "legs",
         "feet"
-      ]
+      ],
+      "taxon_label": "Troglodytes troglodytes",
+      "feedback_short": "head",
+      "media_render_url": "https://static.inaturalist.org/photos/123587450/original.jpeg",
+      "media_attribution": null,
+      "media_license": null
     },
     {
       "canonical_taxon_id": "taxon:birds:000020",
@@ -76,7 +81,12 @@
         "wing",
         "tail",
         "legs"
-      ]
+      ],
+      "taxon_label": "Phoenicurus ochruros",
+      "feedback_short": "head",
+      "media_render_url": "https://static.inaturalist.org/photos/244861382/original.jpeg",
+      "media_attribution": null,
+      "media_license": null
     },
     {
       "canonical_taxon_id": "taxon:birds:000015",
@@ -113,7 +123,12 @@
         "wing",
         "tail",
         "legs"
-      ]
+      ],
+      "taxon_label": "Turdus philomelos",
+      "feedback_short": "head",
+      "media_render_url": "https://static.inaturalist.org/photos/263030195/original.jpeg",
+      "media_attribution": null,
+      "media_license": null
     },
     {
       "canonical_taxon_id": "taxon:birds:000008",
@@ -149,7 +164,12 @@
         "wings",
         "breast",
         "tail"
-      ]
+      ],
+      "taxon_label": "Parus major",
+      "feedback_short": "head",
+      "media_render_url": "https://static.inaturalist.org/photos/377623743/original.jpeg",
+      "media_attribution": null,
+      "media_license": null
     }
   ]
 }

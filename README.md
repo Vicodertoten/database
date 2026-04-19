@@ -155,6 +155,7 @@ Installed entrypoints mirror the script wrappers:
 - canonical governance review queue with close/resolve workflow metadata (`resolved_at`, `resolved_note`, `resolved_by`)
 - snapshot-scoped review overrides that can be replayed on rerun
 - playable corpus surface (`playable_corpus.v1`) persisted in Postgres and queryable with geo/date filters
+- playable corpus includes owner-prepared minimal player-ready metadata (`taxon_label`, `feedback_short`, `media_render_url`, `media_attribution`, `media_license`)
 - pack layer v1 with immutable revisions (`pack.spec.v1`) and deterministic compilability diagnostics (`pack.diagnostic.v1`)
 - deterministic compiled pack builds persisted as `pack.compiled.v1`
 - frozen pack materializations persisted as `pack.materialization.v1` for `assignment` and `daily_challenge`

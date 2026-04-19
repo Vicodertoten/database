@@ -25,6 +25,7 @@ Etat de transition confirme:
 - le lifecycle playable cumulatif/incremental (`active`/`invalidated`) est implemente et visible en schema + code
 - la decomposition storage en stores specialises est deja engagee et operationnelle, avec `storage/services.py` comme point d'orchestration
 - `storage/postgres.py` reste une facade de compatibilite encore transitoire (responsabilites reduites, mais simplification a poursuivre)
+- la sequence transport inter-repos est explicite et active: V1 fixtures publiees -> V1.5 API minimale runtime -> Phase 1 owner-side HTTP nominal
 
 Positionnement recommande:
 
@@ -43,6 +44,7 @@ Le repo fait aujourd'hui, de maniere operationnelle:
 - review queue, overrides snapshot-scoped et gouvernance canonique manuelle
 - export `export.bundle.v4` valide par schema
 - surface `playable_corpus.v1` exploitable par filtres geo/date/pedagogie
+- surface `playable_corpus.v1` etendue avec metadata player-ready minimales owner-side (`taxon_label`, `feedback_short`, `media_render_url`, `media_attribution`, `media_license`)
 - packs versionnes, diagnostics, builds compiles, materializations figees
 - queue d'enrichissement asynchrone persistante
 - ingestion batch de confusions et agregats globaux diriges

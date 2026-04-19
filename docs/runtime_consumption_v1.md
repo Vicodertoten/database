@@ -65,6 +65,17 @@ Tout type consumer (TypeScript ou autre) doit refleter ces schemas champ par cha
 - `schemas/pack_compiled_v1.schema.json` — reference pour `pack.compiled.v1`
 - `schemas/pack_materialization_v1.schema.json` — reference pour `pack.materialization.v1`
 
+Extension additive Phase 3 (sans changement de version de contrat):
+
+- `playable_corpus.v1` expose maintenant un minimum player-ready owner-side:
+  - `taxon_label`
+  - `feedback_short`
+  - `media_render_url`
+  - `media_attribution`
+  - `media_license`
+
+Ces champs restent prepares owner-side dans `database`; `runtime-app` les consomme sans redefinition semantique.
+
 ## Regle de non-renommage
 
 Aucun consommateur n'est autorise a renommer, abrevger ou simplifier les champs de ces schemas.

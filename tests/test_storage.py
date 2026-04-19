@@ -578,6 +578,11 @@ def test_playable_items_persist_and_support_filters(database_url: str) -> None:
     assert rows[0]["common_names_i18n"]["en"] == ["Great Tit"]
     assert rows[0]["common_names_i18n"]["fr"] == []
     assert rows[0]["common_names_i18n"]["nl"] == []
+    assert rows[0]["taxon_label"] == "Great Tit"
+    assert rows[0]["feedback_short"] == "head"
+    assert rows[0]["media_render_url"] == "https://example.test/image.jpg"
+    assert rows[0]["media_attribution"] == "test"
+    assert rows[0]["media_license"] == "CC-BY"
 
     payload = repository.fetch_playable_corpus_payload(limit=10)
     validate_playable_corpus(payload)

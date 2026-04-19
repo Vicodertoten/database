@@ -137,6 +137,12 @@ Etat d'avancement P3 (2026-04-12):
 - enrichissement iNaturalist: extraction des noms par langue depuis `names[]` + merge dedup par langue
 - serving playable: alimentation `common_names_i18n` depuis les champs multilingues enrichis, avec fallback legacy
 - signal pedagogique: `confusion_hint` enrichi avec nom scientifique + nom commun (si disponible)
+- extension additive runtime-read `playable_corpus.v1` (phase 3 minimal player-ready):
+  - `taxon_label`
+  - `feedback_short`
+  - `media_render_url`
+  - `media_attribution`
+  - `media_license`
 - non-regression: tests gate dedies + suites structurantes + `verify_repo` verts
 
 ## 6. Discipline d'execution

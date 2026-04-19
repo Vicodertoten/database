@@ -283,45 +283,45 @@ class PostgresPlayableStore:
             where_clauses: list[str] = []
             params: list[object] = []
             if canonical_taxon_id:
-                where_clauses.append("canonical_taxon_id = %s")
+                where_clauses.append("p.canonical_taxon_id = %s")
                 params.append(canonical_taxon_id)
             if country_code:
-                where_clauses.append("country_code = %s")
+                where_clauses.append("p.country_code = %s")
                 params.append(country_code)
             if difficulty_level:
-                where_clauses.append("difficulty_level = %s")
+                where_clauses.append("p.difficulty_level = %s")
                 params.append(difficulty_level)
             if media_role:
-                where_clauses.append("media_role = %s")
+                where_clauses.append("p.media_role = %s")
                 params.append(media_role)
             if learning_suitability:
-                where_clauses.append("learning_suitability = %s")
+                where_clauses.append("p.learning_suitability = %s")
                 params.append(learning_suitability)
             if confusion_relevance:
-                where_clauses.append("confusion_relevance = %s")
+                where_clauses.append("p.confusion_relevance = %s")
                 params.append(confusion_relevance)
             if observed_from:
-                where_clauses.append("observed_at >= %s")
+                where_clauses.append("p.observed_at >= %s")
                 params.append(observed_from.isoformat())
             if observed_to:
-                where_clauses.append("observed_at <= %s")
+                where_clauses.append("p.observed_at <= %s")
                 params.append(observed_to.isoformat())
             if bbox is not None:
                 where_clauses.append(
                     """
                     (
                         (
-                            location_bbox IS NOT NULL
+                            p.location_bbox IS NOT NULL
                             AND ST_Intersects(
-                                location_bbox,
+                                p.location_bbox,
                                 ST_MakeEnvelope(%s, %s, %s, %s, 4326)
                             )
                         )
                         OR
                         (
-                            location_point IS NOT NULL
+                            p.location_point IS NOT NULL
                             AND ST_Intersects(
-                                location_point,
+                                p.location_point,
                                 ST_MakeEnvelope(%s, %s, %s, %s, 4326)
                             )
                         )
@@ -345,9 +345,9 @@ class PostgresPlayableStore:
                 longitude, latitude, radius_meters = point_radius
                 where_clauses.append(
                     """
-                    location_point IS NOT NULL
+                    p.location_point IS NOT NULL
                     AND ST_DWithin(
-                        location_point::geography,
+                        p.location_point::geography,
                         ST_SetSRID(ST_MakePoint(%s, %s), 4326)::geography,
                         %s
                     )
@@ -359,56 +359,61 @@ class PostgresPlayableStore:
             rows = connection.execute(
                 f"""
                 SELECT
-                    playable_item_id,
-                    run_id,
-                    qualified_resource_id,
-                    canonical_taxon_id,
-                    media_asset_id,
-                    source_observation_uid,
-                    source_name,
-                    source_observation_id,
-                    source_media_id,
-                    scientific_name,
-                    common_names_i18n_json,
-                    difficulty_level,
-                    media_role,
-                    learning_suitability,
-                    confusion_relevance,
-                    diagnostic_feature_visibility,
-                    similar_taxon_ids_json,
-                    what_to_look_at_specific_json,
-                    what_to_look_at_general_json,
-                    confusion_hint,
-                    country_code,
-                    observed_at,
+                    p.playable_item_id,
+                    p.run_id,
+                    p.qualified_resource_id,
+                    p.canonical_taxon_id,
+                    p.media_asset_id,
+                    p.source_observation_uid,
+                    p.source_name,
+                    p.source_observation_id,
+                    p.source_media_id,
+                    p.scientific_name,
+                    p.common_names_i18n_json,
+                    p.difficulty_level,
+                    p.media_role,
+                    p.learning_suitability,
+                    p.confusion_relevance,
+                    p.diagnostic_feature_visibility,
+                    p.similar_taxon_ids_json,
+                    p.what_to_look_at_specific_json,
+                    p.what_to_look_at_general_json,
+                    p.confusion_hint,
+                    media_assets.source_url AS media_render_url,
+                    media_assets.attribution AS media_attribution,
+                    media_assets.license AS media_license,
+                    p.country_code,
+                    p.observed_at,
                     CASE
-                        WHEN location_point IS NULL THEN NULL
-                        ELSE ST_X(location_point)
+                        WHEN p.location_point IS NULL THEN NULL
+                        ELSE ST_X(p.location_point)
                     END AS location_longitude,
                     CASE
-                        WHEN location_point IS NULL THEN NULL
-                        ELSE ST_Y(location_point)
+                        WHEN p.location_point IS NULL THEN NULL
+                        ELSE ST_Y(p.location_point)
                     END AS location_latitude,
                     CASE
-                        WHEN location_bbox IS NULL THEN NULL
-                        ELSE ST_XMin(location_bbox)
+                        WHEN p.location_bbox IS NULL THEN NULL
+                        ELSE ST_XMin(p.location_bbox)
                     END AS bbox_min_longitude,
                     CASE
-                        WHEN location_bbox IS NULL THEN NULL
-                        ELSE ST_YMin(location_bbox)
+                        WHEN p.location_bbox IS NULL THEN NULL
+                        ELSE ST_YMin(p.location_bbox)
                     END AS bbox_min_latitude,
                     CASE
-                        WHEN location_bbox IS NULL THEN NULL
-                        ELSE ST_XMax(location_bbox)
+                        WHEN p.location_bbox IS NULL THEN NULL
+                        ELSE ST_XMax(p.location_bbox)
                     END AS bbox_max_longitude,
                     CASE
-                        WHEN location_bbox IS NULL THEN NULL
-                        ELSE ST_YMax(location_bbox)
+                        WHEN p.location_bbox IS NULL THEN NULL
+                        ELSE ST_YMax(p.location_bbox)
                     END AS bbox_max_latitude,
-                    location_radius_meters
-                FROM playable_corpus_v1
+                    p.location_radius_meters
+                FROM playable_corpus_v1 AS p
+                LEFT JOIN media_assets
+                    ON media_assets.media_id = p.media_asset_id
                 {where_sql}
-                ORDER BY playable_item_id
+                ORDER BY p.playable_item_id
                 LIMIT %s
                 """,
                 [*params, limit],
@@ -417,6 +422,11 @@ class PostgresPlayableStore:
         parsed_rows: list[dict[str, object]] = []
         for row in rows:
             observed_at = row["observed_at"]
+            common_names_i18n = json.loads(str(row["common_names_i18n_json"]))
+            scientific_name = str(row["scientific_name"])
+            what_to_look_at_specific = json.loads(str(row["what_to_look_at_specific_json"]))
+            what_to_look_at_general = json.loads(str(row["what_to_look_at_general_json"]))
+            confusion_hint = row["confusion_hint"]
             parsed_rows.append(
                 {
                     "playable_item_id": row["playable_item_id"],
@@ -426,21 +436,29 @@ class PostgresPlayableStore:
                     "source_name": row["source_name"],
                     "source_observation_id": row["source_observation_id"],
                     "source_media_id": row["source_media_id"],
-                    "scientific_name": row["scientific_name"],
-                    "common_names_i18n": json.loads(str(row["common_names_i18n_json"])),
+                    "scientific_name": scientific_name,
+                    "common_names_i18n": common_names_i18n,
+                    "taxon_label": _build_taxon_label(
+                        scientific_name=scientific_name,
+                        common_names_i18n=common_names_i18n,
+                    ),
                     "difficulty_level": row["difficulty_level"],
                     "media_role": row["media_role"],
                     "learning_suitability": row["learning_suitability"],
                     "confusion_relevance": row["confusion_relevance"],
                     "diagnostic_feature_visibility": row["diagnostic_feature_visibility"],
                     "similar_taxon_ids": json.loads(str(row["similar_taxon_ids_json"])),
-                    "what_to_look_at_specific": json.loads(
-                        str(row["what_to_look_at_specific_json"])
+                    "what_to_look_at_specific": what_to_look_at_specific,
+                    "what_to_look_at_general": what_to_look_at_general,
+                    "confusion_hint": confusion_hint,
+                    "feedback_short": _build_feedback_short(
+                        what_to_look_at_specific=what_to_look_at_specific,
+                        what_to_look_at_general=what_to_look_at_general,
+                        confusion_hint=confusion_hint,
                     ),
-                    "what_to_look_at_general": json.loads(
-                        str(row["what_to_look_at_general_json"])
-                    ),
-                    "confusion_hint": row["confusion_hint"],
+                    "media_render_url": row["media_render_url"],
+                    "media_attribution": row["media_attribution"],
+                    "media_license": row["media_license"],
                     "country_code": row["country_code"],
                     "observed_at": observed_at.isoformat() if observed_at else None,
                     "location_point": (
@@ -592,6 +610,50 @@ class PostgresPlayableStore:
 
 def _json(value: object) -> str:
     return json.dumps(value, sort_keys=True, ensure_ascii=True)
+
+
+def _first_non_empty_string(values: Sequence[object]) -> str | None:
+    for value in values:
+        if isinstance(value, str):
+            normalized = value.strip()
+            if normalized:
+                return normalized
+    return None
+
+
+def _build_taxon_label(*, scientific_name: str, common_names_i18n: dict[str, object]) -> str:
+    preferred_languages = ("fr", "en", "nl")
+    for language in preferred_languages:
+        names = common_names_i18n.get(language)
+        if isinstance(names, list):
+            first_name = _first_non_empty_string(names)
+            if first_name:
+                return first_name
+    for names in common_names_i18n.values():
+        if isinstance(names, list):
+            first_name = _first_non_empty_string(names)
+            if first_name:
+                return first_name
+    return scientific_name
+
+
+def _build_feedback_short(
+    *,
+    what_to_look_at_specific: Sequence[object],
+    what_to_look_at_general: Sequence[object],
+    confusion_hint: object,
+) -> str | None:
+    specific = _first_non_empty_string(what_to_look_at_specific)
+    if specific:
+        return specific
+    general = _first_non_empty_string(what_to_look_at_general)
+    if general:
+        return general
+    if isinstance(confusion_hint, str):
+        normalized_hint = confusion_hint.strip()
+        if normalized_hint:
+            return normalized_hint
+    return None
 
 
 def _executemany(

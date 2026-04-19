@@ -43,6 +43,7 @@
           "source_media_id",
           "scientific_name",
           "common_names_i18n",
+          "taxon_label",
           "difficulty_level",
           "media_role",
           "learning_suitability",
@@ -52,6 +53,10 @@
           "what_to_look_at_specific",
           "what_to_look_at_general",
           "confusion_hint",
+          "feedback_short",
+          "media_render_url",
+          "media_attribution",
+          "media_license",
           "country_code",
           "observed_at",
           "location_point",
@@ -126,6 +131,10 @@
               }
             }
           },
+          "taxon_label": {
+            "type": "string",
+            "minLength": 1
+          },
           "difficulty_level": {
             "type": "string",
             "enum": [
@@ -190,6 +199,30 @@
             }
           },
           "confusion_hint": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "feedback_short": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "media_render_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "media_attribution": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "media_license": {
             "type": [
               "string",
               "null"
