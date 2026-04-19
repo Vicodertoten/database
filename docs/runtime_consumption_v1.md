@@ -47,6 +47,9 @@ Cette implementation reste volontairement minimale:
 - aucun write/editorial transport
 - aucune logique session/scoring/progression
 - aucune exposition du brut pipeline
+- observabilite operationnelle minimale incluse:
+  - `/health` enrichi (`service_version`, `ready`, `limits`)
+  - logs requete JSON (`method`, `path`, `status`, `error_category`, `latency_ms`)
 
 ## Surfaces officiellement consommables
 

@@ -643,6 +643,14 @@ def test_runtime_read_owner_http_server_serves_runtime_surfaces(database_url: st
     thread.start()
 
     try:
+        status, health_payload = _http_get_json(f"http://{host}:{port}/health")
+        assert status == 200
+        assert health_payload["status"] == "ok"
+        assert health_payload["service"] == "database-runtime-read-owner"
+        assert health_payload["service_version"] == "v1"
+        assert health_payload["ready"] is True
+        assert health_payload["limits"]["default_playable_limit"] == 200
+
         status, playable_payload = _http_get_json(f"http://{host}:{port}/playable-corpus")
         assert status == 200
         assert playable_payload["playable_corpus_version"] == "playable_corpus.v1"
@@ -679,6 +687,12 @@ def test_runtime_read_owner_http_server_serves_runtime_surfaces(database_url: st
         )
         assert status == 400
         assert invalid_revision_payload == {"error": "invalid_revision"}
+
+        status, invalid_revision_zero_payload = _http_get_json(
+            f"http://{host}:{port}/packs/{encoded_pack_id}/compiled/0"
+        )
+        assert status == 400
+        assert invalid_revision_zero_payload == {"error": "invalid_revision"}
 
         status, not_found_payload = _http_get_json(
             f"http://{host}:{port}/materializations/{quote('packmat:unknown', safe='')}"

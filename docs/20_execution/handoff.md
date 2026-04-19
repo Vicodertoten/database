@@ -4,8 +4,8 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
 
 ## Current active chantier
 
-- ID: INT-017
-- Title: Runtime visible baseline stabilization (wording + archive + cross-repo handoff)
+- ID: INT-018
+- Title: Owner-side runtime-read operational hardening
 - Status: closed
 
 ## Repo role in current chantier
@@ -17,16 +17,15 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
 
 ## Last validated state
 
-- Last validated context: INT-016 closure (2026-04-19) + INT-017 closure sync (2026-04-19)
+- Last validated context: INT-018 closure sync (2026-04-19)
 - What is already validated:
-  - owner-side runtime-read tests now cover series behavior on compiled/materialization
-  - latest compiled read path is explicitly proven (`/packs/{pack_id}/compiled`)
-  - HTTP error matrix is explicit (`400 invalid_limit`, `400 invalid_revision`, `404 not_found`, `500 internal_error`)
+  - owner-side runtime-read `/health` now exposes operational diagnostics (`service_version`, `ready`, `limits`)
+  - request logs are emitted as JSON with `error_category` and `latency_ms`
+  - HTTP error matrix remains explicit and now validates `revision <= 0` as `400 invalid_revision`
   - runtime-read boundary remains unchanged (read-only, 3 official surfaces)
-  - active integration log now keeps real entries only; fictitious examples moved to archive
-  - runtime-app mirror closure evidence is in place (`INT-017` runtime side closed)
+  - runtime-app mirror closure evidence is in place (`INT-018` runtime side closed)
 - What is not validated yet:
-  - none for INT-017 scope
+  - none for INT-018 scope
 
 ## Decisions already locked
 
@@ -42,15 +41,14 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
 
 ## Next exact step
 
-- Open phase 7 planning and keep INT-017 as closed baseline.
+- Open phase 7 planning and keep INT-018 as closed baseline.
 
 ## Files to read first in this repo
 
 - README.md
 - docs/runtime_consumption_v1.md
 - docs/adr/0004-runtime-consumption-transport-v1.md
-- docs/20_execution/chantiers/INT-017.md
-- docs/20_execution/chantiers/INT-017-runtime-app-handoff-checklist.md
+- docs/20_execution/chantiers/INT-018.md
 - docs/20_execution/integration_log.md
 - tests/test_runtime_read_owner_service.py
 
@@ -59,6 +57,7 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
 - runtime-app/docs/20_execution/chantiers/INT-015.md
 - runtime-app/docs/20_execution/chantiers/INT-016.md
 - runtime-app/docs/20_execution/chantiers/INT-017.md
+- runtime-app/docs/20_execution/chantiers/INT-018.md
 - runtime-app/docs/20_execution/integration_log.md
 
 ## Verification commands
@@ -67,6 +66,5 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
 
 ## Notes for next IA session
 
-- INT-016 closed owner-side
-- INT-017 closed with runtime-app mirror evidence
+- INT-018 closed owner-side
 - phase 7 planning can resume

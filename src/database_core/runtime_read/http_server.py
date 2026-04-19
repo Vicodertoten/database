@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import time
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from typing import Any
@@ -15,12 +16,15 @@ from database_core.runtime_read.service import (
 )
 
 PLAYABLE_CORPUS_PATH = "/playable-corpus"
+SERVICE_NAME = "database-runtime-read-owner"
+SERVICE_VERSION = os.environ.get("DATABASE_RUNTIME_READ_SERVICE_VERSION", "v1")
 
 
 class RuntimeReadRequestHandler(BaseHTTPRequestHandler):
     server: RuntimeReadHTTPServer
 
     def do_GET(self) -> None:  # noqa: N802
+        self._request_started_at = time.perf_counter()
         parsed = urlsplit(self.path)
         path = parsed.path
         query = parse_qs(parsed.query)
@@ -30,7 +34,12 @@ class RuntimeReadRequestHandler(BaseHTTPRequestHandler):
                 HTTPStatus.OK,
                 {
                     "status": "ok",
-                    "service": "database-runtime-read-owner",
+                    "service": SERVICE_NAME,
+                    "service_version": SERVICE_VERSION,
+                    "ready": True,
+                    "limits": {
+                        "default_playable_limit": self.server.service.default_playable_limit,
+                    },
                     "surfaces": [
                         "playable_corpus.v1",
                         "pack.compiled.v1",
@@ -55,7 +64,7 @@ class RuntimeReadRequestHandler(BaseHTTPRequestHandler):
         self._send_error(HTTPStatus.NOT_FOUND, "not_found")
 
     def log_message(self, format: str, *args: Any) -> None:  # noqa: A003
-        # Keep output minimal and controlled for this bounded owner-side service.
+        # Disable default text access logs; we emit JSON logs in _send_json.
         return
 
     def _handle_playable_corpus(self, query: dict[str, list[str]]) -> None:
@@ -93,6 +102,9 @@ class RuntimeReadRequestHandler(BaseHTTPRequestHandler):
             try:
                 revision = int(parts[3])
             except ValueError:
+                self._send_error(HTTPStatus.BAD_REQUEST, "invalid_revision")
+                return
+            if revision <= 0:
                 self._send_error(HTTPStatus.BAD_REQUEST, "invalid_revision")
                 return
 
@@ -141,6 +153,38 @@ class RuntimeReadRequestHandler(BaseHTTPRequestHandler):
         self.send_header("content-length", str(len(encoded)))
         self.end_headers()
         self.wfile.write(encoded)
+        self._log_request(status=status, payload=payload)
+
+    def _log_request(self, *, status: HTTPStatus, payload: dict[str, object]) -> None:
+        started_at = getattr(self, "_request_started_at", None)
+        if started_at is None:
+            latency_ms = 0.0
+        else:
+            latency_ms = round((time.perf_counter() - started_at) * 1000.0, 3)
+
+        error = payload.get("error") if isinstance(payload, dict) else None
+        if int(status) >= 500:
+            category = "server_error"
+        elif int(status) >= 400:
+            category = "client_error"
+        else:
+            category = "success"
+
+        print(
+            json.dumps(
+                {
+                    "service": SERVICE_NAME,
+                    "service_version": SERVICE_VERSION,
+                    "method": self.command,
+                    "path": self.path,
+                    "status": int(status),
+                    "error": error,
+                    "error_category": category,
+                    "latency_ms": latency_ms,
+                },
+                ensure_ascii=True,
+            )
+        )
 
 
 class RuntimeReadHTTPServer(ThreadingHTTPServer):
@@ -190,9 +234,14 @@ def main() -> None:
         json.dumps(
             {
                 "status": "listening",
-                "service": "database-runtime-read-owner",
+                "service": SERVICE_NAME,
+                "service_version": SERVICE_VERSION,
                 "host": args.host,
                 "port": args.port,
+                "ready": True,
+                "limits": {
+                    "default_playable_limit": args.playable_limit,
+                },
                 "surfaces": [
                     "playable_corpus.v1",
                     "pack.compiled.v1",

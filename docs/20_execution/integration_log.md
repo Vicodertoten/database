@@ -579,3 +579,35 @@ This chantier stabilizes the visible runtime baseline narrative across docs/READ
 Les exemples fictifs ont ete deplaces vers:
 
 - `docs/20_execution/archive/integration_log_fictitious_examples.md`
+
+## Chantier ID: INT-018
+
+- Title: Owner-side runtime-read operational hardening
+- Status: closed
+- Owner repo: database
+- Consumer repo: runtime-app
+- Summary: owner-side runtime-read service now exposes richer health diagnostics and request-level JSON observability while staying strictly bounded to the three official read surfaces.
+- Source of truth:
+  - `docs/20_execution/chantiers/INT-018.md`
+  - `docs/runtime_consumption_v1.md`
+  - `runtime-app/docs/20_execution/chantiers/INT-018.md`
+- Decisions:
+  - no contract version change
+  - no scope extension beyond read-only runtime transport
+  - strict parameter guards (`limit`, `revision`) kept explicit
+- Affected files:
+  - database: `src/database_core/runtime_read/http_server.py`
+  - database: `tests/test_runtime_read_owner_service.py`
+  - database: `docs/runtime_consumption_v1.md`
+  - database: `docs/20_execution/chantiers/INT-018.md`
+  - runtime-app: `apps/api/src/routes/runtime-read.ts`
+  - runtime-app: `apps/api/src/routes/sessions.ts`
+  - runtime-app: `apps/api/src/integrations/database/owner-http-provider.ts`
+- Linked commits:
+  - database: pending
+  - runtime-app: pending
+- Verification:
+  - `python -m pytest -q tests/test_runtime_read_owner_service.py -p no:capture` passed
+  - `corepack pnpm --filter @runtime-app/api test:runtime-read` passed
+- Next step: phase 7 planning
+- Closed at: 2026-04-19
