@@ -158,6 +158,13 @@ def test_editorial_write_owner_http_server_flow(database_url: str) -> None:
         assert status == 200
         assert diagnose_payload["operation_version"] == "pack.diagnose.v1"
 
+        status, invalid_diagnose_payload = _http_post_json(
+            f"http://{host}:{port}/editorial/packs/{encoded_pack_id}/diagnose",
+            {"revision": 0},
+        )
+        assert status == 400
+        assert invalid_diagnose_payload == {"error": "invalid_request"}
+
         status, compile_conflict = _http_post_json(
             (
                 f"http://{host}:{port}/editorial/packs/"
@@ -167,6 +174,16 @@ def test_editorial_write_owner_http_server_flow(database_url: str) -> None:
         )
         assert status == 409
         assert compile_conflict == {"error": "conflict"}
+
+        status, invalid_compile_payload = _http_post_json(
+            (
+                f"http://{host}:{port}/editorial/packs/"
+                f"{quote('pack:int019:create-http', safe='')}/compile"
+            ),
+            {"question_count": 0},
+        )
+        assert status == 400
+        assert invalid_compile_payload == {"error": "invalid_request"}
 
         status, materialize_payload = _http_post_json(
             f"http://{host}:{port}/editorial/packs/{encoded_pack_id}/materialize",
@@ -179,6 +196,13 @@ def test_editorial_write_owner_http_server_flow(database_url: str) -> None:
         assert status == 200
         assert materialize_payload["operation_version"] == "pack.materialize.v1"
 
+        status, invalid_materialize_payload = _http_post_json(
+            f"http://{host}:{port}/editorial/packs/{encoded_pack_id}/materialize",
+            {"purpose": "invalid"},
+        )
+        assert status == 400
+        assert invalid_materialize_payload == {"error": "invalid_request"}
+
         status, enqueue_payload = _http_post_json(
             (
                 f"http://{host}:{port}/editorial/packs/"
@@ -189,6 +213,16 @@ def test_editorial_write_owner_http_server_flow(database_url: str) -> None:
         assert status == 200
         assert enqueue_payload["operation_version"] == "enrichment.enqueue.v1"
         request_id = str(enqueue_payload["payload"]["request"]["request"]["enrichment_request_id"])
+
+        status, invalid_enqueue_payload = _http_post_json(
+            (
+                f"http://{host}:{port}/editorial/packs/"
+                f"{quote('pack:int019:create-http', safe='')}/enrichment/enqueue"
+            ),
+            {"question_count": -1},
+        )
+        assert status == 400
+        assert invalid_enqueue_payload == {"error": "invalid_request"}
 
         status, enrichment_status_payload = _http_get_json(
             f"http://{host}:{port}/editorial/enrichment-requests/{quote(request_id, safe='')}"
@@ -225,6 +259,16 @@ def test_editorial_write_owner_http_server_flow(database_url: str) -> None:
         )
         assert status == 400
         assert invalid_execute_payload == {"error": "invalid_request"}
+
+        status, invalid_execute_type_payload = _http_post_json(
+            (
+                f"http://{host}:{port}/editorial/enrichment-requests/"
+                f"{quote(request_id, safe='')}/execute"
+            ),
+            {"trigger_recompile": "yes"},
+        )
+        assert status == 400
+        assert invalid_execute_type_payload == {"error": "invalid_request"}
     finally:
         server.shutdown()
         thread.join(timeout=5)

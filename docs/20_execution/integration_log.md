@@ -658,3 +658,36 @@ Les exemples fictifs ont ete deplaces vers:
   - `corepack pnpm --filter @runtime-app/api test:editorial` passed
 - Next step: institutional minimum planning and bounded write expansion sequencing
 - Closed at: 2026-04-19
+
+## Chantier ID: INT-020
+
+- Title: Support owner-side pour surface editoriale legere runtime (Phase 4)
+- Status: closed
+- Owner repo: database
+- Consumer repo: runtime-app
+- Summary: owner-side write service remains strict and stable while enabling runtime-app to ship a minimal real editorial operator surface (`/editorial`) through `apps/api`.
+- Source of truth:
+  - `docs/20_execution/chantiers/INT-020.md`
+  - `runtime-app/docs/20_execution/chantiers/INT-020.md`
+  - `docs/adr/0005-editorial-write-transport-v1.md`
+- Decisions:
+  - preserve owner-side scope (pack/enrichment orchestration only)
+  - strengthen explicit invalid-input refusals
+  - keep contracts/versioning unchanged
+- Affected files:
+  - database: `src/database_core/editorial_write/http_server.py`
+  - database: `tests/test_editorial_write_owner_service.py`
+  - database: `docs/20_execution/chantiers/INT-020.md`
+  - runtime-app: `apps/web/app/editorial/page.tsx`
+  - runtime-app: `packages/shared/src/index.ts`
+  - runtime-app: `apps/api/src/routes/editorial-pack-flows.ts`
+- Linked commits:
+  - database: pending
+  - runtime-app: pending
+- Verification:
+  - `ruff check .` passed
+  - `python -m compileall -q src tests/test_editorial_write_owner_service.py` passed
+  - `corepack pnpm --filter @runtime-app/api run test:editorial` passed
+  - `corepack pnpm --filter @runtime-app/web run test:smoke` passed
+- Next step: institutional minimum planning
+- Closed at: 2026-04-19

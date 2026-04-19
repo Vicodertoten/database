@@ -140,7 +140,7 @@ class EditorialWriteRequestHandler(BaseHTTPRequestHandler):
         if body is None:
             return
 
-        revision = self._parse_optional_positive_int(body.get("revision"), "revision")
+        revision = self._parse_optional_positive_int(body.get("revision"))
         if revision is None and body.get("revision") is not None:
             return
 
