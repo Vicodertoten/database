@@ -550,14 +550,15 @@ This chantier stabilizes the visible runtime baseline narrative across docs/READ
 - database: docs/20_execution/chantiers/INT-017-runtime-app-handoff-checklist.md
 - database: docs/runtime_consumption_v1.md
 - database: README.md
-- runtime-app: docs/20_execution/chantiers/INT-017.md (expected)
-- runtime-app: docs/20_execution/integration_log.md (expected)
-- runtime-app: README/docs/UI wording and image-first checks (expected)
+- runtime-app: docs/20_execution/chantiers/INT-017.md
+- runtime-app: docs/20_execution/integration_log.md
+- runtime-app: README/docs/UI wording and image-first checks
 
 ### Linked commits
 
-- database: pending
-- runtime-app: pending
+- database: c847c9b
+- runtime-app: eab3bbc
+
 
 ### Verification
 
