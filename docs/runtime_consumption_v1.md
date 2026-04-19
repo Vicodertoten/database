@@ -16,6 +16,17 @@ Le transport inter-repos suit la sequence suivante:
 Le mode nominal de lecture runtime n'est plus fixture-only.
 Le provider owner-side est maintenant la jonction nominale; les fixtures restent un fallback explicite dev/test.
 
+## Etat courant visible (reference de wording)
+
+Pour l'alignement inter-repos, l'etat courant doit etre formule sans ambiguite:
+
+- lecture runtime nominale: owner-side reelle en place (`database`)
+- sessions runtime nominales: persistees cote `runtime-app`
+- web runtime: minimal pedagogical player
+- mobile runtime: surface minimale reelle image-first (rendu image prioritaire en UI)
+
+Aucun texte majeur ne doit presenter cet etat courant comme un simple demonstrateur technique d'IDs.
+
 ## Phase 1 - read transport owner-side minimal (en place)
 
 Un service owner-side de lecture runtime est maintenant en place dans `database`,

@@ -14,6 +14,17 @@ Il formalise uniquement la maniere de conduire un chantier documentaire, techniq
 - un handoff doit permettre de reprendre le chantier dans une nouvelle session IA sans perdre le contexte utile
 - un integration log doit garder la trace des decisions, validations et prochaines etapes inter-repos
 
+## Etat courant visible (reference inter-repos)
+
+Ce bloc sert de reference de wording pour eviter toute derive narrative entre `database` et `runtime-app`:
+
+- lecture runtime nominale: owner-side read minimal reel en place (`database`), sur 3 surfaces officielles uniquement
+- sessions runtime: nominales et persistees cote `runtime-app`
+- web runtime: surface minimale pedagogique
+- mobile runtime: surface minimale reelle image-first (rendu image prioritaire en UI)
+
+Cette reference de statut doit rester coherente entre README/docs/UI des deux repos.
+
 ## Notions
 
 ### Chantier
@@ -40,6 +51,9 @@ Il indique le chantier actif, le role du repo courant, l'etat valide, les contra
 
 L'integration log est le journal de synchronisation inter-repos.
 Il sert a garder une trace courte mais exploitable de chaque chantier: ce qui a ete decide, ce qui a ete valide, quels fichiers sont touches, quels commits sont lies et quelle est la prochaine etape.
+
+Seules les entrees reelles doivent vivre dans `integration_log.md`.
+Les exemples fictifs, templates pedagogiques et archives doivent etre ranges dans `docs/20_execution/archive/`.
 
 ## Frontieres a respecter
 

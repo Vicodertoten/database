@@ -63,6 +63,17 @@ That is the main architectural priority before any significant new scope is adde
 - pack is a durable specification object; a runtime game session is separate and ephemeral
 - compilation is deterministic on existing data (no external calls); enrichment is asynchronous and traceable
 
+## Runtime visible baseline (cross-repo)
+
+Current inter-repo wording is locked as follows:
+
+- owner-side runtime read is nominal and real (minimal bounded HTTP read in `database`)
+- runtime sessions are nominal and persisted in `runtime-app`
+- runtime web is a minimal pedagogical player
+- runtime mobile is a minimal real image-first surface (image rendered as primary UI content)
+
+No major README/docs/UI text should describe the visible runtime as an ID-only technical demonstrator.
+
 ## Strategic positioning
 
 This repository should be treated as a specialized knowledge/database layer, not as the future product backend.
