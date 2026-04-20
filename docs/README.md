@@ -53,6 +53,8 @@ Reading discipline:
 - `docs/05_audit_reference.md`: current state, target posture, explicit debt, and decision baseline.
 - `docs/codex_execution_plan.md`: execution discipline and next approved workstreams.
 - `docs/20_execution/integration_log.md`: active inter-repo entries (real entries only).
+- `docs/20_execution/chantiers/INT-022.md`: active phase 6 cross-repo hardening brief.
+- `docs/20_execution/phase6_pilot_runbook.md`: owner-side pilot-prep operational runbook.
 - `docs/20_execution/archive/`: archived or pedagogical execution material (not current-state source of truth).
 
 ## Documentation Hygiene Rules

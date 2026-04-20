@@ -48,3 +48,8 @@ jobs:
 
       - name: Verify repository
         run: python scripts/verify_repo.py
+
+      - name: Validate phase6 doc sync markers
+        run: |
+          rg -n "INT-022" docs/20_execution/chantiers/INT-022.md docs/20_execution/handoff.md docs/20_execution/integration_log.md
+          test -f docs/20_execution/phase6_pilot_runbook.md

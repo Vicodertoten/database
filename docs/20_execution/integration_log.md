@@ -691,3 +691,68 @@ Les exemples fictifs ont ete deplaces vers:
   - `corepack pnpm --filter @runtime-app/web run test:smoke` passed
 - Next step: institutional minimum planning
 - Closed at: 2026-04-19
+
+## Chantier ID: INT-021
+
+- Title: Runtime institutional minimum alignment catch-up
+- Status: closed
+- Owner repo: runtime-app
+- Consumer repo: database (owner docs alignment only)
+- Summary: owner-side `database` execution trace acknowledges runtime-side INT-021 closure to remove cross-repo baseline drift before phase 6 kickoff.
+- Source of truth:
+  - `runtime-app/docs/20_execution/chantiers/INT-021.md`
+  - `runtime-app/docs/20_execution/integration_log.md`
+- Decisions:
+  - no owner contract/surface changes
+  - institutional ownership remains runtime-side
+  - database handoff/log baseline updated to reflect post-INT-021 state
+- Affected files:
+  - database: `docs/20_execution/handoff.md`
+  - database: `docs/20_execution/integration_log.md`
+  - runtime-app: `docs/20_execution/chantiers/INT-021.md`
+  - runtime-app: `docs/20_execution/integration_log.md`
+- Linked commits:
+  - database: pending
+  - runtime-app: pending
+- Verification:
+  - docs consistency pass completed across both repos
+- Next step: open INT-022 as shared active chantier
+- Closed at: 2026-04-20
+
+## Chantier ID: INT-022
+
+- Title: Phase 6 pilot-prep hardening (cross-repo)
+- Status: in_progress
+- Owner repo: runtime-app + database (split ownership by perimeter)
+- Consumer repo: runtime-app + database
+- Summary: phase 6 hardening is active with synchronized chantier docs/runbook, runtime-side operator auth + metrics/retry guardrails implemented, and owner-side dry-run evidence path prepared.
+- Source of truth:
+  - `docs/20_execution/chantiers/INT-022.md`
+  - `docs/20_execution/phase6_pilot_runbook.md`
+  - `runtime-app/docs/20_execution/chantiers/INT-022.md`
+  - `runtime-app/docs/20_execution/phase6_pilot_runbook.md`
+- Decisions:
+  - acceptance targets locked cross-repo:
+    - availability SLO `99.5% / 7d`
+    - latency `p95 <= 800ms`
+    - load profile `100` concurrent learners
+    - `2` complete dry-runs with simulated owner incident
+  - owner perimeter remains unchanged (no runtime/institutional semantics moved to database)
+  - cross-repo docs sync is mandatory before merge for phase 6 changes
+- Affected files:
+  - database: `docs/20_execution/chantiers/INT-022.md`
+  - database: `docs/20_execution/phase6_pilot_runbook.md`
+  - database: `docs/20_execution/handoff.md`
+  - database: `docs/20_execution/integration_log.md`
+  - runtime-app: `docs/20_execution/chantiers/INT-022.md`
+  - runtime-app: `docs/20_execution/phase6_pilot_runbook.md`
+  - runtime-app: `docs/20_execution/handoff.md`
+  - runtime-app: `docs/20_execution/integration_log.md`
+- Linked commits:
+  - database: pending
+  - runtime-app: pending
+- Verification:
+  - `ruff check .` pending
+  - `python -m compileall -q src tests/test_runtime_read_owner_service.py tests/test_editorial_write_owner_service.py` pending
+  - runtime-side phase 6 verification suite pending from synchronized run
+- Next step: execute dry-run #1 and publish owner/runtime evidence bundle.
