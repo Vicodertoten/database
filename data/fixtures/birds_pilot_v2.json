@@ -1,0 +1,562 @@
+[
+  {
+    "canonical_taxon_id": "taxon:birds:000014",
+    "accepted_scientific_name": "Turdus merula",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "12716"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000004",
+    "accepted_scientific_name": "Erithacus rubecula",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "13094"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000009",
+    "accepted_scientific_name": "Passer domesticus",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "13858"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000003",
+    "accepted_scientific_name": "Cyanistes caeruleus",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "144849"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000008",
+    "accepted_scientific_name": "Parus major",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "203153"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000010",
+    "accepted_scientific_name": "Pica pica",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "891696"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000005",
+    "accepted_scientific_name": "Fringilla coelebs",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "10070"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000001",
+    "accepted_scientific_name": "Columba palumbus",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "3048"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000011",
+    "accepted_scientific_name": "Sturnus vulgaris",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "14850"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000015",
+    "accepted_scientific_name": "Turdus philomelos",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "12748"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000012",
+    "accepted_scientific_name": "Sylvia atricapilla",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "15282"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000007",
+    "accepted_scientific_name": "Motacilla alba",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "13695"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000006",
+    "accepted_scientific_name": "Garrulus glandarius",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "8088"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000002",
+    "accepted_scientific_name": "Corvus corone",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "204496"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000013",
+    "accepted_scientific_name": "Troglodytes troglodytes",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "145363"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000016",
+    "accepted_scientific_name": "Carduelis carduelis",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "9398"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000017",
+    "accepted_scientific_name": "Chloris chloris",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "145360"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000018",
+    "accepted_scientific_name": "Acrocephalus scirpaceus",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "204455"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000019",
+    "accepted_scientific_name": "Coccothraustes coccothraustes",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "9801"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000020",
+    "accepted_scientific_name": "Phoenicurus ochruros",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "13000"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000021",
+    "accepted_scientific_name": "Anas platyrhynchos",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "6930"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000022",
+    "accepted_scientific_name": "Anser anser",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "7018"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000023",
+    "accepted_scientific_name": "Cygnus olor",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "6921"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000024",
+    "accepted_scientific_name": "Fulica atra",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "482"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000025",
+    "accepted_scientific_name": "Gallinula chloropus",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "201282"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000026",
+    "accepted_scientific_name": "Larus michahellis",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "59202"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000027",
+    "accepted_scientific_name": "Larus argentatus",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "204533"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000028",
+    "accepted_scientific_name": "Phalacrocorax carbo",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "4270"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000029",
+    "accepted_scientific_name": "Ardea cinerea",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "4954"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000030",
+    "accepted_scientific_name": "Egretta garzetta",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "4943"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000031",
+    "accepted_scientific_name": "Buteo buteo",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "204472"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000032",
+    "accepted_scientific_name": "Accipiter nisus",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "5106"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000033",
+    "accepted_scientific_name": "Falco tinnunculus",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "472766"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000034",
+    "accepted_scientific_name": "Falco peregrinus",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "4647"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000035",
+    "accepted_scientific_name": "Strix aluco",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "19898"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000036",
+    "accepted_scientific_name": "Asio otus",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "20307"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000037",
+    "accepted_scientific_name": "Athene noctua",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "19998"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000038",
+    "accepted_scientific_name": "Picus viridis",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "144243"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000039",
+    "accepted_scientific_name": "Dendrocopos major",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "17871"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000040",
+    "accepted_scientific_name": "Dryocopus martius",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "17835"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000041",
+    "accepted_scientific_name": "Apus apus",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "6638"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000042",
+    "accepted_scientific_name": "Delichon urbicum",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "64705"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000043",
+    "accepted_scientific_name": "Hirundo rustica",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "11901"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000044",
+    "accepted_scientific_name": "Riparia riparia",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "11941"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000045",
+    "accepted_scientific_name": "Alauda arvensis",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "7347"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000046",
+    "accepted_scientific_name": "Galerida cristata",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "578607"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000047",
+    "accepted_scientific_name": "Lanius collurio",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "12038"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000048",
+    "accepted_scientific_name": "Coloeus monedula",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "336399"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000049",
+    "accepted_scientific_name": "Corvus frugilegus",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "8029"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000050",
+    "accepted_scientific_name": "Corvus cornix",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "144757"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000051",
+    "accepted_scientific_name": "Pyrrhula pyrrhula",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "9462"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000052",
+    "accepted_scientific_name": "Linaria cannabina",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "558634"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000053",
+    "accepted_scientific_name": "Spinus spinus",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "145303"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000054",
+    "accepted_scientific_name": "Serinus serinus",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "9236"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000055",
+    "accepted_scientific_name": "Emberiza citrinella",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "9195"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000056",
+    "accepted_scientific_name": "Emberiza schoeniclus",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "9201"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000057",
+    "accepted_scientific_name": "Prunella modularis",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "13988"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000058",
+    "accepted_scientific_name": "Anthus pratensis",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "13729"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000059",
+    "accepted_scientific_name": "Anthus trivialis",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "13711"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000060",
+    "accepted_scientific_name": "Regulus regulus",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "793469"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000061",
+    "accepted_scientific_name": "Regulus ignicapilla",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "117097"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000062",
+    "accepted_scientific_name": "Phylloscopus collybita",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "117016"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000063",
+    "accepted_scientific_name": "Phylloscopus trochilus",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "117055"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000064",
+    "accepted_scientific_name": "Phylloscopus sibilatrix",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "117048"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000065",
+    "accepted_scientific_name": "Ficedula hypoleuca",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "204512"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000066",
+    "accepted_scientific_name": "Muscicapa striata",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "12971"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000067",
+    "accepted_scientific_name": "Saxicola rubicola",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "201192"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000068",
+    "accepted_scientific_name": "Oenanthe oenanthe",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "12822"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000069",
+    "accepted_scientific_name": "Tachybaptus ruficollis",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "4237"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000070",
+    "accepted_scientific_name": "Podiceps cristatus",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "4208"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000071",
+    "accepted_scientific_name": "Vanellus vanellus",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "4857"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000072",
+    "accepted_scientific_name": "Thinornis dubius",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "1580336"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000073",
+    "accepted_scientific_name": "Actitis hypoleucos",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "3978"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000074",
+    "accepted_scientific_name": "Gallinago gallinago",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "318836"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000075",
+    "accepted_scientific_name": "Scolopax rusticola",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "3931"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000076",
+    "accepted_scientific_name": "Alcedo atthis",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "2599"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000077",
+    "accepted_scientific_name": "Upupa epops",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "20969"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000078",
+    "accepted_scientific_name": "Cuculus canorus",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "1907"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000079",
+    "accepted_scientific_name": "Streptopelia decaocto",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "2969"
+  },
+  {
+    "canonical_taxon_id": "taxon:birds:000080",
+    "accepted_scientific_name": "Streptopelia turtur",
+    "canonical_rank": "species",
+    "common_names": [],
+    "source_taxon_id": "2938"
+  }
+]

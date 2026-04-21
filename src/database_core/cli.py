@@ -101,6 +101,14 @@ def main() -> None:
     fetch_parser.add_argument("--pilot-taxa-path", type=Path, default=DEFAULT_PILOT_TAXA_PATH)
     fetch_parser.add_argument("--max-observations-per-taxon", type=int, default=5)
     fetch_parser.add_argument("--timeout-seconds", type=int, default=30)
+    fetch_parser.add_argument(
+        "--bbox",
+        type=str,
+        help="min_longitude,min_latitude,max_longitude,max_latitude",
+    )
+    fetch_parser.add_argument("--place-id", type=str)
+    fetch_parser.add_argument("--observed-from", type=str)
+    fetch_parser.add_argument("--observed-to", type=str)
 
     qualify_parser = subparsers.add_parser("qualify-inat-snapshot")
     qualify_parser.add_argument("--snapshot-id", required=True)
@@ -450,6 +458,10 @@ def main() -> None:
             pilot_taxa_path=args.pilot_taxa_path,
             max_observations_per_taxon=args.max_observations_per_taxon,
             timeout_seconds=args.timeout_seconds,
+            bbox=_normalize_bbox_arg(args.bbox) if args.bbox else None,
+            place_id=args.place_id,
+            observed_from=args.observed_from,
+            observed_to=args.observed_to,
         )
         print(
             "Snapshot fetched | "
@@ -894,6 +906,17 @@ def _parse_bbox(value: str | None) -> tuple[float, float, float, float] | None:
     except ValueError as exc:  # pragma: no cover - CLI parse failure path.
         raise SystemExit("--bbox values must be numeric") from exc
     return min_longitude, min_latitude, max_longitude, max_latitude
+
+
+def _normalize_bbox_arg(value: str) -> str:
+    parsed = _parse_bbox(value)
+    if parsed is None:  # pragma: no cover - defensive branch for optional parser reuse.
+        raise SystemExit("--bbox expects min_longitude,min_latitude,max_longitude,max_latitude")
+    min_longitude, min_latitude, max_longitude, max_latitude = parsed
+    return ",".join(
+        str(component)
+        for component in (min_longitude, min_latitude, max_longitude, max_latitude)
+    )
 
 
 def _parse_point_radius(value: str | None) -> tuple[float, float, float] | None:

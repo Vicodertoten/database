@@ -39,6 +39,19 @@ RECOVERABLE_HARVEST_ERRORS = (
 )
 
 
+def _bbox_to_inat_params(bbox: str) -> dict[str, str]:
+    parts = [part.strip() for part in bbox.split(",")]
+    if len(parts) != 4:
+        raise ValueError("bbox must have four comma-separated values")
+    min_lon, min_lat, max_lon, max_lat = parts
+    return {
+        "swlng": min_lon,
+        "swlat": min_lat,
+        "nelng": max_lon,
+        "nelat": max_lat,
+    }
+
+
 @dataclass(frozen=True)
 class HarvestResult:
     snapshot_id: str
@@ -64,6 +77,10 @@ def fetch_inat_snapshot(
     pilot_taxa_path: Path = DEFAULT_PILOT_TAXA_PATH,
     max_observations_per_taxon: int = 5,
     timeout_seconds: int = 30,
+    bbox: str | None = None,
+    place_id: str | None = None,
+    observed_from: str | None = None,
+    observed_to: str | None = None,
 ) -> HarvestResult:
     snapshot_dir = resolve_snapshot_dir(snapshot_id, snapshot_root)
     responses_dir = snapshot_dir / "responses"
@@ -89,6 +106,10 @@ def fetch_inat_snapshot(
             source_taxon_id=seed.source_taxon_id,
             max_observations_per_taxon=max_observations_per_taxon,
             timeout_seconds=timeout_seconds,
+            bbox=bbox,
+            place_id=place_id,
+            observed_from=observed_from,
+            observed_to=observed_to,
         )
         candidate_results = [
             item
@@ -224,6 +245,10 @@ def _fetch_seed_payload(
     source_taxon_id: str,
     max_observations_per_taxon: int,
     timeout_seconds: int,
+    bbox: str | None = None,
+    place_id: str | None = None,
+    observed_from: str | None = None,
+    observed_to: str | None = None,
 ) -> tuple[dict[str, object], str, str, bool, dict[str, str]]:
     base_params = {
         "taxon_id": source_taxon_id,
@@ -235,6 +260,14 @@ def _fetch_seed_payload(
         "per_page": str(max_observations_per_taxon),
         "order": "desc",
     }
+    if bbox:
+        base_params.update(_bbox_to_inat_params(bbox))
+    if place_id:
+        base_params["place_id"] = place_id
+    if observed_from:
+        base_params["d1"] = observed_from
+    if observed_to:
+        base_params["d2"] = observed_to
     requested_order_by = "votes"
     first_params = {**base_params, "order_by": requested_order_by}
     try:

@@ -89,6 +89,63 @@ def test_default_snapshot_id_uses_strict_inaturalist_prefix(monkeypatch) -> None
     assert cli.default_snapshot_id() == "inaturalist-birds-20260408T123456Z"
 
 
+def test_cli_fetch_inat_snapshot_forwards_optional_filters(monkeypatch, tmp_path: Path) -> None:
+    calls: dict[str, object] = {}
+
+    class FakeHarvestResult:
+        snapshot_id = "snapshot-v2"
+        harvested_observation_count = 10
+        downloaded_image_count = 9
+        snapshot_dir = tmp_path / "raw" / "snapshot-v2"
+
+    def fake_fetch_inat_snapshot(**kwargs):
+        calls.update(kwargs)
+        return FakeHarvestResult()
+
+    monkeypatch.setattr(cli, "fetch_inat_snapshot", fake_fetch_inat_snapshot)
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "database-core",
+            "fetch-inat-snapshot",
+            "--snapshot-id",
+            "snapshot-v2",
+            "--snapshot-root",
+            str(tmp_path / "raw"),
+            "--pilot-taxa-path",
+            str(tmp_path / "pilot-v2.json"),
+            "--max-observations-per-taxon",
+            "7",
+            "--timeout-seconds",
+            "42",
+            "--bbox",
+            "2.5,49.45,6.4,51.6",
+            "--place-id",
+            "80500",
+            "--observed-from",
+            "2024-01-01",
+            "--observed-to",
+            "2025-12-31",
+        ],
+    )
+
+    buffer = io.StringIO()
+    with redirect_stdout(buffer):
+        cli.main()
+
+    assert calls["snapshot_id"] == "snapshot-v2"
+    assert calls["snapshot_root"] == tmp_path / "raw"
+    assert calls["pilot_taxa_path"] == tmp_path / "pilot-v2.json"
+    assert calls["max_observations_per_taxon"] == 7
+    assert calls["timeout_seconds"] == 42
+    assert calls["bbox"] == "2.5,49.45,6.4,51.6"
+    assert calls["place_id"] == "80500"
+    assert calls["observed_from"] == "2024-01-01"
+    assert calls["observed_to"] == "2025-12-31"
+    assert "Snapshot fetched" in buffer.getvalue()
+
+
 def test_review_overrides_cli_init_creates_versioned_file(monkeypatch, tmp_path: Path) -> None:
     override_path = tmp_path / "review_overrides.json"
     monkeypatch.setattr(
