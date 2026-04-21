@@ -73,6 +73,26 @@ def test_snapshot_loader_rebuilds_records_without_network() -> None:
     ]
 
 
+def test_snapshot_loader_accepts_slash_separated_datetime(tmp_path: Path) -> None:
+    snapshot_dir = tmp_path / "snapshot"
+    shutil.copytree(SNAPSHOT_MANIFEST.parent, snapshot_dir)
+    response_path = snapshot_dir / "responses" / "taxon_birds_000014.json"
+    payload = json.loads(response_path.read_text(encoding="utf-8"))
+    payload["results"][0]["time_observed_at"] = "2024/04/26T00:00:00+00:00"
+    response_path.write_text(
+        json.dumps(payload, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+
+    dataset = load_snapshot_dataset(manifest_path=snapshot_dir / "manifest.json")
+
+    first_obs = next(
+        item for item in dataset.observations if item.source_observation_id == "910001"
+    )
+    assert first_obs.observed_at is not None
+    assert first_obs.observed_at.isoformat() == "2024-04-26T00:00:00+00:00"
+
+
 def test_snapshot_manifest_v3_is_accepted() -> None:
     manifest, snapshot_dir = load_snapshot_manifest(manifest_path=SNAPSHOT_MANIFEST)
 

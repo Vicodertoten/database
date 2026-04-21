@@ -462,7 +462,10 @@ def _resolve_download_dimensions(
 def _parse_datetime(value: object) -> datetime | None:
     if value in {None, ""}:
         return None
-    text = str(value)
+    text = str(value).strip()
+    if len(text) >= 10:
+        date_part = text[:10].replace("/", "-")
+        text = f"{date_part}{text[10:]}"
     if len(text) == 10:
         text = f"{text}T00:00:00+00:00"
     return datetime.fromisoformat(text.replace("Z", "+00:00"))
