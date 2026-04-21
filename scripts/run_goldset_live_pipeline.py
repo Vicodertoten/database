@@ -46,6 +46,7 @@ def main() -> int:
         description="Run full live pipeline on goldset (Gemini qualification + pipeline export)."
     )
     parser.add_argument("--goldset-manifest", type=Path, default=DEFAULT_GOLDSET_MANIFEST_PATH)
+    parser.add_argument("--pilot-taxa-path", type=Path, default=DEFAULT_PILOT_TAXA_PATH)
     parser.add_argument("--snapshot-root", type=Path, default=DEFAULT_INAT_SNAPSHOT_ROOT)
     parser.add_argument("--snapshot-id", type=str)
     parser.add_argument("--gemini-api-key-env", default="GEMINI_API_KEY")
@@ -91,7 +92,8 @@ def main() -> int:
     (snapshot_dir / "images").mkdir(parents=True, exist_ok=True)
     (snapshot_dir / "taxa").mkdir(parents=True, exist_ok=True)
 
-    canonical_by_source_taxon_id = _resolve_canonical_mapping(payload)
+    canonical_by_source_taxon_id = _resolve_canonical_mapping(payload, args.pilot_taxa_path)
+    goldset_version = str(payload.get("goldset_version") or "goldset.birds.v1")
 
     taxon_seeds: list[SnapshotTaxonSeed] = []
     media_downloads: list[SnapshotMediaDownload] = []
@@ -188,7 +190,7 @@ def main() -> int:
                 synonyms=[],
                 common_names=[],
                 source_taxon_id=source_taxon_id,
-                query_params={"source": "goldset.birds.v1", "mode": "live_e2e"},
+                query_params={"source": goldset_version, "mode": "live_e2e"},
                 response_path=response_path,
                 taxon_payload_path=None,
                 requested_order_by=str(taxon.get("requested_order_by") or "votes"),
@@ -275,11 +277,11 @@ def main() -> int:
 
 
 def _default_snapshot_id() -> str:
-    return f"goldset-birds-v1-live-{datetime.now(UTC).strftime('%Y%m%dT%H%M%SZ')}"
+    return f"goldset-birds-live-{datetime.now(UTC).strftime('%Y%m%dT%H%M%SZ')}"
 
 
-def _resolve_canonical_mapping(payload: dict[str, object]) -> dict[str, str]:
-    fixtures = json.loads(DEFAULT_PILOT_TAXA_PATH.read_text(encoding="utf-8"))
+def _resolve_canonical_mapping(payload: dict[str, object], pilot_taxa_path: Path) -> dict[str, str]:
+    fixtures = json.loads(pilot_taxa_path.read_text(encoding="utf-8"))
     mapping: dict[str, str] = {}
     existing_ids: set[str] = set()
     for item in fixtures:

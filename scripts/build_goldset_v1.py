@@ -77,9 +77,41 @@ TARGET_TAXA: tuple[GoldsetTaxonTarget, ...] = (
 )
 
 
+def _load_taxa_targets(path: Path | None) -> tuple[GoldsetTaxonTarget, ...]:
+    if path is None:
+        return TARGET_TAXA
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(payload, list):
+        raise SystemExit(f"Invalid taxa file: expected JSON list ({path})")
+    targets: list[GoldsetTaxonTarget] = []
+    for index, item in enumerate(payload, start=1):
+        if not isinstance(item, dict):
+            raise SystemExit(f"Invalid taxa file entry at index {index}: expected object")
+        scientific_name = str(
+            item.get("scientific_name") or item.get("accepted_scientific_name") or ""
+        ).strip()
+        source_taxon_id = str(item.get("source_taxon_id") or "").strip()
+        if not scientific_name or not source_taxon_id:
+            raise SystemExit(
+                "Invalid taxa file entry at index "
+                f"{index}: scientific_name/accepted_scientific_name and source_taxon_id required"
+            )
+        targets.append(
+            GoldsetTaxonTarget(
+                scientific_name=scientific_name,
+                source_taxon_id=source_taxon_id,
+            )
+        )
+    if not targets:
+        raise SystemExit(f"Invalid taxa file: no targets found ({path})")
+    return tuple(targets)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Build Gold set birds v1 (100 images / 20 taxa).")
     parser.add_argument("--output-root", type=Path, default=DEFAULT_OUTPUT_ROOT)
+    parser.add_argument("--taxa-path", type=Path)
+    parser.add_argument("--goldset-version", type=str, default="goldset.birds.v1")
     parser.add_argument("--images-per-taxon", type=int, default=DEFAULT_TARGET_IMAGES_PER_TAXON)
     parser.add_argument("--timeout-seconds", type=int, default=DEFAULT_TIMEOUT_SECONDS)
     parser.add_argument(
@@ -100,6 +132,7 @@ def main() -> int:
         raise SystemExit("--images-per-taxon must be positive")
 
     output_root: Path = args.output_root
+    targets = _load_taxa_targets(args.taxa_path)
     if args.clean and output_root.exists():
         shutil.rmtree(output_root)
     images_root = output_root / "images"
@@ -110,7 +143,7 @@ def main() -> int:
     selected_media_ids: set[str] = set()
     manifest_taxa: list[dict[str, object]] = []
 
-    for target in TARGET_TAXA:
+    for target in targets:
         taxon_payload = _collect_taxon_examples(
             target=target,
             images_per_taxon=args.images_per_taxon,
@@ -129,10 +162,10 @@ def main() -> int:
 
     total_images = sum(len(item["images"]) for item in manifest_taxa)
     manifest_payload = {
-        "goldset_version": "goldset.birds.v1",
+        "goldset_version": args.goldset_version,
         "created_at": datetime.now(UTC).isoformat(),
         "source_name": "inaturalist",
-        "target_taxa_count": len(TARGET_TAXA),
+        "target_taxa_count": len(targets),
         "target_images_per_taxon": args.images_per_taxon,
         "total_images": total_images,
         "safe_licenses": sorted(SAFE_LICENSES),
@@ -144,7 +177,7 @@ def main() -> int:
 
     print(
         "goldset built | "
-        f"taxa={len(TARGET_TAXA)} | images={total_images} | manifest={manifest_path}"
+        f"taxa={len(targets)} | images={total_images} | manifest={manifest_path}"
     )
     return 0
 

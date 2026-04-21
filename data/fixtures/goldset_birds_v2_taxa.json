@@ -1,0 +1,402 @@
+[
+  {
+    "scientific_name": "Turdus merula",
+    "source_taxon_id": "12716"
+  },
+  {
+    "scientific_name": "Erithacus rubecula",
+    "source_taxon_id": "13094"
+  },
+  {
+    "scientific_name": "Passer domesticus",
+    "source_taxon_id": "13858"
+  },
+  {
+    "scientific_name": "Cyanistes caeruleus",
+    "source_taxon_id": "144849"
+  },
+  {
+    "scientific_name": "Parus major",
+    "source_taxon_id": "203153"
+  },
+  {
+    "scientific_name": "Pica pica",
+    "source_taxon_id": "891696"
+  },
+  {
+    "scientific_name": "Fringilla coelebs",
+    "source_taxon_id": "10070"
+  },
+  {
+    "scientific_name": "Columba palumbus",
+    "source_taxon_id": "3048"
+  },
+  {
+    "scientific_name": "Sturnus vulgaris",
+    "source_taxon_id": "14850"
+  },
+  {
+    "scientific_name": "Turdus philomelos",
+    "source_taxon_id": "12748"
+  },
+  {
+    "scientific_name": "Sylvia atricapilla",
+    "source_taxon_id": "15282"
+  },
+  {
+    "scientific_name": "Motacilla alba",
+    "source_taxon_id": "13695"
+  },
+  {
+    "scientific_name": "Garrulus glandarius",
+    "source_taxon_id": "8088"
+  },
+  {
+    "scientific_name": "Corvus corone",
+    "source_taxon_id": "204496"
+  },
+  {
+    "scientific_name": "Troglodytes troglodytes",
+    "source_taxon_id": "145363"
+  },
+  {
+    "scientific_name": "Carduelis carduelis",
+    "source_taxon_id": "9398"
+  },
+  {
+    "scientific_name": "Chloris chloris",
+    "source_taxon_id": "145360"
+  },
+  {
+    "scientific_name": "Acrocephalus scirpaceus",
+    "source_taxon_id": "204455"
+  },
+  {
+    "scientific_name": "Coccothraustes coccothraustes",
+    "source_taxon_id": "9801"
+  },
+  {
+    "scientific_name": "Phoenicurus ochruros",
+    "source_taxon_id": "13000"
+  },
+  {
+    "scientific_name": "Anas platyrhynchos",
+    "source_taxon_id": "6930"
+  },
+  {
+    "scientific_name": "Anser anser",
+    "source_taxon_id": "7018"
+  },
+  {
+    "scientific_name": "Cygnus olor",
+    "source_taxon_id": "6921"
+  },
+  {
+    "scientific_name": "Fulica atra",
+    "source_taxon_id": "482"
+  },
+  {
+    "scientific_name": "Gallinula chloropus",
+    "source_taxon_id": "201282"
+  },
+  {
+    "scientific_name": "Larus michahellis",
+    "source_taxon_id": "59202"
+  },
+  {
+    "scientific_name": "Larus argentatus",
+    "source_taxon_id": "204533"
+  },
+  {
+    "scientific_name": "Phalacrocorax carbo",
+    "source_taxon_id": "4270"
+  },
+  {
+    "scientific_name": "Ardea cinerea",
+    "source_taxon_id": "4954"
+  },
+  {
+    "scientific_name": "Egretta garzetta",
+    "source_taxon_id": "4943"
+  },
+  {
+    "scientific_name": "Buteo buteo",
+    "source_taxon_id": "204472"
+  },
+  {
+    "scientific_name": "Accipiter nisus",
+    "source_taxon_id": "5106"
+  },
+  {
+    "scientific_name": "Falco tinnunculus",
+    "source_taxon_id": "472766"
+  },
+  {
+    "scientific_name": "Falco peregrinus",
+    "source_taxon_id": "4647"
+  },
+  {
+    "scientific_name": "Strix aluco",
+    "source_taxon_id": "19898"
+  },
+  {
+    "scientific_name": "Asio otus",
+    "source_taxon_id": "20307"
+  },
+  {
+    "scientific_name": "Athene noctua",
+    "source_taxon_id": "19998"
+  },
+  {
+    "scientific_name": "Picus viridis",
+    "source_taxon_id": "144243"
+  },
+  {
+    "scientific_name": "Dendrocopos major",
+    "source_taxon_id": "17871"
+  },
+  {
+    "scientific_name": "Dryocopus martius",
+    "source_taxon_id": "17835"
+  },
+  {
+    "scientific_name": "Apus apus",
+    "source_taxon_id": "6638"
+  },
+  {
+    "scientific_name": "Delichon urbicum",
+    "source_taxon_id": "64705"
+  },
+  {
+    "scientific_name": "Hirundo rustica",
+    "source_taxon_id": "11901"
+  },
+  {
+    "scientific_name": "Riparia riparia",
+    "source_taxon_id": "11941"
+  },
+  {
+    "scientific_name": "Alauda arvensis",
+    "source_taxon_id": "7347"
+  },
+  {
+    "scientific_name": "Galerida cristata",
+    "source_taxon_id": "578607"
+  },
+  {
+    "scientific_name": "Lanius collurio",
+    "source_taxon_id": "12038"
+  },
+  {
+    "scientific_name": "Coloeus monedula",
+    "source_taxon_id": "336399"
+  },
+  {
+    "scientific_name": "Corvus frugilegus",
+    "source_taxon_id": "8029"
+  },
+  {
+    "scientific_name": "Corvus cornix",
+    "source_taxon_id": "144757"
+  },
+  {
+    "scientific_name": "Pyrrhula pyrrhula",
+    "source_taxon_id": "9462"
+  },
+  {
+    "scientific_name": "Linaria cannabina",
+    "source_taxon_id": "558634"
+  },
+  {
+    "scientific_name": "Spinus spinus",
+    "source_taxon_id": "145303"
+  },
+  {
+    "scientific_name": "Serinus serinus",
+    "source_taxon_id": "9236"
+  },
+  {
+    "scientific_name": "Emberiza citrinella",
+    "source_taxon_id": "9195"
+  },
+  {
+    "scientific_name": "Emberiza schoeniclus",
+    "source_taxon_id": "9201"
+  },
+  {
+    "scientific_name": "Prunella modularis",
+    "source_taxon_id": "13988"
+  },
+  {
+    "scientific_name": "Anthus pratensis",
+    "source_taxon_id": "13729"
+  },
+  {
+    "scientific_name": "Anthus trivialis",
+    "source_taxon_id": "13711"
+  },
+  {
+    "scientific_name": "Regulus regulus",
+    "source_taxon_id": "793469"
+  },
+  {
+    "scientific_name": "Regulus ignicapilla",
+    "source_taxon_id": "117097"
+  },
+  {
+    "scientific_name": "Phylloscopus collybita",
+    "source_taxon_id": "117016"
+  },
+  {
+    "scientific_name": "Phylloscopus trochilus",
+    "source_taxon_id": "117055"
+  },
+  {
+    "scientific_name": "Phylloscopus sibilatrix",
+    "source_taxon_id": "117048"
+  },
+  {
+    "scientific_name": "Ficedula hypoleuca",
+    "source_taxon_id": "204512"
+  },
+  {
+    "scientific_name": "Muscicapa striata",
+    "source_taxon_id": "12971"
+  },
+  {
+    "scientific_name": "Saxicola rubicola",
+    "source_taxon_id": "201192"
+  },
+  {
+    "scientific_name": "Oenanthe oenanthe",
+    "source_taxon_id": "12822"
+  },
+  {
+    "scientific_name": "Tachybaptus ruficollis",
+    "source_taxon_id": "4237"
+  },
+  {
+    "scientific_name": "Podiceps cristatus",
+    "source_taxon_id": "4208"
+  },
+  {
+    "scientific_name": "Vanellus vanellus",
+    "source_taxon_id": "4857"
+  },
+  {
+    "scientific_name": "Thinornis dubius",
+    "source_taxon_id": "1580336"
+  },
+  {
+    "scientific_name": "Actitis hypoleucos",
+    "source_taxon_id": "3978"
+  },
+  {
+    "scientific_name": "Gallinago gallinago",
+    "source_taxon_id": "318836"
+  },
+  {
+    "scientific_name": "Scolopax rusticola",
+    "source_taxon_id": "3931"
+  },
+  {
+    "scientific_name": "Alcedo atthis",
+    "source_taxon_id": "2599"
+  },
+  {
+    "scientific_name": "Upupa epops",
+    "source_taxon_id": "20969"
+  },
+  {
+    "scientific_name": "Cuculus canorus",
+    "source_taxon_id": "1907"
+  },
+  {
+    "scientific_name": "Streptopelia decaocto",
+    "source_taxon_id": "2969"
+  },
+  {
+    "scientific_name": "Streptopelia turtur",
+    "source_taxon_id": "2938"
+  },
+  {
+    "scientific_name": "Bombycilla garrulus",
+    "source_taxon_id": "7429"
+  },
+  {
+    "scientific_name": "Nucifraga caryocatactes",
+    "source_taxon_id": "204552"
+  },
+  {
+    "scientific_name": "Oriolus oriolus",
+    "source_taxon_id": "204556"
+  },
+  {
+    "scientific_name": "Sitta europaea",
+    "source_taxon_id": "14824"
+  },
+  {
+    "scientific_name": "Certhia brachydactyla",
+    "source_taxon_id": "7462"
+  },
+  {
+    "scientific_name": "Certhia familiaris",
+    "source_taxon_id": "7450"
+  },
+  {
+    "scientific_name": "Poecile palustris",
+    "source_taxon_id": "144809"
+  },
+  {
+    "scientific_name": "Lophophanes cristatus",
+    "source_taxon_id": "144830"
+  },
+  {
+    "scientific_name": "Aegithalos caudatus",
+    "source_taxon_id": "7278"
+  },
+  {
+    "scientific_name": "Periparus ater",
+    "source_taxon_id": "144823"
+  },
+  {
+    "scientific_name": "Locustella naevia",
+    "source_taxon_id": "116941"
+  },
+  {
+    "scientific_name": "Acrocephalus arundinaceus",
+    "source_taxon_id": "204456"
+  },
+  {
+    "scientific_name": "Acrocephalus palustris",
+    "source_taxon_id": "116802"
+  },
+  {
+    "scientific_name": "Cettia cetti",
+    "source_taxon_id": "116858"
+  },
+  {
+    "scientific_name": "Curruca communis",
+    "source_taxon_id": "1289470"
+  },
+  {
+    "scientific_name": "Curruca curruca",
+    "source_taxon_id": "1289484"
+  },
+  {
+    "scientific_name": "Curruca melanocephala",
+    "source_taxon_id": "1289472"
+  },
+  {
+    "scientific_name": "Luscinia megarhynchos",
+    "source_taxon_id": "13079"
+  },
+  {
+    "scientific_name": "Phoenicurus phoenicurus",
+    "source_taxon_id": "12992"
+  },
+  {
+    "scientific_name": "Mareca penelope",
+    "source_taxon_id": "558441"
+  }
+]

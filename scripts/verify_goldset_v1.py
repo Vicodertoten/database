@@ -7,12 +7,24 @@ from pathlib import Path
 DEFAULT_MANIFEST_PATH = Path("data/goldset/birds_v1/manifest.json")
 
 
+def _load_expected_taxa_count(path: Path) -> int:
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(payload, list):
+        raise SystemExit(f"Invalid taxa file: expected JSON list ({path})")
+    return len(payload)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Verify Gold set birds v1 integrity.")
     parser.add_argument("--manifest-path", type=Path, default=DEFAULT_MANIFEST_PATH)
     parser.add_argument("--expected-taxa", type=int, default=20)
     parser.add_argument("--expected-images-per-taxon", type=int, default=5)
+    parser.add_argument("--expected-goldset-version", type=str)
+    parser.add_argument("--expected-taxa-path", type=Path)
     args = parser.parse_args()
+
+    if args.expected_taxa_path is not None:
+        args.expected_taxa = _load_expected_taxa_count(args.expected_taxa_path)
 
     payload = json.loads(args.manifest_path.read_text(encoding="utf-8"))
     expected_total_images = args.expected_taxa * args.expected_images_per_taxon
@@ -26,6 +38,13 @@ def main() -> int:
             f"expected {args.expected_taxa} taxa but found {len(taxa)} "
             f"(manifest={args.manifest_path})"
         )
+    if args.expected_goldset_version is not None:
+        manifest_version = str(payload.get("goldset_version") or "")
+        if manifest_version != args.expected_goldset_version:
+            errors.append(
+                "manifest goldset_version mismatch: "
+                f"expected {args.expected_goldset_version}, got {manifest_version}"
+            )
 
     unique_media_ids: set[str] = set()
     image_count = 0
