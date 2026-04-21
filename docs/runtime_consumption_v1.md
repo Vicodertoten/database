@@ -58,6 +58,17 @@ Ces implementations restent volontairement minimales:
   - runtime-read `/health` enrichi (`service_version`, `ready`, `limits`)
   - logs requete JSON (`method`, `path`, `status`, `error_category`, `latency_ms`)
 
+## Hypothese reseau owner-side (R4)
+
+Pour le deploiement cible Fly.io:
+
+- les services owner-side (`database-runtime-read-owner`, `database-editorial-write-owner`) ne sont exposes qu'en reseau prive interne (`.internal`)
+- toute exposition publique de ces services est une violation de securite
+- un secret inter-service optionnel peut etre active:
+  - header attendu: `X-Owner-Service-Token`
+  - variable owner-side: `OWNER_SERVICE_TOKEN`
+  - variable consumer-side (`runtime-api`): `DATABASE_OWNER_SERVICE_TOKEN`
+
 ## Surfaces officiellement consommables
 
 `runtime-app` peut consommer les surfaces suivantes comme surfaces runtime officielles:

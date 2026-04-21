@@ -1,12 +1,13 @@
 from __future__ import annotations
 
 import json
+import os
 import threading
 from datetime import datetime, timedelta
 from pathlib import Path
 from urllib.error import HTTPError
 from urllib.parse import quote
-from urllib.request import urlopen
+from urllib.request import Request, urlopen
 
 from database_core.pack import validate_compiled_pack, validate_pack_materialization
 from database_core.playable import validate_playable_corpus
@@ -584,9 +585,14 @@ def _seed_owner_runtime_read_data(database_url: str) -> dict[str, object]:
     }
 
 
-def _http_get_json(url: str) -> tuple[int, dict[str, object]]:
+def _http_get_json(
+    url: str,
+    *,
+    headers: dict[str, str] | None = None,
+) -> tuple[int, dict[str, object]]:
+    request = Request(url, method="GET", headers=headers or {})
     try:
-        with urlopen(url) as response:  # noqa: S310
+        with urlopen(request) as response:  # noqa: S310
             payload = json.loads(response.read().decode("utf-8"))
             return int(response.status), payload
     except HTTPError as error:
@@ -750,3 +756,43 @@ def test_runtime_read_owner_http_server_handles_internal_errors() -> None:
         server.shutdown()
         thread.join(timeout=5)
         server.server_close()
+
+
+def test_runtime_read_owner_http_server_optional_token_auth(database_url: str) -> None:
+    seeded = _seed_owner_runtime_read_data(database_url)
+    service = build_runtime_read_owner_service(database_url, default_playable_limit=200)
+    previous_token = os.environ.get("OWNER_SERVICE_TOKEN")
+    os.environ["OWNER_SERVICE_TOKEN"] = "owner-shared-token"
+
+    server = RuntimeReadHTTPServer(("127.0.0.1", 0), service)
+    host, port = server.server_address
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+
+    try:
+        status, unauthorized_payload = _http_get_json(f"http://{host}:{port}/health")
+        assert status == 401
+        assert unauthorized_payload == {"error": "unauthorized"}
+
+        status, authorized_health = _http_get_json(
+            f"http://{host}:{port}/health",
+            headers={"X-Owner-Service-Token": "owner-shared-token"},
+        )
+        assert status == 200
+        assert authorized_health["status"] == "ok"
+
+        encoded_pack_id = quote(str(seeded["pack_id"]), safe="")
+        status, compiled_payload = _http_get_json(
+            f"http://{host}:{port}/packs/{encoded_pack_id}/compiled/{seeded['revision']}",
+            headers={"X-Owner-Service-Token": "owner-shared-token"},
+        )
+        assert status == 200
+        assert compiled_payload["pack_compiled_version"] == "pack.compiled.v1"
+    finally:
+        server.shutdown()
+        thread.join(timeout=5)
+        server.server_close()
+        if previous_token is None:
+            del os.environ["OWNER_SERVICE_TOKEN"]
+        else:
+            os.environ["OWNER_SERVICE_TOKEN"] = previous_token

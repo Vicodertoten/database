@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import threading
 from urllib.error import HTTPError
 from urllib.parse import quote
@@ -11,9 +12,14 @@ from database_core.editorial_write.service import build_editorial_write_owner_se
 from tests.test_runtime_read_owner_service import _seed_owner_runtime_read_data
 
 
-def _http_get_json(url: str) -> tuple[int, dict[str, object]]:
+def _http_get_json(
+    url: str,
+    *,
+    headers: dict[str, str] | None = None,
+) -> tuple[int, dict[str, object]]:
+    request = Request(url, method="GET", headers=headers or {})
     try:
-        with urlopen(url) as response:  # noqa: S310
+        with urlopen(request) as response:  # noqa: S310
             payload = json.loads(response.read().decode("utf-8"))
             return int(response.status), payload
     except HTTPError as error:
@@ -22,13 +28,17 @@ def _http_get_json(url: str) -> tuple[int, dict[str, object]]:
 
 
 def _http_post_json(
-    url: str, payload: dict[str, object] | list[object]
+    url: str,
+    payload: dict[str, object] | list[object],
+    *,
+    headers: dict[str, str] | None = None,
 ) -> tuple[int, dict[str, object]]:
+    merged_headers = {"content-type": "application/json", **(headers or {})}
     request = Request(
         url,
         method="POST",
         data=json.dumps(payload, ensure_ascii=True).encode("utf-8"),
-        headers={"content-type": "application/json"},
+        headers=merged_headers,
     )
     try:
         with urlopen(request) as response:  # noqa: S310
@@ -273,3 +283,44 @@ def test_editorial_write_owner_http_server_flow(database_url: str) -> None:
         server.shutdown()
         thread.join(timeout=5)
         server.server_close()
+
+
+def test_editorial_write_owner_http_server_optional_token_auth(database_url: str) -> None:
+    seeded = _seed_owner_runtime_read_data(database_url)
+    service = build_editorial_write_owner_service(database_url)
+    previous_token = os.environ.get("OWNER_SERVICE_TOKEN")
+    os.environ["OWNER_SERVICE_TOKEN"] = "owner-shared-token"
+
+    server = EditorialWriteHTTPServer(("127.0.0.1", 0), service)
+    host, port = server.server_address
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+
+    try:
+        status, unauthorized_health = _http_get_json(f"http://{host}:{port}/health")
+        assert status == 401
+        assert unauthorized_health == {"error": "unauthorized"}
+
+        status, authorized_health = _http_get_json(
+            f"http://{host}:{port}/health",
+            headers={"X-Owner-Service-Token": "owner-shared-token"},
+        )
+        assert status == 200
+        assert authorized_health["status"] == "ok"
+
+        encoded_pack_id = quote(str(seeded["pack_id"]), safe="")
+        status, diagnose_payload = _http_post_json(
+            f"http://{host}:{port}/editorial/packs/{encoded_pack_id}/diagnose",
+            {"revision": int(seeded["revision"])},
+            headers={"X-Owner-Service-Token": "owner-shared-token"},
+        )
+        assert status == 200
+        assert diagnose_payload["operation_version"] == "pack.diagnose.v1"
+    finally:
+        server.shutdown()
+        thread.join(timeout=5)
+        server.server_close()
+        if previous_token is None:
+            del os.environ["OWNER_SERVICE_TOKEN"]
+        else:
+            os.environ["OWNER_SERVICE_TOKEN"] = previous_token

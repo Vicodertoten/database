@@ -17,6 +17,8 @@ from database_core.pipeline.runner import DEFAULT_DATABASE_URL
 
 SERVICE_NAME = "database-editorial-write-owner"
 SERVICE_VERSION = os.environ.get("DATABASE_EDITORIAL_WRITE_SERVICE_VERSION", "v1")
+OWNER_SERVICE_TOKEN_ENV = "OWNER_SERVICE_TOKEN"
+OWNER_SERVICE_TOKEN_HEADER = "X-Owner-Service-Token"
 
 
 class EditorialWriteRequestHandler(BaseHTTPRequestHandler):
@@ -24,6 +26,8 @@ class EditorialWriteRequestHandler(BaseHTTPRequestHandler):
 
     def do_GET(self) -> None:  # noqa: N802
         self._request_started_at = time.perf_counter()
+        if not self._authorize_owner_request():
+            return
         parsed = urlsplit(self.path)
         path = parsed.path
 
@@ -56,6 +60,8 @@ class EditorialWriteRequestHandler(BaseHTTPRequestHandler):
 
     def do_POST(self) -> None:  # noqa: N802
         self._request_started_at = time.perf_counter()
+        if not self._authorize_owner_request():
+            return
         parsed = urlsplit(self.path)
         path = parsed.path
 
@@ -397,6 +403,17 @@ class EditorialWriteRequestHandler(BaseHTTPRequestHandler):
 
     def _send_error(self, status: HTTPStatus, code: str) -> None:
         self._send_json(status, {"error": code})
+
+    def _authorize_owner_request(self) -> bool:
+        expected_token = os.environ.get(OWNER_SERVICE_TOKEN_ENV)
+        if not expected_token:
+            return True
+
+        received_token = self.headers.get(OWNER_SERVICE_TOKEN_HEADER)
+        if received_token != expected_token:
+            self._send_error(HTTPStatus.UNAUTHORIZED, "unauthorized")
+            return False
+        return True
 
     def _send_json(self, status: HTTPStatus, payload: dict[str, object]) -> None:
         encoded = json.dumps(payload, ensure_ascii=True).encode("utf-8")
