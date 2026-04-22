@@ -6,7 +6,7 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
 
 - ID: INT-026
 - Title: Phase 3 remediation data taxons deficitaires
-- Status: open_in_progress
+- Status: closed_no_go
 
 ## Repo role in current chantier
 
@@ -17,15 +17,18 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
 
 ## Last validated state
 
-- Last validated context: INT-026 implementation started owner-side.
+- Last validated context: INT-026 Phase 3.1 execution completed and closed.
 - What is already validated:
   - phase3 remediation orchestration is implemented (`scripts/phase3_taxon_remediation.py`)
   - prioritization source uses pack diagnostics (`reason_code`, `deficits`, `blocking_taxa`)
   - idempotence guards implemented in script-level snapshot filtering (`source_observation_id`, `source_media_id`)
   - enrichment queue role preserved (request/execution/recompile trace)
+  - phase3.1 summary generated: `docs/20_execution/phase3_1/phase3_1_summary.v1.json`
+  - script verdict: `STOP_RETARGET`
+  - strict mapping applied: `STOP_RETARGET -> NO_GO`
+  - closure decision published in `INT-026` and `integration_log`
 - What is not validated yet:
-  - full end-to-end remediation run evidence on target pack(s)
-  - runtime compatibility note for INT-026 consumer mirror
+  - no pending validation in INT-026 scope (chantier closed)
 
 ## Decisions already locked
 
@@ -43,13 +46,14 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
 
 ## Next exact step
 
-- execute INT-026 remediation on prioritized pack(s), publish `docs/20_execution/phase3/*.phase3_remediation.v1.json`, then emit Phase 3 decision.
+- open next owner chantier focused on selection retargeting (maximize compile-impact per Gemini call) before any new Phase 3 scale rerun.
 
 ## Files to read first in this repo
 
 - docs/codex_execution_plan.md
 - docs/20_execution/chantiers/INT-026.md
 - docs/20_execution/integration_log.md
+- scripts/phase3_1_complete_measurement.py
 - src/database_core/ops/phase3_taxon_remediation.py
 - scripts/phase3_taxon_remediation.py
 
@@ -62,6 +66,7 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
 ## Verification commands
 
 - `python -m pytest -q -p no:capture tests/test_phase3_taxon_remediation.py`
+- `python -m pytest -q -p no:capture tests/test_inat_snapshot.py`
 - `python -m pytest -q -p no:capture tests/test_storage.py`
 - `python scripts/verify_goldset_v1.py`
 - `python scripts/verify_repo.py`
@@ -69,6 +74,7 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
 
 ## Notes for next IA session
 
-- INT-026 implementation is in place and validated by targeted unit tests.
+- INT-026 is closed with final decision `NO_GO` after completed Phase 3.1 run.
 - `verify_repo.py` currently fails on a pre-existing doctrine marker check (`Politique distracteurs v2`) unrelated to this chantier.
-- INT-026 decision is pending execution evidence.
+- Phase 3.1 artifacts and summary are available under `docs/20_execution/phase3_1/`.
+- Next work should retarget acquisition logic rather than increase raw run volume.

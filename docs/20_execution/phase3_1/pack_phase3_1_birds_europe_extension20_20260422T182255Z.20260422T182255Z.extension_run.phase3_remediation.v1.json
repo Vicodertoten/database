@@ -1,0 +1,562 @@
+{
+  "baseline": {
+    "diagnostic": {
+      "attempt_id": "packdiag:pack:phase3_1:birds:europe:extension20:20260422T182255Z:1:3407ec8c",
+      "attempted_at": "2026-04-22T18:23:22.070258Z",
+      "blocking_taxa": [
+        {
+          "canonical_taxon_id": "taxon:birds:000081",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000082",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000083",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000084",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000085",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000086",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000087",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000088",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000089",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000090",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000091",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000092",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000093",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000094",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000095",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000096",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000097",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000098",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000099",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000100",
+          "media_count": 0,
+          "missing_media_count": 2
+        }
+      ],
+      "compilable": false,
+      "deficits": [
+        {
+          "code": "min_taxa_served",
+          "current": 0,
+          "missing": 10,
+          "required": 10
+        },
+        {
+          "code": "min_media_per_taxon",
+          "current": 0,
+          "missing": 2,
+          "required": 2
+        },
+        {
+          "code": "min_total_questions",
+          "current": 0,
+          "missing": 20,
+          "required": 20
+        }
+      ],
+      "measured": {
+        "min_media_count_per_taxon": 0,
+        "questions_possible": 0,
+        "requested_taxa_count": 20,
+        "taxa_served": 0,
+        "total_playable_items": 0
+      },
+      "pack_diagnostic_version": "pack.diagnostic.v1",
+      "pack_id": "pack:phase3_1:birds:europe:extension20:20260422T182255Z",
+      "reason_code": "no_playable_items",
+      "revision": 1,
+      "schema_version": "database.schema.v15",
+      "thresholds": {
+        "min_media_per_taxon": 2,
+        "min_taxa_served": 10,
+        "min_total_questions": 20
+      }
+    },
+    "insufficient_media_per_taxon_reason_count": 0,
+    "overall_pass": true,
+    "taxon_with_min2_media_ratio": 1.0
+  },
+  "created_at": "2026-04-22T18:36:22.971245+00:00",
+  "decision": {
+    "go_condition": "ratio_up AND insufficient_media_per_taxon_down AND overall_pass_true",
+    "status": "GO_WITH_GAPS"
+  },
+  "delta": {
+    "insufficient_media_per_taxon_reason_count": 0,
+    "taxon_with_min2_media_ratio": 4.0
+  },
+  "enrichment": {
+    "execution": {
+      "enrichment_execution_id": "enrexec:enrreq:pack:phase3_1:birds:europe:extension20:20260422T182255Z:1:c0508d3b:6ac2c6df",
+      "enrichment_request_id": "enrreq:pack:phase3_1:birds:europe:extension20:20260422T182255Z:1:c0508d3b",
+      "executed_at": "2026-04-22T18:36:22.508430+00:00",
+      "execution_status": "success",
+      "recompilation": {
+        "attempted": true,
+        "compiled_build_id": "packbuild:pack:phase3_1:birds:europe:extension20:20260422T182255Z:1:f7e6d5f9",
+        "diagnostic_reason_code": "compilable",
+        "pack_id": "pack:phase3_1:birds:europe:extension20:20260422T182255Z",
+        "revision": 1
+      },
+      "request_status": "completed",
+      "trigger_recompile": true
+    },
+    "request": {
+      "merged": false,
+      "request": {
+        "completed_at": null,
+        "created_at": "2026-04-22T18:23:22.471241+00:00",
+        "enrichment_request_id": "enrreq:pack:phase3_1:birds:europe:extension20:20260422T182255Z:1:c0508d3b",
+        "execution_attempt_count": 0,
+        "pack_id": "pack:phase3_1:birds:europe:extension20:20260422T182255Z",
+        "reason_code": "no_playable_items",
+        "request_status": "pending",
+        "revision": 1
+      },
+      "targets": [
+        {
+          "created_at": "2026-04-22T18:23:22.471241Z",
+          "enrichment_request_id": "enrreq:pack:phase3_1:birds:europe:extension20:20260422T182255Z:1:c0508d3b",
+          "enrichment_request_target_id": "enrtgt:24b22778c654",
+          "resource_id": "taxon:birds:000081",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T18:23:22.471241Z",
+          "enrichment_request_id": "enrreq:pack:phase3_1:birds:europe:extension20:20260422T182255Z:1:c0508d3b",
+          "enrichment_request_target_id": "enrtgt:3fca2490ada0",
+          "resource_id": "taxon:birds:000082",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T18:23:22.471241Z",
+          "enrichment_request_id": "enrreq:pack:phase3_1:birds:europe:extension20:20260422T182255Z:1:c0508d3b",
+          "enrichment_request_target_id": "enrtgt:f61516efff55",
+          "resource_id": "taxon:birds:000083",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T18:23:22.471241Z",
+          "enrichment_request_id": "enrreq:pack:phase3_1:birds:europe:extension20:20260422T182255Z:1:c0508d3b",
+          "enrichment_request_target_id": "enrtgt:6158ef8c74f3",
+          "resource_id": "taxon:birds:000084",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T18:23:22.471241Z",
+          "enrichment_request_id": "enrreq:pack:phase3_1:birds:europe:extension20:20260422T182255Z:1:c0508d3b",
+          "enrichment_request_target_id": "enrtgt:92832647e8fe",
+          "resource_id": "taxon:birds:000085",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T18:23:22.471241Z",
+          "enrichment_request_id": "enrreq:pack:phase3_1:birds:europe:extension20:20260422T182255Z:1:c0508d3b",
+          "enrichment_request_target_id": "enrtgt:ef0d7a0f9420",
+          "resource_id": "taxon:birds:000086",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T18:23:22.471241Z",
+          "enrichment_request_id": "enrreq:pack:phase3_1:birds:europe:extension20:20260422T182255Z:1:c0508d3b",
+          "enrichment_request_target_id": "enrtgt:ae98689d3eba",
+          "resource_id": "taxon:birds:000087",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T18:23:22.471241Z",
+          "enrichment_request_id": "enrreq:pack:phase3_1:birds:europe:extension20:20260422T182255Z:1:c0508d3b",
+          "enrichment_request_target_id": "enrtgt:280005d108f9",
+          "resource_id": "taxon:birds:000088",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T18:23:22.471241Z",
+          "enrichment_request_id": "enrreq:pack:phase3_1:birds:europe:extension20:20260422T182255Z:1:c0508d3b",
+          "enrichment_request_target_id": "enrtgt:d9d97b17e366",
+          "resource_id": "taxon:birds:000089",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T18:23:22.471241Z",
+          "enrichment_request_id": "enrreq:pack:phase3_1:birds:europe:extension20:20260422T182255Z:1:c0508d3b",
+          "enrichment_request_target_id": "enrtgt:edf8d255a07e",
+          "resource_id": "taxon:birds:000090",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T18:23:22.471241Z",
+          "enrichment_request_id": "enrreq:pack:phase3_1:birds:europe:extension20:20260422T182255Z:1:c0508d3b",
+          "enrichment_request_target_id": "enrtgt:666c80151ef1",
+          "resource_id": "taxon:birds:000091",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T18:23:22.471241Z",
+          "enrichment_request_id": "enrreq:pack:phase3_1:birds:europe:extension20:20260422T182255Z:1:c0508d3b",
+          "enrichment_request_target_id": "enrtgt:98233a3498f0",
+          "resource_id": "taxon:birds:000092",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T18:23:22.471241Z",
+          "enrichment_request_id": "enrreq:pack:phase3_1:birds:europe:extension20:20260422T182255Z:1:c0508d3b",
+          "enrichment_request_target_id": "enrtgt:80b98c5490df",
+          "resource_id": "taxon:birds:000093",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T18:23:22.471241Z",
+          "enrichment_request_id": "enrreq:pack:phase3_1:birds:europe:extension20:20260422T182255Z:1:c0508d3b",
+          "enrichment_request_target_id": "enrtgt:1b972db71ba9",
+          "resource_id": "taxon:birds:000094",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T18:23:22.471241Z",
+          "enrichment_request_id": "enrreq:pack:phase3_1:birds:europe:extension20:20260422T182255Z:1:c0508d3b",
+          "enrichment_request_target_id": "enrtgt:11a47f16ccf7",
+          "resource_id": "taxon:birds:000095",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T18:23:22.471241Z",
+          "enrichment_request_id": "enrreq:pack:phase3_1:birds:europe:extension20:20260422T182255Z:1:c0508d3b",
+          "enrichment_request_target_id": "enrtgt:572f52f88ee0",
+          "resource_id": "taxon:birds:000096",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T18:23:22.471241Z",
+          "enrichment_request_id": "enrreq:pack:phase3_1:birds:europe:extension20:20260422T182255Z:1:c0508d3b",
+          "enrichment_request_target_id": "enrtgt:dd4735934f0f",
+          "resource_id": "taxon:birds:000097",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T18:23:22.471241Z",
+          "enrichment_request_id": "enrreq:pack:phase3_1:birds:europe:extension20:20260422T182255Z:1:c0508d3b",
+          "enrichment_request_target_id": "enrtgt:f91d02f89eb9",
+          "resource_id": "taxon:birds:000098",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T18:23:22.471241Z",
+          "enrichment_request_id": "enrreq:pack:phase3_1:birds:europe:extension20:20260422T182255Z:1:c0508d3b",
+          "enrichment_request_target_id": "enrtgt:89471274d28f",
+          "resource_id": "taxon:birds:000099",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T18:23:22.471241Z",
+          "enrichment_request_id": "enrreq:pack:phase3_1:birds:europe:extension20:20260422T182255Z:1:c0508d3b",
+          "enrichment_request_target_id": "enrtgt:f7885e68523d",
+          "resource_id": "taxon:birds:000100",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        }
+      ]
+    }
+  },
+  "final": {
+    "diagnostic": {
+      "attempt_id": "packdiag:pack:phase3_1:birds:europe:extension20:20260422T182255Z:1:c9e3f5ea",
+      "attempted_at": "2026-04-22T18:36:19.357132Z",
+      "blocking_taxa": [],
+      "compilable": true,
+      "deficits": [],
+      "measured": {
+        "min_media_count_per_taxon": 4,
+        "questions_possible": 20,
+        "requested_taxa_count": 20,
+        "taxa_served": 20,
+        "total_playable_items": 129
+      },
+      "pack_diagnostic_version": "pack.diagnostic.v1",
+      "pack_id": "pack:phase3_1:birds:europe:extension20:20260422T182255Z",
+      "reason_code": "compilable",
+      "revision": 1,
+      "schema_version": "database.schema.v15",
+      "thresholds": {
+        "min_media_per_taxon": 2,
+        "min_taxa_served": 10,
+        "min_total_questions": 20
+      }
+    },
+    "insufficient_media_per_taxon_reason_count": 0,
+    "overall_pass": true,
+    "taxon_with_min2_media_ratio": 5.0
+  },
+  "harvest_query": {
+    "bbox": "-11.0,34.0,32.0,71.0",
+    "observed_from": "2010-01-01",
+    "observed_to": "2022-12-31",
+    "order": "asc",
+    "order_by": "observed_on"
+  },
+  "pack_id": "pack:phase3_1:birds:europe:extension20:20260422T182255Z",
+  "passes": [
+    {
+      "downloaded_images": 200,
+      "exportable_resources": 129,
+      "harvested_observations": 200,
+      "idempotence": {
+        "accepted_new_observation_media": 200,
+        "ignored_existing_media": 0,
+        "ignored_existing_observation": 0
+      },
+      "images_sent_to_gemini": 186,
+      "missing_taxa_in_pilot": [],
+      "pack_compilable_after_pass": true,
+      "pack_diagnostic_reason_code_after_pass": "compilable",
+      "pass": 1,
+      "pre_ai_rejection_count": 14,
+      "qualified_resources": 200,
+      "snapshot_id": "inaturalist-birds-v2-phase3rem-20260422T182322Z-p1"
+    }
+  ],
+  "phase3_remediation_version": "phase3.remediation.v1",
+  "revision": 1,
+  "run_limits": {
+    "max_observations_per_taxon": 10,
+    "max_passes": 3
+  },
+  "selection": {
+    "blocking_taxa": [
+      {
+        "canonical_taxon_id": "taxon:birds:000081",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000082",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000083",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000084",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000085",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000086",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000087",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000088",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000089",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000090",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000091",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000092",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000093",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000094",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000095",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000096",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000097",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000098",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000099",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000100",
+        "media_count": 0,
+        "missing_media_count": 2
+      }
+    ],
+    "deficits": [
+      {
+        "code": "min_taxa_served",
+        "current": 0,
+        "missing": 10,
+        "required": 10
+      },
+      {
+        "code": "min_media_per_taxon",
+        "current": 0,
+        "missing": 2,
+        "required": 2
+      },
+      {
+        "code": "min_total_questions",
+        "current": 0,
+        "missing": 20,
+        "required": 20
+      }
+    ],
+    "prioritized_taxon_ids": [
+      "taxon:birds:000081",
+      "taxon:birds:000082",
+      "taxon:birds:000083",
+      "taxon:birds:000084",
+      "taxon:birds:000085",
+      "taxon:birds:000086",
+      "taxon:birds:000087",
+      "taxon:birds:000088",
+      "taxon:birds:000089",
+      "taxon:birds:000090",
+      "taxon:birds:000091",
+      "taxon:birds:000092",
+      "taxon:birds:000093",
+      "taxon:birds:000094",
+      "taxon:birds:000095",
+      "taxon:birds:000096",
+      "taxon:birds:000097",
+      "taxon:birds:000098",
+      "taxon:birds:000099",
+      "taxon:birds:000100"
+    ],
+    "reason_code": "no_playable_items"
+  }
+}

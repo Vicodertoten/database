@@ -36,6 +36,13 @@ def main() -> None:
     parser.add_argument("--pilot-taxa-path", type=Path, default=DEFAULT_PILOT_TAXA_PATH)
     parser.add_argument("--gemini-api-key-env", default="GEMINI_API_KEY")
     parser.add_argument("--output-path", type=Path)
+    parser.add_argument("--max-passes", type=int, default=3)
+    parser.add_argument("--max-observations-per-taxon", type=int, default=15)
+    parser.add_argument("--harvest-order-by", type=str)
+    parser.add_argument("--harvest-order", choices=["asc", "desc"])
+    parser.add_argument("--harvest-observed-from", type=str)
+    parser.add_argument("--harvest-observed-to", type=str)
+    parser.add_argument("--harvest-bbox", type=str)
     args = parser.parse_args()
 
     gemini_api_key = os.environ.get(args.gemini_api_key_env)
@@ -50,6 +57,13 @@ def main() -> None:
         pilot_taxa_path=args.pilot_taxa_path,
         gemini_api_key=gemini_api_key,
         summary_output_path=args.output_path,
+        max_passes=args.max_passes,
+        max_observations_per_taxon=args.max_observations_per_taxon,
+        harvest_order_by=args.harvest_order_by,
+        harvest_order=args.harvest_order,
+        harvest_observed_from=args.harvest_observed_from,
+        harvest_observed_to=args.harvest_observed_to,
+        harvest_bbox=args.harvest_bbox,
     )
     print(json.dumps(summary, indent=2, sort_keys=True))
 

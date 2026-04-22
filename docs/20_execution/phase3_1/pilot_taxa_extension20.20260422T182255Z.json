@@ -1,0 +1,222 @@
+[
+  {
+    "accepted_scientific_name": "Bombycilla garrulus",
+    "authority_source": "inaturalist",
+    "canonical_rank": "species",
+    "canonical_taxon_id": "taxon:birds:000081",
+    "common_names": [],
+    "display_slug": null,
+    "source_taxon_id": "7429",
+    "synonyms": [],
+    "taxon_status": "active"
+  },
+  {
+    "accepted_scientific_name": "Nucifraga caryocatactes",
+    "authority_source": "inaturalist",
+    "canonical_rank": "species",
+    "canonical_taxon_id": "taxon:birds:000082",
+    "common_names": [],
+    "display_slug": null,
+    "source_taxon_id": "204552",
+    "synonyms": [],
+    "taxon_status": "active"
+  },
+  {
+    "accepted_scientific_name": "Oriolus oriolus",
+    "authority_source": "inaturalist",
+    "canonical_rank": "species",
+    "canonical_taxon_id": "taxon:birds:000083",
+    "common_names": [],
+    "display_slug": null,
+    "source_taxon_id": "204556",
+    "synonyms": [],
+    "taxon_status": "active"
+  },
+  {
+    "accepted_scientific_name": "Sitta europaea",
+    "authority_source": "inaturalist",
+    "canonical_rank": "species",
+    "canonical_taxon_id": "taxon:birds:000084",
+    "common_names": [],
+    "display_slug": null,
+    "source_taxon_id": "14824",
+    "synonyms": [],
+    "taxon_status": "active"
+  },
+  {
+    "accepted_scientific_name": "Certhia brachydactyla",
+    "authority_source": "inaturalist",
+    "canonical_rank": "species",
+    "canonical_taxon_id": "taxon:birds:000085",
+    "common_names": [],
+    "display_slug": null,
+    "source_taxon_id": "7462",
+    "synonyms": [],
+    "taxon_status": "active"
+  },
+  {
+    "accepted_scientific_name": "Certhia familiaris",
+    "authority_source": "inaturalist",
+    "canonical_rank": "species",
+    "canonical_taxon_id": "taxon:birds:000086",
+    "common_names": [],
+    "display_slug": null,
+    "source_taxon_id": "7450",
+    "synonyms": [],
+    "taxon_status": "active"
+  },
+  {
+    "accepted_scientific_name": "Poecile palustris",
+    "authority_source": "inaturalist",
+    "canonical_rank": "species",
+    "canonical_taxon_id": "taxon:birds:000087",
+    "common_names": [],
+    "display_slug": null,
+    "source_taxon_id": "144809",
+    "synonyms": [],
+    "taxon_status": "active"
+  },
+  {
+    "accepted_scientific_name": "Lophophanes cristatus",
+    "authority_source": "inaturalist",
+    "canonical_rank": "species",
+    "canonical_taxon_id": "taxon:birds:000088",
+    "common_names": [],
+    "display_slug": null,
+    "source_taxon_id": "144830",
+    "synonyms": [],
+    "taxon_status": "active"
+  },
+  {
+    "accepted_scientific_name": "Aegithalos caudatus",
+    "authority_source": "inaturalist",
+    "canonical_rank": "species",
+    "canonical_taxon_id": "taxon:birds:000089",
+    "common_names": [],
+    "display_slug": null,
+    "source_taxon_id": "7278",
+    "synonyms": [],
+    "taxon_status": "active"
+  },
+  {
+    "accepted_scientific_name": "Periparus ater",
+    "authority_source": "inaturalist",
+    "canonical_rank": "species",
+    "canonical_taxon_id": "taxon:birds:000090",
+    "common_names": [],
+    "display_slug": null,
+    "source_taxon_id": "144823",
+    "synonyms": [],
+    "taxon_status": "active"
+  },
+  {
+    "accepted_scientific_name": "Locustella naevia",
+    "authority_source": "inaturalist",
+    "canonical_rank": "species",
+    "canonical_taxon_id": "taxon:birds:000091",
+    "common_names": [],
+    "display_slug": null,
+    "source_taxon_id": "116941",
+    "synonyms": [],
+    "taxon_status": "active"
+  },
+  {
+    "accepted_scientific_name": "Acrocephalus arundinaceus",
+    "authority_source": "inaturalist",
+    "canonical_rank": "species",
+    "canonical_taxon_id": "taxon:birds:000092",
+    "common_names": [],
+    "display_slug": null,
+    "source_taxon_id": "204456",
+    "synonyms": [],
+    "taxon_status": "active"
+  },
+  {
+    "accepted_scientific_name": "Acrocephalus palustris",
+    "authority_source": "inaturalist",
+    "canonical_rank": "species",
+    "canonical_taxon_id": "taxon:birds:000093",
+    "common_names": [],
+    "display_slug": null,
+    "source_taxon_id": "116802",
+    "synonyms": [],
+    "taxon_status": "active"
+  },
+  {
+    "accepted_scientific_name": "Cettia cetti",
+    "authority_source": "inaturalist",
+    "canonical_rank": "species",
+    "canonical_taxon_id": "taxon:birds:000094",
+    "common_names": [],
+    "display_slug": null,
+    "source_taxon_id": "116858",
+    "synonyms": [],
+    "taxon_status": "active"
+  },
+  {
+    "accepted_scientific_name": "Curruca communis",
+    "authority_source": "inaturalist",
+    "canonical_rank": "species",
+    "canonical_taxon_id": "taxon:birds:000095",
+    "common_names": [],
+    "display_slug": null,
+    "source_taxon_id": "1289470",
+    "synonyms": [],
+    "taxon_status": "active"
+  },
+  {
+    "accepted_scientific_name": "Curruca curruca",
+    "authority_source": "inaturalist",
+    "canonical_rank": "species",
+    "canonical_taxon_id": "taxon:birds:000096",
+    "common_names": [],
+    "display_slug": null,
+    "source_taxon_id": "1289484",
+    "synonyms": [],
+    "taxon_status": "active"
+  },
+  {
+    "accepted_scientific_name": "Curruca melanocephala",
+    "authority_source": "inaturalist",
+    "canonical_rank": "species",
+    "canonical_taxon_id": "taxon:birds:000097",
+    "common_names": [],
+    "display_slug": null,
+    "source_taxon_id": "1289472",
+    "synonyms": [],
+    "taxon_status": "active"
+  },
+  {
+    "accepted_scientific_name": "Luscinia megarhynchos",
+    "authority_source": "inaturalist",
+    "canonical_rank": "species",
+    "canonical_taxon_id": "taxon:birds:000098",
+    "common_names": [],
+    "display_slug": null,
+    "source_taxon_id": "13079",
+    "synonyms": [],
+    "taxon_status": "active"
+  },
+  {
+    "accepted_scientific_name": "Phoenicurus phoenicurus",
+    "authority_source": "inaturalist",
+    "canonical_rank": "species",
+    "canonical_taxon_id": "taxon:birds:000099",
+    "common_names": [],
+    "display_slug": null,
+    "source_taxon_id": "12992",
+    "synonyms": [],
+    "taxon_status": "active"
+  },
+  {
+    "accepted_scientific_name": "Mareca penelope",
+    "authority_source": "inaturalist",
+    "canonical_rank": "species",
+    "canonical_taxon_id": "taxon:birds:000100",
+    "common_names": [],
+    "display_slug": null,
+    "source_taxon_id": "558441",
+    "synonyms": [],
+    "taxon_status": "active"
+  }
+]

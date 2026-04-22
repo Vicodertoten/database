@@ -1,0 +1,101 @@
+{
+  "baseline": {
+    "diagnostic": {
+      "attempt_id": "packdiag:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:d265567c",
+      "attempted_at": "2026-04-22T18:23:08.315468Z",
+      "blocking_taxa": [],
+      "compilable": true,
+      "deficits": [],
+      "measured": {
+        "min_media_count_per_taxon": 2,
+        "questions_possible": 20,
+        "requested_taxa_count": 80,
+        "taxa_served": 80,
+        "total_playable_items": 555
+      },
+      "pack_diagnostic_version": "pack.diagnostic.v1",
+      "pack_id": "pack:pilot:birds-v2-nogeo:20260421T215543Z",
+      "reason_code": "compilable",
+      "revision": 1,
+      "schema_version": "database.schema.v15",
+      "thresholds": {
+        "min_media_per_taxon": 2,
+        "min_taxa_served": 10,
+        "min_total_questions": 20
+      }
+    },
+    "insufficient_media_per_taxon_reason_count": 0,
+    "overall_pass": true,
+    "taxon_with_min2_media_ratio": 1.0
+  },
+  "created_at": "2026-04-22T18:23:11.313906+00:00",
+  "decision": {
+    "go_condition": "ratio_up AND insufficient_media_per_taxon_down AND overall_pass_true",
+    "status": "NO_GO"
+  },
+  "delta": {
+    "insufficient_media_per_taxon_reason_count": 0,
+    "taxon_with_min2_media_ratio": 0.0
+  },
+  "enrichment": {
+    "execution": {
+      "execution_status": "success",
+      "reason": "pack_compilable_baseline",
+      "skipped": true
+    },
+    "request": {
+      "reason": "pack_compilable_baseline",
+      "skipped": true
+    }
+  },
+  "final": {
+    "diagnostic": {
+      "attempt_id": "packdiag:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:d265567c",
+      "attempted_at": "2026-04-22T18:23:08.315468Z",
+      "blocking_taxa": [],
+      "compilable": true,
+      "deficits": [],
+      "measured": {
+        "min_media_count_per_taxon": 2,
+        "questions_possible": 20,
+        "requested_taxa_count": 80,
+        "taxa_served": 80,
+        "total_playable_items": 555
+      },
+      "pack_diagnostic_version": "pack.diagnostic.v1",
+      "pack_id": "pack:pilot:birds-v2-nogeo:20260421T215543Z",
+      "reason_code": "compilable",
+      "revision": 1,
+      "schema_version": "database.schema.v15",
+      "thresholds": {
+        "min_media_per_taxon": 2,
+        "min_taxa_served": 10,
+        "min_total_questions": 20
+      }
+    },
+    "insufficient_media_per_taxon_reason_count": 0,
+    "overall_pass": true,
+    "taxon_with_min2_media_ratio": 1.0
+  },
+  "harvest_query": {
+    "bbox": "-11.0,34.0,32.0,71.0",
+    "observed_from": "2010-01-01",
+    "observed_to": "2022-12-31",
+    "order": "asc",
+    "order_by": "observed_on"
+  },
+  "pack_id": "pack:pilot:birds-v2-nogeo:20260421T215543Z",
+  "passes": [],
+  "phase3_remediation_version": "phase3.remediation.v1",
+  "revision": 1,
+  "run_limits": {
+    "max_observations_per_taxon": 10,
+    "max_passes": 3
+  },
+  "selection": {
+    "blocking_taxa": [],
+    "deficits": [],
+    "prioritized_taxon_ids": [],
+    "reason_code": "compilable"
+  }
+}

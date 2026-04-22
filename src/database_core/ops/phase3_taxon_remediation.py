@@ -81,7 +81,12 @@ def collect_known_source_ids(
         snapshot_id = manifest_path.parent.name
         if snapshot_id in excluded:
             continue
-        manifest, _ = load_snapshot_manifest(manifest_path=manifest_path)
+        try:
+            manifest, _ = load_snapshot_manifest(manifest_path=manifest_path)
+        except ValueError:
+            # Ignore legacy/unsupported manifests in snapshot root; Phase 3 idempotence
+            # must only compare against canonical v3-compatible snapshots.
+            continue
         for item in manifest.media_downloads:
             known_observation_ids.add(str(item.source_observation_id))
             known_media_ids.add(str(item.source_media_id))
@@ -198,6 +203,13 @@ def run_phase3_taxon_remediation(
     pilot_taxa_path: Path = DEFAULT_PILOT_TAXA_PATH,
     gemini_api_key: str,
     summary_output_path: Path | None = None,
+    max_passes: int = PHASE3_MAX_PASSES,
+    max_observations_per_taxon: int = PHASE3_MAX_OBSERVATIONS_PER_TAXON,
+    harvest_order_by: str | None = None,
+    harvest_order: str | None = None,
+    harvest_observed_from: str | None = None,
+    harvest_observed_to: str | None = None,
+    harvest_bbox: str | None = None,
 ) -> dict[str, object]:
     services = build_storage_services(database_url)
     services.database.initialize()
@@ -210,27 +222,31 @@ def run_phase3_taxon_remediation(
     baseline_diagnostic = services.pack_store.diagnose_pack(pack_id=pack_id, revision=revision)
     selection = build_remediation_selection(baseline_diagnostic)
 
-    request_payload = services.enrichment_store.create_or_merge_enrichment_request(
-        pack_id=pack_id,
-        revision=int(baseline_diagnostic["revision"]),
-        reason_code=selection.reason_code,
-        targets=[
-            {
-                "resource_type": "canonical_taxon",
-                "resource_id": taxon_id,
-                "target_attribute": "playable_availability",
-            }
-            for taxon_id in selection.prioritized_taxon_ids
-        ]
-        or [
-            {
-                "resource_type": "pack",
-                "resource_id": pack_id,
-                "target_attribute": "playable_availability",
-            }
-        ],
-    )
-    enrichment_request_id = str(request_payload["request"]["enrichment_request_id"])
+    request_payload: dict[str, Any] | None = None
+    execution_payload: dict[str, Any] | None = None
+    enrichment_request_id: str | None = None
+    if not bool(baseline_diagnostic.get("compilable")):
+        request_payload = services.enrichment_store.create_or_merge_enrichment_request(
+            pack_id=pack_id,
+            revision=int(baseline_diagnostic["revision"]),
+            reason_code=selection.reason_code,
+            targets=[
+                {
+                    "resource_type": "canonical_taxon",
+                    "resource_id": taxon_id,
+                    "target_attribute": "playable_availability",
+                }
+                for taxon_id in selection.prioritized_taxon_ids
+            ]
+            or [
+                {
+                    "resource_type": "pack",
+                    "resource_id": pack_id,
+                    "target_attribute": "playable_availability",
+                }
+            ],
+        )
+        enrichment_request_id = str(request_payload["request"]["enrichment_request_id"])
 
     known_observation_ids, known_media_ids = collect_known_source_ids(
         snapshot_root=snapshot_root,
@@ -239,7 +255,10 @@ def run_phase3_taxon_remediation(
     current_diagnostic = baseline_diagnostic
     now = datetime.now(UTC)
 
-    for remediation_pass in range(1, PHASE3_MAX_PASSES + 1):
+    resolved_max_passes = max(1, int(max_passes))
+    resolved_max_observations_per_taxon = max(1, int(max_observations_per_taxon))
+
+    for remediation_pass in range(1, resolved_max_passes + 1):
         if bool(current_diagnostic.get("compilable")):
             break
         pass_selection = build_remediation_selection(current_diagnostic)
@@ -271,8 +290,15 @@ def run_phase3_taxon_remediation(
             snapshot_id=snapshot_id,
             snapshot_root=snapshot_root,
             pilot_taxa_path=seed_subset_path,
-            max_observations_per_taxon=PHASE3_MAX_OBSERVATIONS_PER_TAXON,
+            max_observations_per_taxon=resolved_max_observations_per_taxon,
             timeout_seconds=PHASE3_TIMEOUT_SECONDS,
+            observed_from=harvest_observed_from,
+            observed_to=harvest_observed_to,
+            order_by=harvest_order_by,
+            order=harvest_order,
+            bbox=harvest_bbox,
+            exclude_observation_ids=known_observation_ids,
+            exclude_media_ids=known_media_ids,
         )
         idempotence_stats = filter_snapshot_media_for_idempotence(
             snapshot_id=snapshot_id,
@@ -310,6 +336,7 @@ def run_phase3_taxon_remediation(
                 "pack_diagnostic_reason_code_after_pass": str(current_diagnostic["reason_code"]),
                 "pack_compilable_after_pass": bool(current_diagnostic["compilable"]),
                 "images_sent_to_gemini": int(qualify_result.images_sent_to_gemini_count),
+                "pre_ai_rejection_count": int(qualify_result.pre_ai_rejection_count),
             }
         )
 
@@ -326,12 +353,19 @@ def run_phase3_taxon_remediation(
         "baseline_reason_code": str(baseline_diagnostic["reason_code"]),
         "final_reason_code": str(current_diagnostic["reason_code"]),
     }
-    execution_payload = services.enrichment_store.record_enrichment_execution(
-        enrichment_request_id=enrichment_request_id,
-        execution_status=execution_status,
-        execution_context=execution_context,
-        trigger_recompile=True,
-    )
+    if enrichment_request_id is not None:
+        execution_payload = services.enrichment_store.record_enrichment_execution(
+            enrichment_request_id=enrichment_request_id,
+            execution_status=execution_status,
+            execution_context=execution_context,
+            trigger_recompile=True,
+        )
+    else:
+        execution_payload = {
+            "skipped": True,
+            "reason": "pack_compilable_baseline",
+            "execution_status": execution_status,
+        }
 
     baseline_ratio = float(
         baseline_smoke["extended_kpis"]["taxon_with_min2_media_ratio"]["actual"]
@@ -387,9 +421,24 @@ def run_phase3_taxon_remediation(
             "blocking_taxa": selection.blocking_taxa,
             "prioritized_taxon_ids": selection.prioritized_taxon_ids,
         },
+        "run_limits": {
+            "max_passes": resolved_max_passes,
+            "max_observations_per_taxon": resolved_max_observations_per_taxon,
+        },
+        "harvest_query": {
+            "order_by": harvest_order_by or "votes",
+            "order": harvest_order or "desc",
+            "observed_from": harvest_observed_from,
+            "observed_to": harvest_observed_to,
+            "bbox": harvest_bbox,
+        },
         "passes": passes,
         "enrichment": {
-            "request": request_payload,
+            "request": request_payload
+            or {
+                "skipped": True,
+                "reason": "pack_compilable_baseline",
+            },
             "execution": execution_payload,
         },
         "decision": {

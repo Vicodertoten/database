@@ -1,0 +1,167 @@
+[
+  {
+    "accepted_scientific_name": "Carduelis carduelis",
+    "authority_source": "inaturalist",
+    "canonical_rank": "species",
+    "canonical_taxon_id": "taxon:birds:000016",
+    "common_names": [],
+    "display_slug": null,
+    "source_taxon_id": "9398",
+    "synonyms": [],
+    "taxon_status": "active"
+  },
+  {
+    "accepted_scientific_name": "Chloris chloris",
+    "authority_source": "inaturalist",
+    "canonical_rank": "species",
+    "canonical_taxon_id": "taxon:birds:000017",
+    "common_names": [],
+    "display_slug": null,
+    "source_taxon_id": "145360",
+    "synonyms": [],
+    "taxon_status": "active"
+  },
+  {
+    "accepted_scientific_name": "Acrocephalus scirpaceus",
+    "authority_source": "inaturalist",
+    "canonical_rank": "species",
+    "canonical_taxon_id": "taxon:birds:000018",
+    "common_names": [],
+    "display_slug": null,
+    "source_taxon_id": "204455",
+    "synonyms": [],
+    "taxon_status": "active"
+  },
+  {
+    "accepted_scientific_name": "Coccothraustes coccothraustes",
+    "authority_source": "inaturalist",
+    "canonical_rank": "species",
+    "canonical_taxon_id": "taxon:birds:000019",
+    "common_names": [],
+    "display_slug": null,
+    "source_taxon_id": "9801",
+    "synonyms": [],
+    "taxon_status": "active"
+  },
+  {
+    "accepted_scientific_name": "Phoenicurus ochruros",
+    "authority_source": "inaturalist",
+    "canonical_rank": "species",
+    "canonical_taxon_id": "taxon:birds:000020",
+    "common_names": [],
+    "display_slug": null,
+    "source_taxon_id": "13000",
+    "synonyms": [],
+    "taxon_status": "active"
+  },
+  {
+    "accepted_scientific_name": "Anas platyrhynchos",
+    "authority_source": "inaturalist",
+    "canonical_rank": "species",
+    "canonical_taxon_id": "taxon:birds:000021",
+    "common_names": [],
+    "display_slug": null,
+    "source_taxon_id": "6930",
+    "synonyms": [],
+    "taxon_status": "active"
+  },
+  {
+    "accepted_scientific_name": "Anser anser",
+    "authority_source": "inaturalist",
+    "canonical_rank": "species",
+    "canonical_taxon_id": "taxon:birds:000022",
+    "common_names": [],
+    "display_slug": null,
+    "source_taxon_id": "7018",
+    "synonyms": [],
+    "taxon_status": "active"
+  },
+  {
+    "accepted_scientific_name": "Cygnus olor",
+    "authority_source": "inaturalist",
+    "canonical_rank": "species",
+    "canonical_taxon_id": "taxon:birds:000023",
+    "common_names": [],
+    "display_slug": null,
+    "source_taxon_id": "6921",
+    "synonyms": [],
+    "taxon_status": "active"
+  },
+  {
+    "accepted_scientific_name": "Fulica atra",
+    "authority_source": "inaturalist",
+    "canonical_rank": "species",
+    "canonical_taxon_id": "taxon:birds:000024",
+    "common_names": [],
+    "display_slug": null,
+    "source_taxon_id": "482",
+    "synonyms": [],
+    "taxon_status": "active"
+  },
+  {
+    "accepted_scientific_name": "Gallinula chloropus",
+    "authority_source": "inaturalist",
+    "canonical_rank": "species",
+    "canonical_taxon_id": "taxon:birds:000025",
+    "common_names": [],
+    "display_slug": null,
+    "source_taxon_id": "201282",
+    "synonyms": [],
+    "taxon_status": "active"
+  },
+  {
+    "accepted_scientific_name": "Larus michahellis",
+    "authority_source": "inaturalist",
+    "canonical_rank": "species",
+    "canonical_taxon_id": "taxon:birds:000026",
+    "common_names": [],
+    "display_slug": null,
+    "source_taxon_id": "59202",
+    "synonyms": [],
+    "taxon_status": "active"
+  },
+  {
+    "accepted_scientific_name": "Larus argentatus",
+    "authority_source": "inaturalist",
+    "canonical_rank": "species",
+    "canonical_taxon_id": "taxon:birds:000027",
+    "common_names": [],
+    "display_slug": null,
+    "source_taxon_id": "204533",
+    "synonyms": [],
+    "taxon_status": "active"
+  },
+  {
+    "accepted_scientific_name": "Phalacrocorax carbo",
+    "authority_source": "inaturalist",
+    "canonical_rank": "species",
+    "canonical_taxon_id": "taxon:birds:000028",
+    "common_names": [],
+    "display_slug": null,
+    "source_taxon_id": "4270",
+    "synonyms": [],
+    "taxon_status": "active"
+  },
+  {
+    "accepted_scientific_name": "Ardea cinerea",
+    "authority_source": "inaturalist",
+    "canonical_rank": "species",
+    "canonical_taxon_id": "taxon:birds:000029",
+    "common_names": [],
+    "display_slug": null,
+    "source_taxon_id": "4954",
+    "synonyms": [],
+    "taxon_status": "active"
+  },
+  {
+    "accepted_scientific_name": "Egretta garzetta",
+    "authority_source": "inaturalist",
+    "canonical_rank": "species",
+    "canonical_taxon_id": "taxon:birds:000030",
+    "common_names": [],
+    "display_slug": null,
+    "source_taxon_id": "4943",
+    "synonyms": [],
+    "taxon_status": "active"
+  }
+]

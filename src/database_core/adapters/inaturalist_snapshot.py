@@ -484,12 +484,26 @@ def _parse_datetime(value: object) -> datetime | None:
     if value in {None, ""}:
         return None
     text = str(value).strip()
-    if len(text) >= 10:
-        date_part = text[:10].replace("/", "-")
-        text = f"{date_part}{text[10:]}"
-    if len(text) == 10:
-        text = f"{text}T00:00:00+00:00"
-    return datetime.fromisoformat(text.replace("Z", "+00:00"))
+    normalized = text
+    if len(normalized) >= 10:
+        date_part = normalized[:10].replace("/", "-")
+        normalized = f"{date_part}{normalized[10:]}"
+    if len(normalized) == 10:
+        normalized = f"{normalized}T00:00:00+00:00"
+    try:
+        return datetime.fromisoformat(normalized.replace("Z", "+00:00"))
+    except ValueError:
+        # Some iNaturalist payloads ship non-ISO variants such as
+        # `2018-07-06 5:40 AM -03` or `3/13/2010`; keep ingestion resilient by
+        # preserving date-only information in UTC.
+        date_only = normalized[:10]
+        for date_format in ("%Y-%m-%d", "%m/%d/%Y", "%m/%d/%y"):
+            try:
+                parsed = datetime.strptime(date_only, date_format)
+                return datetime.fromisoformat(parsed.strftime("%Y-%m-%dT00:00:00+00:00"))
+            except ValueError:
+                continue
+        raise
 
 
 def _guess_extension(url: str) -> str | None:

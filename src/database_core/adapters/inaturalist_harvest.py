@@ -82,6 +82,10 @@ def fetch_inat_snapshot(
     place_id: str | None = None,
     observed_from: str | None = None,
     observed_to: str | None = None,
+    order_by: str | None = None,
+    order: str | None = None,
+    exclude_observation_ids: set[str] | None = None,
+    exclude_media_ids: set[str] | None = None,
 ) -> HarvestResult:
     snapshot_dir = resolve_snapshot_dir(snapshot_id, snapshot_root)
     responses_dir = snapshot_dir / "responses"
@@ -111,12 +115,26 @@ def fetch_inat_snapshot(
             place_id=place_id,
             observed_from=observed_from,
             observed_to=observed_to,
+            order_by=order_by,
+            order=order,
         )
-        candidate_results = [
-            item
-            for item in response_payload.get("results", [])
-            if is_supported_observation_result(item, seed.source_taxon_id)
-        ][:max_observations_per_taxon]
+        candidate_results: list[dict[str, object]] = []
+        known_observation_ids = exclude_observation_ids or set()
+        known_media_ids = exclude_media_ids or set()
+        for item in response_payload.get("results", []):
+            if not is_supported_observation_result(item, seed.source_taxon_id):
+                continue
+            observation_id = str(item.get("id", "")).strip()
+            photos = item.get("photos") or []
+            primary_photo = photos[0] if photos else None
+            media_id = str((primary_photo or {}).get("id", "")).strip()
+            if observation_id and observation_id in known_observation_ids:
+                continue
+            if media_id and media_id in known_media_ids:
+                continue
+            candidate_results.append(item)
+            if len(candidate_results) >= max_observations_per_taxon:
+                break
         response_payload["results"] = candidate_results
         taxon_payload_path = _write_taxon_payload(
             snapshot_dir=snapshot_dir,
@@ -254,6 +272,8 @@ def _fetch_seed_payload(
     place_id: str | None = None,
     observed_from: str | None = None,
     observed_to: str | None = None,
+    order_by: str | None = None,
+    order: str | None = None,
 ) -> tuple[dict[str, object], str, str, bool, dict[str, str]]:
     base_params = {
         "taxon_id": source_taxon_id,
@@ -263,7 +283,7 @@ def _fetch_seed_payload(
         "photo_license": INAT_SAFE_LICENSE_FILTER,
         "captive": "false",
         "per_page": str(max_observations_per_taxon),
-        "order": "desc",
+        "order": (order or "desc"),
     }
     if bbox:
         base_params.update(_bbox_to_inat_params(bbox))
@@ -273,7 +293,7 @@ def _fetch_seed_payload(
         base_params["d1"] = observed_from
     if observed_to:
         base_params["d2"] = observed_to
-    requested_order_by = "votes"
+    requested_order_by = order_by or "votes"
     first_params = {**base_params, "order_by": requested_order_by}
     try:
         payload = _fetch_json(

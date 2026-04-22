@@ -979,8 +979,59 @@ Les exemples fictifs ont ete deplaces vers:
   - runtime-app: `docs/20_execution/handoff.md`
   - runtime-app: `docs/20_execution/integration_log.md`
 - Verification:
-  - pending in this entry
+  - `python -m pytest -q -p no:capture tests/test_phase3_taxon_remediation.py` passed (`3 passed`)
+  - `python -m pytest -q -p no:capture tests/test_inat_snapshot.py` passed (`24 passed`)
+  - real weak-taxa Phase 3 run executed on `pack:pilot:birds-v2-nogeo:20260421T215543Z`
+  - artifact: `docs/20_execution/phase3/pack_pilot_birds-v2-nogeo_20260421T215543Z.20260422T125207Z.phase3_remediation.v1.json`
+  - strict cap respected: `max_passes=1`, `max_observations_per_taxon=3`, `images_sent_to_gemini=0`
+  - novelty-seeking follow-up executed:
+    - artifact: `docs/20_execution/phase3/pack_pilot_birds-v2-nogeo_20260421T215543Z.20260422T125858Z.phase3_remediation.v1.json`
+    - accepted new observation/media: `45`
+    - exportable resources: `32`
+    - `images_sent_to_gemini`: `40`
+    - `taxon_with_min2_media_ratio` delta: `+0.066666`
+    - `insufficient_media_per_taxon` delta: `0`
 - Exit decision:
   - pending execution evidence
 - Next step:
-  - run `scripts/phase3_taxon_remediation.py` on prioritized pack(s), publish delta artifacts, and emit `GO` / `GO_WITH_GAPS` / `NO_GO`.
+  - publish Phase 3 closure decision with explicit statement: novelty acquisition succeeded but compile-deficit reduction remains partial.
+
+- 2026-04-22 - INT-026/Phase3.1 - measurement protocol implementation and real run attempt
+  - scope:
+    - delivered decision-grade Phase 3.1 orchestration script `scripts/phase3_1_complete_measurement.py`
+    - extended Phase 3 remediation plumbing for run controls and metrics:
+      - `max_passes`, `max_observations_per_taxon`, harvest novelty query params
+      - pass metric `pre_ai_rejection_count`
+      - harvest query echo in summary
+    - added pre-harvest exclusion support in snapshot fetch (`exclude_observation_ids`, `exclude_media_ids`) to reduce redundant acquisition churn.
+  - validation:
+    - `python -m py_compile scripts/phase3_1_complete_measurement.py scripts/phase3_taxon_remediation.py src/database_core/ops/phase3_taxon_remediation.py src/database_core/adapters/inaturalist_harvest.py src/database_core/adapters/inaturalist_snapshot.py` (pass)
+    - `python -m pytest -q -p no:capture tests/test_phase3_taxon_remediation.py tests/test_inat_snapshot.py` (pass, 27 passed)
+  - real run evidence:
+    - command: `set -a; source .env; set +a; python scripts/phase3_1_complete_measurement.py`
+    - observed first-scale-pass startup: `media=800`, `pre_ai_filtered=56`, `Gemini=744` and progressive qualification logs.
+    - run stopped manually before completion to avoid unsupervised Gemini spend; no final `phase3_1_summary.v1.json` yet.
+  - decision status:
+    - Phase 3.1 remains `in_progress` pending completion of 3 scale runs + 1 extension run and publication of the summary artifact.
+
+- 2026-04-22 - INT-026/Phase3.1 - final closure decision published
+  - execution:
+    - rerun completed with explicit manifest: `python scripts/phase3_1_complete_measurement.py --manifest-path /tmp/phase3_1_scale80_manifest.json`
+    - generated summary: `docs/20_execution/phase3_1/phase3_1_summary.v1.json`
+    - generated markdown: `docs/20_execution/phase3_1/phase3_1_summary.md`
+    - generated run artifacts: `scale_run1/2/3` + `extension_run1`
+  - script verdict:
+    - `decision.status=STOP_RETARGET`
+  - strict mapping applied:
+    - `CONTINUE_SCALE -> GO`
+    - `GO_WITH_GAPS -> GO_WITH_GAPS`
+    - `STOP_RETARGET -> NO_GO`
+    - resulting INT-026 decision: `NO_GO`
+  - key measured facts:
+    - scale runs (3/3): `images_sent_to_gemini=0`, `accepted_new_observation_media=0`, `delta_insufficient_media=0`, `delta_ratio=0.0`
+    - extension run: `images_sent_to_gemini=186`, `accepted_new_observation_media=200`, `delta_insufficient_media=0`, `delta_ratio=4.0`, `cost_per_exportable=0.00173`
+    - analysis questions: `Q1=false`, `Q2=false`, `Q3=false`, `Q4=false`
+  - causal reading:
+    - protocol and observability are stable, but additional cost/novelty did not reduce compile deficits on the comparable scale segment.
+  - next prioritized action:
+    - stop scale expansion and retarget selection logic to maximize compile-impact per Gemini call before any new scale campaign.
