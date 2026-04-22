@@ -36,15 +36,15 @@
   "created_at": "2026-04-22T12:04:50Z",
   "decision": {
     "next_actions": [
-      "Build/target a corpus where blur/decode-error/duplicate cases are non-zero to validate additional savings.",
-      "Only promote Phase 2 when ai call volume or cost per exportable is measurably reduced without exportable regression."
+      "Run a targeted corpus with non-zero blur/decode-error/duplicate pre-AI cases to measure additional savings.",
+      "Refresh the decision summary with cost-delta evidence while preserving hard-gate non-regression checks."
     ],
     "rationale": [
-      "No measurable AI-call reduction on real A/B same-snapshot run.",
-      "No measurable AI cost reduction (delta = 0).",
-      "Pre-AI filtering only remapped existing insufficient-resolution rejects upstream on this corpus."
+      "Hard gates are passed: compatibility preserved, non-regression confirmed, and pre-AI traceability is available.",
+      "No measurable AI cost reduction was observed on the current corpus.",
+      "Impact cost remains an open Phase 2 pilot objective to confirm on a more suitable corpus."
     ],
-    "status": "NO_GO"
+    "status": "GO_WITH_GAPS"
   },
   "delta": {
     "estimated_ai_cost_eur": 0.0,

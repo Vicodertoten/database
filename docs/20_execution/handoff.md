@@ -6,7 +6,7 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
 
 - ID: INT-025
 - Title: Phase 2 pre-filtrage image amont (reduction cout IA)
-- Status: closed_no_go
+- Status: closed_go_with_gaps
 
 ## Repo role in current chantier
 
@@ -25,7 +25,7 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
   - targeted tests are green (`tests/test_inat_snapshot.py`, `tests/test_cli.py`, `tests/test_smoke_report.py`)
   - consumer nominal smoke remains green (`runtime-app`)
 - What is not validated yet:
-  - measurable cost reduction evidence from blur/decode/duplicate pre-AI filters
+  - measurable cost reduction evidence from blur/decode/duplicate pre-AI filters (pilot objective)
 
 ## Decisions already locked
 
@@ -74,4 +74,4 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
 
 - INT-025 implementation is in place and validated by targeted tests.
 - `verify_repo.py` currently fails on a pre-existing doctrine marker check (`Politique distracteurs v2`) unrelated to this chantier.
-- INT-025 is closed with `NO_GO` (see `docs/20_execution/phase2/decision_summary.v1.json`).
+- INT-025 is closed with `GO_WITH_GAPS` (see `docs/20_execution/phase2/decision_summary.v1.json`).

@@ -263,9 +263,19 @@ Backlog technique:
 
 Criteres d'acceptation:
 
-- baisse du volume d'appels IA non utiles
-- cout IA par exportable en baisse
-- pas de baisse significative du taux exportable
+- hard gates (obligatoires):
+  - compatibilite contractuelle conservee (changement additif uniquement)
+  - non-regression qualite/sortie (`overall_pass` verrouille et exportable stable)
+  - tracabilite pre-IA exploitable (`pre_ai_rejection_reason` + distribution smoke)
+- impact cout (objectif de pilotage, non bloquant si hard gates passes):
+  - baisse du volume d'appels IA non utiles
+  - cout IA par exportable en baisse
+
+Regle de decision Phase 2:
+
+- `GO`: hard gates passes + impact cout confirme
+- `GO_WITH_GAPS`: hard gates passes + impact cout non confirme sur corpus courant
+- `NO_GO`: hard gate casse
 
 Definition of done:
 
