@@ -4,36 +4,35 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
 
 ## Current active chantier
 
-- ID: INT-025
-- Title: Phase 2 pre-filtrage image amont (reduction cout IA)
-- Status: closed_go_with_gaps
+- ID: INT-026
+- Title: Phase 3 remediation data taxons deficitaires
+- Status: open_in_progress
 
 ## Repo role in current chantier
 
 - Current repo: database
 - Role: owner
 - Other repo: runtime-app
-- Expected dependency order: phase2 closure completed -> follow-up corpus with non-zero pre-AI rejections -> refreshed cost-delta publication
+- Expected dependency order: baseline diagnose -> targeted remediation passes -> diagnose/compile delta -> runtime compatibility check
 
 ## Last validated state
 
-- Last validated context: INT-025 implementation and closure decision completed owner-side.
+- Last validated context: INT-026 implementation started owner-side.
 - What is already validated:
-  - pre-AI filters are active before Gemini calls
-  - additive manifest/smoke contract preserved
-  - pre-AI reasons are traceable (`insufficient_resolution_pre_ai`, `decode_error_pre_ai`, `blur_pre_ai`, `duplicate_pre_ai`)
-  - targeted tests are green (`tests/test_inat_snapshot.py`, `tests/test_cli.py`, `tests/test_smoke_report.py`)
-  - consumer nominal smoke remains green (`runtime-app`)
+  - phase3 remediation orchestration is implemented (`scripts/phase3_taxon_remediation.py`)
+  - prioritization source uses pack diagnostics (`reason_code`, `deficits`, `blocking_taxa`)
+  - idempotence guards implemented in script-level snapshot filtering (`source_observation_id`, `source_media_id`)
+  - enrichment queue role preserved (request/execution/recompile trace)
 - What is not validated yet:
-  - measurable cost reduction evidence from blur/decode/duplicate pre-AI filters (pilot objective)
+  - full end-to-end remediation run evidence on target pack(s)
+  - runtime compatibility note for INT-026 consumer mirror
 
 ## Decisions already locked
 
-- blur enabled directly (no shadow mode)
-- dedup by exact hash only (`sha256`), no `pHash` in Phase 2
-- one dimension gate source of truth (existing AI min dimensions)
+- source of truth for targeting: pack diagnose output
+- idempotence logic lives in remediation script + snapshot filtering (not enrichment_store core)
 - no runtime contract change
-- no Phase 4/5 remediation work in this chantier
+- no Phase 4/5 work in this chantier
 
 ## Important constraints
 
@@ -44,34 +43,32 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
 
 ## Next exact step
 
-- execute the Phase 2 follow-up run set on a corpus with non-zero pre-AI rejections and refresh `docs/20_execution/phase2/decision_summary.v1.json`.
+- execute INT-026 remediation on prioritized pack(s), publish `docs/20_execution/phase3/*.phase3_remediation.v1.json`, then emit Phase 3 decision.
 
 ## Files to read first in this repo
 
 - docs/codex_execution_plan.md
-- docs/20_execution/chantiers/INT-025.md
+- docs/20_execution/chantiers/INT-026.md
 - docs/20_execution/integration_log.md
-- src/database_core/adapters/inaturalist_harvest.py
-- src/database_core/adapters/inaturalist_qualification.py
-- src/database_core/adapters/inaturalist_snapshot.py
-- src/database_core/ops/smoke_report.py
+- src/database_core/ops/phase3_taxon_remediation.py
+- scripts/phase3_taxon_remediation.py
 
 ## Files to read first in the other repo
 
-- runtime-app/docs/20_execution/chantiers/INT-025.md
+- runtime-app/docs/20_execution/chantiers/INT-026.md
 - runtime-app/docs/20_execution/handoff.md
 - runtime-app/docs/20_execution/integration_log.md
 
 ## Verification commands
 
-- `python -m pytest -q -p no:capture tests/test_inat_snapshot.py tests/test_cli.py tests/test_smoke_report.py`
+- `python -m pytest -q -p no:capture tests/test_phase3_taxon_remediation.py`
+- `python -m pytest -q -p no:capture tests/test_storage.py`
 - `python scripts/verify_goldset_v1.py`
-- `set -a; source .env; set +a; python scripts/generate_smoke_report.py --snapshot-id inaturalist-birds-v2-20260421T210221Z --fail-on-kpi-breach`
 - `python scripts/verify_repo.py`
 - `corepack pnpm --filter @runtime-app/web run test:smoke`
 
 ## Notes for next IA session
 
-- INT-025 implementation is in place and validated by targeted tests.
+- INT-026 implementation is in place and validated by targeted unit tests.
 - `verify_repo.py` currently fails on a pre-existing doctrine marker check (`Politique distracteurs v2`) unrelated to this chantier.
-- INT-025 is closed with `GO_WITH_GAPS` (see `docs/20_execution/phase2/decision_summary.v1.json`).
+- INT-026 decision is pending execution evidence.

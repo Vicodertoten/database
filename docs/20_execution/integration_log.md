@@ -951,3 +951,36 @@ Les exemples fictifs ont ete deplaces vers:
     - measurable cost reduction not demonstrated on real A/B evidence (tracked pilot gap)
 - Next step:
   - execute follow-up comparable runs on a corpus with non-zero pre-AI rejections and refresh the decision summary.
+
+## Chantier ID: INT-026
+
+- Title: Phase 3 remediation data taxons deficitaires
+- Status: open_in_progress
+- Owner repo: database (owner remediation orchestration)
+- Consumer repo: runtime-app (nominal compatibility validation)
+- Summary: Phase 3 implementation is opened with pack-diagnostic-driven prioritization and script-level idempotent acquisition filtering.
+- Source of truth:
+  - `docs/codex_execution_plan.md`
+  - `docs/20_execution/chantiers/INT-026.md`
+  - `runtime-app/docs/20_execution/chantiers/INT-026.md`
+- Locked decisions applied:
+  - targeting from `pack diagnose` (`reason_code`, `deficits`, `blocking_taxa`)
+  - idempotence in remediation script + snapshot payload filtering
+  - dedup guards: primary `source_observation_id`, secondary `source_media_id`
+  - enrichment store remains request/execution/recompile trace owner
+- Affected files:
+  - database: `src/database_core/ops/phase3_taxon_remediation.py`
+  - database: `scripts/phase3_taxon_remediation.py`
+  - database: `tests/test_phase3_taxon_remediation.py`
+  - database: `docs/20_execution/chantiers/INT-026.md`
+  - database: `docs/20_execution/handoff.md`
+  - database: `docs/20_execution/integration_log.md`
+  - runtime-app: `docs/20_execution/chantiers/INT-026.md`
+  - runtime-app: `docs/20_execution/handoff.md`
+  - runtime-app: `docs/20_execution/integration_log.md`
+- Verification:
+  - pending in this entry
+- Exit decision:
+  - pending execution evidence
+- Next step:
+  - run `scripts/phase3_taxon_remediation.py` on prioritized pack(s), publish delta artifacts, and emit `GO` / `GO_WITH_GAPS` / `NO_GO`.
