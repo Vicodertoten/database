@@ -895,3 +895,46 @@ Les exemples fictifs ont ete deplaces vers:
   - `GO_WITH_GAPS`
 - Next step:
   - open corrective P1 follow-up for diversity and country-code completeness trajectories
+
+## Chantier ID: INT-025
+
+- Title: Phase 2 pre-filtrage image amont (reduction cout IA)
+- Status: open_in_progress
+- Owner repo: database (owner implementation)
+- Consumer repo: runtime-app (nominal compatibility validation)
+- Summary: Phase 2 pre-AI filtering was implemented with direct blur activation and exact-hash dedup only, while preserving additive contract compatibility.
+- Source of truth:
+  - `docs/codex_execution_plan.md`
+  - `docs/20_execution/chantiers/INT-025.md`
+  - `runtime-app/docs/20_execution/chantiers/INT-025.md`
+- Locked decisions applied:
+  - blur active directly (no shadow mode)
+  - dedup exact hash (`sha256`) only (no `pHash`)
+  - pre-AI reasons enforced: `insufficient_resolution_pre_ai`, `decode_error_pre_ai`, `blur_pre_ai`, `duplicate_pre_ai`
+  - additive manifest/smoke contract only
+- Affected files:
+  - database: `src/database_core/adapters/inaturalist_harvest.py`
+  - database: `src/database_core/adapters/inaturalist_snapshot.py`
+  - database: `src/database_core/adapters/inaturalist_qualification.py`
+  - database: `src/database_core/qualification/policy.py`
+  - database: `src/database_core/ops/smoke_report.py`
+  - database: `src/database_core/cli.py`
+  - database: `tests/test_inat_snapshot.py`
+  - database: `tests/test_smoke_report.py`
+  - runtime-app: `docs/20_execution/chantiers/INT-025.md`
+  - runtime-app: `docs/20_execution/handoff.md`
+  - runtime-app: `docs/20_execution/integration_log.md`
+- Verification:
+  - `python -m pytest -q -p no:capture tests/test_inat_snapshot.py tests/test_cli.py tests/test_smoke_report.py` passed (`43 passed`)
+  - `python scripts/verify_goldset_v1.py` passed
+  - `set -a; source .env; set +a; python scripts/generate_smoke_report.py --snapshot-id inaturalist-birds-v2-20260421T210221Z --fail-on-kpi-breach` passed
+  - `corepack pnpm --filter @runtime-app/web run test:smoke` passed (`3/3`)
+  - `python scripts/verify_repo.py` failed on pre-existing marker check (`Politique distracteurs v2` expected)
+- Comparable artifacts captured:
+  - `docs/20_execution/phase2/smoke_run1.smoke_report.v1.json`
+  - `docs/20_execution/phase2/smoke_run2.smoke_report.v1.json`
+  - `docs/20_execution/phase2/smoke_run3.smoke_report.v1.json`
+- Exit decision:
+  - pending baseline/candidate delta evidence (cost and IA-call reduction)
+- Next step:
+  - publish final Phase 2 decision table and close INT-025 with `GO` / `GO_WITH_GAPS` / `NO_GO`.

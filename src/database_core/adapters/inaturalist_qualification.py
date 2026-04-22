@@ -10,6 +10,7 @@ from urllib.error import HTTPError, URLError
 
 from database_core.adapters.inaturalist_snapshot import (
     DEFAULT_INAT_SNAPSHOT_ROOT,
+    InaturalistSnapshotManifest,
     load_snapshot_dataset,
     load_snapshot_manifest,
     write_snapshot_manifest,
@@ -18,17 +19,29 @@ from database_core.export.json_exporter import write_json
 from database_core.qualification.ai import (
     DEFAULT_GEMINI_MODEL,
     DEFAULT_GEMINI_PROMPT_VERSION,
+    MIN_AI_IMAGE_HEIGHT,
+    MIN_AI_IMAGE_WIDTH,
     AIQualifier,
+    AIQualificationOutcome,
     GeminiRequestError,
     GeminiVisionQualifier,
     build_ai_outputs_payload,
     collect_ai_qualification_outcomes,
+    inspect_image_dimensions,
+    source_external_key_for_media,
 )
 
 DEFAULT_REQUEST_INTERVAL_SECONDS = 0.5
 DEFAULT_MAX_RETRIES = 2
 DEFAULT_INITIAL_BACKOFF_SECONDS = 1.0
 DEFAULT_MAX_BACKOFF_SECONDS = 8.0
+MIN_PRE_AI_BLUR_SCORE = 10.0
+PRE_AI_REJECTION_REASONS = {
+    "insufficient_resolution_pre_ai",
+    "decode_error_pre_ai",
+    "blur_pre_ai",
+    "duplicate_pre_ai",
+}
 
 
 class SleepFunc(Protocol):
@@ -48,6 +61,7 @@ class SnapshotQualificationResult:
     images_sent_to_gemini_count: int
     ai_valid_output_count: int
     insufficient_resolution_count: int
+    pre_ai_rejection_count: int = 0
 
 
 def qualify_inat_snapshot(
@@ -79,19 +93,28 @@ def qualify_inat_snapshot(
         )
 
     resolved_progress_stream = sys.stdout if progress_stream is None else progress_stream
+    pre_ai_rejections_by_source_media_id = _compute_pre_ai_rejections(
+        manifest=manifest,
+        snapshot_dir=snapshot_dir,
+    )
+    eligible_media_assets = [
+        media for media in dataset.media_assets
+        if media.source_media_id not in pre_ai_rejections_by_source_media_id
+    ]
 
     if resolved_progress_stream is not None:
         print(
             "Starting Gemini qualification | "
             f"snapshot_id={manifest.snapshot_id} | "
             f"media={len(dataset.media_assets)} | "
+            f"pre_ai_filtered={len(pre_ai_rejections_by_source_media_id)} | "
             f"request_interval_seconds={request_interval_seconds}",
             file=resolved_progress_stream,
             flush=True,
         )
 
-    outcomes = collect_ai_qualification_outcomes(
-        dataset.media_assets,
+    gemini_outcomes = collect_ai_qualification_outcomes(
+        eligible_media_assets,
         qualifier_mode="gemini",
         cached_image_paths_by_source_media_key=dataset.cached_image_paths_by_source_media_key,
         gemini_api_key=gemini_api_key,
@@ -100,24 +123,56 @@ def qualify_inat_snapshot(
         qualifier=qualifier,
         progress_callback=_build_progress_callback(resolved_progress_stream),
     )
+    outcomes: dict[object, AIQualificationOutcome] = dict(gemini_outcomes)
+    media_by_source_media_id = {media.source_media_id: media for media in dataset.media_assets}
+    for source_media_id, reason in pre_ai_rejections_by_source_media_id.items():
+        media_asset = media_by_source_media_id[source_media_id]
+        media_key = source_external_key_for_media(media_asset)
+        outcomes[media_key] = AIQualificationOutcome(
+            status=reason,
+            qualification=None,
+            flags=(reason,),
+            note=f"pre-ai filtered ({reason}) for {source_media_id}",
+            prompt_version=prompt_version,
+        )
 
     ai_outputs_path = snapshot_dir / "ai_outputs.json"
     write_json(ai_outputs_path, build_ai_outputs_payload(outcomes))
+    updated_media_downloads = []
+    for item in manifest.media_downloads:
+        updated_media_downloads.append(
+            item.model_copy(
+                update={
+                    "pre_ai_rejection_reason": pre_ai_rejections_by_source_media_id.get(
+                        item.source_media_id
+                    )
+                }
+            )
+        )
     write_snapshot_manifest(
         snapshot_dir,
-        manifest.model_copy(update={"ai_outputs_path": ai_outputs_path.name}),
+        manifest.model_copy(
+            update={
+                "ai_outputs_path": ai_outputs_path.name,
+                "media_downloads": updated_media_downloads,
+            }
+        ),
     )
 
     images_sent_to_gemini_count = len(
         [
             item
             for item in outcomes.values()
-            if item.status not in {"missing_cached_image", "insufficient_resolution"}
+            if item.status
+            not in {"missing_cached_image", "insufficient_resolution", *PRE_AI_REJECTION_REASONS}
         ]
     )
     ai_valid_output_count = len([item for item in outcomes.values() if item.status == "ok"])
     insufficient_resolution_count = len(
         [item for item in outcomes.values() if item.status == "insufficient_resolution"]
+    )
+    pre_ai_rejection_count = len(
+        [item for item in outcomes.values() if item.status in PRE_AI_REJECTION_REASONS]
     )
 
     return SnapshotQualificationResult(
@@ -128,7 +183,48 @@ def qualify_inat_snapshot(
         images_sent_to_gemini_count=images_sent_to_gemini_count,
         ai_valid_output_count=ai_valid_output_count,
         insufficient_resolution_count=insufficient_resolution_count,
+        pre_ai_rejection_count=pre_ai_rejection_count,
     )
+
+
+def _compute_pre_ai_rejections(
+    *,
+    manifest: InaturalistSnapshotManifest,
+    snapshot_dir: Path,
+) -> dict[str, str]:
+    rejections: dict[str, str] = {}
+    seen_hashes: set[str] = set()
+    for item in sorted(manifest.media_downloads, key=lambda entry: entry.source_media_id):
+        if item.download_status != "downloaded":
+            continue
+        image_path = snapshot_dir / item.image_path
+        if not image_path.exists():
+            continue
+
+        width = item.downloaded_width
+        height = item.downloaded_height
+        if width is None or height is None:
+            width, height = inspect_image_dimensions(image_path)
+            if width is None or height is None:
+                rejections[item.source_media_id] = "decode_error_pre_ai"
+                continue
+
+        if width < MIN_AI_IMAGE_WIDTH or height < MIN_AI_IMAGE_HEIGHT:
+            rejections[item.source_media_id] = "insufficient_resolution_pre_ai"
+            continue
+
+        if item.blur_score is not None and item.blur_score < MIN_PRE_AI_BLUR_SCORE:
+            rejections[item.source_media_id] = "blur_pre_ai"
+            continue
+
+        image_hash = str(item.sha256 or "").strip()
+        if image_hash:
+            if image_hash in seen_hashes:
+                rejections[item.source_media_id] = "duplicate_pre_ai"
+                continue
+            seen_hashes.add(image_hash)
+
+    return rejections
 
 
 def _build_progress_callback(

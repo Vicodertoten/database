@@ -493,6 +493,7 @@ def main() -> None:
             f"sent_to_gemini={result.images_sent_to_gemini_count} | "
             f"ok={result.ai_valid_output_count} | "
             f"insufficient_resolution={result.insufficient_resolution_count} | "
+            f"pre_ai_rejected={result.pre_ai_rejection_count} | "
             f"path={result.ai_outputs_path}"
         )
         return

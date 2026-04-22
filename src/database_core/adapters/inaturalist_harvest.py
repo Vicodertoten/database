@@ -10,7 +10,7 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode, urlparse
 from urllib.request import Request, urlopen
 
-from PIL import Image, UnidentifiedImageError
+from PIL import Image, ImageFilter, ImageStat, UnidentifiedImageError
 
 from database_core.adapters.inaturalist_snapshot import (
     DEFAULT_INAT_SNAPSHOT_ROOT,
@@ -37,6 +37,7 @@ RECOVERABLE_HARVEST_ERRORS = (
     ValueError,
     json.JSONDecodeError,
 )
+BLUR_SCORE_DOWNSAMPLED_SIZE = (256, 256)
 
 
 def _bbox_to_inat_params(bbox: str) -> dict[str, str]:
@@ -159,6 +160,7 @@ def fetch_inat_snapshot(
             downloaded_height = None
             downloaded_variant = None
             file_size_bytes = None
+            blur_score = None
 
             try:
                 downloaded = _download_best_candidate(
@@ -174,6 +176,7 @@ def fetch_inat_snapshot(
                 downloaded_variant = downloaded.variant
                 file_size_bytes = len(downloaded.image_bytes)
                 image_url = downloaded.source_url
+                blur_score = _compute_blur_score(downloaded.image_bytes)
                 downloaded_image_count += 1
             except RECOVERABLE_HARVEST_ERRORS as exc:
                 download_status = f"error:{type(exc).__name__}"
@@ -191,6 +194,8 @@ def fetch_inat_snapshot(
                     downloaded_height=downloaded_height,
                     downloaded_variant=downloaded_variant,
                     file_size_bytes=file_size_bytes,
+                    blur_score=blur_score,
+                    pre_ai_rejection_reason=None,
                 )
             )
 
@@ -356,6 +361,24 @@ def _inspect_image_dimensions(image_bytes: bytes) -> tuple[int | None, int | Non
             return image.width, image.height
     except (OSError, UnidentifiedImageError):
         return None, None
+
+
+def _compute_blur_score(image_bytes: bytes) -> float | None:
+    try:
+        with Image.open(io.BytesIO(image_bytes)) as image:
+            grayscale = image.convert("L").resize(BLUR_SCORE_DOWNSAMPLED_SIZE)
+            # Lightweight edge-energy proxy using Laplacian kernel variance.
+            laplacian = grayscale.filter(
+                ImageFilter.Kernel(
+                    (3, 3),
+                    [-1, -1, -1, -1, 8, -1, -1, -1, -1],
+                    scale=1,
+                )
+            )
+            stats = ImageStat.Stat(laplacian)
+            return round(float(stats.var[0]), 6)
+    except (OSError, UnidentifiedImageError, ValueError):
+        return None
 
 
 def _guess_extension(url: str) -> str | None:

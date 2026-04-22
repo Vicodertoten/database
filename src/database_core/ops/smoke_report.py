@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from datetime import UTC, datetime
 
+from database_core.adapters.inaturalist_snapshot import summarize_snapshot_manifest
 from database_core.security import redact_database_url
 from database_core.storage.services import PostgresPipelineStore
 
@@ -50,6 +51,18 @@ def generate_smoke_report(
     timestamp = generated_at or datetime.now(UTC)
     run_metrics = repository.fetch_run_level_metrics()
     phase1_metrics = repository.fetch_phase1_smoke_metrics()
+    pre_ai_rejection_reason_counts: dict[str, int] = {}
+    if snapshot_id:
+        try:
+            snapshot_summary = summarize_snapshot_manifest(snapshot_id=snapshot_id)
+            pre_ai_rejection_reason_counts = {
+                str(key): int(value)
+                for key, value in (
+                    snapshot_summary.get("pre_ai_rejection_reason_counts", {}) or {}
+                ).items()
+            }
+        except (FileNotFoundError, ValueError):
+            pre_ai_rejection_reason_counts = {}
     with repository.connect() as connection:
         latest_run = connection.execute(
             """
@@ -148,6 +161,7 @@ def generate_smoke_report(
         "kpis": kpis,
         "extended_kpis": extended_kpis,
         "compile_deficits_summary": phase1_metrics["compile_deficits_summary"],
+        "pre_ai_rejection_reason_counts": dict(sorted(pre_ai_rejection_reason_counts.items())),
         "overall_pass": overall_pass,
     }
 

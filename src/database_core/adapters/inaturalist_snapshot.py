@@ -85,6 +85,8 @@ class SnapshotMediaDownload(SnapshotModel):
     downloaded_height: int | None = None
     downloaded_variant: str | None = None
     file_size_bytes: int | None = None
+    blur_score: float | None = None
+    pre_ai_rejection_reason: str | None = None
 
 
 class InaturalistSnapshotManifest(SnapshotModel):
@@ -286,17 +288,35 @@ def summarize_snapshot_manifest(
             if width < MIN_ACCEPTED_WIDTH or height < MIN_ACCEPTED_HEIGHT:
                 insufficient_resolution_images += 1
 
+    pre_ai_rejection_reason_counts: dict[str, int] = {}
+    for item in manifest.media_downloads:
+        reason = str(item.pre_ai_rejection_reason or "").strip()
+        if not reason:
+            continue
+        pre_ai_rejection_reason_counts[reason] = pre_ai_rejection_reason_counts.get(reason, 0) + 1
+
     ai_outputs = _load_ai_outputs(
         snapshot_dir,
         manifest.ai_outputs_path,
         source_name=manifest.source_name,
     )
+    pre_ai_statuses = {
+        "insufficient_resolution_pre_ai",
+        "decode_error_pre_ai",
+        "blur_pre_ai",
+        "duplicate_pre_ai",
+    }
     images_sent_to_gemini = len(
         [
             item
             for item in ai_outputs.values()
             if item.status
-            not in {"missing_cached_image", "insufficient_resolution", "missing_cached_ai_output"}
+            not in {
+                "missing_cached_image",
+                "insufficient_resolution",
+                "missing_cached_ai_output",
+                *pre_ai_statuses,
+            }
         ]
     )
     ai_valid_outputs = len([item for item in ai_outputs.values() if item.status == "ok"])
@@ -309,6 +329,7 @@ def summarize_snapshot_manifest(
         "images_sent_to_gemini": images_sent_to_gemini,
         "insufficient_resolution_images": insufficient_resolution_images,
         "ai_valid_outputs": ai_valid_outputs,
+        "pre_ai_rejection_reason_counts": dict(sorted(pre_ai_rejection_reason_counts.items())),
     }
 
 

@@ -46,6 +46,17 @@ class InvalidJsonQualifier:
         raise json.JSONDecodeError("invalid", "{}", 0)
 
 
+class RecordingQualifier:
+    def __init__(self, qualification: AIQualification) -> None:
+        self.qualification = qualification
+        self.called_source_media_ids: list[str] = []
+
+    def qualify(self, media_asset, *, image_bytes: bytes | None = None) -> AIQualification | None:
+        del image_bytes
+        self.called_source_media_ids.append(media_asset.source_media_id)
+        return self.qualification
+
+
 def test_snapshot_loader_rebuilds_records_without_network() -> None:
     dataset = load_snapshot_dataset(manifest_path=SNAPSHOT_MANIFEST)
 
@@ -334,6 +345,127 @@ def test_qualify_inat_snapshot_writes_replayable_ai_outputs(tmp_path: Path) -> N
     assert ai_outputs_payload[serialized_key]["prompt_version"] == "phase1.inat.image.v2"
 
 
+def test_qualify_inat_snapshot_filters_insufficient_resolution_pre_ai(tmp_path: Path) -> None:
+    snapshot_root = tmp_path / "raw"
+    snapshot_dir = snapshot_root / "smoke-snapshot"
+    shutil.copytree(SNAPSHOT_MANIFEST.parent, snapshot_dir)
+    manifest_path = snapshot_dir / "manifest.json"
+    manifest_payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest_payload["ai_outputs_path"] = None
+    manifest_payload["media_downloads"][0]["downloaded_width"] = 90
+    manifest_payload["media_downloads"][0]["downloaded_height"] = 90
+    manifest_path.write_text(
+        json.dumps(manifest_payload, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+
+    qualifier = RecordingQualifier(_accepted_ai_qualification())
+    result = qualify_inat_snapshot(
+        snapshot_id="smoke-snapshot",
+        snapshot_root=snapshot_root,
+        gemini_api_key="test-key",
+        qualifier=qualifier,
+    )
+
+    ai_outputs_payload = json.loads(result.ai_outputs_path.read_text(encoding="utf-8"))
+    updated_manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    assert result.pre_ai_rejection_count == 1
+    assert result.images_sent_to_gemini_count == 2
+    assert set(qualifier.called_source_media_ids) == {"810002", "810003"}
+    assert ai_outputs_payload["inaturalist::810001"]["status"] == "insufficient_resolution_pre_ai"
+    assert updated_manifest["media_downloads"][0]["pre_ai_rejection_reason"] == (
+        "insufficient_resolution_pre_ai"
+    )
+
+
+def test_qualify_inat_snapshot_filters_decode_error_pre_ai(tmp_path: Path) -> None:
+    snapshot_root = tmp_path / "raw"
+    snapshot_dir = snapshot_root / "smoke-snapshot"
+    shutil.copytree(SNAPSHOT_MANIFEST.parent, snapshot_dir)
+    manifest_path = snapshot_dir / "manifest.json"
+    manifest_payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest_payload["ai_outputs_path"] = None
+    manifest_payload["media_downloads"][0]["downloaded_width"] = None
+    manifest_payload["media_downloads"][0]["downloaded_height"] = None
+    manifest_path.write_text(
+        json.dumps(manifest_payload, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    (snapshot_dir / "images" / "810001.jpg").write_bytes(b"not-an-image")
+
+    qualifier = RecordingQualifier(_accepted_ai_qualification())
+    result = qualify_inat_snapshot(
+        snapshot_id="smoke-snapshot",
+        snapshot_root=snapshot_root,
+        gemini_api_key="test-key",
+        qualifier=qualifier,
+    )
+
+    ai_outputs_payload = json.loads(result.ai_outputs_path.read_text(encoding="utf-8"))
+    assert result.pre_ai_rejection_count == 1
+    assert result.images_sent_to_gemini_count == 2
+    assert set(qualifier.called_source_media_ids) == {"810002", "810003"}
+    assert ai_outputs_payload["inaturalist::810001"]["status"] == "decode_error_pre_ai"
+
+
+def test_qualify_inat_snapshot_filters_blur_pre_ai(tmp_path: Path) -> None:
+    snapshot_root = tmp_path / "raw"
+    snapshot_dir = snapshot_root / "smoke-snapshot"
+    shutil.copytree(SNAPSHOT_MANIFEST.parent, snapshot_dir)
+    manifest_path = snapshot_dir / "manifest.json"
+    manifest_payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest_payload["ai_outputs_path"] = None
+    manifest_payload["media_downloads"][0]["blur_score"] = 0.1
+    manifest_path.write_text(
+        json.dumps(manifest_payload, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+
+    qualifier = RecordingQualifier(_accepted_ai_qualification())
+    result = qualify_inat_snapshot(
+        snapshot_id="smoke-snapshot",
+        snapshot_root=snapshot_root,
+        gemini_api_key="test-key",
+        qualifier=qualifier,
+    )
+
+    ai_outputs_payload = json.loads(result.ai_outputs_path.read_text(encoding="utf-8"))
+    assert result.pre_ai_rejection_count == 1
+    assert result.images_sent_to_gemini_count == 2
+    assert set(qualifier.called_source_media_ids) == {"810002", "810003"}
+    assert ai_outputs_payload["inaturalist::810001"]["status"] == "blur_pre_ai"
+
+
+def test_qualify_inat_snapshot_filters_duplicate_pre_ai(tmp_path: Path) -> None:
+    snapshot_root = tmp_path / "raw"
+    snapshot_dir = snapshot_root / "smoke-snapshot"
+    shutil.copytree(SNAPSHOT_MANIFEST.parent, snapshot_dir)
+    manifest_path = snapshot_dir / "manifest.json"
+    manifest_payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest_payload["ai_outputs_path"] = None
+    manifest_payload["media_downloads"][1]["sha256"] = manifest_payload["media_downloads"][0]["sha256"]
+    manifest_path.write_text(
+        json.dumps(manifest_payload, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+
+    qualifier = RecordingQualifier(_accepted_ai_qualification())
+    result = qualify_inat_snapshot(
+        snapshot_id="smoke-snapshot",
+        snapshot_root=snapshot_root,
+        gemini_api_key="test-key",
+        qualifier=qualifier,
+    )
+
+    ai_outputs_payload = json.loads(result.ai_outputs_path.read_text(encoding="utf-8"))
+    updated_manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    assert result.pre_ai_rejection_count == 1
+    assert result.images_sent_to_gemini_count == 2
+    assert set(qualifier.called_source_media_ids) == {"810001", "810003"}
+    assert ai_outputs_payload["inaturalist::810002"]["status"] == "duplicate_pre_ai"
+    assert updated_manifest["media_downloads"][1]["pre_ai_rejection_reason"] == "duplicate_pre_ai"
+
+
 def test_qualify_inat_snapshot_prints_progress(tmp_path: Path) -> None:
     snapshot_root = tmp_path / "raw"
     snapshot_dir = snapshot_root / "smoke-snapshot"
@@ -562,6 +694,25 @@ def test_snapshot_manifest_summary_includes_taxon_breakdown() -> None:
         "taxon:birds:000004": 1,
         "taxon:birds:000009": 1,
         "taxon:birds:000014": 1,
+    }
+    assert summary["pre_ai_rejection_reason_counts"] == {}
+
+
+def test_snapshot_manifest_summary_includes_pre_ai_rejection_distribution(tmp_path: Path) -> None:
+    snapshot_dir = tmp_path / "snapshot"
+    shutil.copytree(SNAPSHOT_MANIFEST.parent, snapshot_dir)
+    manifest_path = snapshot_dir / "manifest.json"
+    payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    payload["media_downloads"][0]["pre_ai_rejection_reason"] = "blur_pre_ai"
+    payload["media_downloads"][1]["pre_ai_rejection_reason"] = "duplicate_pre_ai"
+    payload["media_downloads"][2]["pre_ai_rejection_reason"] = "duplicate_pre_ai"
+    manifest_path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+    summary = summarize_snapshot_manifest(manifest_path=manifest_path)
+
+    assert summary["pre_ai_rejection_reason_counts"] == {
+        "blur_pre_ai": 1,
+        "duplicate_pre_ai": 2,
     }
 
 

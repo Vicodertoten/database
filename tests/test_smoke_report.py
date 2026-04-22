@@ -129,3 +129,4 @@ def test_generate_smoke_report_phase1_additive_contract(tmp_path: Path, database
     assert "overall_pass" in report
     assert "extended_kpis" in report
     assert "compile_deficits_summary" in report
+    assert report["pre_ai_rejection_reason_counts"] == {}
