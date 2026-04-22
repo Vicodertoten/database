@@ -899,7 +899,7 @@ Les exemples fictifs ont ete deplaces vers:
 ## Chantier ID: INT-025
 
 - Title: Phase 2 pre-filtrage image amont (reduction cout IA)
-- Status: open_in_progress
+- Status: closed_go_with_gaps
 - Owner repo: database (owner implementation)
 - Consumer repo: runtime-app (nominal compatibility validation)
 - Summary: Phase 2 pre-AI filtering was implemented with direct blur activation and exact-hash dedup only, while preserving additive contract compatibility.
@@ -924,6 +924,9 @@ Les exemples fictifs ont ete deplaces vers:
   - runtime-app: `docs/20_execution/chantiers/INT-025.md`
   - runtime-app: `docs/20_execution/handoff.md`
   - runtime-app: `docs/20_execution/integration_log.md`
+- Linked commits:
+  - database: `b37cc09`
+  - runtime-app: `42eaa8e`
 - Verification:
   - `python -m pytest -q -p no:capture tests/test_inat_snapshot.py tests/test_cli.py tests/test_smoke_report.py` passed (`43 passed`)
   - `python scripts/verify_goldset_v1.py` passed
@@ -934,7 +937,16 @@ Les exemples fictifs ont ete deplaces vers:
   - `docs/20_execution/phase2/smoke_run1.smoke_report.v1.json`
   - `docs/20_execution/phase2/smoke_run2.smoke_report.v1.json`
   - `docs/20_execution/phase2/smoke_run3.smoke_report.v1.json`
+  - `docs/20_execution/phase2/decision_summary.v1.json`
 - Exit decision:
-  - pending baseline/candidate delta evidence (cost and IA-call reduction)
+  - `GO_WITH_GAPS`
+  - comparable corpus result:
+    - `ai_qualified_images`: `612 -> 612`
+    - `estimated_ai_cost_eur`: `0.7344 -> 0.7344`
+    - `estimated_ai_cost_eur_per_exportable`: `0.00255 -> 0.00255`
+    - `pre_ai_rejection_total`: `0`
+  - interpretation:
+    - implementation complete and non-regressive
+    - measurable cost reduction not demonstrated on this comparable snapshot
 - Next step:
-  - publish final Phase 2 decision table and close INT-025 with `GO` / `GO_WITH_GAPS` / `NO_GO`.
+  - execute follow-up comparable runs on a corpus with non-zero pre-AI rejections and refresh the decision summary.
