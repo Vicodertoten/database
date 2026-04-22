@@ -49,3 +49,47 @@ Surfaces inspect metriques ajoutees en Gate 8:
 - `inspect confusion-metrics`
 
 Ces vues sont des surfaces de lecture operateur et ne changent pas le contrat smoke KPI.
+
+## Promotion P0 -> P1 (doctrine de decision)
+
+Statuts autorises:
+
+- `GO`
+- `GO_WITH_GAPS`
+- `NO_GO`
+
+Regle de classement:
+
+- `GO`: hard gates passes et KPI etendus dans la cible
+- `GO_WITH_GAPS`: hard gates passes et au moins un KPI etendu hors cible non bloquante
+- `NO_GO`: hard gate casse ou seuil bloquant depasse
+
+Hard gates P0 -> P1:
+
+1. `compile_success_ratio_segment == 1.0` sur 3 runs comparables
+2. `overall_pass == true` sur 3 runs comparables
+3. comparabilite demontree (segment, snapshot/policy, commandes, formules, `difficulty_policy`)
+4. contrats runtime inchanges + smoke nominal vert
+5. latence consumer: aucun run au-dessus du seuil bloquant
+
+KPI etendus P0 -> P1 (non bloquants a l'entree P1):
+
+- `owner_distractor_diversity_vs_prototype`
+- `consumer_latency_vs_prototype`
+
+Budget latence P1 (`latency_e2e_segment_p95`, cote consumer):
+
+- vert: `<= 900ms`
+- ambre: `> 900ms` et `<= 1500ms` (gap suivi)
+- rouge: `> 1500ms` (bloquant)
+
+Regle de stabilite latence (3 runs):
+
+- au plus 1 run au-dessus de `900ms`
+- 0 run au-dessus de `1500ms`
+
+Objectifs distractor diversity P1:
+
+- amelioration obligatoire vs baseline P0
+- plancher minimal de sortie P1: `0.15`
+- cible recommandee de sortie P1: `0.25`

@@ -824,3 +824,26 @@ Les exemples fictifs ont ete deplaces vers:
   - Go/No-Go emitted with `NO_GO` due to:
     - `owner_distractor_diversity_vs_prototype=false`
     - `consumer_latency_vs_prototype=false`
+
+### INT-023 doctrine update (2026-04-22)
+
+- Historical artifact remains unchanged:
+  - `docs/20_execution/phase0/go_no_go_decision.v1.json` keeps `decision=NO_GO` under strict prototype parity rule
+- Promotion doctrine P0 -> P1 is now explicit:
+  - statuses: `GO`, `GO_WITH_GAPS`, `NO_GO`
+  - hard gates: stability/reproducibility/contracts/smoke
+  - comparative prototype KPIs moved to tracked P1 gaps (non-blocking at P1 entry)
+- Latency budget for P1 locked:
+  - green `p95 <= 900ms`
+  - amber `900ms < p95 <= 1500ms`
+  - blocking `p95 > 1500ms`
+  - stability constraint: max 1 run above 900ms, zero run above 1500ms
+- Distractor diversity objective for P1 locked:
+  - mandatory improvement vs P0 baseline
+  - minimum exit floor `0.15`
+  - recommended exit target `0.25`
+- Pilot decision for progression:
+  - `P0 -> P1 = GO_WITH_GAPS`
+  - priority gaps:
+    - distractor diversity
+    - consumer latency budget

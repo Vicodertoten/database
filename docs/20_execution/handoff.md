@@ -27,7 +27,7 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
   - consumer p95 evidence published with >= 30 measured requests per run
   - Go/No-Go decision published (`NO_GO`)
 - What is not validated yet:
-  - doctrine versioning of `P0 before P1` as an explicit codified rule
+  - none on INT-023 execution scope
 
 ## Decisions already locked
 
@@ -42,13 +42,15 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
 - no schema/contract change for this chantier
 - no runtime logic in owner repo
 - no subjective UX criterion in Phase 0 decision
-- treat `P0 before P1` as proposed gating rule until explicitly versioned in doctrine
+- gate doctrine P0 -> P1 is now versioned (`GO` / `GO_WITH_GAPS` / `NO_GO`)
 
 ## Next exact step
 
-- Open a focused post-P0 corrective mini-plan (new chantier) to address only the two failed metrics:
-  - `distractor_diversity_segment` gap vs prototype baseline
-  - `latency_e2e_segment_p95` gap vs prototype baseline
+- Open Phase 1 under status `GO_WITH_GAPS` and keep scope locked to:
+  - instrumentation/baseline KPI work (Phase 1)
+  - tracked corrective gaps inherited from P0:
+    - `distractor_diversity_segment` (priority 1)
+    - `latency_e2e_segment_p95` against product budget (`X=900ms`, `Y=1500ms`)
 
 ## Files to read first in this repo
 
@@ -81,3 +83,6 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
 - locked evidence:
   - `docs/20_execution/phase0/owner_benchmark_summary.v1.json`
   - `docs/20_execution/phase0/go_no_go_decision.v1.json`
+- doctrine decision after closure:
+  - promotion decision model versioned: `GO` / `GO_WITH_GAPS` / `NO_GO`
+  - P0->P1 status: `GO_WITH_GAPS` (historical `NO_GO` artifact unchanged)

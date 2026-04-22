@@ -555,6 +555,49 @@ Criteres de sortie:
 
 - experience quiz au moins equivalente au prototype sur segment cible
 
+Note doctrine (2026-04-22):
+
+- le resultat `NO_GO` de la comparaison stricte prototype reste conserve tel quel dans les artefacts P0
+- la promotion P0 -> P1 est evaluee avec un gate doctrine explicite:
+  - hard gates de stabilite/reproductibilite/contrats
+  - KPI comparatifs prototype suivis en gaps prioritaires de Phase 1
+  - statut de decision: `GO`, `GO_WITH_GAPS`, `NO_GO`
+
+Regle de promotion P0 -> P1 (version active):
+
+Hard gates (bloquants):
+
+1. `compile_success_ratio_segment == 1.0` sur les 3 runs retenus
+2. `overall_pass == true` sur les 3 runs retenus
+3. 3 runs strictement comparables (segment/snapshot/formules/commandes/difficulty policy)
+4. contrats runtime owner inchanges et smoke nominal vert
+5. latence consumer: aucun run `p95 > 1500ms`
+
+KPI etendus (non bloquants a l'entree P1, obligatoires a corriger en P1):
+
+1. `owner_distractor_diversity_vs_prototype`
+2. `consumer_latency_vs_prototype`
+
+Statuts de decision:
+
+1. `GO`: hard gates passes + KPI etendus dans la cible
+2. `GO_WITH_GAPS`: hard gates passes + au moins un KPI etendu hors cible non bloquante
+3. `NO_GO`: hard gate casse ou seuil bloquant depasse
+
+Budget latence P1 (consumer `latency_e2e_segment_p95`):
+
+1. vert: `p95 <= 900ms`
+2. ambre: `900ms < p95 <= 1500ms` (tolere avec gap ouvert)
+3. rouge: `p95 > 1500ms` (bloquant)
+4. stabilite: au plus 1 run sur 3 au-dessus de `900ms`, aucun run au-dessus de `1500ms`
+
+Objectifs distractor diversity P1:
+
+1. amelioration obligatoire vs baseline P0
+2. plancher minimal de sortie P1: `0.15`
+3. cible recommandee de sortie P1: `0.25`
+4. non bloquant pour l'entree en P1, gap prioritaire de pilotage
+
 #### Phase 3bis - Query-to-pack loop et coverage contracts
 
 But:
