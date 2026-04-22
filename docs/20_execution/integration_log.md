@@ -722,7 +722,7 @@ Les exemples fictifs ont ete deplaces vers:
 ## Chantier ID: INT-022
 
 - Title: Phase 6 pilot-prep hardening (cross-repo)
-- Status: in_progress
+- Status: blocked
 - Owner repo: runtime-app + database (split ownership by perimeter)
 - Consumer repo: runtime-app + database
 - Summary: phase 6 hardening is active with synchronized chantier docs/runbook, runtime-side operator auth + metrics/retry guardrails implemented, and owner-side dry-run evidence path prepared.
@@ -756,3 +756,71 @@ Les exemples fictifs ont ete deplaces vers:
   - `python -m compileall -q src tests/test_runtime_read_owner_service.py tests/test_editorial_write_owner_service.py` pending
   - runtime-side phase 6 verification suite pending from synchronized run
 - Next step: execute dry-run #1 and publish owner/runtime evidence bundle.
+
+## Chantier ID: INT-023
+
+- Title: Phase 0 segment cible et benchmark prototype
+- Status: closed_no_go
+- Owner repo: database (benchmark owner) + inaturamouche (prototype reference extraction)
+- Consumer repo: runtime-app (runtime validation only)
+- Summary: Phase 0 execution is completed with strict comparability evidence across owner/prototype/consumer tracks and final documented decision `NO_GO`.
+- Source of truth:
+  - `docs/20_execution/chantiers/INT-023.md`
+  - `docs/codex_execution_plan.md`
+  - `runtime-app/docs/20_execution/chantiers/INT-023.md`
+- Decisions:
+  - segment locked: birds-only, image-only, Europe, owner difficulty policy `mixed`, no seasonal filter
+  - prototype baseline source is inaturamouche only; runtime-app is not the prototype reference
+  - comparative benchmark must use frozen corpus/snapshot policy with strict comparability across 3 runs
+  - equivalence is formalized only by 4 diffable criteria:
+    - `compile_success_ratio_segment`
+    - `distractor_diversity_segment`
+    - `latency_e2e_segment_p95`
+    - `overall_pass=true` on locked smoke KPIs
+  - optional live iNaturalist run remains a separate stability track and is excluded from the primary comparative score
+  - `P0 before P1` is tracked as a gating rule proposal to be versioned in doctrine, not yet treated as already locked doctrine
+- Affected files:
+  - database: `docs/20_execution/chantiers/INT-023.md`
+  - database: `docs/20_execution/handoff.md`
+  - database: `docs/20_execution/integration_log.md`
+  - runtime-app: `docs/20_execution/chantiers/INT-023.md`
+  - runtime-app: `docs/20_execution/handoff.md`
+  - runtime-app: `docs/20_execution/integration_log.md`
+- Linked commits:
+  - database: pending
+  - runtime-app: pending
+  - inaturamouche: pending
+- Verification:
+  - owner benchmark executed:
+    - `docs/20_execution/phase0/owner_benchmark_summary.v1.json`
+    - runs 1-3: `compile_success_ratio_segment=1.0`, `distractor_diversity_segment=0.02`, `overall_pass=true`
+  - prototype baseline frozen:
+    - `/Users/ryelandt/Documents/Inaturamouche/docs/20_execution/phase0/prototype_baseline.v1.json`
+    - `distractor_diversity_segment=0.833333`, `latency_e2e_segment_p95=19.518ms`
+  - consumer validation executed:
+    - `/Users/ryelandt/Documents/runtime-app/docs/20_execution/phase0/consumer_latency_summary.v1.json`
+    - p95 runs: `698.921ms`, `700.239ms`, `729.915ms` (30 samples each)
+  - decision generated:
+    - `docs/20_execution/phase0/go_no_go_decision.v1.json` => `decision=NO_GO`
+  - consumer smoke:
+    - `corepack pnpm --filter @runtime-app/web run test:smoke` passed (3/3)
+- Next step: open a scoped post-P0 corrective chantier targeting only diversity and latency deltas against prototype baseline.
+
+### INT-023 update (2026-04-22)
+
+- Locked Phase 0 owner difficulty policy to `mixed` for all comparable runs.
+- Locked shared latency flow definition across prototype and consumer:
+  - `start_round_or_session -> get_question -> submit_answer`
+- Added executable scripts:
+  - `scripts/phase0_owner_benchmark.py` (database)
+  - `scripts/phase0_go_no_go.py` (database)
+  - `scripts/phase0_prototype_flow_benchmark.mjs` (inaturamouche)
+  - `scripts/phase0_consumer_flow_benchmark.mjs` (runtime-app)
+- Snapshot candidate confirmed as frozen corpus base:
+  - `inaturalist-birds-v2-20260421T210221Z`
+- Execution summary:
+  - owner comparable runs completed (`difficulty_policy=mixed` locked)
+  - prototype and consumer flow definitions aligned
+  - Go/No-Go emitted with `NO_GO` due to:
+    - `owner_distractor_diversity_vs_prototype=false`
+    - `consumer_latency_vs_prototype=false`

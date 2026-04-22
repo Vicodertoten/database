@@ -1,0 +1,63 @@
+{
+  "comparability": {
+    "same_attempts_per_run": true,
+    "same_difficulty_policy": true,
+    "same_question_count": true,
+    "same_snapshot_id": true
+  },
+  "database_url": "postgresql://postgres:***@db.cduiheqceeghzrlbtwom.supabase.co:5432/postgres?sslmode=require",
+  "generated_at": "2026-04-22T08:43:15.330193+00:00",
+  "pack": {
+    "canonical_taxon_count": 61,
+    "latest_revision": 3,
+    "pack_action": "revise",
+    "pack_id": "pack:phase0:birds:europe:mixed:v1"
+  },
+  "runs": [
+    {
+      "attempts": 10,
+      "compile_success_ratio_segment": 1.0,
+      "distractor_diversity_segment": 0.02,
+      "failures": 0,
+      "overall_pass": true,
+      "run_index": 1,
+      "smoke_report_path": "docs/smoke_reports/inaturalist-birds-v2-20260421T210221Z.smoke_report.v1.json",
+      "successes": 10,
+      "total_distractor_slots": 600,
+      "unique_directed_pairs": 12
+    },
+    {
+      "attempts": 10,
+      "compile_success_ratio_segment": 1.0,
+      "distractor_diversity_segment": 0.02,
+      "failures": 0,
+      "overall_pass": true,
+      "run_index": 2,
+      "smoke_report_path": "docs/smoke_reports/inaturalist-birds-v2-20260421T210221Z.smoke_report.v1.json",
+      "successes": 10,
+      "total_distractor_slots": 600,
+      "unique_directed_pairs": 12
+    },
+    {
+      "attempts": 10,
+      "compile_success_ratio_segment": 1.0,
+      "distractor_diversity_segment": 0.02,
+      "failures": 0,
+      "overall_pass": true,
+      "run_index": 3,
+      "smoke_report_path": "docs/smoke_reports/inaturalist-birds-v2-20260421T210221Z.smoke_report.v1.json",
+      "successes": 10,
+      "total_distractor_slots": 600,
+      "unique_directed_pairs": 12
+    }
+  ],
+  "schema_version": "phase0.owner.benchmark.v1",
+  "segment": {
+    "difficulty_policy": "mixed",
+    "media_type": "image-only",
+    "season_filter": null,
+    "taxon_group": "birds-only",
+    "zone": "Europe"
+  },
+  "snapshot_id": "inaturalist-birds-v2-20260421T210221Z"
+}

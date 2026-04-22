@@ -1,0 +1,29 @@
+{
+  "checks": {
+    "consumer_latency_vs_prototype": false,
+    "consumer_run_count": true,
+    "consumer_sample_count_min_30": true,
+    "difficulty_policy_mixed": true,
+    "flow_definition_aligned": true,
+    "owner_compile_success_ratio_absolute": true,
+    "owner_distractor_diversity_vs_prototype": false,
+    "owner_run_count": true,
+    "owner_smoke_overall_pass": true
+  },
+  "criteria": {
+    "compile_success_ratio_segment": "== 1.0 on each owner run",
+    "consumer_sample_count": ">= 30 measured flows on each consumer run",
+    "distractor_diversity_segment": ">= prototype baseline on each owner run",
+    "flow_definition": "start_round_or_session -> get_question -> submit_answer",
+    "latency_e2e_segment_p95": "<= prototype baseline on each consumer run",
+    "overall_pass": "true on each owner run"
+  },
+  "decision": "NO_GO",
+  "generated_at": "2026-04-22T08:50:13.812030+00:00",
+  "inputs": {
+    "consumer_summary": "/Users/ryelandt/Documents/runtime-app/docs/20_execution/phase0/consumer_latency_summary.v1.json",
+    "owner_summary": "docs/20_execution/phase0/owner_benchmark_summary.v1.json",
+    "prototype_baseline": "/Users/ryelandt/Documents/Inaturamouche/docs/20_execution/phase0/prototype_baseline.v1.json"
+  },
+  "schema_version": "phase0.go_no_go.v1"
+}
