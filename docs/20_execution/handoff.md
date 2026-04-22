@@ -4,8 +4,8 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
 
 ## Current active chantier
 
-- ID: INT-027
-- Title: Phase 3 retargeting preflight gate (owner)
+- ID: INT-028
+- Title: Protocole preflight v2 (preuve binaire operabilite Phase 3.1)
 - Status: closed_no_go
 
 ## Repo role in current chantier
@@ -17,16 +17,15 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
 
 ## Last validated state
 
-- Last validated context: INT-027 preflight + gated full run executed.
+- Last validated context: INT-028 executed end-to-end with published verdict.
 - What is already validated:
-  - preflight ops function implemented (`run_phase3_preflight`)
-  - preflight decision function implemented (`evaluate_preflight_gate`)
-  - `phase3_1_complete_measurement.py` blocks full campaign when preflight is missing/no-go (`STOP_RETARGET_PRECHECK`)
-  - unit/non-regression tests green (`30 passed`) on targeted suites
-  - real preflight artifact generated and parsed
-  - real full run produced `phase3_1_summary.v1.json` with `decision.status=STOP_RETARGET_PRECHECK`
+  - preflight deficit source now follows `pack diagnose` (`min_media_per_taxon` missing), not smoke reason_count
+  - bounded protocol orchestrator implemented (`scripts/phase3_1_preflight_v2_protocol.py`)
+  - strict status mapping maintained (`CONTINUE_SCALE->GO`, `GO_WITH_GAPS->GO_WITH_GAPS`, others->NO_GO)
+  - real run executed and verdict artifact published: `phase3_1_preflight_v2_verdict.v1.json`
+  - final verdict: `NO_GO` (`cause=no_compile_signal_under_capped_probe`)
 - What is not validated yet:
-  - rerun on a candidate pack with `insufficient_media_before>0` and `preflight_go=true`
+  - no pending validation in INT-028 scope (chantier closed)
 
 ## Decisions already locked
 
@@ -44,13 +43,14 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
 
 ## Next exact step
 
-- select a candidate pack with explicit compile deficit (`insufficient_media_before>0`), rerun preflight, and launch Phase 3.1 full campaign only if `preflight_go=true`.
+- open next owner-only retargeting step to improve compile-impact per Gemini call before re-attempting any Phase 3.1 full campaign.
 
 ## Files to read first in this repo
 
 - docs/codex_execution_plan.md
-- docs/20_execution/chantiers/INT-027.md
+- docs/20_execution/chantiers/INT-028.md
 - docs/20_execution/integration_log.md
+- scripts/phase3_1_preflight_v2_protocol.py
 - scripts/phase3_1_complete_measurement.py
 - src/database_core/ops/phase3_taxon_remediation.py
 - scripts/phase3_taxon_remediation.py
@@ -73,7 +73,7 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
 ## Notes for next IA session
 
 - INT-026 is closed with final decision `NO_GO`.
-- INT-027 introduces a hard preflight gate to avoid wasteful reruns.
-- INT-027 is now closed `NO_GO` by strict mapping (`STOP_RETARGET_PRECHECK -> NO_GO`) on real execution.
+- INT-027 is closed `NO_GO`; it introduced the hard gate before full 3.1 campaign.
+- INT-028 is now closed `NO_GO` after real supervised execution.
 - `verify_repo.py` currently fails on a pre-existing doctrine marker check (`Politique distracteurs v2`) unrelated to this chantier.
-- Phase 3.1 full campaign should not be launched without `docs/20_execution/phase3_1/phase3_1_preflight.v1.json` with `preflight_go=true`.
+- Full 3.1 run is now controlled by `phase3_1_preflight_v2_protocol.py` and should not be launched outside that flow.

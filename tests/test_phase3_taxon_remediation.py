@@ -8,6 +8,7 @@ from database_core.ops.phase3_taxon_remediation import (
     build_remediation_selection,
     collect_known_source_ids,
     evaluate_preflight_gate,
+    extract_min_media_missing_from_diagnostic,
     filter_snapshot_media_for_idempotence,
 )
 
@@ -127,3 +128,14 @@ def test_evaluate_preflight_gate_behaviors() -> None:
     assert go is False
     assert expected_signal is False
     assert reason == "pack_already_compilable"
+
+
+def test_extract_min_media_missing_from_diagnostic() -> None:
+    diagnostic = {
+        "deficits": [
+            {"code": "min_taxa_served", "missing": 10},
+            {"code": "min_media_per_taxon", "missing": 2},
+        ]
+    }
+    assert extract_min_media_missing_from_diagnostic(diagnostic) == 2
+    assert extract_min_media_missing_from_diagnostic({"deficits": []}) == 0

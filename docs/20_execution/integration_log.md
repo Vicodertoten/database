@@ -1081,3 +1081,58 @@ Les exemples fictifs ont ete deplaces vers:
     - selected candidate had no compile deficit on the targeted metric (`insufficient_media_before=0`), so full scale campaign was not decision-useful.
   - next single action:
     - retarget to a candidate pack with `insufficient_media_before>0`, then rerun preflight before any new full Phase 3.1 run.
+
+## Chantier ID: INT-028
+
+- Title: Preflight v2 protocol (binary operability proof for Phase 3.1)
+- Status: closed_no_go
+- Owner repo: database
+- Consumer repo: runtime-app (unchanged in this chantier)
+- Summary:
+  - implement a bounded protocol that always ends with a strict verdict (`GO` / `GO_WITH_GAPS` / `NO_GO`) without uncontrolled Gemini spend.
+- Source of truth:
+  - `docs/codex_execution_plan.md`
+  - `docs/20_execution/chantiers/INT-028.md`
+- Decisions:
+  - preflight eligibility deficit source switched to `pack diagnose` (`deficits[min_media_per_taxon].missing`)
+  - bounded gates:
+    - preflight A max 3 attempts
+    - probe B max 2 attempts with Gemini cap
+    - full 3.1 run max 1
+  - strict mapping preserved:
+    - `CONTINUE_SCALE -> GO`
+    - `GO_WITH_GAPS -> GO_WITH_GAPS`
+    - all other stop outcomes -> `NO_GO`
+- Affected files:
+  - `src/database_core/ops/phase3_taxon_remediation.py`
+  - `scripts/phase3_1_preflight_v2_protocol.py`
+  - `tests/test_phase3_taxon_remediation.py`
+  - `tests/test_phase3_1_preflight_v2_protocol.py`
+  - `docs/20_execution/chantiers/INT-028.md`
+  - `docs/20_execution/handoff.md`
+  - `docs/20_execution/integration_log.md`
+- Verification:
+  - `python -m py_compile src/database_core/ops/phase3_taxon_remediation.py scripts/phase3_1_preflight_v2_protocol.py` (pass)
+  - `python -m pytest -q -p no:capture tests/test_phase3_taxon_remediation.py tests/test_phase3_1_preflight_v2_protocol.py tests/test_phase3_1_complete_measurement.py tests/test_inat_snapshot.py` (pass, 35 passed)
+  - real run executed:
+    - `set -a; source .env; set +a; python scripts/phase3_1_preflight_v2_protocol.py --manifest-path data/raw/inaturalist/inaturalist-birds-v2-phase3rem-20260422T172512Z-p1/manifest.json`
+- Exit decision contribution:
+  - verdict artifact:
+    - `docs/20_execution/phase3_1/phase3_1_preflight_v2_verdict.v1.json`
+  - strict verdict:
+    - `status=NO_GO`
+    - `cause=no_compile_signal_under_capped_probe`
+  - measured evidence:
+    - candidate pack selected with `selected_missing_min_media=2`
+    - preflight A:
+      - A1 no-go (`signal_absent_on_blocking_taxa`)
+      - A2 no-go (`signal_absent_on_blocking_taxa`)
+      - A3 go (`accepted_new_observation_media_probe=240`)
+    - probe B:
+      - B1 no compile signal (`delta_insufficient_media=0`, `delta_ratio=0.0`, `images_sent_to_gemini=0`)
+      - B2 no compile signal (`delta_insufficient_media=0`, `delta_ratio=0.0`, `images_sent_to_gemini=29`)
+    - full 3.1 run correctly not launched by protocol after probe failure (`full_run=null`)
+  - causal synthesis:
+    - novelty acquisition exists, but does not translate into compile-deficit reduction under capped probes.
+  - next single action:
+    - retarget weak-taxa/source selection strategy to maximize compile-impact before any new Phase 3.1 full campaign.

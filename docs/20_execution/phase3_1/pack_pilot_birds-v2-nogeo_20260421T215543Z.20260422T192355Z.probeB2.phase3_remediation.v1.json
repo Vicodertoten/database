@@ -1,0 +1,2188 @@
+{
+  "baseline": {
+    "diagnostic": {
+      "attempt_id": "packdiag:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:6df7e978",
+      "attempted_at": "2026-04-22T19:40:58.232897Z",
+      "blocking_taxa": [
+        {
+          "canonical_taxon_id": "taxon:birds:000014",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000004",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000009",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000003",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000008",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000010",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000005",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000001",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000011",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000015",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000012",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000007",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000006",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000013",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000016",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000017",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000018",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000019",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000020",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000021",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000022",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000023",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000024",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000025",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000026",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000027",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000028",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000029",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000030",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000031",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000032",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000033",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000034",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000035",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000036",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000037",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000038",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000039",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000040",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000041",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000042",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000043",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000044",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000045",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000046",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000047",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000048",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000049",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000050",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000051",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000052",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000053",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000054",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000055",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000056",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000057",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000058",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000059",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000060",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000061",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000062",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000063",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000064",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000065",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000066",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000067",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000068",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000069",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000070",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000071",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000072",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000073",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000074",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000075",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000076",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000077",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000078",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000079",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000080",
+          "media_count": 0,
+          "missing_media_count": 2
+        }
+      ],
+      "compilable": false,
+      "deficits": [
+        {
+          "code": "min_taxa_served",
+          "current": 0,
+          "missing": 10,
+          "required": 10
+        },
+        {
+          "code": "min_media_per_taxon",
+          "current": 0,
+          "missing": 2,
+          "required": 2
+        },
+        {
+          "code": "min_total_questions",
+          "current": 0,
+          "missing": 20,
+          "required": 20
+        }
+      ],
+      "measured": {
+        "min_media_count_per_taxon": 0,
+        "questions_possible": 0,
+        "requested_taxa_count": 80,
+        "taxa_served": 0,
+        "total_playable_items": 0
+      },
+      "pack_diagnostic_version": "pack.diagnostic.v1",
+      "pack_id": "pack:pilot:birds-v2-nogeo:20260421T215543Z",
+      "reason_code": "no_playable_items",
+      "revision": 1,
+      "schema_version": "database.schema.v15",
+      "thresholds": {
+        "min_media_per_taxon": 2,
+        "min_taxa_served": 10,
+        "min_total_questions": 20
+      }
+    },
+    "insufficient_media_per_taxon_reason_count": 0,
+    "overall_pass": true,
+    "taxon_with_min2_media_ratio": 6.666667
+  },
+  "created_at": "2026-04-22T19:43:41.907705+00:00",
+  "decision": {
+    "go_condition": "ratio_up AND insufficient_media_per_taxon_down AND overall_pass_true",
+    "status": "NO_GO"
+  },
+  "delta": {
+    "insufficient_media_per_taxon_reason_count": 0,
+    "taxon_with_min2_media_ratio": 0.0
+  },
+  "enrichment": {
+    "execution": {
+      "enrichment_execution_id": "enrexec:enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad:1e612500",
+      "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+      "executed_at": "2026-04-22T19:43:41.622219+00:00",
+      "execution_status": "partial",
+      "recompilation": {
+        "attempted": true,
+        "compiled_build_id": null,
+        "diagnostic_reason_code": "no_playable_items",
+        "pack_id": "pack:pilot:birds-v2-nogeo:20260421T215543Z",
+        "revision": 1
+      },
+      "request_status": "completed",
+      "trigger_recompile": true
+    },
+    "request": {
+      "merged": false,
+      "request": {
+        "completed_at": null,
+        "created_at": "2026-04-22T19:40:58.641131+00:00",
+        "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+        "execution_attempt_count": 0,
+        "pack_id": "pack:pilot:birds-v2-nogeo:20260421T215543Z",
+        "reason_code": "no_playable_items",
+        "request_status": "pending",
+        "revision": 1
+      },
+      "targets": [
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:7634c47e9bca",
+          "resource_id": "taxon:birds:000001",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:e65053973f4c",
+          "resource_id": "taxon:birds:000002",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:a62d727ce41f",
+          "resource_id": "taxon:birds:000003",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:116e1be28f86",
+          "resource_id": "taxon:birds:000004",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:21684ed5d411",
+          "resource_id": "taxon:birds:000005",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:f30300deafc1",
+          "resource_id": "taxon:birds:000006",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:9cb76e760ef0",
+          "resource_id": "taxon:birds:000007",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:1d0015e8ded5",
+          "resource_id": "taxon:birds:000008",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:386e3b1663fc",
+          "resource_id": "taxon:birds:000009",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:f8115c57297d",
+          "resource_id": "taxon:birds:000010",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:0e53f1a595d0",
+          "resource_id": "taxon:birds:000011",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:9d4469fccbc1",
+          "resource_id": "taxon:birds:000012",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:ea8691767cdd",
+          "resource_id": "taxon:birds:000013",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:9ec31bf27edc",
+          "resource_id": "taxon:birds:000014",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:0096f6f9e04b",
+          "resource_id": "taxon:birds:000015",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:c85a3575df78",
+          "resource_id": "taxon:birds:000016",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:8a0c9c30a6a7",
+          "resource_id": "taxon:birds:000017",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:53b063298c8c",
+          "resource_id": "taxon:birds:000018",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:20c1a6ee8a8f",
+          "resource_id": "taxon:birds:000019",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:2518d43249f0",
+          "resource_id": "taxon:birds:000020",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:e7d237e92465",
+          "resource_id": "taxon:birds:000021",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:72d5d4cc5eec",
+          "resource_id": "taxon:birds:000022",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:25a89aa244f8",
+          "resource_id": "taxon:birds:000023",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:4739467ca10e",
+          "resource_id": "taxon:birds:000024",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:52690d1619e2",
+          "resource_id": "taxon:birds:000025",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:03f3a6615547",
+          "resource_id": "taxon:birds:000026",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:c89c9d2518ad",
+          "resource_id": "taxon:birds:000027",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:b9d0815893b9",
+          "resource_id": "taxon:birds:000028",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:2aefc3008cc2",
+          "resource_id": "taxon:birds:000029",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:da9fd1f387b3",
+          "resource_id": "taxon:birds:000030",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:275ab1d94874",
+          "resource_id": "taxon:birds:000031",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:afad95d0bff4",
+          "resource_id": "taxon:birds:000032",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:b0e5682a2bdf",
+          "resource_id": "taxon:birds:000033",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:96759c75a1f6",
+          "resource_id": "taxon:birds:000034",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:33a4ad54c9a6",
+          "resource_id": "taxon:birds:000035",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:9c9c30df0b78",
+          "resource_id": "taxon:birds:000036",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:804b74d52fe7",
+          "resource_id": "taxon:birds:000037",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:c9659f6ce273",
+          "resource_id": "taxon:birds:000038",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:552b03c7eff9",
+          "resource_id": "taxon:birds:000039",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:f5a3fbb7d75d",
+          "resource_id": "taxon:birds:000040",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:01105e8911e8",
+          "resource_id": "taxon:birds:000041",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:c9d14649893b",
+          "resource_id": "taxon:birds:000042",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:487b6d15b039",
+          "resource_id": "taxon:birds:000043",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:c8957e3ba044",
+          "resource_id": "taxon:birds:000044",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:1542ded1eb71",
+          "resource_id": "taxon:birds:000045",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:4d59b6703b1c",
+          "resource_id": "taxon:birds:000046",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:3af9c220e776",
+          "resource_id": "taxon:birds:000047",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:82fb53faf1e7",
+          "resource_id": "taxon:birds:000048",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:2ca3b39b375e",
+          "resource_id": "taxon:birds:000049",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:d6f03c6989e5",
+          "resource_id": "taxon:birds:000050",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:8aa51fa88d85",
+          "resource_id": "taxon:birds:000051",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:a3887bc8774f",
+          "resource_id": "taxon:birds:000052",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:1dc79196006e",
+          "resource_id": "taxon:birds:000053",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:4f40fca190d3",
+          "resource_id": "taxon:birds:000054",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:25094c973d04",
+          "resource_id": "taxon:birds:000055",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:7aa8ec2a6365",
+          "resource_id": "taxon:birds:000056",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:4e96584ef485",
+          "resource_id": "taxon:birds:000057",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:7973f413037d",
+          "resource_id": "taxon:birds:000058",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:6b56f0548c4c",
+          "resource_id": "taxon:birds:000059",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:d87f254e6e41",
+          "resource_id": "taxon:birds:000060",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:13b96f87e320",
+          "resource_id": "taxon:birds:000061",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:28ff9e75f259",
+          "resource_id": "taxon:birds:000062",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:fb6d892749b6",
+          "resource_id": "taxon:birds:000063",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:0e445938b552",
+          "resource_id": "taxon:birds:000064",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:6f4bd91d63b6",
+          "resource_id": "taxon:birds:000065",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:b655a53aa454",
+          "resource_id": "taxon:birds:000066",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:ec605a3da000",
+          "resource_id": "taxon:birds:000067",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:bde0eb891fdc",
+          "resource_id": "taxon:birds:000068",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:673ce16c6814",
+          "resource_id": "taxon:birds:000069",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:04b486c692e8",
+          "resource_id": "taxon:birds:000070",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:3d589efb13d2",
+          "resource_id": "taxon:birds:000071",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:040dde664386",
+          "resource_id": "taxon:birds:000072",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:39780b2c0df1",
+          "resource_id": "taxon:birds:000073",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:14eb3f423d32",
+          "resource_id": "taxon:birds:000074",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:426a7c93556d",
+          "resource_id": "taxon:birds:000075",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:c5c6e20f01ea",
+          "resource_id": "taxon:birds:000076",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:88d1551ecf83",
+          "resource_id": "taxon:birds:000077",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:2bf8f0781e06",
+          "resource_id": "taxon:birds:000078",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:dbe87b6e0c1a",
+          "resource_id": "taxon:birds:000079",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        },
+        {
+          "created_at": "2026-04-22T19:40:58.641131Z",
+          "enrichment_request_id": "enrreq:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:ba0211ad",
+          "enrichment_request_target_id": "enrtgt:7b0fa21a5d39",
+          "resource_id": "taxon:birds:000080",
+          "resource_type": "canonical_taxon",
+          "target_attribute": "playable_availability"
+        }
+      ]
+    }
+  },
+  "final": {
+    "diagnostic": {
+      "attempt_id": "packdiag:pack:pilot:birds-v2-nogeo:20260421T215543Z:1:8f93a003",
+      "attempted_at": "2026-04-22T19:43:38.484756Z",
+      "blocking_taxa": [
+        {
+          "canonical_taxon_id": "taxon:birds:000014",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000004",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000009",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000003",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000008",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000010",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000005",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000001",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000011",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000015",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000012",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000007",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000006",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000013",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000016",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000017",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000018",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000019",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000020",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000021",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000022",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000023",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000024",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000025",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000026",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000027",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000028",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000029",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000030",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000031",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000032",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000033",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000034",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000035",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000036",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000037",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000038",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000039",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000040",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000041",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000042",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000043",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000044",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000045",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000046",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000047",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000048",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000049",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000050",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000051",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000052",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000053",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000054",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000055",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000056",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000057",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000058",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000059",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000060",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000061",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000062",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000063",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000064",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000065",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000066",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000067",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000068",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000069",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000070",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000071",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000072",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000073",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000074",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000075",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000076",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000077",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000078",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000079",
+          "media_count": 0,
+          "missing_media_count": 2
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000080",
+          "media_count": 0,
+          "missing_media_count": 2
+        }
+      ],
+      "compilable": false,
+      "deficits": [
+        {
+          "code": "min_taxa_served",
+          "current": 0,
+          "missing": 10,
+          "required": 10
+        },
+        {
+          "code": "min_media_per_taxon",
+          "current": 0,
+          "missing": 2,
+          "required": 2
+        },
+        {
+          "code": "min_total_questions",
+          "current": 0,
+          "missing": 20,
+          "required": 20
+        }
+      ],
+      "measured": {
+        "min_media_count_per_taxon": 0,
+        "questions_possible": 0,
+        "requested_taxa_count": 80,
+        "taxa_served": 0,
+        "total_playable_items": 0
+      },
+      "pack_diagnostic_version": "pack.diagnostic.v1",
+      "pack_id": "pack:pilot:birds-v2-nogeo:20260421T215543Z",
+      "reason_code": "no_playable_items",
+      "revision": 1,
+      "schema_version": "database.schema.v15",
+      "thresholds": {
+        "min_media_per_taxon": 2,
+        "min_taxa_served": 10,
+        "min_total_questions": 20
+      }
+    },
+    "insufficient_media_per_taxon_reason_count": 0,
+    "overall_pass": true,
+    "taxon_with_min2_media_ratio": 6.666667
+  },
+  "harvest_query": {
+    "bbox": "-11.0,34.0,32.0,71.0",
+    "observed_from": "2023-01-01",
+    "observed_to": "2026-12-31",
+    "order": "asc",
+    "order_by": "observed_on"
+  },
+  "pack_id": "pack:pilot:birds-v2-nogeo:20260421T215543Z",
+  "passes": [
+    {
+      "downloaded_images": 30,
+      "exportable_resources": 15,
+      "harvested_observations": 30,
+      "idempotence": {
+        "accepted_new_observation_media": 30,
+        "ignored_existing_media": 0,
+        "ignored_existing_observation": 0
+      },
+      "images_sent_to_gemini": 29,
+      "missing_taxa_in_pilot": [
+        "taxon:birds:000016",
+        "taxon:birds:000017",
+        "taxon:birds:000018",
+        "taxon:birds:000019",
+        "taxon:birds:000020",
+        "taxon:birds:000021",
+        "taxon:birds:000022",
+        "taxon:birds:000023",
+        "taxon:birds:000024",
+        "taxon:birds:000025",
+        "taxon:birds:000026",
+        "taxon:birds:000027",
+        "taxon:birds:000028",
+        "taxon:birds:000029",
+        "taxon:birds:000030",
+        "taxon:birds:000031",
+        "taxon:birds:000032",
+        "taxon:birds:000033",
+        "taxon:birds:000034",
+        "taxon:birds:000035",
+        "taxon:birds:000036",
+        "taxon:birds:000037",
+        "taxon:birds:000038",
+        "taxon:birds:000039",
+        "taxon:birds:000040",
+        "taxon:birds:000041",
+        "taxon:birds:000042",
+        "taxon:birds:000043",
+        "taxon:birds:000044",
+        "taxon:birds:000045",
+        "taxon:birds:000046",
+        "taxon:birds:000047",
+        "taxon:birds:000048",
+        "taxon:birds:000049",
+        "taxon:birds:000050",
+        "taxon:birds:000051",
+        "taxon:birds:000052",
+        "taxon:birds:000053",
+        "taxon:birds:000054",
+        "taxon:birds:000055",
+        "taxon:birds:000056",
+        "taxon:birds:000057",
+        "taxon:birds:000058",
+        "taxon:birds:000059",
+        "taxon:birds:000060",
+        "taxon:birds:000061",
+        "taxon:birds:000062",
+        "taxon:birds:000063",
+        "taxon:birds:000064",
+        "taxon:birds:000065",
+        "taxon:birds:000066",
+        "taxon:birds:000067",
+        "taxon:birds:000068",
+        "taxon:birds:000069",
+        "taxon:birds:000070",
+        "taxon:birds:000071",
+        "taxon:birds:000072",
+        "taxon:birds:000073",
+        "taxon:birds:000074",
+        "taxon:birds:000075",
+        "taxon:birds:000076",
+        "taxon:birds:000077",
+        "taxon:birds:000078",
+        "taxon:birds:000079",
+        "taxon:birds:000080"
+      ],
+      "pack_compilable_after_pass": false,
+      "pack_diagnostic_reason_code_after_pass": "no_playable_items",
+      "pass": 1,
+      "pre_ai_rejection_count": 1,
+      "qualified_resources": 30,
+      "snapshot_id": "inaturalist-birds-v2-phase3rem-20260422T194058Z-p1"
+    }
+  ],
+  "phase3_remediation_version": "phase3.remediation.v1",
+  "revision": 1,
+  "run_limits": {
+    "max_observations_per_taxon": 5,
+    "max_passes": 1
+  },
+  "selection": {
+    "blocking_taxa": [
+      {
+        "canonical_taxon_id": "taxon:birds:000001",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000002",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000003",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000004",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000005",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000006",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000007",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000008",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000009",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000010",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000011",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000012",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000013",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000014",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000015",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000016",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000017",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000018",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000019",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000020",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000021",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000022",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000023",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000024",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000025",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000026",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000027",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000028",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000029",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000030",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000031",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000032",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000033",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000034",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000035",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000036",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000037",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000038",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000039",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000040",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000041",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000042",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000043",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000044",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000045",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000046",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000047",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000048",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000049",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000050",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000051",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000052",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000053",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000054",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000055",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000056",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000057",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000058",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000059",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000060",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000061",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000062",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000063",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000064",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000065",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000066",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000067",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000068",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000069",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000070",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000071",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000072",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000073",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000074",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000075",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000076",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000077",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000078",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000079",
+        "media_count": 0,
+        "missing_media_count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000080",
+        "media_count": 0,
+        "missing_media_count": 2
+      }
+    ],
+    "deficits": [
+      {
+        "code": "min_taxa_served",
+        "current": 0,
+        "missing": 10,
+        "required": 10
+      },
+      {
+        "code": "min_media_per_taxon",
+        "current": 0,
+        "missing": 2,
+        "required": 2
+      },
+      {
+        "code": "min_total_questions",
+        "current": 0,
+        "missing": 20,
+        "required": 20
+      }
+    ],
+    "prioritized_taxon_ids": [
+      "taxon:birds:000001",
+      "taxon:birds:000002",
+      "taxon:birds:000003",
+      "taxon:birds:000004",
+      "taxon:birds:000005",
+      "taxon:birds:000006",
+      "taxon:birds:000007",
+      "taxon:birds:000008",
+      "taxon:birds:000009",
+      "taxon:birds:000010",
+      "taxon:birds:000011",
+      "taxon:birds:000012",
+      "taxon:birds:000013",
+      "taxon:birds:000014",
+      "taxon:birds:000015",
+      "taxon:birds:000016",
+      "taxon:birds:000017",
+      "taxon:birds:000018",
+      "taxon:birds:000019",
+      "taxon:birds:000020",
+      "taxon:birds:000021",
+      "taxon:birds:000022",
+      "taxon:birds:000023",
+      "taxon:birds:000024",
+      "taxon:birds:000025",
+      "taxon:birds:000026",
+      "taxon:birds:000027",
+      "taxon:birds:000028",
+      "taxon:birds:000029",
+      "taxon:birds:000030",
+      "taxon:birds:000031",
+      "taxon:birds:000032",
+      "taxon:birds:000033",
+      "taxon:birds:000034",
+      "taxon:birds:000035",
+      "taxon:birds:000036",
+      "taxon:birds:000037",
+      "taxon:birds:000038",
+      "taxon:birds:000039",
+      "taxon:birds:000040",
+      "taxon:birds:000041",
+      "taxon:birds:000042",
+      "taxon:birds:000043",
+      "taxon:birds:000044",
+      "taxon:birds:000045",
+      "taxon:birds:000046",
+      "taxon:birds:000047",
+      "taxon:birds:000048",
+      "taxon:birds:000049",
+      "taxon:birds:000050",
+      "taxon:birds:000051",
+      "taxon:birds:000052",
+      "taxon:birds:000053",
+      "taxon:birds:000054",
+      "taxon:birds:000055",
+      "taxon:birds:000056",
+      "taxon:birds:000057",
+      "taxon:birds:000058",
+      "taxon:birds:000059",
+      "taxon:birds:000060",
+      "taxon:birds:000061",
+      "taxon:birds:000062",
+      "taxon:birds:000063",
+      "taxon:birds:000064",
+      "taxon:birds:000065",
+      "taxon:birds:000066",
+      "taxon:birds:000067",
+      "taxon:birds:000068",
+      "taxon:birds:000069",
+      "taxon:birds:000070",
+      "taxon:birds:000071",
+      "taxon:birds:000072",
+      "taxon:birds:000073",
+      "taxon:birds:000074",
+      "taxon:birds:000075",
+      "taxon:birds:000076",
+      "taxon:birds:000077",
+      "taxon:birds:000078",
+      "taxon:birds:000079",
+      "taxon:birds:000080"
+    ],
+    "reason_code": "no_playable_items"
+  }
+}

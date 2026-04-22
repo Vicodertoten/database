@@ -58,6 +58,16 @@ def evaluate_preflight_gate(
     return False, False, "signal_absent_on_blocking_taxa"
 
 
+def extract_min_media_missing_from_diagnostic(diagnostic: dict[str, Any]) -> int:
+    deficits = diagnostic.get("deficits") or []
+    for item in deficits:
+        code = str(item.get("code", "")).strip()
+        if code != "min_media_per_taxon":
+            continue
+        return int(item.get("missing", 0))
+    return 0
+
+
 def build_remediation_selection(diagnostic: dict[str, object]) -> RemediationSelection:
     blocking_taxa_payload = diagnostic.get("blocking_taxa") or []
     blocking_taxa = [
@@ -230,19 +240,9 @@ def run_phase3_preflight(
     services = build_storage_services(database_url)
     services.database.initialize()
 
-    baseline_smoke = generate_smoke_report(
-        services.pipeline_store,
-        snapshot_id=None,
-        database_url=database_url,
-    )
     baseline_diagnostic = services.pack_store.diagnose_pack(pack_id=pack_id, revision=revision)
     selection = build_remediation_selection(baseline_diagnostic)
-
-    insufficient_media_before = int(
-        baseline_smoke["compile_deficits_summary"]["reason_counts"].get(
-            "insufficient_media_per_taxon", 0
-        )
-    )
+    insufficient_media_before = extract_min_media_missing_from_diagnostic(baseline_diagnostic)
     is_compilable_before = bool(baseline_diagnostic.get("compilable"))
     now = datetime.now(UTC)
     resolved_probe_obs = max(1, int(max_observations_per_taxon_probe))
