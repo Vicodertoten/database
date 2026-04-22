@@ -7,6 +7,7 @@ from pathlib import Path
 from database_core.ops.phase3_taxon_remediation import (
     build_remediation_selection,
     collect_known_source_ids,
+    evaluate_preflight_gate,
     filter_snapshot_media_for_idempotence,
 )
 
@@ -97,3 +98,32 @@ def test_filter_snapshot_media_for_idempotence_is_idempotent_on_second_snapshot(
     assert stats["accepted_new_observation_media"] == 0
     assert stats["ignored_existing_observation"] == 3
     assert stats["ignored_existing_media"] == 0
+
+
+def test_evaluate_preflight_gate_behaviors() -> None:
+    go, expected_signal, reason = evaluate_preflight_gate(
+        is_compilable_before=False,
+        insufficient_media_before=2,
+        accepted_new_observation_media_probe=5,
+    )
+    assert go is True
+    assert expected_signal is True
+    assert reason == "signal_positive"
+
+    go, expected_signal, reason = evaluate_preflight_gate(
+        is_compilable_before=False,
+        insufficient_media_before=2,
+        accepted_new_observation_media_probe=0,
+    )
+    assert go is False
+    assert expected_signal is False
+    assert reason == "signal_absent_on_blocking_taxa"
+
+    go, expected_signal, reason = evaluate_preflight_gate(
+        is_compilable_before=True,
+        insufficient_media_before=2,
+        accepted_new_observation_media_probe=10,
+    )
+    assert go is False
+    assert expected_signal is False
+    assert reason == "pack_already_compilable"

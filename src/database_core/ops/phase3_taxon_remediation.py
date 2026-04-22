@@ -30,6 +30,8 @@ PHASE3_NORMALIZED_OUTPUT_DIR = Path("data/normalized")
 PHASE3_QUALIFIED_OUTPUT_DIR = Path("data/qualified")
 PHASE3_EXPORT_OUTPUT_DIR = Path("data/exports")
 PHASE3_SUMMARY_OUTPUT_DIR = Path("docs/20_execution/phase3")
+PHASE3_PREFLIGHT_VERSION = "phase3.preflight.v1"
+PHASE3_PREFLIGHT_OUTPUT_DIR = Path("docs/20_execution/phase3_1")
 
 
 @dataclass(frozen=True)
@@ -38,6 +40,22 @@ class RemediationSelection:
     reason_code: str
     deficits: list[dict[str, object]]
     blocking_taxa: list[dict[str, object]]
+
+
+def evaluate_preflight_gate(
+    *,
+    is_compilable_before: bool,
+    insufficient_media_before: int,
+    accepted_new_observation_media_probe: int,
+) -> tuple[bool, bool, str]:
+    if is_compilable_before:
+        return False, False, "pack_already_compilable"
+    if insufficient_media_before <= 0:
+        return False, False, "no_compile_deficit"
+    expected_compile_impact_signal = accepted_new_observation_media_probe > 0
+    if expected_compile_impact_signal:
+        return True, True, "signal_positive"
+    return False, False, "signal_absent_on_blocking_taxa"
 
 
 def build_remediation_selection(diagnostic: dict[str, object]) -> RemediationSelection:
@@ -192,6 +210,151 @@ def _write_seed_subset_file(
         encoding="utf-8",
     )
     return output_path
+
+
+def run_phase3_preflight(
+    *,
+    pack_id: str,
+    revision: int | None,
+    database_url: str,
+    snapshot_root: Path = DEFAULT_INAT_SNAPSHOT_ROOT,
+    pilot_taxa_path: Path = DEFAULT_PILOT_TAXA_PATH,
+    summary_output_path: Path | None = None,
+    max_observations_per_taxon_probe: int = 3,
+    harvest_order_by: str | None = None,
+    harvest_order: str | None = None,
+    harvest_observed_from: str | None = None,
+    harvest_observed_to: str | None = None,
+    harvest_bbox: str | None = None,
+) -> dict[str, object]:
+    services = build_storage_services(database_url)
+    services.database.initialize()
+
+    baseline_smoke = generate_smoke_report(
+        services.pipeline_store,
+        snapshot_id=None,
+        database_url=database_url,
+    )
+    baseline_diagnostic = services.pack_store.diagnose_pack(pack_id=pack_id, revision=revision)
+    selection = build_remediation_selection(baseline_diagnostic)
+
+    insufficient_media_before = int(
+        baseline_smoke["compile_deficits_summary"]["reason_counts"].get(
+            "insufficient_media_per_taxon", 0
+        )
+    )
+    is_compilable_before = bool(baseline_diagnostic.get("compilable"))
+    now = datetime.now(UTC)
+    resolved_probe_obs = max(1, int(max_observations_per_taxon_probe))
+    snapshot_id = None
+    probe_result: dict[str, Any] = {
+        "harvested_observations": 0,
+        "downloaded_images": 0,
+        "accepted_new_observation_media_probe": 0,
+        "ignored_existing_observation": 0,
+        "ignored_existing_media": 0,
+        "missing_taxa_in_pilot": [],
+        "probe_executed": False,
+    }
+
+    expected_compile_impact_signal = False
+    preflight_go, _, preflight_reason = evaluate_preflight_gate(
+        is_compilable_before=is_compilable_before,
+        insufficient_media_before=insufficient_media_before,
+        accepted_new_observation_media_probe=0,
+    )
+
+    if (not is_compilable_before) and insufficient_media_before > 0:
+        selected_seeds, missing_taxa = _build_seed_subset(
+            pilot_taxa_path=pilot_taxa_path,
+            prioritized_taxon_ids=selection.prioritized_taxon_ids,
+        )
+        probe_result["missing_taxa_in_pilot"] = missing_taxa
+        if selected_seeds:
+            snapshot_id = f"inaturalist-birds-v2-phase3pre-{now.strftime('%Y%m%dT%H%M%SZ')}-p1"
+            seed_subset_path = _write_seed_subset_file(
+                snapshot_root=snapshot_root,
+                pack_id=pack_id,
+                remediation_pass=0,
+                selected_seeds=selected_seeds,
+            )
+            known_observation_ids, known_media_ids = collect_known_source_ids(
+                snapshot_root=snapshot_root,
+            )
+            harvest_result = fetch_inat_snapshot(
+                snapshot_id=snapshot_id,
+                snapshot_root=snapshot_root,
+                pilot_taxa_path=seed_subset_path,
+                max_observations_per_taxon=resolved_probe_obs,
+                timeout_seconds=PHASE3_TIMEOUT_SECONDS,
+                observed_from=harvest_observed_from,
+                observed_to=harvest_observed_to,
+                order_by=harvest_order_by,
+                order=harvest_order,
+                bbox=harvest_bbox,
+                exclude_observation_ids=known_observation_ids,
+                exclude_media_ids=known_media_ids,
+            )
+            idempotence_stats = filter_snapshot_media_for_idempotence(
+                snapshot_id=snapshot_id,
+                snapshot_root=snapshot_root,
+                known_observation_ids=known_observation_ids,
+                known_media_ids=known_media_ids,
+            )
+            accepted_new = int(idempotence_stats["accepted_new_observation_media"])
+            preflight_go, expected_compile_impact_signal, preflight_reason = evaluate_preflight_gate(
+                is_compilable_before=is_compilable_before,
+                insufficient_media_before=insufficient_media_before,
+                accepted_new_observation_media_probe=accepted_new,
+            )
+            probe_result = {
+                "harvested_observations": int(harvest_result.harvested_observation_count),
+                "downloaded_images": int(harvest_result.downloaded_image_count),
+                "accepted_new_observation_media_probe": accepted_new,
+                "ignored_existing_observation": int(idempotence_stats["ignored_existing_observation"]),
+                "ignored_existing_media": int(idempotence_stats["ignored_existing_media"]),
+                "missing_taxa_in_pilot": missing_taxa,
+                "probe_executed": True,
+            }
+        else:
+            preflight_reason = "no_blocking_taxa_seed_mapping"
+
+    summary = {
+        "phase3_preflight_version": PHASE3_PREFLIGHT_VERSION,
+        "created_at": datetime.now(UTC).isoformat(),
+        "candidate_pack_id": pack_id,
+        "revision": int(baseline_diagnostic["revision"]),
+        "candidate_pack_reason_code_before": str(baseline_diagnostic["reason_code"]),
+        "is_compilable_before": is_compilable_before,
+        "insufficient_media_before": insufficient_media_before,
+        "blocking_taxa_count": len(selection.blocking_taxa),
+        "prioritized_taxon_ids": selection.prioritized_taxon_ids,
+        "snapshot_id": snapshot_id,
+        "probe": probe_result,
+        "expected_compile_impact_signal": expected_compile_impact_signal,
+        "decision": "preflight_go" if preflight_go else "preflight_no_go",
+        "preflight_go": preflight_go,
+        "preflight_reason": preflight_reason,
+        "run_limits": {
+            "max_observations_per_taxon_probe": resolved_probe_obs,
+        },
+        "harvest_query": {
+            "order_by": harvest_order_by or "votes",
+            "order": harvest_order or "desc",
+            "observed_from": harvest_observed_from,
+            "observed_to": harvest_observed_to,
+            "bbox": harvest_bbox,
+        },
+    }
+
+    safe_pack_id = pack_id.replace(":", "_")
+    output_path = summary_output_path or (
+        PHASE3_PREFLIGHT_OUTPUT_DIR
+        / f"{safe_pack_id}.{datetime.now(UTC).strftime('%Y%m%dT%H%M%SZ')}.phase3_preflight.v1.json"
+    )
+    write_json(output_path, summary)
+    summary["output_path"] = output_path.as_posix()
+    return summary
 
 
 def run_phase3_taxon_remediation(

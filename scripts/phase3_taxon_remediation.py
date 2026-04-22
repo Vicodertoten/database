@@ -22,7 +22,10 @@ def main() -> None:
     _bootstrap_src_path()
     from database_core.adapters import DEFAULT_INAT_SNAPSHOT_ROOT, DEFAULT_PILOT_TAXA_PATH
     from database_core.pipeline.runner import DEFAULT_DATABASE_URL
-    from database_core.ops.phase3_taxon_remediation import run_phase3_taxon_remediation
+    from database_core.ops.phase3_taxon_remediation import (
+        run_phase3_preflight,
+        run_phase3_taxon_remediation,
+    )
 
     parser = argparse.ArgumentParser(prog="phase3-taxon-remediation")
     parser.add_argument("--pack-id", required=True)
@@ -36,6 +39,9 @@ def main() -> None:
     parser.add_argument("--pilot-taxa-path", type=Path, default=DEFAULT_PILOT_TAXA_PATH)
     parser.add_argument("--gemini-api-key-env", default="GEMINI_API_KEY")
     parser.add_argument("--output-path", type=Path)
+    parser.add_argument("--preflight-only", action="store_true")
+    parser.add_argument("--preflight-output-path", type=Path)
+    parser.add_argument("--preflight-max-observations-per-taxon", type=int, default=3)
     parser.add_argument("--max-passes", type=int, default=3)
     parser.add_argument("--max-observations-per-taxon", type=int, default=15)
     parser.add_argument("--harvest-order-by", type=str)
@@ -44,6 +50,24 @@ def main() -> None:
     parser.add_argument("--harvest-observed-to", type=str)
     parser.add_argument("--harvest-bbox", type=str)
     args = parser.parse_args()
+
+    if args.preflight_only:
+        summary = run_phase3_preflight(
+            pack_id=args.pack_id,
+            revision=args.revision,
+            database_url=args.database_url,
+            snapshot_root=args.snapshot_root,
+            pilot_taxa_path=args.pilot_taxa_path,
+            summary_output_path=args.preflight_output_path,
+            max_observations_per_taxon_probe=args.preflight_max_observations_per_taxon,
+            harvest_order_by=args.harvest_order_by,
+            harvest_order=args.harvest_order,
+            harvest_observed_from=args.harvest_observed_from,
+            harvest_observed_to=args.harvest_observed_to,
+            harvest_bbox=args.harvest_bbox,
+        )
+        print(json.dumps(summary, indent=2, sort_keys=True))
+        return
 
     gemini_api_key = os.environ.get(args.gemini_api_key_env)
     if not gemini_api_key:

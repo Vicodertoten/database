@@ -4,8 +4,8 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
 
 ## Current active chantier
 
-- ID: INT-026
-- Title: Phase 3 remediation data taxons deficitaires
+- ID: INT-027
+- Title: Phase 3 retargeting preflight gate (owner)
 - Status: closed_no_go
 
 ## Repo role in current chantier
@@ -17,18 +17,16 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
 
 ## Last validated state
 
-- Last validated context: INT-026 Phase 3.1 execution completed and closed.
+- Last validated context: INT-027 preflight + gated full run executed.
 - What is already validated:
-  - phase3 remediation orchestration is implemented (`scripts/phase3_taxon_remediation.py`)
-  - prioritization source uses pack diagnostics (`reason_code`, `deficits`, `blocking_taxa`)
-  - idempotence guards implemented in script-level snapshot filtering (`source_observation_id`, `source_media_id`)
-  - enrichment queue role preserved (request/execution/recompile trace)
-  - phase3.1 summary generated: `docs/20_execution/phase3_1/phase3_1_summary.v1.json`
-  - script verdict: `STOP_RETARGET`
-  - strict mapping applied: `STOP_RETARGET -> NO_GO`
-  - closure decision published in `INT-026` and `integration_log`
+  - preflight ops function implemented (`run_phase3_preflight`)
+  - preflight decision function implemented (`evaluate_preflight_gate`)
+  - `phase3_1_complete_measurement.py` blocks full campaign when preflight is missing/no-go (`STOP_RETARGET_PRECHECK`)
+  - unit/non-regression tests green (`30 passed`) on targeted suites
+  - real preflight artifact generated and parsed
+  - real full run produced `phase3_1_summary.v1.json` with `decision.status=STOP_RETARGET_PRECHECK`
 - What is not validated yet:
-  - no pending validation in INT-026 scope (chantier closed)
+  - rerun on a candidate pack with `insufficient_media_before>0` and `preflight_go=true`
 
 ## Decisions already locked
 
@@ -46,12 +44,12 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
 
 ## Next exact step
 
-- open next owner chantier focused on selection retargeting (maximize compile-impact per Gemini call) before any new Phase 3 scale rerun.
+- select a candidate pack with explicit compile deficit (`insufficient_media_before>0`), rerun preflight, and launch Phase 3.1 full campaign only if `preflight_go=true`.
 
 ## Files to read first in this repo
 
 - docs/codex_execution_plan.md
-- docs/20_execution/chantiers/INT-026.md
+- docs/20_execution/chantiers/INT-027.md
 - docs/20_execution/integration_log.md
 - scripts/phase3_1_complete_measurement.py
 - src/database_core/ops/phase3_taxon_remediation.py
@@ -74,7 +72,8 @@ Ce document capture l'etat operationnel reel de passation pour le chantier actif
 
 ## Notes for next IA session
 
-- INT-026 is closed with final decision `NO_GO` after completed Phase 3.1 run.
+- INT-026 is closed with final decision `NO_GO`.
+- INT-027 introduces a hard preflight gate to avoid wasteful reruns.
+- INT-027 is now closed `NO_GO` by strict mapping (`STOP_RETARGET_PRECHECK -> NO_GO`) on real execution.
 - `verify_repo.py` currently fails on a pre-existing doctrine marker check (`Politique distracteurs v2`) unrelated to this chantier.
-- Phase 3.1 artifacts and summary are available under `docs/20_execution/phase3_1/`.
-- Next work should retarget acquisition logic rather than increase raw run volume.
+- Phase 3.1 full campaign should not be launched without `docs/20_execution/phase3_1/phase3_1_preflight.v1.json` with `preflight_go=true`.

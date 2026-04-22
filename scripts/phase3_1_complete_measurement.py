@@ -253,6 +253,74 @@ def _build_markdown_table(rows: list[dict[str, Any]]) -> str:
     return header + "\n".join(lines) + "\n"
 
 
+def _load_preflight_artifact(path: Path) -> dict[str, Any] | None:
+    if not path.exists():
+        return None
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError(f"Invalid preflight artifact payload at {path}")
+    return payload
+
+
+def _write_precheck_stop_summary(
+    *,
+    output_dir: Path,
+    reason: str,
+    preflight_artifact_path: Path,
+    preflight_payload: dict[str, Any] | None,
+) -> tuple[Path, Path]:
+    summary_payload = {
+        "phase3_1_measurement_version": "phase3.1.measurement.v1",
+        "created_at": datetime.now(UTC).isoformat(),
+        "decision": {
+            "status": "STOP_RETARGET_PRECHECK",
+            "rules_evaluation": {
+                "preflight_gate": "blocked",
+                "reason": reason,
+            },
+            "what_works": "Preflight gate prevents costly scale runs when compile-impact signal is absent.",
+            "what_does_not_work": "Scale run blocked by preflight hard stop.",
+            "causal_hypothesis": "Running full measurement now would likely spend Gemini budget without compile movement.",
+            "next_recommended_action": "Run targeted retargeting and rerun preflight until `preflight_go=true`.",
+        },
+        "preflight": {
+            "artifact_path": preflight_artifact_path.as_posix(),
+            "payload": preflight_payload,
+        },
+        "run_level_rows": [],
+        "scale_statistics": {},
+        "analysis_questions": {
+            "q1_novelty_reduces_duplicate_churn": False,
+            "q2_novelty_reduces_compile_deficits": False,
+            "q3_marginal_ai_cost_acceptable_for_compile_gain": False,
+            "q4_extension_marginal_value_better_than_scale": False,
+        },
+    }
+    summary_json_path = output_dir / "phase3_1_summary.v1.json"
+    _write_json(summary_json_path, summary_payload)
+
+    markdown_path = output_dir / "phase3_1_summary.md"
+    markdown_parts = [
+        "# Phase 3.1 Summary",
+        "",
+        f"- created_at: `{summary_payload['created_at']}`",
+        "- phase3 closure: `not_executed_precheck_block`",
+        "- scale decision: `STOP_RETARGET_PRECHECK`",
+        "",
+        "## Decision Narrative",
+        "",
+        f"- ce qui marche: {summary_payload['decision']['what_works']}",
+        f"- ce qui ne marche pas: {summary_payload['decision']['what_does_not_work']}",
+        f"- hypothese causale: {summary_payload['decision']['causal_hypothesis']}",
+        f"- action suivante recommandee: {summary_payload['decision']['next_recommended_action']}",
+        "",
+        f"- preflight reason: `{reason}`",
+        f"- preflight artifact: `{preflight_artifact_path.as_posix()}`",
+    ]
+    markdown_path.write_text("\n".join(markdown_parts) + "\n", encoding="utf-8")
+    return summary_json_path, markdown_path
+
+
 def main() -> None:
     load_dotenv(dotenv_path=Path(".env"))
     _bootstrap_src_path()
@@ -286,6 +354,11 @@ def main() -> None:
         type=Path,
         default=Path("docs/20_execution/phase3_1"),
     )
+    parser.add_argument(
+        "--preflight-artifact-path",
+        type=Path,
+        default=Path("docs/20_execution/phase3_1/phase3_1_preflight.v1.json"),
+    )
     parser.add_argument("--scale-runs", type=int, default=3)
     parser.add_argument("--max-passes", type=int, default=3)
     parser.add_argument("--max-observations-per-taxon", type=int, default=10)
@@ -297,16 +370,42 @@ def main() -> None:
     parser.add_argument("--extension-count", type=int, default=20)
     args = parser.parse_args()
 
+    now = datetime.now(UTC)
+    timestamp = now.strftime("%Y%m%dT%H%M%SZ")
+    output_dir = args.output_dir
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    preflight_payload = _load_preflight_artifact(args.preflight_artifact_path)
+    preflight_reason = None
+    if preflight_payload is None:
+        preflight_reason = "preflight_artifact_missing"
+    elif not bool(preflight_payload.get("preflight_go", False)):
+        preflight_reason = str(preflight_payload.get("preflight_reason", "preflight_no_go"))
+    if preflight_reason is not None:
+        summary_json_path, markdown_path = _write_precheck_stop_summary(
+            output_dir=output_dir,
+            reason=preflight_reason,
+            preflight_artifact_path=args.preflight_artifact_path,
+            preflight_payload=preflight_payload,
+        )
+        print(
+            json.dumps(
+                {
+                    "summary_json": summary_json_path.as_posix(),
+                    "summary_markdown": markdown_path.as_posix(),
+                    "scale_decision": "STOP_RETARGET_PRECHECK",
+                },
+                indent=2,
+                sort_keys=True,
+            )
+        )
+        return
+
     if not args.database_url:
         raise SystemExit("DATABASE_URL is required")
     gemini_api_key = os.environ.get(args.gemini_api_key_env)
     if not gemini_api_key:
         raise SystemExit(f"Missing Gemini API key in env var {args.gemini_api_key_env}")
-
-    now = datetime.now(UTC)
-    timestamp = now.strftime("%Y%m%dT%H%M%SZ")
-    output_dir = args.output_dir
-    output_dir.mkdir(parents=True, exist_ok=True)
 
     scale_seed_path = output_dir / f"pilot_taxa_scale80.{timestamp}.json"
     extension_seed_path = output_dir / f"pilot_taxa_extension20.{timestamp}.json"

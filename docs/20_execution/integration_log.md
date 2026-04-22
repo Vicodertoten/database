@@ -1035,3 +1035,49 @@ Les exemples fictifs ont ete deplaces vers:
     - protocol and observability are stable, but additional cost/novelty did not reduce compile deficits on the comparable scale segment.
   - next prioritized action:
     - stop scale expansion and retarget selection logic to maximize compile-impact per Gemini call before any new scale campaign.
+
+## Chantier ID: INT-027
+
+- Title: Phase 3 retargeting preflight gate (owner)
+- Status: closed_no_go
+- Owner repo: database
+- Consumer repo: runtime-app (unchanged in this chantier)
+- Summary: add a mandatory preflight gate before any full Phase 3.1 campaign to prevent wasteful Gemini spend when compile-impact signal is absent.
+- Source of truth:
+  - `docs/codex_execution_plan.md`
+  - `docs/20_execution/chantiers/INT-027.md`
+- Decisions:
+  - full Phase 3.1 campaign is blocked if preflight artifact is missing
+  - full Phase 3.1 campaign is blocked if preflight decision is `preflight_no_go`
+  - blocking status emitted as `STOP_RETARGET_PRECHECK`
+- Affected files:
+  - `src/database_core/ops/phase3_taxon_remediation.py`
+  - `scripts/phase3_taxon_remediation.py`
+  - `scripts/phase3_1_complete_measurement.py`
+  - `tests/test_phase3_taxon_remediation.py`
+  - `tests/test_phase3_1_complete_measurement.py`
+  - `docs/20_execution/chantiers/INT-027.md`
+  - `docs/20_execution/handoff.md`
+  - `docs/20_execution/integration_log.md`
+- Verification:
+  - `python -m py_compile src/database_core/ops/phase3_taxon_remediation.py scripts/phase3_taxon_remediation.py scripts/phase3_1_complete_measurement.py` (pass)
+  - `python -m pytest -q -p no:capture tests/test_phase3_taxon_remediation.py tests/test_phase3_1_complete_measurement.py tests/test_inat_snapshot.py` (pass, 30 passed)
+- Exit decision contribution:
+  - real preflight executed:
+    - artifact: `docs/20_execution/phase3_1/phase3_1_preflight.v1.json`
+    - result: `decision=preflight_no_go`, `preflight_reason=no_compile_deficit`, `insufficient_media_before=0`
+  - real gated run executed:
+    - summary: `docs/20_execution/phase3_1/phase3_1_summary.v1.json`
+    - markdown: `docs/20_execution/phase3_1/phase3_1_summary.md`
+    - result: `decision.status=STOP_RETARGET_PRECHECK`
+  - strict mapping applied:
+    - `CONTINUE_SCALE -> GO`
+    - `GO_WITH_GAPS -> GO_WITH_GAPS`
+    - `STOP_RETARGET` or `STOP_RETARGET_PRECHECK -> NO_GO`
+  - final INT-027 decision:
+    - `NO_GO` (`closed_no_go`)
+  - causal synthesis:
+    - gate mechanism works and prevents wasteful full campaigns.
+    - selected candidate had no compile deficit on the targeted metric (`insufficient_media_before=0`), so full scale campaign was not decision-useful.
+  - next single action:
+    - retarget to a candidate pack with `insufficient_media_before>0`, then rerun preflight before any new full Phase 3.1 run.
