@@ -1900,6 +1900,114 @@ class PostgresStorageInternal:
             },
         }
 
+    def fetch_phase1_smoke_metrics(self) -> dict[str, object]:
+        with self.connect() as connection:
+            canonical_counts = connection.execute(
+                """
+                SELECT
+                    COUNT(*) FILTER (WHERE taxon_status != 'provisional') AS accepted_taxa,
+                    COUNT(*) FILTER (WHERE taxon_status = 'provisional') AS provisional_taxa
+                FROM canonical_taxa
+                """
+            ).fetchone()
+            playable_counts = connection.execute(
+                """
+                SELECT
+                    COUNT(*) AS playable_items_total,
+                    COUNT(*) FILTER (WHERE country_code IS NOT NULL) AS playable_items_with_country
+                FROM playable_items
+                """
+            ).fetchone()
+            playable_taxa_counts = connection.execute(
+                """
+                SELECT COUNT(DISTINCT canonical_taxon_id) AS playable_taxa
+                FROM playable_items
+                """
+            ).fetchone()
+            min2_media_counts = connection.execute(
+                """
+                SELECT COUNT(*) AS taxa_with_min2_media
+                FROM (
+                    SELECT canonical_taxon_id
+                    FROM playable_items
+                    GROUP BY canonical_taxon_id
+                    HAVING COUNT(*) >= 2
+                ) AS eligible
+                """
+            ).fetchone()
+            latest_attempt_rows = connection.execute(
+                """
+                SELECT attempt.attempt_id, attempt.reason_code, attempt.blocking_taxa_json
+                FROM pack_compilation_attempts AS attempt
+                JOIN (
+                    SELECT pack_id, revision, MAX(attempted_at) AS latest_attempted_at
+                    FROM pack_compilation_attempts
+                    GROUP BY pack_id, revision
+                ) AS latest
+                    ON latest.pack_id = attempt.pack_id
+                   AND latest.revision = attempt.revision
+                   AND latest.latest_attempted_at = attempt.attempted_at
+                ORDER BY attempt.attempted_at DESC
+                """
+            ).fetchall()
+            compiled_payload_rows = connection.execute(
+                """
+                SELECT build.payload_json
+                FROM compiled_pack_builds AS build
+                JOIN (
+                    SELECT pack_id, revision, MAX(built_at) AS latest_built_at
+                    FROM compiled_pack_builds
+                    GROUP BY pack_id, revision
+                ) AS latest
+                    ON latest.pack_id = build.pack_id
+                   AND latest.revision = build.revision
+                   AND latest.latest_built_at = build.built_at
+                """
+            ).fetchall()
+
+        accepted_taxa_total = int(canonical_counts["accepted_taxa"] or 0)
+        playable_items_total = int(playable_counts["playable_items_total"] or 0)
+        playable_items_with_country = int(playable_counts["playable_items_with_country"] or 0)
+        playable_taxa_total = int(playable_taxa_counts["playable_taxa"] or 0)
+        taxa_with_min2_media = int(min2_media_counts["taxa_with_min2_media"] or 0)
+
+        compile_deficits_summary = _summarize_compile_deficits(latest_attempt_rows)
+        distractor_diversity = _compute_distractor_diversity_index(compiled_payload_rows)
+
+        return {
+            "taxon_playable_coverage_ratio": {
+                "actual": _safe_ratio(playable_taxa_total, accepted_taxa_total),
+                "stats": {
+                    "playable_taxa": playable_taxa_total,
+                    "accepted_taxa_total": accepted_taxa_total,
+                    "provisional_taxa_total": int(canonical_counts["provisional_taxa"] or 0),
+                },
+            },
+            "taxon_with_min2_media_ratio": {
+                "actual": _safe_ratio(taxa_with_min2_media, accepted_taxa_total),
+                "stats": {
+                    "taxa_with_min2_media": taxa_with_min2_media,
+                    "accepted_taxa_total": accepted_taxa_total,
+                },
+            },
+            "country_code_completeness_ratio": {
+                "actual": _safe_ratio(playable_items_with_country, playable_items_total),
+                "stats": {
+                    "playable_items_with_country": playable_items_with_country,
+                    "playable_items_total": playable_items_total,
+                },
+            },
+            "distractor_diversity_index": {
+                "actual": distractor_diversity["index"],
+                "stats": {
+                    "unique_directed_pairs": distractor_diversity["unique_directed_pairs"],
+                    "total_distractor_slots": distractor_diversity["total_distractor_slots"],
+                    "latest_compiled_payloads": distractor_diversity["latest_compiled_payloads"],
+                },
+            },
+            "compile_deficits_summary": compile_deficits_summary,
+        }
+
     def _load_latest_canonical_taxa_before_run(
         self,
         *,
@@ -1936,6 +2044,87 @@ class PostgresStorageInternal:
 
 def _json(value: object) -> str:
     return json.dumps(value, sort_keys=True, ensure_ascii=True)
+
+
+def _safe_ratio(numerator: int, denominator: int) -> float:
+    if denominator <= 0:
+        return 1.0
+    return round(numerator / denominator, 6)
+
+
+def _compute_distractor_diversity_index(rows: Sequence[dict[str, object]]) -> dict[str, object]:
+    unique_pairs: set[tuple[str, str]] = set()
+    total_slots = 0
+    for row in rows:
+        payload_raw = row.get("payload_json")
+        if not isinstance(payload_raw, str):
+            continue
+        try:
+            payload = json.loads(payload_raw)
+        except json.JSONDecodeError:
+            continue
+        questions = payload.get("questions")
+        if not isinstance(questions, list):
+            continue
+        for question in questions:
+            if not isinstance(question, dict):
+                continue
+            target = str(question.get("target_canonical_taxon_id") or "").strip()
+            distractors = question.get("distractor_canonical_taxon_ids")
+            if not target or not isinstance(distractors, list):
+                continue
+            for distractor in distractors:
+                distractor_id = str(distractor or "").strip()
+                if not distractor_id:
+                    continue
+                total_slots += 1
+                unique_pairs.add((target, distractor_id))
+
+    return {
+        "index": _safe_ratio(len(unique_pairs), total_slots) if total_slots > 0 else 0.0,
+        "unique_directed_pairs": len(unique_pairs),
+        "total_distractor_slots": total_slots,
+        "latest_compiled_payloads": len(rows),
+    }
+
+
+def _summarize_compile_deficits(rows: Sequence[dict[str, object]]) -> dict[str, object]:
+    reason_counts: Counter[str] = Counter()
+    blocking_taxa_counts: Counter[str] = Counter()
+    non_compilable = 0
+    for row in rows:
+        reason = str(row.get("reason_code") or "").strip()
+        if reason:
+            reason_counts[reason] += 1
+        if reason and reason != "compilable":
+            non_compilable += 1
+
+        blocking_raw = row.get("blocking_taxa_json")
+        if not isinstance(blocking_raw, str):
+            continue
+        try:
+            blocking_taxa = json.loads(blocking_raw)
+        except json.JSONDecodeError:
+            continue
+        if not isinstance(blocking_taxa, list):
+            continue
+        for entry in blocking_taxa:
+            if not isinstance(entry, dict):
+                continue
+            canonical_taxon_id = str(entry.get("canonical_taxon_id") or "").strip()
+            if canonical_taxon_id:
+                blocking_taxa_counts[canonical_taxon_id] += 1
+
+    attempts_total = len(rows)
+    return {
+        "attempts_total": attempts_total,
+        "non_compilable_attempts": non_compilable,
+        "reason_counts": dict(sorted(reason_counts.items())),
+        "top_blocking_taxa": [
+            {"canonical_taxon_id": taxon_id, "count": count}
+            for taxon_id, count in blocking_taxa_counts.most_common(10)
+        ],
+    }
 
 
 def _executemany(

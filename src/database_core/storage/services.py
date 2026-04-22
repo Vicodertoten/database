@@ -179,6 +179,9 @@ class PostgresPipelineStore:
 	def fetch_run_level_metrics(self, *, run_id: str | None = None) -> dict[str, object]:
 		return self._repository.fetch_run_level_metrics(run_id=run_id)
 
+	def fetch_phase1_smoke_metrics(self) -> dict[str, object]:
+		return self._repository.fetch_phase1_smoke_metrics()
+
 
 @dataclass(frozen=True)
 class StorageServices:

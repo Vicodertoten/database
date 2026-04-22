@@ -50,6 +50,43 @@ Surfaces inspect metriques ajoutees en Gate 8:
 
 Ces vues sont des surfaces de lecture operateur et ne changent pas le contrat smoke KPI.
 
+## Phase 1 instrumentation (additif, non-bloquant)
+
+Regle de compatibilite `smoke.report.v1`:
+
+1. aucun renommage des champs historiques
+2. aucune suppression des champs historiques
+3. aucune modification semantique des champs historiques
+4. ajout uniquement en mode additif (`extended_kpis`, `compile_deficits_summary`)
+5. `overall_pass` conserve sa definition historique (KPI verrouilles uniquement)
+
+KPI etendus publies en Phase 1 (`extended_kpis`):
+
+1. `taxon_playable_coverage_ratio`
+   - formule: `playable_taxa / accepted_taxa_total`
+   - stats: `playable_taxa`, `accepted_taxa_total`, `provisional_taxa_total`
+2. `taxon_with_min2_media_ratio`
+   - formule: `taxa_with_min2_media / accepted_taxa_total`
+   - stats: `taxa_with_min2_media`, `accepted_taxa_total`
+3. `country_code_completeness_ratio`
+   - formule: `playable_items_with_country / playable_items_total`
+   - stats: `playable_items_with_country`, `playable_items_total`
+4. `distractor_diversity_index` (v1 simple)
+   - formule: `unique_directed_pairs(target,distractor) / total_distractor_slots`
+   - stats: `unique_directed_pairs`, `total_distractor_slots`, `latest_compiled_payloads`
+
+Resume deficits compile (`compile_deficits_summary`):
+
+- `attempts_total`
+- `non_compilable_attempts`
+- `reason_counts`
+- `top_blocking_taxa`
+
+Interpretation Phase 1:
+
+- KPI etendus sont des signaux de pilotage baseline (non bloquants pour ce chantier)
+- les decisions pass/fail operationnelles restent portees par les KPI verrouilles
+
 ## Promotion P0 -> P1 (doctrine de decision)
 
 Statuts autorises:

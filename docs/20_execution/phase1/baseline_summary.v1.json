@@ -1,0 +1,197 @@
+{
+  "comparability": {
+    "same_command_profile": true,
+    "same_locked_kpi_pass": true,
+    "same_metric_formulas": true,
+    "same_snapshot_id": true
+  },
+  "runs": [
+    {
+      "compile_deficits_summary": {
+        "attempts_total": 8,
+        "non_compilable_attempts": 5,
+        "reason_counts": {
+          "compilable": 3,
+          "insufficient_media_per_taxon": 2,
+          "insufficient_taxa_served": 2,
+          "no_playable_items": 1
+        },
+        "top_blocking_taxa": [
+          {
+            "canonical_taxon_id": "taxon:birds:000059",
+            "count": 3
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000071",
+            "count": 3
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000039",
+            "count": 3
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000068",
+            "count": 3
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000042",
+            "count": 3
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000034",
+            "count": 3
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000056",
+            "count": 3
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000065",
+            "count": 3
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000077",
+            "count": 3
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000014",
+            "count": 3
+          }
+        ]
+      },
+      "country_code_completeness_ratio": 0.0,
+      "distractor_diversity_index": 0.21978,
+      "locked_kpis_pass": true,
+      "overall_pass": true,
+      "run_index": 1,
+      "snapshot_id": "inaturalist-birds-v2-20260421T210221Z",
+      "taxon_playable_coverage_ratio": 0.875,
+      "taxon_with_min2_media_ratio": 0.7625
+    },
+    {
+      "compile_deficits_summary": {
+        "attempts_total": 8,
+        "non_compilable_attempts": 5,
+        "reason_counts": {
+          "compilable": 3,
+          "insufficient_media_per_taxon": 2,
+          "insufficient_taxa_served": 2,
+          "no_playable_items": 1
+        },
+        "top_blocking_taxa": [
+          {
+            "canonical_taxon_id": "taxon:birds:000059",
+            "count": 3
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000071",
+            "count": 3
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000039",
+            "count": 3
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000068",
+            "count": 3
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000042",
+            "count": 3
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000034",
+            "count": 3
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000056",
+            "count": 3
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000065",
+            "count": 3
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000077",
+            "count": 3
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000014",
+            "count": 3
+          }
+        ]
+      },
+      "country_code_completeness_ratio": 0.0,
+      "distractor_diversity_index": 0.21978,
+      "locked_kpis_pass": true,
+      "overall_pass": true,
+      "run_index": 2,
+      "snapshot_id": "inaturalist-birds-v2-20260421T210221Z",
+      "taxon_playable_coverage_ratio": 0.875,
+      "taxon_with_min2_media_ratio": 0.7625
+    },
+    {
+      "compile_deficits_summary": {
+        "attempts_total": 8,
+        "non_compilable_attempts": 5,
+        "reason_counts": {
+          "compilable": 3,
+          "insufficient_media_per_taxon": 2,
+          "insufficient_taxa_served": 2,
+          "no_playable_items": 1
+        },
+        "top_blocking_taxa": [
+          {
+            "canonical_taxon_id": "taxon:birds:000059",
+            "count": 3
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000071",
+            "count": 3
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000039",
+            "count": 3
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000068",
+            "count": 3
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000042",
+            "count": 3
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000034",
+            "count": 3
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000056",
+            "count": 3
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000065",
+            "count": 3
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000077",
+            "count": 3
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000014",
+            "count": 3
+          }
+        ]
+      },
+      "country_code_completeness_ratio": 0.0,
+      "distractor_diversity_index": 0.21978,
+      "locked_kpis_pass": true,
+      "overall_pass": true,
+      "run_index": 3,
+      "snapshot_id": "inaturalist-birds-v2-20260421T210221Z",
+      "taxon_playable_coverage_ratio": 0.875,
+      "taxon_with_min2_media_ratio": 0.7625
+    }
+  ],
+  "schema_version": "phase1.baseline.summary.v1"
+}

@@ -51,6 +51,29 @@ def test_generate_smoke_report_includes_locked_kpis(tmp_path: Path, database_url
         kpis["governance_reason_and_signal_coverage"]["stats"]["missing_source_delta"] == 0
     )
     assert kpis["export_trace_flags_uncertainty_coverage"]["actual"] == 1.0
+    extended_kpis = report["extended_kpis"]
+    assert set(extended_kpis.keys()) == {
+        "taxon_playable_coverage_ratio",
+        "taxon_with_min2_media_ratio",
+        "country_code_completeness_ratio",
+        "distractor_diversity_index",
+    }
+    for key in extended_kpis:
+        assert extended_kpis[key]["target"] == "baseline_observe"
+        assert extended_kpis[key]["pass"] is None
+        assert isinstance(extended_kpis[key]["actual"], float)
+        assert isinstance(extended_kpis[key]["stats"], dict)
+    compile_deficits_summary = report["compile_deficits_summary"]
+    assert set(compile_deficits_summary.keys()) == {
+        "attempts_total",
+        "non_compilable_attempts",
+        "reason_counts",
+        "top_blocking_taxa",
+    }
+    assert isinstance(compile_deficits_summary["attempts_total"], int)
+    assert isinstance(compile_deficits_summary["non_compilable_attempts"], int)
+    assert isinstance(compile_deficits_summary["reason_counts"], dict)
+    assert isinstance(compile_deficits_summary["top_blocking_taxa"], list)
     assert set(report["governance_review_alerts"].keys()) == {
         "open_backlog",
         "avg_open_age_hours",
@@ -85,3 +108,24 @@ def test_generate_smoke_report_uses_locked_kpi_registry(tmp_path: Path, database
     assert set(report["kpis"].keys()) == set(_LOCKED_KPIS.keys())
     for name, expected_target in _LOCKED_KPIS.items():
         assert report["kpis"][name]["target"] == expected_target
+
+
+def test_generate_smoke_report_phase1_additive_contract(tmp_path: Path, database_url: str) -> None:
+    run_pipeline(
+        database_url=database_url,
+        normalized_snapshot_path=tmp_path / "normalized_phase1.json",
+        qualification_snapshot_path=tmp_path / "qualified_phase1.json",
+        export_path=tmp_path / "export_phase1.json",
+    )
+    repository = _build_repository(database_url)
+    report = generate_smoke_report(
+        repository,
+        snapshot_id=None,
+        database_url=database_url,
+    )
+
+    assert report["report_version"] == "smoke.report.v1"
+    assert "kpis" in report
+    assert "overall_pass" in report
+    assert "extended_kpis" in report
+    assert "compile_deficits_summary" in report

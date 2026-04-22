@@ -32,6 +32,12 @@ _LOCKED_KPIS = {
     "governance_reason_and_signal_coverage": "== 1.0",
     "export_trace_flags_uncertainty_coverage": "== 1.0",
 }
+_PHASE1_EXTENDED_KPIS = {
+    "taxon_playable_coverage_ratio": "baseline_observe",
+    "taxon_with_min2_media_ratio": "baseline_observe",
+    "country_code_completeness_ratio": "baseline_observe",
+    "distractor_diversity_index": "baseline_observe",
+}
 
 
 def generate_smoke_report(
@@ -43,6 +49,7 @@ def generate_smoke_report(
 ) -> dict[str, object]:
     timestamp = generated_at or datetime.now(UTC)
     run_metrics = repository.fetch_run_level_metrics()
+    phase1_metrics = repository.fetch_phase1_smoke_metrics()
     with repository.connect() as connection:
         latest_run = connection.execute(
             """
@@ -95,6 +102,15 @@ def generate_smoke_report(
         "governance_reason_and_signal_coverage": kpi_governance_reason_signal,
         "export_trace_flags_uncertainty_coverage": kpi_export_trace_flags_uncertainty,
     }
+    extended_kpis = {
+        name: {
+            "target": _PHASE1_EXTENDED_KPIS[name],
+            "actual": float(phase1_metrics[name]["actual"]),
+            "pass": None,
+            "stats": phase1_metrics[name]["stats"],
+        }
+        for name in _PHASE1_EXTENDED_KPIS
+    }
     overall_pass = all(bool(item["pass"]) for item in kpis.values())
     governance_metrics = run_metrics.get("governance", {})
     governance_open_backlog = int(governance_metrics.get("open_governance_review_items", 0))
@@ -130,6 +146,8 @@ def generate_smoke_report(
         "run_metrics": run_metrics,
         "governance_review_alerts": governance_review_alerts,
         "kpis": kpis,
+        "extended_kpis": extended_kpis,
+        "compile_deficits_summary": phase1_metrics["compile_deficits_summary"],
         "overall_pass": overall_pass,
     }
 

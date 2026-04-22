@@ -847,3 +847,51 @@ Les exemples fictifs ont ete deplaces vers:
   - priority gaps:
     - distractor diversity
     - consumer latency budget
+
+## Chantier ID: INT-024
+
+- Title: Phase 1 instrumentation et baseline KPI
+- Status: closed_go_with_gaps
+- Owner repo: database (smoke instrumentation owner)
+- Consumer repo: runtime-app (nominal compatibility validation)
+- Summary: Phase 1 instrumentation is completed with additive smoke report extension, 3-run comparable baseline publication, and preserved locked KPI semantics.
+- Source of truth:
+  - `docs/codex_execution_plan.md`
+  - `docs/20_execution/chantiers/INT-024.md`
+  - `runtime-app/docs/20_execution/chantiers/INT-024.md`
+- Decisions:
+  - `smoke.report.v1` compatibility is additive-only (no rename/remove/semantic change on historical fields)
+  - locked KPI registry remains in `kpis`
+  - `overall_pass` remains computed from locked KPIs only
+  - Phase 1 instrumentation publishes non-blocking baseline signals in `extended_kpis`
+- Affected files:
+  - database: `src/database_core/ops/smoke_report.py`
+  - database: `src/database_core/storage/postgres.py`
+  - database: `src/database_core/storage/services.py`
+  - database: `tests/test_smoke_report.py`
+  - database: `docs/10_program_kpis.md`
+  - database: `docs/20_execution/chantiers/INT-024.md`
+  - database: `docs/20_execution/handoff.md`
+  - database: `docs/20_execution/integration_log.md`
+  - runtime-app: `docs/20_execution/chantiers/INT-024.md`
+  - runtime-app: `docs/20_execution/handoff.md`
+  - runtime-app: `docs/20_execution/integration_log.md`
+- Linked commits:
+  - database: pending
+  - runtime-app: pending
+- Verification:
+  - `python -m pytest -q -p no:capture tests/test_smoke_report.py` passed (3 passed)
+  - `python scripts/verify_goldset_v1.py` passed
+  - `corepack pnpm --filter @runtime-app/web run test:smoke` passed (3/3)
+  - `python scripts/verify_repo.py` failed on pre-existing doc marker mismatch (`Politique distracteurs v2` expected)
+- Baseline artifacts:
+  - `docs/20_execution/phase1/smoke_run1.smoke_report.v1.json`
+  - `docs/20_execution/phase1/smoke_run2.smoke_report.v1.json`
+  - `docs/20_execution/phase1/smoke_run3.smoke_report.v1.json`
+  - `docs/20_execution/phase1/baseline_summary.v1.json`
+- Baseline snapshot:
+  - `inaturalist-birds-v2-20260421T210221Z`
+- Exit decision:
+  - `GO_WITH_GAPS`
+- Next step:
+  - open corrective P1 follow-up for diversity and country-code completeness trajectories
