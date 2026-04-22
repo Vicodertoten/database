@@ -1,6 +1,6 @@
 {
   "database_url": "postgresql://postgres:***@db.cduiheqceeghzrlbtwom.supabase.co:5432/postgres?sslmode=require",
-  "generated_at": "2026-04-21T21:59:38.036134+00:00",
+  "generated_at": "2026-04-22T08:43:12.786897+00:00",
   "governance_review_alerts": {
     "avg_open_age_alert": false,
     "avg_open_age_hours": 0.0,
