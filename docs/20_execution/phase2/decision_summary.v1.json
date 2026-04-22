@@ -1,65 +1,70 @@
 {
-  "schema_version": "phase2.decision.summary.v1",
-  "created_at": "2026-04-22T13:30:00Z",
-  "baseline_reference": {
-    "source": "docs/20_execution/phase1/baseline_summary.v1.json",
-    "snapshot_id": "inaturalist-birds-v2-20260421T210221Z",
-    "runs": 3
+  "baseline": {
+    "estimated_ai_cost_eur": 0.174,
+    "insufficient_resolution": 5,
+    "pipeline": {
+      "exportable": 128,
+      "qualified": 150,
+      "review": 0,
+      "run_id": "run:20260422T120358Z:0bebccbd"
+    },
+    "pre_ai_rejection_reason_counts": {},
+    "processed_media": 150,
+    "sent_to_gemini": 145
   },
-  "candidate_reference": {
-    "source": [
-      "docs/20_execution/phase2/smoke_run1.smoke_report.v1.json",
-      "docs/20_execution/phase2/smoke_run2.smoke_report.v1.json",
-      "docs/20_execution/phase2/smoke_run3.smoke_report.v1.json"
-    ],
-    "snapshot_id": "inaturalist-birds-v2-20260421T210221Z",
-    "runs": 3
+  "candidate": {
+    "estimated_ai_cost_eur": 0.174,
+    "insufficient_resolution": 0,
+    "pipeline": {
+      "exportable": 128,
+      "qualified": 150,
+      "review": 0,
+      "run_id": "run:20260422T120408Z:3ffbb38a"
+    },
+    "pre_ai_rejection_reason_counts": {
+      "insufficient_resolution_pre_ai": 5
+    },
+    "processed_media": 150,
+    "sent_to_gemini": 145
   },
   "comparability": {
-    "same_snapshot_id": true,
-    "same_locked_kpi_semantics": true,
-    "same_report_version": true,
-    "same_formulas": true
+    "same_command_profile": true,
+    "same_gemini_model_and_prompt": true,
+    "same_kpi_formulas": true,
+    "same_snapshot_payload": true
   },
-  "baseline_average": {
-    "overall_pass": true,
-    "locked_kpis_pass": true,
-    "ai_qualified_images": 612.0,
-    "estimated_ai_cost_eur": 0.7344,
-    "exportable_resources": 288.0,
-    "estimated_ai_cost_eur_per_exportable": 0.00255
-  },
-  "candidate_average": {
-    "overall_pass": true,
-    "locked_kpis_pass": true,
-    "ai_qualified_images": 612.0,
-    "estimated_ai_cost_eur": 0.7344,
-    "exportable_resources": 288.0,
-    "estimated_ai_cost_eur_per_exportable": 0.00255,
-    "pre_ai_rejection_total": 0,
-    "pre_ai_rejection_reason_counts": {}
+  "created_at": "2026-04-22T12:04:50Z",
+  "decision": {
+    "next_actions": [
+      "Build/target a corpus where blur/decode-error/duplicate cases are non-zero to validate additional savings.",
+      "Only promote Phase 2 when ai call volume or cost per exportable is measurably reduced without exportable regression."
+    ],
+    "rationale": [
+      "No measurable AI-call reduction on real A/B same-snapshot run.",
+      "No measurable AI cost reduction (delta = 0).",
+      "Pre-AI filtering only remapped existing insufficient-resolution rejects upstream on this corpus."
+    ],
+    "status": "NO_GO"
   },
   "delta": {
-    "ai_qualified_images": 0.0,
     "estimated_ai_cost_eur": 0.0,
-    "exportable_resources": 0.0,
-    "estimated_ai_cost_eur_per_exportable": 0.0
+    "exportable": 0,
+    "sent_to_gemini": 0
+  },
+  "experiment": {
+    "baseline_code_ref": "7cf515a",
+    "candidate_code_ref": "b37cc09+",
+    "max_observations_per_taxon": 10,
+    "snapshot_baseline": "inaturalist-birds-v2-phase2ab15-20260422Tclean-baseline",
+    "snapshot_candidate": "inaturalist-birds-v2-phase2ab15-20260422Tclean-candidate",
+    "snapshot_root": "/tmp/phase2_ab",
+    "snapshot_seed": "inaturalist-birds-v2-phase2ab15-20260422Tclean",
+    "taxon_count": 15,
+    "type": "real_ab_same_snapshot"
   },
   "quality_guardrails": {
-    "locked_kpis_non_regression": true,
-    "overall_pass_non_regression": true,
-    "exportable_resources_non_regression": true
+    "exportable_non_regression": true,
+    "overall_operational_non_regression": true
   },
-  "decision": {
-    "status": "GO_WITH_GAPS",
-    "rationale": [
-      "Phase 2 implementation is complete and non-regressive on locked KPIs and exportable volume.",
-      "Comparable owner runs do not show measurable AI-call/cost reduction on this snapshot.",
-      "Pre-AI instrumentation is active and traceable, but this corpus did not produce pre-AI rejections."
-    ],
-    "required_follow_up": [
-      "Run baseline/candidate comparison on a corpus where pre-AI filters trigger non-zero rejection counts.",
-      "Publish a refreshed cost delta table (ai_qualified_images, estimated_ai_cost_eur, cost_per_exportable)."
-    ]
-  }
+  "schema_version": "phase2.decision.summary.v1"
 }

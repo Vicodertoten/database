@@ -899,7 +899,7 @@ Les exemples fictifs ont ete deplaces vers:
 ## Chantier ID: INT-025
 
 - Title: Phase 2 pre-filtrage image amont (reduction cout IA)
-- Status: closed_go_with_gaps
+- Status: closed_no_go
 - Owner repo: database (owner implementation)
 - Consumer repo: runtime-app (nominal compatibility validation)
 - Summary: Phase 2 pre-AI filtering was implemented with direct blur activation and exact-hash dedup only, while preserving additive contract compatibility.
@@ -939,14 +939,14 @@ Les exemples fictifs ont ete deplaces vers:
   - `docs/20_execution/phase2/smoke_run3.smoke_report.v1.json`
   - `docs/20_execution/phase2/decision_summary.v1.json`
 - Exit decision:
-  - `GO_WITH_GAPS`
-  - comparable corpus result:
-    - `ai_qualified_images`: `612 -> 612`
-    - `estimated_ai_cost_eur`: `0.7344 -> 0.7344`
-    - `estimated_ai_cost_eur_per_exportable`: `0.00255 -> 0.00255`
-    - `pre_ai_rejection_total`: `0`
+  - `NO_GO`
+  - real A/B same-snapshot result:
+    - `sent_to_gemini`: `145 -> 145`
+    - `estimated_ai_cost_eur`: `0.174 -> 0.174`
+    - `exportable`: `128 -> 128`
+    - `pre_ai_rejection_reason_counts` candidate: `insufficient_resolution_pre_ai=5`
   - interpretation:
     - implementation complete and non-regressive
-    - measurable cost reduction not demonstrated on this comparable snapshot
+    - measurable cost reduction not demonstrated on real A/B evidence
 - Next step:
   - execute follow-up comparable runs on a corpus with non-zero pre-AI rejections and refresh the decision summary.
