@@ -26,9 +26,21 @@ def test_build_remediation_selection_prioritizes_blocking_taxa_by_impact() -> No
         "reason_code": "insufficient_media_per_taxon",
         "deficits": [{"code": "min_media_per_taxon", "current": 0, "required": 2, "missing": 2}],
         "blocking_taxa": [
-            {"canonical_taxon_id": "taxon:birds:000003", "media_count": 1, "missing_media_count": 1},
-            {"canonical_taxon_id": "taxon:birds:000001", "media_count": 0, "missing_media_count": 2},
-            {"canonical_taxon_id": "taxon:birds:000002", "media_count": 0, "missing_media_count": 2},
+            {
+                "canonical_taxon_id": "taxon:birds:000003",
+                "media_count": 1,
+                "missing_media_count": 1,
+            },
+            {
+                "canonical_taxon_id": "taxon:birds:000001",
+                "media_count": 0,
+                "missing_media_count": 2,
+            },
+            {
+                "canonical_taxon_id": "taxon:birds:000002",
+                "media_count": 0,
+                "missing_media_count": 2,
+            },
         ],
     }
 
@@ -49,7 +61,7 @@ def test_filter_snapshot_media_for_idempotence_applies_observation_and_media_gua
     snapshot_id = "snapshot-idem"
     snapshot_dir = _copy_snapshot_fixture(snapshot_root, snapshot_id)
     manifest_path = snapshot_dir / "manifest.json"
-    manifest_payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    assert json.loads(manifest_path.read_text(encoding="utf-8"))
 
     known_observation_ids = {"910001"}
     known_media_ids = {"810002"}

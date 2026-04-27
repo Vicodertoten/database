@@ -443,7 +443,9 @@ def test_qualify_inat_snapshot_filters_duplicate_pre_ai(tmp_path: Path) -> None:
     manifest_path = snapshot_dir / "manifest.json"
     manifest_payload = json.loads(manifest_path.read_text(encoding="utf-8"))
     manifest_payload["ai_outputs_path"] = None
-    manifest_payload["media_downloads"][1]["sha256"] = manifest_payload["media_downloads"][0]["sha256"]
+    manifest_payload["media_downloads"][1]["sha256"] = (
+        manifest_payload["media_downloads"][0]["sha256"]
+    )
     manifest_path.write_text(
         json.dumps(manifest_payload, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",

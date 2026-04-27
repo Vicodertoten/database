@@ -6,8 +6,12 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 DEFAULT_OWNER_SUMMARY = Path("docs/20_execution/phase0/owner_benchmark_summary.v1.json")
-DEFAULT_PROTOTYPE_BASELINE = Path("/Users/ryelandt/Documents/Inaturamouche/docs/20_execution/phase0/prototype_baseline.v1.json")
-DEFAULT_CONSUMER_SUMMARY = Path("/Users/ryelandt/Documents/runtime-app/docs/20_execution/phase0/consumer_latency_summary.v1.json")
+DEFAULT_PROTOTYPE_BASELINE = Path(
+    "/Users/ryelandt/Documents/Inaturamouche/docs/20_execution/phase0/prototype_baseline.v1.json"
+)
+DEFAULT_CONSUMER_SUMMARY = Path(
+    "/Users/ryelandt/Documents/runtime-app/docs/20_execution/phase0/consumer_latency_summary.v1.json"
+)
 DEFAULT_OUTPUT = Path("docs/20_execution/phase0/go_no_go_decision.v1.json")
 EXPECTED_FLOW_DEFINITION = "start_round_or_session -> get_question -> submit_answer"
 

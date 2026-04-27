@@ -47,13 +47,13 @@ That is the main architectural priority before any significant new scope is adde
 ## Reference docs
 
 - Documentation index: `docs/README.md`
-- Living audit reference: `docs/05_audit_reference.md`
-- Codex execution plan (sequential gates): `docs/codex_execution_plan.md`
-- Stable canonical charter v1: `docs/06_charte_canonique_v1.md`
+- Living audit reference: `docs/runbooks/audit-reference.md`
+- Codex execution plan (sequential gates): `docs/runbooks/execution-plan.md`
+- Stable canonical charter v1: `docs/foundation/canonical-charter-v1.md`
 - Canonical implementation ADR: `docs/adr/0001-charte-canonique-v1.md`
 - Noyau canonique fort ADR: `docs/adr/0002-noyau-canonique-fort-execution-sequentielle.md`
 - Chaîne playable/pack/compilation/enrichissement ADR: `docs/adr/0003-playable-corpus-pack-compilation-enrichment-queue.md`
-- Program KPI checklist: `docs/10_program_kpis.md`
+- Program KPI checklist: `docs/runbooks/program-kpis.md`
 
 ## Boundaries doctrinaux
 
@@ -468,7 +468,7 @@ It runs, in order:
 
 If `ruff` is missing, the script fails with an explicit message and recommends `pip install -e ".[dev]"`.
 
-For the live 15-taxon smoke workflow, see [docs/04_smoke_runbook.md](docs/04_smoke_runbook.md).
+For the live 15-taxon smoke workflow, see [docs/runbooks/smoke-runbook.md](docs/runbooks/smoke-runbook.md).
 
 ## Continuous integration
 

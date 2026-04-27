@@ -21,11 +21,11 @@ def main() -> None:
     load_dotenv(dotenv_path=Path(".env"))
     _bootstrap_src_path()
     from database_core.adapters import DEFAULT_INAT_SNAPSHOT_ROOT, DEFAULT_PILOT_TAXA_PATH
-    from database_core.pipeline.runner import DEFAULT_DATABASE_URL
     from database_core.ops.phase3_taxon_remediation import (
         run_phase3_preflight,
         run_phase3_taxon_remediation,
     )
+    from database_core.pipeline.runner import DEFAULT_DATABASE_URL
 
     parser = argparse.ArgumentParser(prog="phase3-taxon-remediation")
     parser.add_argument("--pack-id", required=True)

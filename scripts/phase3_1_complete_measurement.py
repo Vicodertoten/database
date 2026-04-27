@@ -46,7 +46,9 @@ def _load_extension_seed_payloads(goldset_path: Path, extension_count: int) -> l
     payload = json.loads(goldset_path.read_text(encoding="utf-8"))
     if len(payload) < extension_count:
         raise ValueError(
-            f"goldset taxa length ({len(payload)}) is smaller than extension_count ({extension_count})"
+            "goldset taxa length "
+            f"({len(payload)}) is smaller than extension_count "
+            f"({extension_count})"
         )
     tail = payload[-extension_count:]
     seeds: list[dict[str, Any]] = []
@@ -134,7 +136,9 @@ def _extract_run_record(
         "images_sent_to_gemini": images_sent_to_gemini,
         "pre_ai_rejection_count": pre_ai_rejection_count,
         "estimated_ai_cost_eur": estimated_ai_cost_eur,
-        "cost_per_exportable": None if cost_per_exportable is None else round(cost_per_exportable, 6),
+        "cost_per_exportable": (
+            None if cost_per_exportable is None else round(cost_per_exportable, 6)
+        ),
         "qualified_resources": qualified_resources,
         "exportable_resources": exportable_resources,
         "exportable_rate": None if exportable_rate is None else round(exportable_rate, 6),
@@ -244,11 +248,13 @@ def _build_markdown_table(rows: list[dict[str, Any]]) -> str:
     lines: list[str] = []
     for row in rows:
         lines.append(
-            "| {run_label} | {run_type} | {accepted_new_observation_media} | "
-            "{images_sent_to_gemini} | {pre_ai_rejection_count} | {estimated_ai_cost_eur} | "
-            "{exportable_resources} | {delta_insufficient_media} | {delta_ratio} | {cost_per_exportable} |".format(
-                **row
-            )
+            (
+                "| {run_label} | {run_type} | {accepted_new_observation_media} | "
+                "{images_sent_to_gemini} | {pre_ai_rejection_count} | "
+                "{estimated_ai_cost_eur} | {exportable_resources} | "
+                "{delta_insufficient_media} | {delta_ratio} | "
+                "{cost_per_exportable} |"
+            ).format(**row)
         )
     return header + "\n".join(lines) + "\n"
 
@@ -278,10 +284,19 @@ def _write_precheck_stop_summary(
                 "preflight_gate": "blocked",
                 "reason": reason,
             },
-            "what_works": "Preflight gate prevents costly scale runs when compile-impact signal is absent.",
+            "what_works": (
+                "Preflight gate prevents costly scale runs when compile-impact signal "
+                "is absent."
+            ),
             "what_does_not_work": "Scale run blocked by preflight hard stop.",
-            "causal_hypothesis": "Running full measurement now would likely spend Gemini budget without compile movement.",
-            "next_recommended_action": "Run targeted retargeting and rerun preflight until `preflight_go=true`.",
+            "causal_hypothesis": (
+                "Running full measurement now would likely spend Gemini budget "
+                "without compile movement."
+            ),
+            "next_recommended_action": (
+                "Run targeted retargeting and rerun preflight until "
+                "`preflight_go=true`."
+            ),
         },
         "preflight": {
             "artifact_path": preflight_artifact_path.as_posix(),
@@ -455,10 +470,14 @@ def main() -> None:
 
     run_records: list[dict[str, Any]] = []
     scale_artifacts: list[str] = []
+    safe_base_pack_id = args.base_pack_id.replace(":", "_")
 
     for run_idx in range(1, args.scale_runs + 1):
         run_label = f"scale_run{run_idx}"
-        artifact = output_dir / f"{args.base_pack_id.replace(':', '_')}.{timestamp}.{run_label}.phase3_remediation.v1.json"
+        artifact = (
+            output_dir
+            / f"{safe_base_pack_id}.{timestamp}.{run_label}.phase3_remediation.v1.json"
+        )
         summary = run_phase3_taxon_remediation(
             pack_id=args.base_pack_id,
             revision=None,
@@ -478,7 +497,11 @@ def main() -> None:
         )
         scale_artifacts.append(summary["output_path"])
 
-    extension_artifact = output_dir / f"{extension_pack_id.replace(':', '_')}.{timestamp}.extension_run.phase3_remediation.v1.json"
+    safe_extension_pack_id = extension_pack_id.replace(":", "_")
+    extension_artifact = (
+        output_dir
+        / f"{safe_extension_pack_id}.{timestamp}.extension_run.phase3_remediation.v1.json"
+    )
     extension_summary = run_phase3_taxon_remediation(
         pack_id=extension_pack_id,
         revision=None,
@@ -521,22 +544,46 @@ def main() -> None:
 
     verdict_by_status = {
         "CONTINUE_SCALE": {
-            "what_works": "Scale remediation improves compile deficits and coverage under controlled cost.",
+            "what_works": (
+                "Scale remediation improves compile deficits and coverage under "
+                "controlled cost."
+            ),
             "what_does_not_work": "No major blocker observed in current parameter envelope.",
-            "causal_hypothesis": "Novelty acquisition is reaching taxa that directly unlock compile constraints.",
-            "next_recommended_action": "Continue Phase 3 targeted remediation on the same segment until compile deficits plateau.",
+            "causal_hypothesis": (
+                "Novelty acquisition is reaching taxa that directly unlock "
+                "compile constraints."
+            ),
+            "next_recommended_action": (
+                "Continue Phase 3 targeted remediation on the same segment "
+                "until compile deficits plateau."
+            ),
         },
         "GO_WITH_GAPS": {
-            "what_works": "Novelty and exportable growth are measurable under the Phase 3.1 protocol.",
+            "what_works": (
+                "Novelty and exportable growth are measurable under the Phase "
+                "3.1 protocol."
+            ),
             "what_does_not_work": "Compile-deficit reduction is partial or unstable run-over-run.",
-            "causal_hypothesis": "New media are added but not concentrated enough on blocking taxa to move compile gates decisively.",
-            "next_recommended_action": "Retarget remediation selection toward top blocking taxa concentration before increasing volume.",
+            "causal_hypothesis": (
+                "New media are added but not concentrated enough on blocking "
+                "taxa to move compile gates decisively."
+            ),
+            "next_recommended_action": (
+                "Retarget remediation selection toward top blocking taxa "
+                "concentration before increasing volume."
+            ),
         },
         "STOP_RETARGET": {
             "what_works": "Protocol and observability are stable and decision-ready.",
             "what_does_not_work": "Cost rises without meaningful compile-deficit improvement.",
-            "causal_hypothesis": "Current acquisition strategy maximizes volume novelty, not compile-relevant novelty.",
-            "next_recommended_action": "Stop scale expansion and redesign targeting logic to maximize compile-impact per Gemini call.",
+            "causal_hypothesis": (
+                "Current acquisition strategy maximizes volume novelty, not "
+                "compile-relevant novelty."
+            ),
+            "next_recommended_action": (
+                "Stop scale expansion and redesign targeting logic to maximize "
+                "compile-impact per Gemini call."
+            ),
         },
     }
     verdict = verdict_by_status[scale_decision["status"]]
@@ -544,7 +591,8 @@ def main() -> None:
     phase3_closure = {
         "phase3_status": "closed_go_with_gaps",
         "closure_reason": (
-            "Remediation pipeline and novelty strategy validated; compile gate movement remains partial."
+            "Remediation pipeline and novelty strategy validated; compile gate "
+            "movement remains partial."
         ),
         "baseline_artifacts": [
             "docs/20_execution/phase3/pack_pilot_birds-v2-nogeo_20260421T215543Z.20260422T125207Z.phase3_remediation.v1.json",

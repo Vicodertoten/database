@@ -150,7 +150,9 @@ def main() -> None:
 
     services = build_storage_services(args.database_url)
     services.database.initialize()
-    diagnostics = services.pack_store.fetch_pack_diagnostics(limit=max(1, int(args.candidate_scan_limit)))
+    diagnostics = services.pack_store.fetch_pack_diagnostics(
+        limit=max(1, int(args.candidate_scan_limit))
+    )
 
     selected_diagnostic: dict[str, Any] | None = None
     if args.base_pack_id:
@@ -186,7 +188,10 @@ def main() -> None:
         "decision": {
             "status": "NO_GO",
             "cause": "no_eligible_pack",
-            "next_action": "Select a candidate pack with `compilable=false` and missing `min_media_per_taxon`.",
+            "next_action": (
+                "Select a candidate pack with `compilable=false` and missing "
+                "`min_media_per_taxon`."
+            ),
         },
     }
 
@@ -205,8 +210,11 @@ def main() -> None:
         "selected_pack_id": pack_id,
         "selected_revision": revision,
         "selected_reason_code": str(selected_diagnostic.get("reason_code", "")),
-        "selected_missing_min_media": _missing_min_media(list(selected_diagnostic.get("deficits") or [])),
+        "selected_missing_min_media": _missing_min_media(
+            list(selected_diagnostic.get("deficits") or [])
+        ),
     }
+    safe_pack_id = pack_id.replace(":", "_")
 
     windows = [
         ("2010-01-01", "2022-12-31"),
@@ -218,7 +226,7 @@ def main() -> None:
     selected_window: tuple[str, str] | None = None
     for idx in range(max_preflight_attempts):
         observed_from, observed_to = windows[idx]
-        artifact_path = output_dir / f"{pack_id.replace(':', '_')}.{timestamp}.preflightA{idx + 1}.v1.json"
+        artifact_path = output_dir / f"{safe_pack_id}.{timestamp}.preflightA{idx + 1}.v1.json"
         attempt = run_phase3_preflight(
             pack_id=pack_id,
             revision=revision,
@@ -255,7 +263,8 @@ def main() -> None:
         blocking_taxa=blocking_taxa,
         weak_taxa_count=max(1, int(args.weak_taxa_count)),
     )
-    weak_seed_path = output_dir / f"pilot_taxa_weak{max(1, int(args.weak_taxa_count))}.{timestamp}.json"
+    weak_taxa_count = max(1, int(args.weak_taxa_count))
+    weak_seed_path = output_dir / f"pilot_taxa_weak{weak_taxa_count}.{timestamp}.json"
     _write_json(weak_seed_path, weak_seeds)
 
     observed_from, observed_to = selected_window
@@ -263,7 +272,7 @@ def main() -> None:
     probe_passed = False
     for idx, max_obs in enumerate(probe_observations, start=1):
         probe_output_path = (
-            output_dir / f"{pack_id.replace(':', '_')}.{timestamp}.probeB{idx}.phase3_remediation.v1.json"
+            output_dir / f"{safe_pack_id}.{timestamp}.probeB{idx}.phase3_remediation.v1.json"
         )
         probe_summary = run_phase3_taxon_remediation(
             pack_id=pack_id,
@@ -306,7 +315,10 @@ def main() -> None:
         summary["decision"] = {
             "status": "NO_GO",
             "cause": "no_compile_signal_under_capped_probe",
-            "next_action": "Stop scale and retarget taxon/source strategy before any full 3.1 campaign.",
+            "next_action": (
+                "Stop scale and retarget taxon/source strategy before any full "
+                "3.1 campaign."
+            ),
         }
         verdict_path = output_dir / "phase3_1_preflight_v2_verdict.v1.json"
         _write_json(verdict_path, summary)

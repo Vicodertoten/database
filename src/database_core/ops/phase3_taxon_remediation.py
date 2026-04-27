@@ -19,7 +19,6 @@ from database_core.adapters import (
 from database_core.export.json_exporter import write_json
 from database_core.ops.smoke_report import generate_smoke_report
 from database_core.pipeline.runner import run_pipeline
-from database_core.storage.pack_store import MIN_PACK_TOTAL_QUESTIONS
 from database_core.storage.services import build_storage_services
 
 PHASE3_REMEDIATION_VERSION = "phase3.remediation.v1"
@@ -128,7 +127,10 @@ def filter_snapshot_media_for_idempotence(
     known_observation_ids: set[str],
     known_media_ids: set[str],
 ) -> dict[str, int]:
-    manifest, snapshot_dir = load_snapshot_manifest(snapshot_id=snapshot_id, snapshot_root=snapshot_root)
+    manifest, snapshot_dir = load_snapshot_manifest(
+        snapshot_id=snapshot_id,
+        snapshot_root=snapshot_root,
+    )
     kept_media_ids: set[str] = set()
     ignored_existing_observation = 0
     ignored_existing_media = 0
@@ -174,7 +176,12 @@ def filter_snapshot_media_for_idempotence(
     ]
     write_snapshot_manifest(
         snapshot_dir,
-        manifest.model_copy(update={"media_downloads": filtered_downloads, "ai_outputs_path": None}),
+        manifest.model_copy(
+            update={
+                "media_downloads": filtered_downloads,
+                "ai_outputs_path": None,
+            }
+        ),
     )
     return {
         "ignored_existing_observation": ignored_existing_observation,
@@ -302,16 +309,20 @@ def run_phase3_preflight(
                 known_media_ids=known_media_ids,
             )
             accepted_new = int(idempotence_stats["accepted_new_observation_media"])
-            preflight_go, expected_compile_impact_signal, preflight_reason = evaluate_preflight_gate(
+            preflight_go, expected_compile_impact_signal, preflight_reason = (
+                evaluate_preflight_gate(
                 is_compilable_before=is_compilable_before,
                 insufficient_media_before=insufficient_media_before,
                 accepted_new_observation_media_probe=accepted_new,
+                )
             )
             probe_result = {
                 "harvested_observations": int(harvest_result.harvested_observation_count),
                 "downloaded_images": int(harvest_result.downloaded_image_count),
                 "accepted_new_observation_media_probe": accepted_new,
-                "ignored_existing_observation": int(idempotence_stats["ignored_existing_observation"]),
+                "ignored_existing_observation": int(
+                    idempotence_stats["ignored_existing_observation"]
+                ),
                 "ignored_existing_media": int(idempotence_stats["ignored_existing_media"]),
                 "missing_taxa_in_pilot": missing_taxa,
                 "probe_executed": True,
@@ -611,9 +622,10 @@ def run_phase3_taxon_remediation(
     }
 
     safe_pack_id = pack_id.replace(":", "_")
+    timestamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
     output_path = summary_output_path or (
         PHASE3_SUMMARY_OUTPUT_DIR
-        / f"{safe_pack_id}.{datetime.now(UTC).strftime('%Y%m%dT%H%M%SZ')}.phase3_remediation.v1.json"
+        / f"{safe_pack_id}.{timestamp}.phase3_remediation.v1.json"
     )
     write_json(output_path, summary)
     summary["output_path"] = output_path.as_posix()

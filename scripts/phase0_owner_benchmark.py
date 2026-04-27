@@ -13,13 +13,6 @@ from dotenv import load_dotenv
 
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "src"
-if str(SRC) not in sys.path:
-    sys.path.insert(0, str(SRC))
-
-from database_core.domain.models import PackRevisionParameters
-from database_core.ops import generate_smoke_report
-from database_core.security import redact_database_url
-from database_core.storage.services import build_storage_services
 
 DEFAULT_SNAPSHOT_ID = "inaturalist-birds-v2-20260421T210221Z"
 DEFAULT_EXPORT_PATH = Path(f"data/exports/{DEFAULT_SNAPSHOT_ID}.json")
@@ -42,6 +35,12 @@ class RunResult:
     total_distractor_slots: int
     overall_pass: bool
     smoke_report_path: str
+
+
+def _bootstrap_src_path() -> None:
+    src_path = str(SRC)
+    if src_path not in sys.path:
+        sys.path.insert(0, src_path)
 
 
 def _load_segment_canonical_taxon_ids(export_path: Path) -> list[str]:
@@ -74,6 +73,10 @@ def _ensure_pack_for_phase0(
     canonical_taxon_ids: list[str],
     difficulty_policy: str,
 ) -> dict[str, Any]:
+    _bootstrap_src_path()
+    from database_core.domain.models import PackRevisionParameters
+    from database_core.storage.services import build_storage_services
+
     services = build_storage_services(database_url)
     services.database.initialize()
     pack_store = services.pack_store
@@ -104,7 +107,9 @@ def _ensure_pack_for_phase0(
     return payload
 
 
-def _compute_quantities_from_build(build_payload: dict[str, Any]) -> tuple[set[tuple[str, str]], int]:
+def _compute_quantities_from_build(
+    build_payload: dict[str, Any],
+) -> tuple[set[tuple[str, str]], int]:
     pairs: set[tuple[str, str]] = set()
     total_slots = 0
     questions = build_payload.get("questions")
@@ -136,6 +141,10 @@ def _run_owner_benchmark(
     attempts_per_run: int,
     question_count: int,
 ) -> list[RunResult]:
+    _bootstrap_src_path()
+    from database_core.ops import generate_smoke_report
+    from database_core.storage.services import build_storage_services
+
     services = build_storage_services(database_url)
     services.database.initialize()
     pack_store = services.pack_store
@@ -173,7 +182,10 @@ def _run_owner_benchmark(
             database_url=database_url,
         )
         smoke_report_path = output_dir / f"{snapshot_id}.smoke_report.v1.json"
-        smoke_report_path.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        smoke_report_path.write_text(
+            json.dumps(report, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
 
         results.append(
             RunResult(
@@ -195,13 +207,23 @@ def _run_owner_benchmark(
 
 def main() -> int:
     load_dotenv(dotenv_path=ROOT / ".env")
+    _bootstrap_src_path()
+    from database_core.security import redact_database_url
+
     parser = argparse.ArgumentParser(description="Phase 0 owner benchmark runner (database)")
-    parser.add_argument("--database-url", default=os.environ.get("DATABASE_URL", "postgresql://localhost:5432/postgres"))
+    parser.add_argument(
+        "--database-url",
+        default=os.environ.get("DATABASE_URL", "postgresql://localhost:5432/postgres"),
+    )
     parser.add_argument("--snapshot-id", default=DEFAULT_SNAPSHOT_ID)
     parser.add_argument("--export-path", type=Path, default=DEFAULT_EXPORT_PATH)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT_PATH)
     parser.add_argument("--pack-id", default=DEFAULT_PACK_ID)
-    parser.add_argument("--difficulty-policy", choices=["easy", "balanced", "hard", "mixed"], default="mixed")
+    parser.add_argument(
+        "--difficulty-policy",
+        choices=["easy", "balanced", "hard", "mixed"],
+        default="mixed",
+    )
     parser.add_argument("--runs", type=int, default=DEFAULT_RUNS)
     parser.add_argument("--attempts-per-run", type=int, default=DEFAULT_ATTEMPTS_PER_RUN)
     parser.add_argument("--question-count", type=int, default=DEFAULT_QUESTION_COUNT)

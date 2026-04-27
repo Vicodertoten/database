@@ -33,6 +33,7 @@ def test_verify_repo_runs_compile_pytest_and_ruff_in_order(monkeypatch) -> None:
         [module.sys.executable, "-m", "compileall", "src", "tests"],
         [module.sys.executable, "-m", "pytest", "-q", "-p", "no:capture"],
         [module.sys.executable, "scripts/check_doc_code_coherence.py"],
+        [module.sys.executable, "scripts/check_docs_hygiene.py"],
         [module.sys.executable, "-m", "ruff", "check", "src", "tests", "scripts"],
     ]
     assert "Repository verification complete" in buffer.getvalue()
@@ -41,11 +42,11 @@ def test_verify_repo_runs_compile_pytest_and_ruff_in_order(monkeypatch) -> None:
 def test_gate_8_docs_keep_playable_gap_and_gate_ordering_visible() -> None:
     root = Path(".")
     readme = (root / "README.md").read_text(encoding="utf-8")
-    scope = (root / "docs/00_scope.md").read_text(encoding="utf-8")
-    model = (root / "docs/01_domain_model.md").read_text(encoding="utf-8")
-    pipeline = (root / "docs/02_pipeline.md").read_text(encoding="utf-8")
-    audit = (root / "docs/05_audit_reference.md").read_text(encoding="utf-8")
-    plan = (root / "docs/codex_execution_plan.md").read_text(encoding="utf-8")
+    scope = (root / "docs/foundation/scope.md").read_text(encoding="utf-8")
+    model = (root / "docs/foundation/domain-model.md").read_text(encoding="utf-8")
+    pipeline = (root / "docs/foundation/pipeline.md").read_text(encoding="utf-8")
+    audit = (root / "docs/runbooks/audit-reference.md").read_text(encoding="utf-8")
+    plan = (root / "docs/runbooks/execution-plan.md").read_text(encoding="utf-8")
 
     _assert_gate_markers(readme, ("4.5", "5", "6", "7", "8"))
     _assert_any_contains(readme, ("cumulative incremental", "incremental playable"))
@@ -63,11 +64,11 @@ def test_gate_8_docs_keep_playable_gap_and_gate_ordering_visible() -> None:
 
     _assert_gate_markers(audit, ("4.5", "5"))
     _assert_any_contains(audit, ("closure checklist", "checklist"))
-    _assert_any_contains(audit, ("Politique distracteurs v2", "distracteurs v2"))
+    _assert_any_contains(audit, ("Politique distracteurs v3", "distracteurs v3"))
 
     _assert_gate_markers(plan, ("4.5", "5", "6", "7", "8"))
     _assert_any_contains(plan, ("Correctif strategique", "strategique"))
-    _assert_any_contains(plan, ("Politique distracteurs v2", "distracteurs v2"))
+    _assert_any_contains(plan, ("Politique distracteurs v3", "distracteurs v3"))
     _assert_any_contains(plan, ("Queue d'enrichissement", "enrichissement"))
     _assert_any_contains(plan, ("Contrat batch confusions", "confusions"))
     _assert_any_contains(plan, ("Inspection/KPI/smoke/CI", "Inspection"))

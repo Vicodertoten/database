@@ -4,7 +4,7 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-AUDIT_DOC_PATH = ROOT / "docs" / "05_audit_reference.md"
+AUDIT_DOC_PATH = ROOT / "docs" / "runbooks" / "audit-reference.md"
 README_PATH = ROOT / "README.md"
 WORKFLOW_PATH = ROOT / ".github" / "workflows" / "verify-repo.yml"
 VERSIONING_PATH = ROOT / "src" / "database_core" / "versioning.py"
@@ -31,7 +31,7 @@ def main() -> int:
         version_tokens["CONFUSION_AGGREGATE_VERSION"],
     ):
         if token not in audit_doc:
-            issues.append(f"docs/05 is missing version token: {token}")
+            issues.append(f"docs/runbooks/audit-reference is missing version token: {token}")
 
     for name, token in version_tokens.items():
         if token not in readme:
@@ -66,26 +66,26 @@ def main() -> int:
         "export_trace_flags_uncertainty_coverage",
     ):
         if locked_kpi not in audit_doc:
-            issues.append(f"docs/05 must mention locked KPI: {locked_kpi}")
+            issues.append(f"docs/runbooks/audit-reference must mention locked KPI: {locked_kpi}")
         if locked_kpi not in readme:
             issues.append(f"README must mention locked KPI: {locked_kpi}")
 
-    kpi_doc = (ROOT / "docs" / "10_program_kpis.md").read_text(encoding="utf-8")
+    kpi_doc = (ROOT / "docs" / "runbooks" / "program-kpis.md").read_text(encoding="utf-8")
     for locked_kpi in (
         "exportable_unresolved_or_provisional",
         "governance_reason_and_signal_coverage",
         "export_trace_flags_uncertainty_coverage",
     ):
         if locked_kpi not in kpi_doc:
-            issues.append(f"docs/10_program_kpis.md must mention locked KPI: {locked_kpi}")
+            issues.append(f"docs/runbooks/program-kpis.md must mention locked KPI: {locked_kpi}")
 
     if WORKFLOW_PATH.exists() and "absence de ci visible" in audit_doc.lower():
-        issues.append("docs/05 still claims CI is not visible while workflow file exists")
+        issues.append("docs/runbooks/audit-reference still claims CI is not visible while workflow file exists")
 
     if "État réel" not in audit_doc:
-        issues.append("docs/05 must contain an explicit 'État réel' section")
+        issues.append("docs/runbooks/audit-reference must contain an explicit 'État réel' section")
     if "Cible" not in audit_doc:
-        issues.append("docs/05 must contain an explicit 'Cible' section")
+        issues.append("docs/runbooks/audit-reference must contain an explicit 'Cible' section")
 
     if issues:
         for issue in issues:

@@ -12,6 +12,7 @@ def main() -> int:
     _run_step([sys.executable, "-m", "compileall", "src", "tests"])
     _run_step([sys.executable, "-m", "pytest", "-q", "-p", "no:capture"])
     _run_step([sys.executable, "scripts/check_doc_code_coherence.py"])
+    _run_step([sys.executable, "scripts/check_docs_hygiene.py"])
     if importlib.util.find_spec("ruff") is None:
         raise SystemExit('ruff is not installed. Run `pip install -e ".[dev]"`.')
     _run_step([sys.executable, "-m", "ruff", "check", "src", "tests", "scripts"])
