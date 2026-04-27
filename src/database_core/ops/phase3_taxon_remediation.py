@@ -28,9 +28,15 @@ PHASE3_TIMEOUT_SECONDS = 30
 PHASE3_NORMALIZED_OUTPUT_DIR = Path("data/normalized")
 PHASE3_QUALIFIED_OUTPUT_DIR = Path("data/qualified")
 PHASE3_EXPORT_OUTPUT_DIR = Path("data/exports")
-PHASE3_SUMMARY_OUTPUT_DIR = Path("docs/20_execution/phase3")
+
+
+def _default_phase3_evidence_dir() -> Path:
+    return Path("docs/archive/evidence") / datetime.now(UTC).strftime("%Y-%m")
+
+
+PHASE3_SUMMARY_OUTPUT_DIR = _default_phase3_evidence_dir()
 PHASE3_PREFLIGHT_VERSION = "phase3.preflight.v1"
-PHASE3_PREFLIGHT_OUTPUT_DIR = Path("docs/20_execution/phase3_1")
+PHASE3_PREFLIGHT_OUTPUT_DIR = _default_phase3_evidence_dir()
 
 
 @dataclass(frozen=True)
