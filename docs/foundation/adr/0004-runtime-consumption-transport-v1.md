@@ -82,7 +82,7 @@ Rappels normatifs:
 
 - `README.md`
 - `docs/foundation/runtime-consumption-v1.md`
-- `docs/adr/0003-playable-corpus-pack-compilation-enrichment-queue.md`
+- `docs/foundation/adr/0003-playable-corpus-pack-compilation-enrichment-queue.md`
 - `docs/archive/chantiers/INT-003.md`
 - `docs/archive/chantiers/INT-004.md`
 - `runtime-app/docs/archive/chantiers/INT-006.md`

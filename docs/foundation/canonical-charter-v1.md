@@ -231,7 +231,7 @@ Le système ne doit jamais:
 
 Cette charte est la référence canonique stable v1.
 
-ADR initial d’implémentation: `docs/adr/0001-charte-canonique-v1.md`.
+ADR initial d’implémentation: `docs/foundation/adr/0001-charte-canonique-v1.md`.
 
 Tout changement ultérieur:
 - doit être tracé dans un ADR dédié,

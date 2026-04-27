@@ -172,8 +172,8 @@ Rappel normatif:
 
 - `README.md`
 - `docs/foundation/runtime-consumption-v1.md`
-- `docs/adr/0003-playable-corpus-pack-compilation-enrichment-queue.md`
-- `docs/adr/0004-runtime-consumption-transport-v1.md`
+- `docs/foundation/adr/0003-playable-corpus-pack-compilation-enrichment-queue.md`
+- `docs/foundation/adr/0004-runtime-consumption-transport-v1.md`
 - `src/database_core/cli.py`
 - `src/database_core/storage/pack_store.py`
 - `src/database_core/storage/enrichment_store.py`

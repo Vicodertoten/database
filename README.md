@@ -50,9 +50,9 @@ That is the main architectural priority before any significant new scope is adde
 - Living audit reference: `docs/runbooks/audit-reference.md`
 - Codex execution plan (sequential gates): `docs/runbooks/execution-plan.md`
 - Stable canonical charter v1: `docs/foundation/canonical-charter-v1.md`
-- Canonical implementation ADR: `docs/adr/0001-charte-canonique-v1.md`
-- Noyau canonique fort ADR: `docs/adr/0002-noyau-canonique-fort-execution-sequentielle.md`
-- Chaîne playable/pack/compilation/enrichissement ADR: `docs/adr/0003-playable-corpus-pack-compilation-enrichment-queue.md`
+- Canonical implementation ADR: `docs/foundation/adr/0001-charte-canonique-v1.md`
+- Noyau canonique fort ADR: `docs/foundation/adr/0002-noyau-canonique-fort-execution-sequentielle.md`
+- Chaîne playable/pack/compilation/enrichissement ADR: `docs/foundation/adr/0003-playable-corpus-pack-compilation-enrichment-queue.md`
 - Program KPI checklist: `docs/runbooks/program-kpis.md`
 
 ## Boundaries doctrinaux
