@@ -58,6 +58,8 @@ Never do the following in this repo:
 - prefer narrow, reversible changes
 - update docs, code, tests, and CI together
 - keep active inter-repo notes only under `docs/runbooks/inter-repo/`
+- do not explore `docs/archive/` by default; open archives only when explicitly
+  needed for historical evidence
 
 ---
 
@@ -159,4 +161,3 @@ For substantial tasks, structure final responses as:
 5. Next steps
 
 ---
-

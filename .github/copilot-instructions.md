@@ -21,6 +21,11 @@ Operational requirements:
 
 Do not silently introduce scope creep, architecture drift, or unrelated refactors.
 
+Documentation navigation rule:
+
+- Do not explore `docs/archive/` by default.
+- Open archives only when explicitly asked for historical context/evidence.
+
 When planning a phase, use the prompt template in `AGENTS.md` under:
 
 - `Prompt template - phase planning`

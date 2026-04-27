@@ -1,0 +1,2 @@
+exclude_path = ["docs/archive/**"]
+exclude = ["^http://localhost", "^http://127\\.0\\.0\\.1"]

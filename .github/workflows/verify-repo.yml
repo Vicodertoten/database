@@ -10,6 +10,25 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
 
 jobs:
+  docs-links:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Validate active docs links
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: >-
+            --config .lychee.toml
+            --offline
+            --no-progress
+            README.md
+            docs/README.md
+            docs/foundation
+            docs/runbooks
+
   verify-repo:
     runs-on: ubuntu-latest
     timeout-minutes: 15
