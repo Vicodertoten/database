@@ -26,6 +26,7 @@ This document tracks the real operational handoff state for the active inter-rep
 
 - `python scripts/verify_repo.py` must be rerun and green on the current HEAD before promotion.
 - Use targeted test commands from the chantier page before promotion.
+- For schema/fixture updates, merge order is strict: `runtime-app` sync PR first, then `database`.
 
 ## Next step
 

@@ -29,6 +29,42 @@ jobs:
             docs/foundation
             docs/runbooks
 
+  runtime-sync-drift:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout database
+        uses: actions/checkout@v5
+
+      - name: Checkout runtime-app
+        uses: actions/checkout@v5
+        with:
+          repository: ${{ format('{0}/runtime-app', github.repository_owner) }}
+          path: .external/runtime-app
+          token: ${{ secrets.CROSS_REPO_READ_TOKEN || github.token }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.0
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: .external/runtime-app/pnpm-lock.yaml
+
+      - name: Install runtime-app dependencies
+        working-directory: .external/runtime-app
+        run: pnpm install --frozen-lockfile
+
+      - name: Verify runtime owner sync drift
+        working-directory: .external/runtime-app
+        run: pnpm run sync:owner:check -- --database-repo "$GITHUB_WORKSPACE"
+
   verify-repo:
     runs-on: ubuntu-latest
     timeout-minutes: 15
