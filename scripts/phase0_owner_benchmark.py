@@ -14,9 +14,14 @@ from dotenv import load_dotenv
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "src"
 
+
+def _default_evidence_month_dir() -> Path:
+    return Path("docs/archive/evidence") / datetime.now(UTC).strftime("%Y-%m")
+
 DEFAULT_SNAPSHOT_ID = "inaturalist-birds-v2-20260421T210221Z"
 DEFAULT_EXPORT_PATH = Path(f"data/exports/{DEFAULT_SNAPSHOT_ID}.json")
-DEFAULT_OUTPUT_PATH = Path("docs/20_execution/phase0/owner_benchmark_summary.v1.json")
+DEFAULT_OUTPUT_PATH = _default_evidence_month_dir() / "owner_benchmark_summary.v1.json"
+DEFAULT_SMOKE_REPORT_DIR = Path("docs/archive/evidence/smoke-reports")
 DEFAULT_PACK_ID = "pack:phase0:birds:europe:mixed:v1"
 DEFAULT_RUNS = 3
 DEFAULT_ATTEMPTS_PER_RUN = 10
@@ -149,7 +154,7 @@ def _run_owner_benchmark(
     services.database.initialize()
     pack_store = services.pack_store
 
-    output_dir = Path("docs/smoke_reports")
+    output_dir = DEFAULT_SMOKE_REPORT_DIR
     output_dir.mkdir(parents=True, exist_ok=True)
 
     results: list[RunResult] = []

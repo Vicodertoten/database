@@ -367,12 +367,16 @@ def main() -> None:
     parser.add_argument(
         "--output-dir",
         type=Path,
-        default=Path("docs/20_execution/phase3_1"),
+        default=Path("docs/archive/evidence") / datetime.now(UTC).strftime("%Y-%m"),
     )
     parser.add_argument(
         "--preflight-artifact-path",
         type=Path,
-        default=Path("docs/20_execution/phase3_1/phase3_1_preflight.v1.json"),
+        default=(
+            Path("docs/archive/evidence")
+            / datetime.now(UTC).strftime("%Y-%m")
+            / "phase3_1_preflight.v1.json"
+        ),
     )
     parser.add_argument("--scale-runs", type=int, default=3)
     parser.add_argument("--max-passes", type=int, default=3)
@@ -595,8 +599,8 @@ def main() -> None:
             "movement remains partial."
         ),
         "baseline_artifacts": [
-            "docs/20_execution/phase3/pack_pilot_birds-v2-nogeo_20260421T215543Z.20260422T125207Z.phase3_remediation.v1.json",
-            "docs/20_execution/phase3/pack_pilot_birds-v2-nogeo_20260421T215543Z.20260422T125858Z.phase3_remediation.v1.json",
+            "docs/archive/evidence/2026-04/pack_pilot_birds-v2-nogeo_20260421T215543Z.20260422T125207Z.phase3_remediation.v1.json",
+            "docs/archive/evidence/2026-04/pack_pilot_birds-v2-nogeo_20260421T215543Z.20260422T125858Z.phase3_remediation.v1.json",
         ],
     }
 

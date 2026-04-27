@@ -5,14 +5,15 @@ import json
 from datetime import UTC, datetime
 from pathlib import Path
 
-DEFAULT_OWNER_SUMMARY = Path("docs/20_execution/phase0/owner_benchmark_summary.v1.json")
-DEFAULT_PROTOTYPE_BASELINE = Path(
-    "/Users/ryelandt/Documents/Inaturamouche/docs/20_execution/phase0/prototype_baseline.v1.json"
-)
-DEFAULT_CONSUMER_SUMMARY = Path(
-    "/Users/ryelandt/Documents/runtime-app/docs/20_execution/phase0/consumer_latency_summary.v1.json"
-)
-DEFAULT_OUTPUT = Path("docs/20_execution/phase0/go_no_go_decision.v1.json")
+
+def _default_evidence_month_dir() -> Path:
+    return Path("docs/archive/evidence") / datetime.now(UTC).strftime("%Y-%m")
+
+
+DEFAULT_OWNER_SUMMARY = _default_evidence_month_dir() / "owner_benchmark_summary.v1.json"
+DEFAULT_PROTOTYPE_BASELINE: Path | None = None
+DEFAULT_CONSUMER_SUMMARY: Path | None = None
+DEFAULT_OUTPUT = _default_evidence_month_dir() / "go_no_go_decision.v1.json"
 EXPECTED_FLOW_DEFINITION = "start_round_or_session -> get_question -> submit_answer"
 
 
@@ -27,6 +28,18 @@ def main() -> int:
     parser.add_argument("--consumer-summary", type=Path, default=DEFAULT_CONSUMER_SUMMARY)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     args = parser.parse_args()
+
+    if args.prototype_baseline is None:
+        raise SystemExit(
+            "--prototype-baseline is required (expected archived benchmark artifact, "
+            "for example from the prototype repository evidence archive)."
+        )
+    if args.consumer_summary is None:
+        raise SystemExit(
+            "--consumer-summary is required (expected archived runtime consumer latency summary, "
+            "for example runtime-app/docs/archive/inter-repo-mirror/20_execution/evidence/"
+            "consumer_latency_summary.v1.json)."
+        )
 
     owner = _load_json(args.owner_summary)
     prototype = _load_json(args.prototype_baseline)

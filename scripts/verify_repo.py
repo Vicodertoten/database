@@ -10,7 +10,10 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def main() -> int:
     _run_step([sys.executable, "-m", "compileall", "src", "tests"])
-    _run_step([sys.executable, "-m", "pytest", "-q", "-p", "no:capture"])
+    pytest_command = [sys.executable, "-m", "pytest", "-q", "-p", "no:capture"]
+    if importlib.util.find_spec("xdist") is not None:
+        pytest_command.extend(["-n", "auto", "--dist", "loadscope"])
+    _run_step(pytest_command)
     _run_step([sys.executable, "scripts/check_doc_code_coherence.py"])
     _run_step([sys.executable, "scripts/check_docs_hygiene.py"])
     if importlib.util.find_spec("ruff") is None:

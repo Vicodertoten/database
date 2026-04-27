@@ -129,7 +129,11 @@ def main() -> None:
     parser.add_argument("--max-preflight-attempts", type=int, default=3)
     parser.add_argument("--weak-taxa-count", type=int, default=15)
     parser.add_argument("--probe-gemini-cap", type=int, default=80)
-    parser.add_argument("--output-dir", type=Path, default=Path("docs/20_execution/phase3_1"))
+    parser.add_argument(
+        "--output-dir",
+        type=Path,
+        default=Path("docs/archive/evidence") / datetime.now(UTC).strftime("%Y-%m"),
+    )
     parser.add_argument("--base-pack-id", type=str, default=None)
     args = parser.parse_args()
 
