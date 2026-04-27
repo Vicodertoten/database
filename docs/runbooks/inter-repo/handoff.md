@@ -28,6 +28,13 @@ This document tracks the real operational handoff state for the active inter-rep
 - Use targeted test commands from the chantier page before promotion.
 - For schema/fixture updates, merge order is strict: `runtime-app` sync PR first, then `database`.
 
+## Last verify_repo validation
+
+- Commit: `7a54498`
+- Date (UTC): `2026-04-27T20:22:31Z`
+- Command: `./.venv/bin/python scripts/verify_repo.py`
+- Result: `PASS` (`166 passed`; doc/code coherence, docs hygiene, and Ruff checks passed)
+
 ## Next step
 
 Unblock `INT-022` with explicit closure criteria and then archive it after closure.
