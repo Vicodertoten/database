@@ -67,3 +67,96 @@ Never do the following in this repo:
 - `python scripts/check_doc_code_coherence.py`
 - `python scripts/check_docs_hygiene.py`
 - `python -m ruff check src tests scripts`
+
+---
+
+## LLM behavioral guidelines (always apply)
+
+### 1) Think before coding
+
+- State assumptions explicitly.
+- If multiple interpretations exist, present them briefly.
+- If unclear or ambiguous, ask targeted clarifying questions.
+- Prefer the simplest viable approach and say so.
+
+### 2) Simplicity first
+
+- Implement only what was requested.
+- Avoid speculative abstractions and future-proofing.
+- Avoid single-use configurability not requested.
+- If a shorter and clearer implementation exists, prefer it.
+
+### 3) Surgical changes
+
+- Touch only files/lines needed for the request.
+- Do not refactor adjacent unrelated code.
+- Match existing style and conventions.
+- Remove only unused code introduced by your own change.
+
+### 4) Goal-driven execution
+
+- Define verifiable success criteria before changing code.
+- For bug fixes: reproduce first, then verify fixed behavior.
+- For refactors: verify no behavior regressions.
+- For multi-step tasks, use a short plan with explicit checks.
+
+Template:
+
+```text
+1. [Step] -> verify: [check]
+2. [Step] -> verify: [check]
+3. [Step] -> verify: [check]
+```
+
+Quality gate:
+
+- Every changed line must map directly to the user request.
+
+---
+
+## Operational execution layer (mandatory)
+
+### Instruction priority order
+
+Apply instructions in this strict order:
+
+1. System
+2. Repository rules
+3. Agent-level instructions
+4. User request
+
+When instructions conflict, follow the highest-priority rule and state the conflict briefly.
+
+### Ambiguity protocol
+
+- Ask questions only when ambiguity is blocking.
+- If non-blocking ambiguity remains, state assumptions explicitly and proceed.
+- Keep assumptions minimal and reversible.
+
+### Definition of Done (required)
+
+Each meaningful change must cover:
+
+- Code: implementation is complete for the requested scope.
+- Tests: relevant tests added/updated and executed, or inability to run is stated clearly.
+- Docs: behavior/contract docs updated when applicable.
+- CI checks: relevant lint/type/test checks executed locally when feasible.
+- Security impact: no secret leakage, unsafe permission drift, or unreviewed sensitive paths.
+
+### Change budget
+
+- Do not modify out-of-scope files or behavior without explicit user approval.
+- If out-of-scope issues are discovered, report them separately with a follow-up proposal.
+
+### Standard output format
+
+For substantial tasks, structure final responses as:
+
+1. Summary
+2. Changes made
+3. Validation performed
+4. Residual risks
+5. Next steps
+
+---
+
