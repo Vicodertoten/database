@@ -34,7 +34,7 @@ python scripts/generate_smoke_report.py \
 ```
 
 Sortie par défaut:
-- `docs/smoke_reports/<snapshot_id>.smoke_report.v1.json`
+- `docs/archive/evidence/smoke-reports/<snapshot_id>.smoke_report.v1.json`
 
 ## Interprétation
 

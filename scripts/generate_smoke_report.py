@@ -17,7 +17,7 @@ def _bootstrap_src_path() -> None:
 
 def _default_output_path(*, snapshot_id: str | None) -> Path:
     identifier = snapshot_id or "postgres"
-    return Path("docs/smoke_reports") / f"{identifier}.smoke_report.v1.json"
+    return Path("docs/archive/evidence/smoke-reports") / f"{identifier}.smoke_report.v1.json"
 
 
 def main() -> None:

@@ -307,7 +307,7 @@ Running the fixture pipeline writes:
 
 Security guardrail:
 
-- Versioned smoke reports in `docs/smoke_reports/` must never include raw credentials.
+- Versioned smoke reports in `docs/archive/evidence/smoke-reports/` must never include raw credentials.
 - Any persisted `database_url` must be redacted.
 
 In `inat_snapshot` mode, the default derived outputs become snapshot-scoped:

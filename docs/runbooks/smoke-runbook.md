@@ -136,7 +136,7 @@ notes:
 
 ## Security guardrail for versioned reports
 
-- Any report committed under `docs/smoke_reports/` must redact credential-bearing fields.
+- Any report committed under `docs/archive/evidence/smoke-reports/` must redact credential-bearing fields.
 - `database_url` values must be redacted (`user:***@host`) before commit.
 - If a raw secret is committed, follow `docs/runbooks/security-incident-runbook.md` immediately.
 
@@ -153,4 +153,4 @@ After a successful live smoke, the main artifacts should be present:
 - `data/normalized/<snapshot_id>.json`
 - `data/qualified/<snapshot_id>.json`
 - `data/exports/<snapshot_id>.json`
-- `docs/smoke_reports/<snapshot_id>.smoke_report.v1.json`
+- `docs/archive/evidence/smoke-reports/<snapshot_id>.smoke_report.v1.json`

@@ -24,7 +24,7 @@ This document tracks the real operational handoff state for the active inter-rep
 
 ## Verified commands
 
-- `python scripts/verify_repo.py` currently passes locally.
+- `python scripts/verify_repo.py` must be rerun and green on the current HEAD before promotion.
 - Use targeted test commands from the chantier page before promotion.
 
 ## Next step

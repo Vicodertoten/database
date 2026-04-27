@@ -1,9 +1,8 @@
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from pathlib import Path
-import re
-import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs"
@@ -73,7 +72,8 @@ def main() -> int:
         for path in legacy_execution.rglob("*"):
             if path.is_file() and path not in allowed:
                 issues.append(
-                    f"docs/20_execution must be pointer-only; unexpected file {path.relative_to(ROOT)}"
+                    "docs/20_execution must be pointer-only; unexpected file "
+                    f"{path.relative_to(ROOT)}"
                 )
 
     for path in sorted((DOCS / "archive" / "evidence").rglob("*")):
@@ -81,7 +81,10 @@ def main() -> int:
             continue
         name = path.name
         if name.startswith("phase") and re.search(r"_", name):
-            issues.append(f"phase naming should be kebab-case in archive paths: {path.relative_to(ROOT)}")
+            issues.append(
+                "phase naming should be kebab-case in archive paths: "
+                f"{path.relative_to(ROOT)}"
+            )
 
     if issues:
         for issue in issues:

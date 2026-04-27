@@ -80,7 +80,10 @@ def main() -> int:
             issues.append(f"docs/runbooks/program-kpis.md must mention locked KPI: {locked_kpi}")
 
     if WORKFLOW_PATH.exists() and "absence de ci visible" in audit_doc.lower():
-        issues.append("docs/runbooks/audit-reference still claims CI is not visible while workflow file exists")
+        issues.append(
+            "docs/runbooks/audit-reference still claims CI is not visible "
+            "while workflow file exists"
+        )
 
     if "État réel" not in audit_doc:
         issues.append("docs/runbooks/audit-reference must contain an explicit 'État réel' section")
