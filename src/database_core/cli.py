@@ -107,6 +107,7 @@ def main() -> None:
         help="min_longitude,min_latitude,max_longitude,max_latitude",
     )
     fetch_parser.add_argument("--place-id", type=str)
+    fetch_parser.add_argument("--country-code", type=str)
     fetch_parser.add_argument("--observed-from", type=str)
     fetch_parser.add_argument("--observed-to", type=str)
 
@@ -460,6 +461,7 @@ def main() -> None:
             timeout_seconds=args.timeout_seconds,
             bbox=_normalize_bbox_arg(args.bbox) if args.bbox else None,
             place_id=args.place_id,
+            country_code=args.country_code,
             observed_from=args.observed_from,
             observed_to=args.observed_to,
         )

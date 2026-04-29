@@ -28,6 +28,20 @@ The current pilot stays narrow on purpose:
 
 The repository is not the quiz app, frontend, or product runtime.
 
+## Operational scope v0.1 (short term)
+
+The short-term execution perimeter is locked in `docs/runbooks/v0.1-scope.md`.
+
+This scope is intentionally narrow and assumes birds-first, image-first, mobile-first:
+
+- birds only
+- Belgium only
+- image-only media
+- QCM + simple direct answer modes
+- internal corpus from iNaturalist ingestion
+- no live iNaturalist call in the runtime play loop
+- target volume: 50 species / 1,000 qualified images
+
 ## Current baseline
 
 The repository is already operational through the current Gate 9 baseline.

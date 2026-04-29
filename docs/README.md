@@ -1,7 +1,7 @@
 ---
 owner: database
 status: stable
-last_reviewed: 2026-04-27
+last_reviewed: 2026-04-29
 source_of_truth: docs/README.md
 scope: documentation_index
 ---
@@ -26,6 +26,8 @@ This repository now uses a three-zone documentation architecture:
 
 - Foundation: `docs/foundation/`
 - Active runbooks: `docs/runbooks/`
+- Locked short-term scope v0.1: `docs/runbooks/v0.1-scope.md`
+- Phase 2 implementation runbook: `docs/runbooks/phase2-playable-corpus-v0.1.md`
 - Archive index: `docs/archive/`
 
 ## Governance rules

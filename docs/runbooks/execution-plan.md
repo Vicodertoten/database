@@ -1,7 +1,7 @@
 ---
 owner: database
 status: stable
-last_reviewed: 2026-04-27
+last_reviewed: 2026-04-29
 source_of_truth: docs/runbooks/execution-plan.md
 scope: runbook
 ---
@@ -26,6 +26,23 @@ en conservant:
 
 Le runtime ne lit jamais `export.bundle.v4`.
 Le runtime lit des surfaces dediees (`playable_corpus.v1`, builds compiles, materializations).
+
+## 1.1 Cadrage court terme verrouille (v0.1)
+
+Source de verite: `docs/runbooks/v0.1-scope.md`.
+
+Perimetre operationnel court terme:
+
+- oiseaux uniquement
+- Belgique uniquement
+- images uniquement
+- modes QCM + reponse directe simple
+- corpus interne issu d'ingestion iNaturalist
+- aucune boucle de jeu runtime avec appel live iNaturalist
+- volume cible: 50 especes / 1 000 images qualifiees
+
+Ce cadrage court terme ne modifie pas les gates historiques 0 a 9,
+ni la frontiere owner/runtime deja verrouillee.
 
 ## 2. Fichiers a lire avant modification
 

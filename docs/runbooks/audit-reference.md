@@ -1,7 +1,7 @@
 ---
 owner: database
 status: stable
-last_reviewed: 2026-04-27
+last_reviewed: 2026-04-29
 source_of_truth: docs/runbooks/audit-reference.md
 scope: runbook
 ---
@@ -9,8 +9,8 @@ scope: runbook
 # Audit De Reference - database
 
 Statut: document vivant (reference d'execution)
-Version: v8
-Date de mise a jour: 2026-04-12
+Version: v8.1
+Date de mise a jour: 2026-04-29
 Perimetre: etat reel du repo apres Gate 9 et synthese des constats structurants
 
 ---
@@ -74,6 +74,12 @@ Contraintes volontaires toujours en vigueur:
 - image-only
 - pilot seed de 15 taxons
 - couverture multilingue pedagogique en progression: extraction iNaturalist branchee, gouvernance editoriale encore partielle
+- cadrage court terme v0.1 verrouille dans `docs/runbooks/v0.1-scope.md`:
+  oiseaux, Belgique, image-only, QCM + reponse directe simple,
+  objectif sans appel live iNaturalist et volume cible 50 especes / 1 000 images qualifiees
+- backlog explicite hors v0.1: plantes, champignons, insectes, audio,
+  offline avance, IA premium, gros dashboard institutionnel,
+  multi-pays complexe, marketplace de packs, application parfaite
 
 ## 3. Cible
 

@@ -38,6 +38,9 @@ RECOVERABLE_HARVEST_ERRORS = (
     json.JSONDecodeError,
 )
 BLUR_SCORE_DOWNSAMPLED_SIZE = (256, 256)
+COUNTRY_CODE_TO_INAT_PLACE_ID = {
+    "BE": "7083",
+}
 
 
 def _bbox_to_inat_params(bbox: str) -> dict[str, str]:
@@ -80,6 +83,7 @@ def fetch_inat_snapshot(
     timeout_seconds: int = 30,
     bbox: str | None = None,
     place_id: str | None = None,
+    country_code: str | None = None,
     observed_from: str | None = None,
     observed_to: str | None = None,
     order_by: str | None = None,
@@ -99,6 +103,10 @@ def fetch_inat_snapshot(
     media_downloads: list[SnapshotMediaDownload] = []
     harvested_observation_count = 0
     downloaded_image_count = 0
+    normalized_country_code, resolved_place_id = _resolve_geo_country_filters(
+        country_code=country_code,
+        place_id=place_id,
+    )
 
     for seed in load_pilot_taxa(pilot_taxa_path):
         (
@@ -112,12 +120,17 @@ def fetch_inat_snapshot(
             max_observations_per_taxon=max_observations_per_taxon,
             timeout_seconds=timeout_seconds,
             bbox=bbox,
-            place_id=place_id,
+            place_id=resolved_place_id,
             observed_from=observed_from,
             observed_to=observed_to,
             order_by=order_by,
             order=order,
         )
+        if normalized_country_code is not None:
+            effective_params = {
+                **effective_params,
+                "country_code": normalized_country_code,
+            }
         candidate_results: list[dict[str, object]] = []
         known_observation_ids = exclude_observation_ids or set()
         known_media_ids = exclude_media_ids or set()
@@ -417,6 +430,45 @@ def _guess_mime_type(url: str) -> str | None:
     if extension == "webp":
         return "image/webp"
     return None
+
+
+def _resolve_geo_country_filters(
+    *,
+    country_code: str | None,
+    place_id: str | None,
+) -> tuple[str | None, str | None]:
+    normalized_country_code = _normalize_country_code(country_code)
+    normalized_place_id = str(place_id).strip() if place_id else None
+
+    if normalized_country_code is None:
+        return None, normalized_place_id
+
+    mapped_place_id = COUNTRY_CODE_TO_INAT_PLACE_ID.get(normalized_country_code)
+    if mapped_place_id is None:
+        supported = ", ".join(sorted(COUNTRY_CODE_TO_INAT_PLACE_ID))
+        raise ValueError(
+            "Unsupported country_code filter "
+            f"{normalized_country_code!r}. Supported values: {supported}"
+        )
+
+    if normalized_place_id and normalized_place_id != mapped_place_id:
+        raise ValueError(
+            "Conflicting geo filters: place_id and country_code target different places. "
+            f"Expected place_id={mapped_place_id!r} for country_code={normalized_country_code!r}."
+        )
+
+    return normalized_country_code, mapped_place_id
+
+
+def _normalize_country_code(value: str | None) -> str | None:
+    if value is None:
+        return None
+    normalized = value.strip().upper()
+    if not normalized:
+        return None
+    if len(normalized) != 2:
+        raise ValueError("country_code must be an ISO alpha-2 code")
+    return normalized
 
 
 def _slugify_filename(value: str) -> str:

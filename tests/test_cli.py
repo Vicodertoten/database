@@ -123,6 +123,8 @@ def test_cli_fetch_inat_snapshot_forwards_optional_filters(monkeypatch, tmp_path
             "2.5,49.45,6.4,51.6",
             "--place-id",
             "80500",
+            "--country-code",
+            "BE",
             "--observed-from",
             "2024-01-01",
             "--observed-to",
@@ -141,6 +143,7 @@ def test_cli_fetch_inat_snapshot_forwards_optional_filters(monkeypatch, tmp_path
     assert calls["timeout_seconds"] == 42
     assert calls["bbox"] == "2.5,49.45,6.4,51.6"
     assert calls["place_id"] == "80500"
+    assert calls["country_code"] == "BE"
     assert calls["observed_from"] == "2024-01-01"
     assert calls["observed_to"] == "2025-12-31"
     assert "Snapshot fetched" in buffer.getvalue()
