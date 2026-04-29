@@ -1,6 +1,6 @@
 ---
 owner: database
-status: planned
+status: implemented
 last_reviewed: 2026-04-29
 source_of_truth: docs/runbooks/phase3-distractor-strategy.md
 scope: runbook

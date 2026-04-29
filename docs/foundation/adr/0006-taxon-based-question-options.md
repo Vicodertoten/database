@@ -1,6 +1,6 @@
 ---
 owner: database
-status: planned
+status: implemented
 last_reviewed: 2026-04-29
 source_of_truth: docs/foundation/adr/0006-taxon-based-question-options.md
 scope: foundation
@@ -8,7 +8,7 @@ scope: foundation
 
 # ADR-0006 — Taxon-Based Question Options and Pack Contracts v2
 
-Statut: `planned`  
+Statut: `implemented`  
 Date: `2026-04-29`  
 Portee: `pack.compiled.v2`, `pack.materialization.v2`, distracteurs taxon-based, frontiere `database` / `runtime-app`
 
