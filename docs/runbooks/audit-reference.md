@@ -174,7 +174,7 @@ Priorite:
 
 Etat schema applicatif observe:
 
-- `database.schema.v15`
+- `database.schema.v16`
 
 Contrats observes:
 
@@ -192,6 +192,11 @@ Contrats observes:
 - `confusion.event.v1`
 - `confusion.aggregate.v1`
 
+Contrats planifies Phase 3:
+
+- `pack.compiled.v2`
+- `pack.materialization.v2`
+
 ## 7. KPI verrouilles
 
 Les KPI programme verrouilles restent:
@@ -205,7 +210,12 @@ ni le format de ces KPI.
 
 ## 8. Recommandation de pilotage
 
-Il n'y a pas de gate actif a ce stade de reference.
+Le prochain chantier structurant planifie est Phase 3 taxon-based question options, documente dans:
+
+- `docs/foundation/adr/0006-taxon-based-question-options.md`
+- `docs/runbooks/phase3-distractor-strategy.md`
+
+Il reste database-first et contract-first. Le runtime ne doit pas etre adapte avant que `database` produise des artefacts ou fixtures v2.
 
 Gate 4.5 closure checklist:
 
@@ -221,6 +231,8 @@ Les prochains travaux ne doivent etre ouverts que si leur cadrage respecte les p
 2. cadrage explicite de l'extraction minimale de `PostgresRepository`
 3. pas de derive runtime/session/scoring/progression
 4. toute extension multi-source ou multi-taxa reste subordonnee aux deux points precedents
+5. pas d'auto-creation de taxons canoniques actifs pour des distracteurs seulement references
+6. `pack.compiled.v1` et `pack.materialization.v1` restent compatibles pendant l'introduction de v2
 
 ## 9. Garde-fous de documentation
 
@@ -266,7 +278,7 @@ Criteres d'acceptation:
 
 Impacts techniques:
 
-- migration schema `database.schema.v15` sur `playable_item_lifecycle` (coherence statut/raison + index inspection)
+- migration schema `database.schema.v16` sur `playable_item_lifecycle` (coherence statut/raison + index inspection)
 - ajustement de `save_playable_items` pour raison explicite
 - ajout d'une surface inspect dediee aux invalidations playable
 - tests de persistance/lifecycle et CLI inspect couverts
@@ -379,7 +391,7 @@ Responsabilites:
 ### Interfaces recommandees
 
 - `database` expose des contrats de donnees stables, pas une logique de runtime
-- `runtime backend` lit `playable_corpus.v1`, `pack.compiled.v1`, `pack.materialization.v1`
+- `runtime backend` lit `playable_corpus.v1`, `pack.compiled.v1`, `pack.materialization.v1`, puis les contrats v2 seulement apres production owner-side
 - `editorial backend` pilote les operations de packs/review/gouvernance contre la couche database
 - `institutional backend` consomme les sorties runtime et certains indicateurs consolides, pas le brut pipeline
 

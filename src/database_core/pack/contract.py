@@ -18,6 +18,12 @@ DEFAULT_COMPILED_PACK_SCHEMA_PATH = (
 DEFAULT_PACK_MATERIALIZATION_SCHEMA_PATH = (
     Path(__file__).resolve().parents[3] / "schemas" / "pack_materialization_v1.schema.json"
 )
+DEFAULT_COMPILED_PACK_V2_SCHEMA_PATH = (
+    Path(__file__).resolve().parents[3] / "schemas" / "pack_compiled_v2.schema.json"
+)
+DEFAULT_PACK_MATERIALIZATION_V2_SCHEMA_PATH = (
+    Path(__file__).resolve().parents[3] / "schemas" / "pack_materialization_v2.schema.json"
+)
 
 
 def validate_pack_spec(
@@ -59,7 +65,7 @@ def validate_compiled_pack(
     *,
     schema_path: Path | None = None,
 ) -> None:
-    resolved_schema_path = schema_path or DEFAULT_COMPILED_PACK_SCHEMA_PATH
+    resolved_schema_path = schema_path or _compiled_pack_schema_path(payload)
     try:
         validate(
             instance=payload,
@@ -76,7 +82,7 @@ def validate_pack_materialization(
     *,
     schema_path: Path | None = None,
 ) -> None:
-    resolved_schema_path = schema_path or DEFAULT_PACK_MATERIALIZATION_SCHEMA_PATH
+    resolved_schema_path = schema_path or _pack_materialization_schema_path(payload)
     try:
         validate(
             instance=payload,
@@ -90,6 +96,20 @@ def validate_pack_materialization(
         ) from exc
 
 
-@lru_cache(maxsize=4)
+def _compiled_pack_schema_path(payload: dict[str, object]) -> Path:
+    version = payload.get("pack_compiled_version")
+    if version == "pack.compiled.v2":
+        return DEFAULT_COMPILED_PACK_V2_SCHEMA_PATH
+    return DEFAULT_COMPILED_PACK_SCHEMA_PATH
+
+
+def _pack_materialization_schema_path(payload: dict[str, object]) -> Path:
+    version = payload.get("pack_materialization_version")
+    if version == "pack.materialization.v2":
+        return DEFAULT_PACK_MATERIALIZATION_V2_SCHEMA_PATH
+    return DEFAULT_PACK_MATERIALIZATION_SCHEMA_PATH
+
+
+@lru_cache(maxsize=8)
 def _load_schema(schema_path: Path) -> dict[str, object]:
     return json.loads(schema_path.read_text(encoding="utf-8"))

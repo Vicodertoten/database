@@ -79,14 +79,14 @@ def test_initialize_can_reset_legacy_schema_version_with_explicit_flag(
         )
 
     assert "legacy_table" not in table_names
-    assert user_version == 15
+    assert user_version == 16
 
 
-def test_migrate_to_latest_initializes_v15_schema(database_url: str) -> None:
+def test_migrate_to_latest_initializes_v16_schema(database_url: str) -> None:
     repository = _build_repository(database_url)
     applied_versions = repository.migrate_to_latest()
-    assert applied_versions == (8, 9, 10, 11, 12, 13, 14, 15)
-    assert repository.current_schema_version() == 15
+    assert applied_versions == (8, 9, 10, 11, 12, 13, 14, 15, 16)
+    assert repository.current_schema_version() == 16
 
 
 def test_geospatial_queries_support_bbox_and_point_radius(database_url: str) -> None:
@@ -1777,6 +1777,149 @@ def test_compile_pack_uses_inat_similar_species_hints_for_distractors(
     assert first_question["distractor_canonical_taxon_ids"] == similar_taxon_ids
 
 
+def test_compile_pack_v2_uses_referenced_only_inat_option(
+    database_url: str,
+) -> None:
+    repository = _build_repository(database_url)
+    repository.initialize()
+    canonical_taxon_ids = _seed_pack_ready_playable_items(
+        repository,
+        run_id="run:20260429T001300Z:phase3v2",
+        taxon_count=10,
+        media_per_taxon=2,
+    )
+    target_taxon_id = canonical_taxon_ids[0]
+    _configure_gate5_similarity(
+        repository,
+        target_taxon_id=target_taxon_id,
+        similar_taxon_ids=canonical_taxon_ids[1:3],
+    )
+    _configure_unknown_inat_similarity_hint(
+        repository,
+        target_taxon_id=target_taxon_id,
+        external_taxon_id="inat-phase3-unknown",
+        accepted_scientific_name="Corvus plausible",
+        common_name="Plausible Crow",
+        confidence=0.91,
+    )
+    payload = repository.create_pack(
+        pack_id="pack:compile:phase3:v2",
+        parameters={
+            "canonical_taxon_ids": canonical_taxon_ids,
+            "difficulty_policy": "easy",
+            "country_code": None,
+            "location_bbox": None,
+            "location_point": None,
+            "location_radius_meters": None,
+            "observed_from": None,
+            "observed_to": None,
+            "owner_id": "owner:compile",
+            "org_id": None,
+            "visibility": "private",
+            "intended_use": "training",
+        },
+    )
+
+    build = repository.compile_pack_v2(pack_id=str(payload["pack_id"]), question_count=1)
+    validate_compiled_pack(build)
+    first_question = build["questions"][0]
+    options = first_question["options"]
+
+    assert build["pack_compiled_version"] == "pack.compiled.v2"
+    assert first_question["target_playable_item_id"]
+    assert first_question["target_canonical_taxon_id"] == target_taxon_id
+    assert len(options) == 4
+    assert sum(1 for option in options if option["is_correct"]) == 1
+    referenced_options = [option for option in options if option.get("referenced_only")]
+    assert len(referenced_options) == 1
+    referenced_option = referenced_options[0]
+    assert referenced_option["canonical_taxon_id"] == "reftaxon:inaturalist:inat-phase3-unknown"
+    assert referenced_option["taxon_label"] == "Plausible Crow"
+    assert referenced_option["playable_item_id"] is None
+    assert referenced_option["score"] is not None
+    assert "inat_similar_species" in referenced_option["reason_codes"]
+    assert "referenced_only" in referenced_option["reason_codes"]
+    assert "out_of_pack" in referenced_option["reason_codes"]
+
+    with repository.connect() as connection:
+        row = connection.execute(
+            """
+            SELECT mapping_status, mapped_canonical_taxon_id, reason_codes_json
+            FROM referenced_taxa
+            WHERE referenced_taxon_id = %s
+            """,
+            ("reftaxon:inaturalist:inat-phase3-unknown",),
+        ).fetchone()
+    assert row is not None
+    assert row["mapping_status"] == "auto_referenced_high_confidence"
+    assert row["mapped_canonical_taxon_id"] is None
+    assert "auto_referenced_high_confidence" in json.loads(row["reason_codes_json"])
+
+
+def test_materialize_pack_v2_freezes_question_options(
+    database_url: str,
+) -> None:
+    repository = _build_repository(database_url)
+    repository.initialize()
+    canonical_taxon_ids = _seed_pack_ready_playable_items(
+        repository,
+        run_id="run:20260429T001310Z:phase3v2",
+        taxon_count=10,
+        media_per_taxon=2,
+    )
+    target_taxon_id = canonical_taxon_ids[0]
+    _configure_unknown_inat_similarity_hint(
+        repository,
+        target_taxon_id=target_taxon_id,
+        external_taxon_id="inat-phase3-freeze",
+        accepted_scientific_name="Frozen species",
+        common_name="Frozen Label",
+        confidence=0.9,
+    )
+    payload = repository.create_pack(
+        pack_id="pack:materialize:phase3:v2",
+        parameters={
+            "canonical_taxon_ids": canonical_taxon_ids,
+            "difficulty_policy": "easy",
+            "country_code": None,
+            "location_bbox": None,
+            "location_point": None,
+            "location_radius_meters": None,
+            "observed_from": None,
+            "observed_to": None,
+            "owner_id": "owner:materialize",
+            "org_id": None,
+            "visibility": "private",
+            "intended_use": "training",
+        },
+    )
+    repository.compile_pack_v2(pack_id=str(payload["pack_id"]), question_count=20)
+    materialization = repository.materialize_pack_v2(
+        pack_id=str(payload["pack_id"]),
+        question_count=1,
+        purpose="assignment",
+    )
+    validate_pack_materialization(materialization)
+    first_options = materialization["questions"][0]["options"]
+    assert materialization["pack_materialization_version"] == "pack.materialization.v2"
+    assert any(option["taxon_label"] == "Frozen Label" for option in first_options)
+
+    with repository.connect() as connection:
+        connection.execute(
+            """
+            UPDATE referenced_taxa
+            SET preferred_common_name = 'Mutated Label'
+            WHERE referenced_taxon_id = %s
+            """,
+            ("reftaxon:inaturalist:inat-phase3-freeze",),
+        )
+    fetched = repository.fetch_pack_materialization_by_id(
+        materialization_id=str(materialization["materialization_id"])
+    )
+    assert fetched is not None
+    assert fetched["questions"][0]["options"] == first_options
+
+
 def test_materialize_pack_daily_challenge_is_frozen_after_playable_change(
     database_url: str,
 ) -> None:
@@ -2044,6 +2187,40 @@ def _configure_inat_similarity_hints(
             WHERE canonical_taxon_id = %s
             """,
             (target_taxon_id,),
+        )
+
+
+def _configure_unknown_inat_similarity_hint(
+    repository: object,
+    *,
+    target_taxon_id: str,
+    external_taxon_id: str,
+    accepted_scientific_name: str,
+    common_name: str,
+    confidence: float,
+) -> None:
+    with repository.connect() as connection:
+        connection.execute(
+            """
+            UPDATE canonical_taxa
+            SET external_similarity_hints_json = %s
+            WHERE canonical_taxon_id = %s
+            """,
+            (
+                json.dumps(
+                    [
+                        {
+                            "source_name": "inaturalist",
+                            "external_taxon_id": external_taxon_id,
+                            "relation_type": "visual_lookalike",
+                            "accepted_scientific_name": accepted_scientific_name,
+                            "common_name": common_name,
+                            "confidence": confidence,
+                        }
+                    ]
+                ),
+                target_taxon_id,
+            ),
         )
 
 

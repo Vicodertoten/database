@@ -1,0 +1,185 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "pack_compiled_v2",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "pack_compiled_version",
+    "build_id",
+    "pack_id",
+    "revision",
+    "built_at",
+    "question_count_requested",
+    "question_count_built",
+    "distractor_count",
+    "source_run_id",
+    "questions"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "pack_compiled_version": {
+      "type": "string",
+      "const": "pack.compiled.v2"
+    },
+    "build_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "pack_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "built_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "question_count_requested": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "question_count_built": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "distractor_count": {
+      "type": "integer",
+      "const": 3
+    },
+    "source_run_id": {
+      "type": ["string", "null"]
+    },
+    "questions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/compiled_question_v2"
+      }
+    }
+  },
+  "$defs": {
+    "compiled_question_v2": {
+      "type": "object",
+      "required": [
+        "position",
+        "target_playable_item_id",
+        "target_canonical_taxon_id",
+        "options"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "position": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "target_playable_item_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target_canonical_taxon_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "options": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "contains": {
+            "type": "object",
+            "required": ["is_correct"],
+            "properties": {
+              "is_correct": {
+                "const": true
+              }
+            }
+          },
+          "minContains": 1,
+          "maxContains": 1,
+          "items": {
+            "$ref": "#/$defs/question_option"
+          }
+        }
+      }
+    },
+    "question_option": {
+      "type": "object",
+      "required": [
+        "option_id",
+        "canonical_taxon_id",
+        "taxon_label",
+        "is_correct",
+        "source",
+        "reason_codes"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "option_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "canonical_taxon_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "taxon_label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "is_correct": {
+          "type": "boolean"
+        },
+        "playable_item_id": {
+          "type": ["string", "null"],
+          "minLength": 1
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "score": {
+          "type": ["number", "null"],
+          "minimum": 0
+        },
+        "reason_codes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "referenced_only": {
+          "type": "boolean"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "is_correct": {
+                "const": false
+              }
+            },
+            "required": ["is_correct"]
+          },
+          "then": {
+            "properties": {
+              "reason_codes": {
+                "minItems": 1
+              },
+              "source": {
+                "minLength": 1
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

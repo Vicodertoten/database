@@ -184,6 +184,7 @@ Installed entrypoints mirror the script wrappers:
 - pack layer v1 with immutable revisions (`pack.spec.v1`) and deterministic compilability diagnostics (`pack.diagnostic.v1`)
 - deterministic compiled pack builds persisted as `pack.compiled.v1`
 - frozen pack materializations persisted as `pack.materialization.v1` for `assignment` and `daily_challenge`
+- planned Phase 3 contract family (`pack.compiled.v2`, `pack.materialization.v2`) defines taxon-based `QuestionOption[]` while keeping v1 as legacy compatibility
 - pack persistence/compilation/materialization logic extracted in `storage/pack_store.py` and consumed directly by CLI pack/inspect pack entrypoints
 - enrichment queue operations extracted in `storage/enrichment_store.py` (`PostgresEnrichmentStore`)
 - confusion batch ingestion and aggregates extracted in `storage/confusion_store.py` (`PostgresConfusionStore`)
@@ -349,7 +350,7 @@ The manifest records which sort was requested and which one was actually used.
 
 The repository now writes explicit stage versions into generated artifacts:
 
-- schema version: `database.schema.v15`
+- schema version: `database.schema.v16`
 - snapshot manifest version: `inaturalist.snapshot.v3`
 - normalized snapshot version: `normalized.snapshot.v3`
 - canonical enrichment version: `canonical.enrichment.v2`
@@ -361,6 +362,8 @@ The repository now writes explicit stage versions into generated artifacts:
 - pack diagnostic version: `pack.diagnostic.v1`
 - compiled pack version: `pack.compiled.v1`
 - pack materialization version: `pack.materialization.v1`
+- planned compiled pack version: `pack.compiled.v2`
+- planned pack materialization version: `pack.materialization.v2`
 - confusion event version: `confusion.event.v1`
 - confusion aggregate version: `confusion.aggregate.v1`
 
@@ -374,6 +377,8 @@ Pack specs and diagnostics are validated against
 `schemas/pack_spec_v1.schema.json` and `schemas/pack_diagnostic_v1.schema.json`.
 Compiled builds and materializations are validated against
 `schemas/pack_compiled_v1.schema.json` and `schemas/pack_materialization_v1.schema.json`.
+Planned Phase 3 v2 contracts are defined by
+`schemas/pack_compiled_v2.schema.json` and `schemas/pack_materialization_v2.schema.json`.
 
 ## Canonical enrichment
 
@@ -406,6 +411,7 @@ Distractor policy note:
 - Gate 5 now applies distractor policy v2 with similarity-first prioritization and deterministic fallback
 - Gate 5 uses iNaturalist `similar_species` hints stored in `external_similarity_hints` when they can be mapped to existing internal taxa
 - distractor traces remain inferable from compiled question payloads (`target_canonical_taxon_id`, `distractor_canonical_taxon_ids`) and source `similar_taxon_ids`
+- Phase 3 contract planning moves toward taxon-based `QuestionOption[]`: target remains a playable item, distractors may be out-of-pack or referenced-only, and labels/scores/reason codes are frozen in materializations
 
 The enrichment stage is offline and deterministic for cached snapshots: it reads only the local taxon payload cache stored in the snapshot.
 
@@ -455,6 +461,7 @@ to avoid stale rows between runs.
 
 - Gate 4.5 established the corrective strategic frame before extension work.
 - Gate 5 delivered distractor policy v2.
+- Phase 3 planning introduces taxon-based question options and v2 pack/materialization contracts without retiring v1.
 - Gate 6 delivered asynchronous enrichment queue persistence.
 - Gate 7 delivered confusion batch ingestion plus global aggregates.
 - Gate 8 delivered inspection/KPI/smoke/CI hardening.

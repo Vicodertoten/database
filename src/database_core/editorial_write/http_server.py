@@ -155,12 +155,17 @@ class EditorialWriteRequestHandler(BaseHTTPRequestHandler):
         )
         if question_count is None and body.get("question_count") is not None:
             return
+        contract_version = str(body.get("contract_version") or "v1")
+        if contract_version not in {"v1", "v2"}:
+            self._send_error(HTTPStatus.BAD_REQUEST, "invalid_request")
+            return
 
         try:
             payload = self.server.service.compile_pack(
                 pack_id=pack_id,
                 revision=revision,
                 question_count=question_count or 20,
+                contract_version=contract_version,
             )
         except ValueError as exc:
             self._handle_value_error(exc)
@@ -198,6 +203,10 @@ class EditorialWriteRequestHandler(BaseHTTPRequestHandler):
         ttl_hours = self._parse_optional_positive_int(body.get("ttl_hours"))
         if ttl_hours is None and body.get("ttl_hours") is not None:
             return
+        contract_version = str(body.get("contract_version") or "v1")
+        if contract_version not in {"v1", "v2"}:
+            self._send_error(HTTPStatus.BAD_REQUEST, "invalid_request")
+            return
 
         try:
             payload = self.server.service.materialize_pack(
@@ -206,6 +215,7 @@ class EditorialWriteRequestHandler(BaseHTTPRequestHandler):
                 question_count=question_count or 20,
                 purpose=str(purpose or "assignment"),
                 ttl_hours=ttl_hours,
+                contract_version=contract_version,
             )
         except ValueError as exc:
             self._handle_value_error(exc)

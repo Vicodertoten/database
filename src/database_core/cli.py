@@ -301,6 +301,11 @@ def main() -> None:
     pack_compile_parser.add_argument("--pack-id", required=True)
     pack_compile_parser.add_argument("--revision", type=int)
     pack_compile_parser.add_argument("--question-count", type=int, default=20)
+    pack_compile_parser.add_argument(
+        "--contract-version",
+        choices=["v1", "v2"],
+        default="v1",
+    )
 
     pack_materialize_parser = pack_subparsers.add_parser("materialize")
     pack_materialize_parser.add_argument(
@@ -311,6 +316,11 @@ def main() -> None:
     pack_materialize_parser.add_argument("--pack-id", required=True)
     pack_materialize_parser.add_argument("--revision", type=int)
     pack_materialize_parser.add_argument("--question-count", type=int, default=20)
+    pack_materialize_parser.add_argument(
+        "--contract-version",
+        choices=["v1", "v2"],
+        default="v1",
+    )
     pack_materialize_parser.add_argument(
         "--purpose",
         choices=["assignment", "daily_challenge"],
@@ -528,21 +538,37 @@ def main() -> None:
             print(json.dumps(payload, indent=2, sort_keys=True))
             return
         if args.pack_command == "compile":
-            payload = pack_store.compile_pack(
-                pack_id=args.pack_id,
-                revision=args.revision,
-                question_count=args.question_count,
-            )
+            if args.contract_version == "v2":
+                payload = pack_store.compile_pack_v2(
+                    pack_id=args.pack_id,
+                    revision=args.revision,
+                    question_count=args.question_count,
+                )
+            else:
+                payload = pack_store.compile_pack(
+                    pack_id=args.pack_id,
+                    revision=args.revision,
+                    question_count=args.question_count,
+                )
             print(json.dumps(payload, indent=2, sort_keys=True))
             return
         if args.pack_command == "materialize":
-            payload = pack_store.materialize_pack(
-                pack_id=args.pack_id,
-                revision=args.revision,
-                question_count=args.question_count,
-                purpose=args.purpose,
-                ttl_hours=args.ttl_hours,
-            )
+            if args.contract_version == "v2":
+                payload = pack_store.materialize_pack_v2(
+                    pack_id=args.pack_id,
+                    revision=args.revision,
+                    question_count=args.question_count,
+                    purpose=args.purpose,
+                    ttl_hours=args.ttl_hours,
+                )
+            else:
+                payload = pack_store.materialize_pack(
+                    pack_id=args.pack_id,
+                    revision=args.revision,
+                    question_count=args.question_count,
+                    purpose=args.purpose,
+                    ttl_hours=args.ttl_hours,
+                )
             print(json.dumps(payload, indent=2, sort_keys=True))
             return
         if args.pack_command == "enrich-enqueue":

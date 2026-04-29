@@ -1,7 +1,7 @@
 ---
 owner: database
 status: stable
-last_reviewed: 2026-04-27
+last_reviewed: 2026-04-29
 source_of_truth: docs/foundation/domain-model.md
 scope: foundation
 ---
@@ -171,7 +171,7 @@ PackCompilationAttempt (deterministic diagnosis):
 
 ## CompiledPackBuild / PackMaterialization (Gate 4)
 
-CompiledPackBuild (`pack.compiled.v1`):
+CompiledPackBuild (`pack.compiled.v1`, current):
 
 - dynamic build computed from current `playable_items` + one pack revision
 - deterministic question set:
@@ -181,7 +181,7 @@ CompiledPackBuild (`pack.compiled.v1`):
 - persisted with build traceability (`build_id`, `pack_id`, `revision`, `built_at`, `source_run_id`)
 - historical builds are kept and queryable for audit and operational reproducibility
 
-PackMaterialization (`pack.materialization.v1`):
+PackMaterialization (`pack.materialization.v1`, current):
 
 - frozen snapshot derived from one compiled build (`source_build_id`)
 - immutable question payload (targets + distractors exacts)
@@ -190,6 +190,17 @@ PackMaterialization (`pack.materialization.v1`):
   - `daily_challenge`: positive TTL and computed `expires_at`
 - immutable once written; later compiled builds do not retroactively mutate old materializations
 - materialization persistence is still in `database` scope; no runtime/session/scoring/progression object is introduced here
+
+Planned Phase 3 contracts (`pack.compiled.v2`, `pack.materialization.v2`):
+
+- target remains a `PlayableItem` and keeps `target_playable_item_id`
+- options become `QuestionOption[]` snapshots
+- each `QuestionOption` carries `option_id`, `canonical_taxon_id`, `taxon_label`, `is_correct`, optional `playable_item_id`, `source`, optional `score`, `reason_codes`, and optional `referenced_only`
+- distractors are taxon options and may be out-of-pack
+- distractors may have no playable item and no media
+- materialization v2 freezes displayed option labels, scores, sources, and reason codes
+- runtime consumes displayed options and submits `selectedOptionId`; it does not resolve labels, score distractors, or map external similar species
+- v1 remains the legacy compatibility family until consumers no longer require `distractor_playable_item_ids`
 
 ## EnrichmentRequest / EnrichmentExecution (Gate 6)
 
@@ -241,8 +252,9 @@ Policy notes:
 
 - iNaturalist similar species hints can be promoted to internal similarity only under controlled rules
 - if a hinted target taxon already exists internally, promotion to `similar_taxon_ids` is straightforward and traceable
-- if target taxon does not exist, any future automatic creation must remain constrained by canonical governance rules
+- if target taxon does not exist, Phase 3 prefers a referenced taxon layer or a strict `referenced_only` status rather than creating active canonical taxa
 - external sources can inform the system but can never freely define internal identity
+- referenced-only taxa are not active, not playable, and not fully qualified; they can be used only as distractor options when mapping confidence and policy allow it
 
 ## Architecture debt callout
 

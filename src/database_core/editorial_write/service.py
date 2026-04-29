@@ -72,12 +72,22 @@ class EditorialWriteOwnerService:
         pack_id: str,
         revision: int | None = None,
         question_count: int = MIN_PACK_TOTAL_QUESTIONS,
+        contract_version: str = "v1",
     ) -> dict[str, object]:
-        result = self.pack_store.compile_pack(
-            pack_id=pack_id,
-            revision=revision,
-            question_count=question_count,
-        )
+        if contract_version == "v2":
+            result = self.pack_store.compile_pack_v2(
+                pack_id=pack_id,
+                revision=revision,
+                question_count=question_count,
+            )
+        elif contract_version == "v1":
+            result = self.pack_store.compile_pack(
+                pack_id=pack_id,
+                revision=revision,
+                question_count=question_count,
+            )
+        else:
+            raise ValueError("contract_version must be v1 or v2")
         validate_compiled_pack(result)
         envelope = _build_envelope(
             operation_version="pack.compile.v1",
@@ -95,15 +105,27 @@ class EditorialWriteOwnerService:
         question_count: int = MIN_PACK_TOTAL_QUESTIONS,
         purpose: str = "assignment",
         ttl_hours: int | None = None,
+        contract_version: str = "v1",
     ) -> dict[str, object]:
         resolved_purpose = str(PackMaterializationPurpose(purpose))
-        result = self.pack_store.materialize_pack(
-            pack_id=pack_id,
-            revision=revision,
-            question_count=question_count,
-            purpose=resolved_purpose,
-            ttl_hours=ttl_hours,
-        )
+        if contract_version == "v2":
+            result = self.pack_store.materialize_pack_v2(
+                pack_id=pack_id,
+                revision=revision,
+                question_count=question_count,
+                purpose=resolved_purpose,
+                ttl_hours=ttl_hours,
+            )
+        elif contract_version == "v1":
+            result = self.pack_store.materialize_pack(
+                pack_id=pack_id,
+                revision=revision,
+                question_count=question_count,
+                purpose=resolved_purpose,
+                ttl_hours=ttl_hours,
+            )
+        else:
+            raise ValueError("contract_version must be v1 or v2")
         validate_pack_materialization(result)
         envelope = _build_envelope(
             operation_version="pack.materialize.v1",

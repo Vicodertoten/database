@@ -30,6 +30,7 @@ from database_core.domain.enums import (
     PedagogicalQuality,
     QualificationStage,
     QualificationStatus,
+    ReferencedTaxonMappingStatus,
     ReviewPriority,
     ReviewStatus,
     Sex,
@@ -911,6 +912,203 @@ class MaterializedPack(DomainModel):
             if self.expires_at is None:
                 raise ValueError("daily_challenge materializations require expires_at")
         return self
+
+
+class QuestionOption(DomainModel):
+    option_id: str
+    canonical_taxon_id: str
+    taxon_label: str
+    is_correct: bool
+    playable_item_id: str | None = None
+    source: str
+    score: float | None = None
+    reason_codes: list[str] = Field(default_factory=list)
+    referenced_only: bool = False
+
+    @field_validator("option_id", "canonical_taxon_id", "taxon_label", "source")
+    @classmethod
+    def validate_non_blank_option_fields(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("field must not be blank")
+        return value
+
+    @field_validator("playable_item_id")
+    @classmethod
+    def validate_optional_playable_item_id(cls, value: str | None) -> str | None:
+        if value is not None and not value.strip():
+            raise ValueError("playable_item_id must not be blank when provided")
+        return value
+
+    @field_validator("reason_codes")
+    @classmethod
+    def validate_reason_codes(cls, value: list[str]) -> list[str]:
+        normalized = [item.strip() for item in value if item.strip()]
+        if len(normalized) != len(set(normalized)):
+            raise ValueError("reason_codes must be unique")
+        return normalized
+
+    @field_validator("score")
+    @classmethod
+    def validate_optional_score(cls, value: float | None) -> float | None:
+        if value is not None and value < 0:
+            raise ValueError("score must be >= 0")
+        return value
+
+    @model_validator(mode="after")
+    def validate_distractor_trace(self) -> Self:
+        if not self.is_correct and not self.reason_codes:
+            raise ValueError("distractor options require reason_codes")
+        return self
+
+
+class CompiledPackQuestionV2(DomainModel):
+    position: int = Field(ge=1)
+    target_playable_item_id: str
+    target_canonical_taxon_id: str
+    options: list[QuestionOption] = Field(default_factory=list)
+
+    @field_validator("target_playable_item_id", "target_canonical_taxon_id")
+    @classmethod
+    def validate_non_blank_fields(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("field must not be blank")
+        return value
+
+    @model_validator(mode="after")
+    def validate_options(self) -> Self:
+        if len(self.options) != 4:
+            raise ValueError("compiled v2 question must include exactly 4 options")
+        correct_options = [option for option in self.options if option.is_correct]
+        if len(correct_options) != 1:
+            raise ValueError("compiled v2 question must include exactly 1 correct option")
+        option_taxa = [option.canonical_taxon_id for option in self.options]
+        if len(set(option_taxa)) != len(option_taxa):
+            raise ValueError("option canonical_taxon_id values must be unique")
+        if self.target_canonical_taxon_id not in option_taxa:
+            raise ValueError("target_canonical_taxon_id must be present in options")
+        for option in self.options:
+            if option.is_correct:
+                if option.canonical_taxon_id != self.target_canonical_taxon_id:
+                    raise ValueError("correct option must match target_canonical_taxon_id")
+                if option.playable_item_id != self.target_playable_item_id:
+                    raise ValueError("correct option must carry target_playable_item_id")
+            elif option.canonical_taxon_id == self.target_canonical_taxon_id:
+                raise ValueError("distractor options must not use target taxon")
+        return self
+
+
+class CompiledPackBuildV2(DomainModel):
+    build_id: str
+    pack_id: str
+    revision: int = Field(ge=1)
+    built_at: datetime
+    question_count_requested: int = Field(ge=1)
+    question_count_built: int = Field(ge=0)
+    distractor_count: int = Field(default=3, ge=3, le=3)
+    source_run_id: str | None = None
+    questions: list[CompiledPackQuestionV2] = Field(default_factory=list)
+
+    @field_validator("build_id", "pack_id")
+    @classmethod
+    def validate_build_ids(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("field must not be blank")
+        return value
+
+    @model_validator(mode="after")
+    def validate_question_counts(self) -> Self:
+        if self.question_count_built != len(self.questions):
+            raise ValueError("question_count_built must equal the number of questions")
+        if self.question_count_built > self.question_count_requested:
+            raise ValueError("question_count_built cannot exceed question_count_requested")
+        return self
+
+
+class MaterializedPackV2(DomainModel):
+    materialization_id: str
+    pack_id: str
+    revision: int = Field(ge=1)
+    source_build_id: str
+    created_at: datetime
+    purpose: PackMaterializationPurpose
+    ttl_hours: int | None = None
+    expires_at: datetime | None = None
+    question_count: int = Field(ge=0)
+    questions: list[CompiledPackQuestionV2] = Field(default_factory=list)
+
+    @field_validator("materialization_id", "pack_id", "source_build_id")
+    @classmethod
+    def validate_materialization_ids(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("field must not be blank")
+        return value
+
+    @model_validator(mode="after")
+    def validate_materialization_shape(self) -> Self:
+        if self.question_count != len(self.questions):
+            raise ValueError("question_count must equal the number of questions")
+        if self.purpose == PackMaterializationPurpose.ASSIGNMENT:
+            if self.ttl_hours is not None or self.expires_at is not None:
+                raise ValueError("assignment materializations cannot define ttl/expires_at")
+        if self.purpose == PackMaterializationPurpose.DAILY_CHALLENGE:
+            if self.ttl_hours is None or self.ttl_hours <= 0:
+                raise ValueError("daily_challenge materializations require ttl_hours > 0")
+            if self.expires_at is None:
+                raise ValueError("daily_challenge materializations require expires_at")
+        return self
+
+
+class ReferencedTaxon(DomainModel):
+    referenced_taxon_id: str
+    source: SourceName
+    source_taxon_id: str
+    scientific_name: str
+    preferred_common_name: str | None = None
+    common_names_i18n: dict[str, list[str]] = Field(default_factory=dict)
+    rank: str | None = None
+    taxon_group: TaxonGroup = TaxonGroup.BIRDS
+    mapping_status: ReferencedTaxonMappingStatus
+    mapped_canonical_taxon_id: str | None = None
+    reason_codes: list[str] = Field(default_factory=list)
+    created_at: datetime
+
+    @field_validator("referenced_taxon_id", "source_taxon_id", "scientific_name")
+    @classmethod
+    def validate_referenced_taxon_fields(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("field must not be blank")
+        return value
+
+    @field_validator("reason_codes")
+    @classmethod
+    def validate_reference_reason_codes(cls, value: list[str]) -> list[str]:
+        normalized = [item.strip() for item in value if item.strip()]
+        if not normalized:
+            raise ValueError("referenced taxa require reason_codes")
+        if len(normalized) != len(set(normalized)):
+            raise ValueError("reason_codes must be unique")
+        return normalized
+
+    @model_validator(mode="after")
+    def validate_mapping_status(self) -> Self:
+        if (
+            self.mapping_status == ReferencedTaxonMappingStatus.MAPPED
+            and not self.mapped_canonical_taxon_id
+        ):
+            raise ValueError("mapped referenced taxa require mapped_canonical_taxon_id")
+        if (
+            self.mapping_status != ReferencedTaxonMappingStatus.MAPPED
+            and self.mapped_canonical_taxon_id is not None
+        ):
+            raise ValueError("only mapped referenced taxa may carry mapped_canonical_taxon_id")
+        return self
+
+
+class DistractorPolicy(DomainModel):
+    allow_out_of_pack_distractors: bool = True
+    allow_referenced_only_distractors: bool = True
+    prefer_inat_similar_species: bool = True
+    max_referenced_only_distractors_per_question: int = Field(default=1, ge=0, le=3)
 
 
 class CanonicalGovernanceReviewItem(DomainModel):

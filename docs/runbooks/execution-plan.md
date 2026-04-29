@@ -121,13 +121,26 @@ Markers de traçabilite (compatibilite verification):
 
 ## 5. Chantiers prioritaires admissibles
 
-Il n'y a pas de gate actif par defaut dans ce plan.
+Le prochain chantier structurant planifie est Phase 3 taxon-based question options.
+Il est documente dans:
+
+- `docs/foundation/adr/0006-taxon-based-question-options.md`
+- `docs/runbooks/phase3-distractor-strategy.md`
+
+Ce chantier est database-first et contract-first:
+
+- verrouiller doctrine et invariants avant code lourd
+- creer `pack.compiled.v2` et `pack.materialization.v2`
+- conserver v1 en compatibilite
+- ne pas commencer l'adaptation `runtime-app` avant production owner-side v2
+
 Si un nouveau chantier structurant est ouvert, il doit appartenir a l'un des axes suivants:
 
 1. consolidation operatoire du playable cumulatif incremental implemente
 2. consolidation finale de l'extraction de responsabilites hors `PostgresRepository`
-3. qualite editoriale et multilingue des surfaces pedagogiques
-4. extension multi-source ou multi-taxa seulement apres 1 et 2
+3. options de question taxon-based et distracteurs hors pack gouvernes
+4. qualite editoriale et multilingue des surfaces pedagogiques
+5. extension multi-source ou multi-taxa seulement apres 1 et 2
 
 Tout autre chantier doit etre considere comme secondaire ou hors-sequence.
 
@@ -141,10 +154,11 @@ Critere de maintien de la phase transitoire:
 - pas de retour a une reconstruction latest-only du serving playable
 - causes d'invalidation conservees explicites et testees
 - `playable_corpus.v1` reste stable pour les consommateurs
+- `pack.compiled.v1` et `pack.materialization.v1` restent disponibles pendant l'introduction de v2
 
 Etat d'avancement constate (2026-04-09):
 
-- schema `database.schema.v15` actif pour le lifecycle playable incremental
+- schema `database.schema.v16` actif pour le lifecycle playable incremental
 - `playable_items` n'est plus supprime globalement dans le run nominal PostgreSQL
 - lifecycle `active`/`invalidated` persiste en base et `playable_corpus.v1` ne sert que les items actifs
 - reactivation automatique couverte en test storage
@@ -550,6 +564,8 @@ KPI de robustesse:
 2. pas de detournement de `export.bundle.v4` en surface runtime
 3. contrats versionnes, migrations explicites, tests systematiques
 4. aucune rupture non documentee des surfaces `playable_corpus.v1`, `pack.compiled.v1`, `pack.materialization.v1`
+5. aucune adaptation runtime v2 avant production owner-side de `pack.materialization.v2`
+6. aucun taxon reference-only ne devient automatiquement active/playable/fully qualified
 
 ### 9.14 Alignement strategique (audit produit) a appliquer immediatement
 

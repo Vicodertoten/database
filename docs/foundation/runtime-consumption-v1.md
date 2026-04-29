@@ -1,7 +1,7 @@
 ---
 owner: database
 status: stable
-last_reviewed: 2026-04-27
+last_reviewed: 2026-04-29
 source_of_truth: docs/foundation/runtime-consumption-v1.md
 scope: foundation
 ---
@@ -85,6 +85,11 @@ Pour le deploiement cible Fly.io:
 - `pack.compiled.v1`
 - `pack.materialization.v1`
 
+Contrats Phase 3 planifies, a consommer seulement apres production cote `database`:
+
+- `pack.compiled.v2`
+- `pack.materialization.v2`
+
 ## Surface interdite pour le runtime
 
 `runtime-app` ne doit jamais utiliser `export.bundle.v4` comme surface live.
@@ -104,8 +109,19 @@ Tout type consumer (TypeScript ou autre) doit refleter ces schemas champ par cha
 - `schemas/playable_corpus_v1.schema.json` — reference pour `playable_corpus.v1`
 - `schemas/pack_compiled_v1.schema.json` — reference pour `pack.compiled.v1`
 - `schemas/pack_materialization_v1.schema.json` — reference pour `pack.materialization.v1`
+- `schemas/pack_compiled_v2.schema.json` — reference planifiee pour `pack.compiled.v2`
+- `schemas/pack_materialization_v2.schema.json` — reference planifiee pour `pack.materialization.v2`
 
-Extension additive Phase 3 (sans changement de version de contrat):
+Regles Phase 3 v2:
+
+- `database` produit les `QuestionOption[]`
+- `runtime-app` affiche les options snapshottees sans recalcul
+- `runtime-app` ne resout pas les labels de taxons
+- `runtime-app` ne score pas les distracteurs
+- `selectedOptionId` devient la soumission standard pour v2
+- `selectedPlayableItemId` reste legacy pour v1 pendant la transition
+
+Extension additive historique sur `playable_corpus.v1` (sans changement de version de contrat):
 
 - `playable_corpus.v1` expose maintenant un minimum player-ready owner-side:
   - `taxon_label`

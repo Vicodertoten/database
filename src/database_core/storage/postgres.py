@@ -1573,6 +1573,21 @@ class PostgresStorageInternal:
             connection=connection,
         )
 
+    def compile_pack_v2(
+        self,
+        *,
+        pack_id: str,
+        revision: int | None = None,
+        question_count: int = MIN_PACK_TOTAL_QUESTIONS,
+        connection: psycopg.Connection | None = None,
+    ) -> dict[str, object]:
+        return self.pack_store.compile_pack_v2(
+            pack_id=pack_id,
+            revision=revision,
+            question_count=question_count,
+            connection=connection,
+        )
+
     def materialize_pack(
         self,
         *,
@@ -1584,6 +1599,25 @@ class PostgresStorageInternal:
         connection: psycopg.Connection | None = None,
     ) -> dict[str, object]:
         return self.pack_store.materialize_pack(
+            pack_id=pack_id,
+            revision=revision,
+            question_count=question_count,
+            purpose=purpose,
+            ttl_hours=ttl_hours,
+            connection=connection,
+        )
+
+    def materialize_pack_v2(
+        self,
+        *,
+        pack_id: str,
+        revision: int | None = None,
+        question_count: int = MIN_PACK_TOTAL_QUESTIONS,
+        purpose: str = "assignment",
+        ttl_hours: int | None = None,
+        connection: psycopg.Connection | None = None,
+    ) -> dict[str, object]:
+        return self.pack_store.materialize_pack_v2(
             pack_id=pack_id,
             revision=revision,
             question_count=question_count,
@@ -1631,6 +1665,15 @@ class PostgresStorageInternal:
             revision=revision,
             purpose=purpose,
             limit=limit,
+        )
+
+    def fetch_pack_materialization_by_id(
+        self,
+        *,
+        materialization_id: str,
+    ) -> dict[str, object] | None:
+        return self.pack_store.fetch_pack_materialization_by_id(
+            materialization_id=materialization_id,
         )
 
     def enqueue_enrichment_for_pack(
@@ -2071,6 +2114,12 @@ def _compute_distractor_diversity_index(rows: Sequence[dict[str, object]]) -> di
                 continue
             target = str(question.get("target_canonical_taxon_id") or "").strip()
             distractors = question.get("distractor_canonical_taxon_ids")
+            if distractors is None and isinstance(question.get("options"), list):
+                distractors = [
+                    option.get("canonical_taxon_id")
+                    for option in question["options"]
+                    if isinstance(option, dict) and not bool(option.get("is_correct"))
+                ]
             if not target or not isinstance(distractors, list):
                 continue
             for distractor in distractors:

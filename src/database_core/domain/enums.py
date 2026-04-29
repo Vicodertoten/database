@@ -198,6 +198,14 @@ class PackMaterializationPurpose(StrEnum):
     DAILY_CHALLENGE = "daily_challenge"
 
 
+class ReferencedTaxonMappingStatus(StrEnum):
+    MAPPED = "mapped"
+    AUTO_REFERENCED_HIGH_CONFIDENCE = "auto_referenced_high_confidence"
+    AUTO_REFERENCED_LOW_CONFIDENCE = "auto_referenced_low_confidence"
+    AMBIGUOUS = "ambiguous"
+    IGNORED = "ignored"
+
+
 class PackCompilationReasonCode(StrEnum):
     COMPILABLE = "compilable"
     NO_PLAYABLE_ITEMS = "no_playable_items"

@@ -1,7 +1,7 @@
 ---
 owner: database
 status: stable
-last_reviewed: 2026-04-27
+last_reviewed: 2026-04-29
 source_of_truth: docs/foundation/pipeline.md
 scope: foundation
 ---
@@ -136,6 +136,16 @@ Controlled promotion rule:
   - no queue d’enrichissement (Gate 6+) in this stage
   - no runtime/session/scoring/progression logic
   - no change to `export.bundle.v4`
+
+Planned Phase 3 v2 extension:
+
+- `pack.compiled.v2` and `pack.materialization.v2` replace playable-item distractor slots with `QuestionOption[]`
+- the target remains a playable item from the pack
+- distractors become taxon options selected from a governed pool and may be out-of-pack
+- distractors may be referenced-only high-confidence taxa without media or playable item
+- materialization v2 freezes option labels, sources, scores, and reason codes
+- compilation remains deterministic and does not call live external sources
+- runtime continues to own sessions, submissions, scoring, progression, and UX only
 
 ## 11. Manage asynchronous enrichment
 

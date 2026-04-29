@@ -748,3 +748,57 @@ ALTER TABLE playable_item_lifecycle
 CREATE INDEX IF NOT EXISTS idx_playable_item_lifecycle_status_reason_run
     ON playable_item_lifecycle (lifecycle_status, invalidation_reason, invalidated_run_id);
 """
+
+POSTGRES_REFERENCED_TAXA_V16_SQL = """
+CREATE TABLE IF NOT EXISTS referenced_taxa (
+    referenced_taxon_id TEXT PRIMARY KEY,
+    source TEXT NOT NULL,
+    source_taxon_id TEXT NOT NULL,
+    scientific_name TEXT NOT NULL,
+    preferred_common_name TEXT,
+    common_names_i18n_json TEXT NOT NULL,
+    rank TEXT,
+    taxon_group TEXT NOT NULL,
+    mapping_status TEXT NOT NULL CHECK (
+        mapping_status IN (
+            'mapped',
+            'auto_referenced_high_confidence',
+            'auto_referenced_low_confidence',
+            'ambiguous',
+            'ignored'
+        )
+    ),
+    mapped_canonical_taxon_id TEXT,
+    reason_codes_json TEXT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    payload_json TEXT NOT NULL,
+    UNIQUE (source, source_taxon_id),
+    FOREIGN KEY (mapped_canonical_taxon_id) REFERENCES canonical_taxa (canonical_taxon_id),
+    CONSTRAINT referenced_taxa_mapped_canonical_consistency
+        CHECK (
+            (mapping_status = 'mapped' AND mapped_canonical_taxon_id IS NOT NULL)
+            OR
+            (mapping_status <> 'mapped' AND mapped_canonical_taxon_id IS NULL)
+        )
+);
+
+CREATE INDEX IF NOT EXISTS idx_referenced_taxa_mapping_status
+    ON referenced_taxa (mapping_status, source, source_taxon_id);
+
+CREATE TABLE IF NOT EXISTS referenced_taxon_events (
+    referenced_taxon_event_id TEXT PRIMARY KEY,
+    referenced_taxon_id TEXT NOT NULL,
+    source TEXT NOT NULL,
+    source_taxon_id TEXT NOT NULL,
+    mapping_status TEXT NOT NULL,
+    reason_codes_json TEXT NOT NULL,
+    payload_json TEXT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL,
+    FOREIGN KEY (referenced_taxon_id) REFERENCES referenced_taxa (referenced_taxon_id)
+        ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_referenced_taxon_events_reference
+    ON referenced_taxon_events (referenced_taxon_id, created_at DESC);
+"""

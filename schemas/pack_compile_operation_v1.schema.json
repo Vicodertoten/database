@@ -12,7 +12,7 @@
   "properties": {
     "schema_version": {
       "type": "string",
-      "const": "database.schema.v15"
+      "const": "database.schema.v16"
     },
     "operation_version": {
       "type": "string",
@@ -32,7 +32,7 @@
       "properties": {
         "pack_compiled_version": {
           "type": "string",
-          "const": "pack.compiled.v1"
+          "enum": ["pack.compiled.v1", "pack.compiled.v2"]
         }
       },
       "additionalProperties": true
