@@ -1,0 +1,395 @@
+{
+  "database_url": "postgresql://postgres:***@db.cduiheqceeghzrlbtwom.supabase.co:5432/postgres?sslmode=require&options=-csearch_path%3Dphase2_v01_gemini_20260429_092043%2Cpublic",
+  "execution": {
+    "attempts": [],
+    "run_rebuild": false
+  },
+  "final_analysis": {
+    "gate": {
+      "checks": {
+        "attribution_completeness": {
+          "actual": 1.0,
+          "pass": true,
+          "target": ">= 1.0"
+        },
+        "common_name_fr_effective_completeness": {
+          "actual": 1.0,
+          "pass": true,
+          "target": ">= 1.0"
+        },
+        "country_code_completeness": {
+          "actual": 0.024201,
+          "pass": true,
+          "target": "n/a (global scope)"
+        },
+        "question_generation_success_rate": {
+          "actual": 1.0,
+          "pass": true,
+          "target": ">= 0.99"
+        },
+        "species_count": {
+          "actual": 50,
+          "pass": true,
+          "target": ">= 50"
+        },
+        "species_with_min_images": {
+          "actual": 50,
+          "pass": true,
+          "target": ">= 50"
+        }
+      },
+      "status": "GO"
+    },
+    "metrics": {
+      "attribution_completeness": 1.0,
+      "common_name_fr_effective_completeness": 1.0,
+      "common_name_fr_strict_completeness": 0.0,
+      "contract_field_completeness": {
+        "canonical_taxon_id": 1.0,
+        "country_code": 0.024201,
+        "difficulty_level": 1.0,
+        "feedback_short": 1.0,
+        "media_attribution": 1.0,
+        "media_license": 1.0,
+        "media_render_url": 1.0,
+        "observed_at": 1.0,
+        "playable_item_id": 1.0,
+        "scientific_name": 1.0,
+        "similar_taxon_ids": 0.0,
+        "source_name": 1.0
+      },
+      "country_code_completeness": 0.024201,
+      "exportable_resources_total": 1157,
+      "image_rejection_rate": 0.228667,
+      "images_per_species": {
+        "taxon:birds:000001": 23,
+        "taxon:birds:000002": 24,
+        "taxon:birds:000003": 23,
+        "taxon:birds:000004": 25,
+        "taxon:birds:000005": 26,
+        "taxon:birds:000006": 24,
+        "taxon:birds:000007": 23,
+        "taxon:birds:000008": 24,
+        "taxon:birds:000009": 19,
+        "taxon:birds:000010": 22,
+        "taxon:birds:000011": 24,
+        "taxon:birds:000012": 19,
+        "taxon:birds:000013": 29,
+        "taxon:birds:000014": 27,
+        "taxon:birds:000015": 27,
+        "taxon:birds:000016": 21,
+        "taxon:birds:000017": 19,
+        "taxon:birds:000018": 20,
+        "taxon:birds:000019": 24,
+        "taxon:birds:000020": 24,
+        "taxon:birds:000021": 27,
+        "taxon:birds:000022": 26,
+        "taxon:birds:000023": 29,
+        "taxon:birds:000024": 28,
+        "taxon:birds:000025": 24,
+        "taxon:birds:000026": 24,
+        "taxon:birds:000027": 26,
+        "taxon:birds:000028": 21,
+        "taxon:birds:000029": 25,
+        "taxon:birds:000030": 24,
+        "taxon:birds:000031": 22,
+        "taxon:birds:000032": 20,
+        "taxon:birds:000033": 25,
+        "taxon:birds:000034": 26,
+        "taxon:birds:000035": 27,
+        "taxon:birds:000036": 22,
+        "taxon:birds:000037": 22,
+        "taxon:birds:000038": 23,
+        "taxon:birds:000039": 22,
+        "taxon:birds:000040": 26,
+        "taxon:birds:000041": 12,
+        "taxon:birds:000042": 17,
+        "taxon:birds:000043": 21,
+        "taxon:birds:000044": 17,
+        "taxon:birds:000045": 16,
+        "taxon:birds:000046": 25,
+        "taxon:birds:000047": 22,
+        "taxon:birds:000048": 24,
+        "taxon:birds:000049": 25,
+        "taxon:birds:000050": 22
+      },
+      "playable_items_total": 1157,
+      "qualified_resources_rejected": 343,
+      "qualified_resources_total": 1500,
+      "question_generation_details": {
+        "pack_compilation_attempts": 10,
+        "pack_compilation_successes": 10,
+        "question_success_rate": 1.0,
+        "questions_total": 200,
+        "questions_valid": 200
+      },
+      "question_generation_success_rate": 1.0,
+      "species_above_30_images": 0,
+      "species_count": 50,
+      "species_with_min_images": 50,
+      "species_with_min_images_rate": 1.0,
+      "species_within_10_to_30_images": 50
+    },
+    "phase2_closed": true,
+    "strategy": {
+      "database_posture": "reuse_with_remediation",
+      "rationale": "Species coverage exists, but density/completeness gates still require targeted remediation.",
+      "strategy": "reuse_and_complete"
+    }
+  },
+  "generated_at": "2026-04-29T10:35:41.784035+00:00",
+  "initial_analysis": {
+    "metrics": {
+      "attribution_completeness": 1.0,
+      "common_name_fr_effective_completeness": 1.0,
+      "common_name_fr_strict_completeness": 0.0,
+      "contract_field_completeness": {
+        "canonical_taxon_id": 1.0,
+        "country_code": 0.024201,
+        "difficulty_level": 1.0,
+        "feedback_short": 1.0,
+        "media_attribution": 1.0,
+        "media_license": 1.0,
+        "media_render_url": 1.0,
+        "observed_at": 1.0,
+        "playable_item_id": 1.0,
+        "scientific_name": 1.0,
+        "similar_taxon_ids": 0.0,
+        "source_name": 1.0
+      },
+      "country_code_completeness": 0.024201,
+      "exportable_resources_total": 1157,
+      "image_rejection_rate": 0.228667,
+      "images_per_species": {
+        "taxon:birds:000001": 23,
+        "taxon:birds:000002": 24,
+        "taxon:birds:000003": 23,
+        "taxon:birds:000004": 25,
+        "taxon:birds:000005": 26,
+        "taxon:birds:000006": 24,
+        "taxon:birds:000007": 23,
+        "taxon:birds:000008": 24,
+        "taxon:birds:000009": 19,
+        "taxon:birds:000010": 22,
+        "taxon:birds:000011": 24,
+        "taxon:birds:000012": 19,
+        "taxon:birds:000013": 29,
+        "taxon:birds:000014": 27,
+        "taxon:birds:000015": 27,
+        "taxon:birds:000016": 21,
+        "taxon:birds:000017": 19,
+        "taxon:birds:000018": 20,
+        "taxon:birds:000019": 24,
+        "taxon:birds:000020": 24,
+        "taxon:birds:000021": 27,
+        "taxon:birds:000022": 26,
+        "taxon:birds:000023": 29,
+        "taxon:birds:000024": 28,
+        "taxon:birds:000025": 24,
+        "taxon:birds:000026": 24,
+        "taxon:birds:000027": 26,
+        "taxon:birds:000028": 21,
+        "taxon:birds:000029": 25,
+        "taxon:birds:000030": 24,
+        "taxon:birds:000031": 22,
+        "taxon:birds:000032": 20,
+        "taxon:birds:000033": 25,
+        "taxon:birds:000034": 26,
+        "taxon:birds:000035": 27,
+        "taxon:birds:000036": 22,
+        "taxon:birds:000037": 22,
+        "taxon:birds:000038": 23,
+        "taxon:birds:000039": 22,
+        "taxon:birds:000040": 26,
+        "taxon:birds:000041": 12,
+        "taxon:birds:000042": 17,
+        "taxon:birds:000043": 21,
+        "taxon:birds:000044": 17,
+        "taxon:birds:000045": 16,
+        "taxon:birds:000046": 25,
+        "taxon:birds:000047": 22,
+        "taxon:birds:000048": 24,
+        "taxon:birds:000049": 25,
+        "taxon:birds:000050": 22
+      },
+      "playable_items_total": 1157,
+      "qualified_resources_rejected": 343,
+      "qualified_resources_total": 1500,
+      "question_generation_details": {
+        "pack_compilation_attempts": 10,
+        "pack_compilation_successes": 10,
+        "question_success_rate": 1.0,
+        "questions_total": 200,
+        "questions_valid": 200
+      },
+      "question_generation_success_rate": 1.0,
+      "species_above_30_images": 0,
+      "species_count": 50,
+      "species_with_min_images": 50,
+      "species_with_min_images_rate": 1.0,
+      "species_within_10_to_30_images": 50
+    },
+    "strategy": {
+      "database_posture": "reuse_with_remediation",
+      "rationale": "Species coverage exists, but density/completeness gates still require targeted remediation.",
+      "strategy": "reuse_and_complete"
+    }
+  },
+  "schema_version": "phase2.playable_corpus.v1",
+  "smoke_report": {
+    "compile_deficits_summary": {
+      "attempts_total": 0,
+      "non_compilable_attempts": 0,
+      "reason_counts": {},
+      "top_blocking_taxa": []
+    },
+    "database_url": "postgresql://postgres:***@db.cduiheqceeghzrlbtwom.supabase.co:5432/postgres?sslmode=require&options=-csearch_path%3Dphase2_v01_gemini_20260429_092043%2Cpublic",
+    "extended_kpis": {
+      "country_code_completeness_ratio": {
+        "actual": 0.024201,
+        "pass": null,
+        "stats": {
+          "playable_items_total": 1157,
+          "playable_items_with_country": 28
+        },
+        "target": "baseline_observe"
+      },
+      "distractor_diversity_index": {
+        "actual": 0.05,
+        "pass": null,
+        "stats": {
+          "latest_compiled_payloads": 1,
+          "total_distractor_slots": 60,
+          "unique_directed_pairs": 3
+        },
+        "target": "baseline_observe"
+      },
+      "taxon_playable_coverage_ratio": {
+        "actual": 1.0,
+        "pass": null,
+        "stats": {
+          "accepted_taxa_total": 50,
+          "playable_taxa": 50,
+          "provisional_taxa_total": 0
+        },
+        "target": "baseline_observe"
+      },
+      "taxon_with_min2_media_ratio": {
+        "actual": 1.0,
+        "pass": null,
+        "stats": {
+          "accepted_taxa_total": 50,
+          "taxa_with_min2_media": 50
+        },
+        "target": "baseline_observe"
+      }
+    },
+    "generated_at": "2026-04-29T10:35:38.714487+00:00",
+    "governance_review_alerts": {
+      "avg_open_age_alert": false,
+      "avg_open_age_hours": 0.0,
+      "open_backlog": 0,
+      "open_backlog_alert": false,
+      "thresholds": {
+        "avg_open_age_hours": 72.0,
+        "open_backlog": 25
+      }
+    },
+    "kpis": {
+      "export_trace_flags_uncertainty_coverage": {
+        "actual": 1.0,
+        "pass": true,
+        "stats": {
+          "coverage_ratio": 1.0,
+          "covered": 1157,
+          "missing_flags": 0,
+          "missing_trace": 0,
+          "total": 1157,
+          "untyped_uncertainty": 0
+        },
+        "target": "== 1.0"
+      },
+      "exportable_unresolved_or_provisional": {
+        "actual": 0,
+        "pass": true,
+        "target": "== 0"
+      },
+      "governance_reason_and_signal_coverage": {
+        "actual": 1.0,
+        "pass": true,
+        "stats": {
+          "coverage_ratio": 1.0,
+          "covered": 50,
+          "missing_reason": 0,
+          "missing_signal_breakdown": 0,
+          "missing_source_delta": 0,
+          "total": 50
+        },
+        "target": "== 1.0"
+      }
+    },
+    "latest_run": {
+      "completed_at": "2026-04-29T10:35:30.224024+00:00",
+      "run_id": "run:20260429T103519Z:4fe59c6a",
+      "run_status": "completed",
+      "started_at": "2026-04-29T10:35:24.749152+00:00"
+    },
+    "overall_pass": true,
+    "pre_ai_rejection_reason_counts": {},
+    "report_version": "smoke.report.v1",
+    "run_metrics": {
+      "cost": {
+        "ai_qualified_images": 1453,
+        "estimated_ai_cost_eur": 1.7436
+      },
+      "governance": {
+        "avg_open_governance_review_age_hours": 0.0,
+        "decision_reason_counts": {
+          "new_taxon_detected": 50
+        },
+        "decision_status_counts": {
+          "auto_clear": 50
+        },
+        "open_governance_backlog_by_reason": {},
+        "open_governance_review_items": 0,
+        "resolved_governance_backlog_by_reason": {},
+        "resolved_governance_review_items": 0
+      },
+      "quality": {
+        "accepted_resources": 1157,
+        "rejected_resources": 343,
+        "review_required_resources": 0,
+        "top_rejection_flags": {
+          "insufficient_resolution": 139,
+          "insufficient_resolution_pre_ai": 46,
+          "insufficient_technical_quality": 266,
+          "missing_view_angle": 60,
+          "missing_visible_parts": 51
+        }
+      },
+      "review_load": {
+        "avg_open_review_age_hours": 0.0,
+        "open_review_queue_items": 0
+      },
+      "run_id": null,
+      "volume": {
+        "canonical_taxa": 50,
+        "exportable_resources": 1157,
+        "media_assets": 1500,
+        "qualified_resources": 1500,
+        "source_observations": 1500
+      }
+    },
+    "snapshot_id": null
+  },
+  "thresholds": {
+    "max_images_per_species": 30,
+    "min_images_per_species": 10,
+    "min_question_success_rate": 0.99,
+    "required_attribution_completeness": 1.0,
+    "required_common_name_fr_completeness": 1.0,
+    "required_country_code_completeness": 1.0,
+    "target_country_code": null,
+    "target_species_count": 50
+  }
+}

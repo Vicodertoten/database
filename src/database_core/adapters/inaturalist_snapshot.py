@@ -30,6 +30,9 @@ DEFAULT_INAT_SNAPSHOT_ROOT = Path("data/raw/inaturalist")
 DEFAULT_PILOT_TAXA_PATH = Path("data/fixtures/inaturalist_pilot_taxa.json")
 MIN_ACCEPTED_WIDTH = 1000
 MIN_ACCEPTED_HEIGHT = 750
+INAT_PLACE_ID_TO_COUNTRY_CODE = {
+    "7083": "BE",
+}
 
 
 class SnapshotModel(BaseModel):
@@ -384,6 +387,7 @@ def _build_snapshot_observation(
 ) -> SourceObservation:
     geojson = result.get("geojson") or {}
     coordinates = geojson.get("coordinates") or [None, None]
+    country_code = _infer_country_code(result=result, seed=seed)
     return SourceObservation(
         observation_uid=f"obs:inaturalist:{result['id']}",
         source_name=SourceName.INATURALIST,
@@ -398,6 +402,7 @@ def _build_snapshot_observation(
             place_name=result.get("place_guess"),
             latitude=coordinates[1] if len(coordinates) > 1 else None,
             longitude=coordinates[0] if coordinates else None,
+            country_code=country_code,
         ),
         source_quality=SourceQualityMetadata(
             quality_grade=str(result.get("quality_grade", "unknown")),
@@ -503,6 +508,13 @@ def _parse_datetime(value: object) -> datetime | None:
                 return datetime.fromisoformat(parsed.strftime("%Y-%m-%dT00:00:00+00:00"))
             except ValueError:
                 continue
+        # Older payloads may include textual dates, e.g. `May 2, 2008`.
+        for date_format in ("%B %d, %Y", "%b %d, %Y", "%B %d %Y", "%b %d %Y"):
+            try:
+                parsed = datetime.strptime(text, date_format)
+                return datetime.fromisoformat(parsed.strftime("%Y-%m-%dT00:00:00+00:00"))
+            except ValueError:
+                continue
         raise
 
 
@@ -522,6 +534,65 @@ def _guess_mime_type(url: str) -> str | None:
     if extension == "webp":
         return "image/webp"
     return None
+
+
+def _infer_country_code(
+    *,
+    result: dict[str, object],
+    seed: SnapshotTaxonSeed,
+) -> str | None:
+    explicit_value = _normalize_country_code(
+        _extract_explicit_country_code(result)
+        or seed.query_params.get("country_code")
+    )
+    if explicit_value is not None:
+        return explicit_value
+
+    place_ids = result.get("place_ids")
+    if isinstance(place_ids, list):
+        for place_id in place_ids:
+            mapped = INAT_PLACE_ID_TO_COUNTRY_CODE.get(str(place_id).strip())
+            if mapped is not None:
+                return mapped
+
+    seed_place_id = str(seed.query_params.get("place_id") or "").strip()
+    if seed_place_id:
+        mapped = INAT_PLACE_ID_TO_COUNTRY_CODE.get(seed_place_id)
+        if mapped is not None:
+            return mapped
+
+    place_guess = str(result.get("place_guess") or "").strip().upper()
+    if not place_guess:
+        return None
+    if ", BE" in place_guess or place_guess.endswith(" BE"):
+        return "BE"
+    if "BELGIUM" in place_guess or "BELGIQUE" in place_guess or "BELGIE" in place_guess:
+        return "BE"
+    return None
+
+
+def _extract_explicit_country_code(result: dict[str, object]) -> str | None:
+    direct_value = result.get("country_code")
+    if isinstance(direct_value, str) and direct_value.strip():
+        return direct_value
+
+    place = result.get("place")
+    if isinstance(place, dict):
+        place_value = place.get("country_code")
+        if isinstance(place_value, str) and place_value.strip():
+            return place_value
+    return None
+
+
+def _normalize_country_code(value: object) -> str | None:
+    if value is None:
+        return None
+    normalized = str(value).strip().upper()
+    if not normalized:
+        return None
+    if len(normalized) != 2:
+        return None
+    return normalized
 
 
 def _assign_missing_canonical_taxon_ids(seeds: list[PilotTaxonSeed]) -> list[PilotTaxonSeed]:
