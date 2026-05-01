@@ -1,0 +1,325 @@
+---
+owner: database
+status: in_progress
+last_reviewed: 2026-05-01
+source_of_truth: docs/runbooks/palier-1-run-001.md
+scope: runbook
+---
+
+# Palier 1 Run 001
+
+Run name: `palier1_be_birds_50taxa_run001`
+
+## 1. Purpose
+
+Prepare and execute the first full Palier 1 ingestion/audit chain with:
+
+- 50 bird taxa relevant for Belgium
+- target: ~20 source candidates per taxon
+- objective: ~10 qualified images per taxon
+- no Gemini live calls
+- no business-logic changes
+
+## 2. Inputs
+
+- pilot taxa fixture: `data/fixtures/inaturalist_pilot_taxa_palier1_be_50.json`
+- quality gates: `docs/runbooks/ingestion-quality-gates.md`
+- code-to-gate map: `docs/runbooks/ingestion-code-to-gate-map.md`
+- roadmap: `docs/runbooks/pre-scale-ingestion-roadmap.md`
+
+## 3. Execution Parameters
+
+- `RUN_NAME=palier1_be_birds_50taxa_run001`
+- `SNAPSHOT_ID=palier1-be-birds-50taxa-20260501-run001`
+- `TAXA_FIXTURE=data/fixtures/inaturalist_pilot_taxa_palier1_be_50.json`
+- `MAX_OBS_PER_TAXON=20`
+- `COUNTRY_CODE=BE`
+
+Optional DB isolation (recommended):
+
+- `DATABASE_URL=<isolated_postgres_url>`
+
+## 4. Guardrails
+
+- do not use `--qualifier-mode gemini`
+- do not execute `qualify-inat-snapshot` if it would call Gemini live
+- do not increase taxa count over 50
+- do not change runtime/session/scoring logic in this repo
+
+## 5. Commands
+
+### 5.1 Fetch snapshot
+
+```bash
+python scripts/fetch_inat_snapshot.py \
+  --snapshot-id "$SNAPSHOT_ID" \
+  --pilot-taxa-path "$TAXA_FIXTURE" \
+  --max-observations-per-taxon "$MAX_OBS_PER_TAXON" \
+  --country-code "$COUNTRY_CODE"
+```
+
+### 5.2 Qualify snapshot (planned command, no Gemini live)
+
+This command is part of the full chain but should stay `NOT_EXECUTED` unless cached AI outputs already exist and no live call is needed.
+
+```bash
+python scripts/qualify_inat_snapshot.py \
+  --snapshot-id "$SNAPSHOT_ID"
+```
+
+No-Gemini execution path:
+
+- use `run_pipeline` with `--qualifier-mode cached` when cached `ai_outputs.json` exists;
+- otherwise use `--qualifier-mode rules`.
+
+### 5.3 Run pipeline (no Gemini)
+
+Preferred (cached AI outputs already present):
+
+```bash
+python scripts/run_pipeline.py \
+  --source-mode inat_snapshot \
+  --snapshot-id "$SNAPSHOT_ID" \
+  --qualifier-mode cached \
+  --uncertain-policy reject \
+  --database-url "$DATABASE_URL" \
+  --normalized-path "data/normalized/${RUN_NAME}.normalized.json" \
+  --qualified-path "data/qualified/${RUN_NAME}.qualified.json" \
+  --export-path "data/exports/${RUN_NAME}.export.json"
+```
+
+Fallback (strict no-Gemini, no cached AI):
+
+```bash
+python scripts/run_pipeline.py \
+  --source-mode inat_snapshot \
+  --snapshot-id "$SNAPSHOT_ID" \
+  --qualifier-mode rules \
+  --uncertain-policy reject \
+  --database-url "$DATABASE_URL" \
+  --normalized-path "data/normalized/${RUN_NAME}.normalized.json" \
+  --qualified-path "data/qualified/${RUN_NAME}.qualified.json" \
+  --export-path "data/exports/${RUN_NAME}.export.json"
+```
+
+### 5.4 Generate smoke report
+
+```bash
+python scripts/generate_smoke_report.py \
+  --snapshot-id "$SNAPSHOT_ID" \
+  --database-url "$DATABASE_URL" \
+  --output-path "docs/archive/evidence/smoke-reports/${RUN_NAME}.smoke_report.v1.json"
+```
+
+### 5.5 Create pack
+
+Build repeated `--canonical-taxon-id` flags from fixture:
+
+```bash
+python - <<'PY'
+import json
+from pathlib import Path
+p=Path("data/fixtures/inaturalist_pilot_taxa_palier1_be_50.json")
+taxa=[row["canonical_taxon_id"] for row in json.loads(p.read_text())]
+print(" ".join(f'--canonical-taxon-id {t}' for t in taxa))
+PY
+```
+
+Then run create:
+
+```bash
+python scripts/manage_packs.py create \
+  --database-url "$DATABASE_URL" \
+  --pack-id "pack:${RUN_NAME}" \
+  --difficulty-policy balanced \
+  --country-code "$COUNTRY_CODE" \
+  --visibility private \
+  --intended-use audit \
+  <PASTE_CANONICAL_TAXON_ID_FLAGS_FROM_PREVIOUS_COMMAND>
+```
+
+### 5.6 Diagnose pack
+
+```bash
+python scripts/manage_packs.py diagnose \
+  --database-url "$DATABASE_URL" \
+  --pack-id "pack:${RUN_NAME}"
+```
+
+### 5.7 Compile pack v2
+
+```bash
+python scripts/manage_packs.py compile \
+  --database-url "$DATABASE_URL" \
+  --pack-id "pack:${RUN_NAME}" \
+  --question-count 50 \
+  --contract-version v2
+```
+
+### 5.8 Materialize pack v2
+
+```bash
+python scripts/manage_packs.py materialize \
+  --database-url "$DATABASE_URL" \
+  --pack-id "pack:${RUN_NAME}" \
+  --question-count 50 \
+  --contract-version v2 \
+  --purpose assignment
+```
+
+### 5.9 Export compiled/materialization payloads for audit script
+
+Use inspect outputs and save JSON:
+
+```bash
+python scripts/inspect_database.py compiled-pack-builds \
+  --database-url "$DATABASE_URL" \
+  --pack-id "pack:${RUN_NAME}" \
+  --limit 5
+
+python scripts/inspect_database.py pack-materializations \
+  --database-url "$DATABASE_URL" \
+  --pack-id "pack:${RUN_NAME}" \
+  --purpose assignment \
+  --limit 5
+```
+
+If needed, fetch concrete files from `data/exports/` generated by your flow, or export DB payloads to:
+
+- `data/exports/${RUN_NAME}.pack_compiled_v2.json`
+- `data/exports/${RUN_NAME}.pack_materialization_v2.json`
+
+### 5.10 Audit distractors
+
+```bash
+python scripts/audit_phase3_distractors.py \
+  "data/exports/${RUN_NAME}.pack_compiled_v2.json" \
+  "data/exports/${RUN_NAME}.pack_materialization_v2.json" \
+  --output-json "data/exports/${RUN_NAME}.phase3_distractor_audit_report.json"
+```
+
+### 5.11 Useful inspect commands
+
+```bash
+python scripts/inspect_database.py summary --database-url "$DATABASE_URL"
+python scripts/inspect_database.py run-metrics --database-url "$DATABASE_URL"
+python scripts/inspect_database.py snapshot-health --database-url "$DATABASE_URL" --snapshot-id "$SNAPSHOT_ID"
+python scripts/inspect_database.py playable-corpus --database-url "$DATABASE_URL" --country-code "$COUNTRY_CODE" --limit 50
+python scripts/inspect_database.py playable-invalidations --database-url "$DATABASE_URL" --limit 50
+python scripts/inspect_database.py review-queue --database-url "$DATABASE_URL" --limit 50
+python scripts/inspect_database.py pack-diagnostics --database-url "$DATABASE_URL" --pack-id "pack:${RUN_NAME}" --limit 10
+```
+
+### 5.12 Runtime-app selectedOptionId validation (cross-repo)
+
+In `runtime-app` repo:
+
+```bash
+pnpm --filter @runtime-app/api run test:sessions:postgres
+pnpm --filter @runtime-app/api run test:sessions:postgres:learning
+```
+
+Evidence to capture in Palier 1 audit report:
+
+- `selectedOptionId` accepted for v2 submissions
+- `selectedTaxonId` derivation from option snapshot
+- no duplicate learning events on idempotent retry
+
+## 6. Evidence Checklist
+
+Expected outputs:
+
+- `data/raw/inaturalist/${SNAPSHOT_ID}/manifest.json`
+- `data/normalized/${RUN_NAME}.normalized.json`
+- `data/qualified/${RUN_NAME}.qualified.json`
+- `data/exports/${RUN_NAME}.export.json`
+- `docs/archive/evidence/smoke-reports/${RUN_NAME}.smoke_report.v1.json`
+- `data/exports/${RUN_NAME}.phase3_distractor_audit_report.json`
+
+And final audit target:
+
+- `docs/audits/palier-1-ingestion-audit-2026-05-01.md` (updated with run001 evidence)
+
+## 7. Run001 Fetch Execution Log
+
+Execution date: 2026-05-01  
+Step executed: fetch snapshot only (no Gemini, no qualification)
+
+Initial command (incorrect geo mapping, kept for traceability):
+
+```bash
+python scripts/fetch_inat_snapshot.py \
+  --snapshot-id palier1-be-birds-50taxa-run001 \
+  --pilot-taxa-path data/fixtures/inaturalist_pilot_taxa_palier1_be_50.json \
+  --country-code BE \
+  --max-observations-per-taxon 20
+```
+
+Initial output:
+
+```text
+Snapshot fetched | snapshot_id=palier1-be-birds-50taxa-run001 | harvested=1 | downloaded=1 | path=data/raw/inaturalist/palier1-be-birds-50taxa-run001
+```
+
+Root-cause correction:
+
+- `country_code=BE` currently maps to wrong iNaturalist place id in code (`7083`, New Caledonia).
+- corrected execution for Belgium uses explicit `--place-id 7008`.
+
+Corrected command (final run001 fetch):
+
+```bash
+python scripts/fetch_inat_snapshot.py \
+  --snapshot-id palier1-be-birds-50taxa-run001 \
+  --pilot-taxa-path data/fixtures/inaturalist_pilot_taxa_palier1_be_50.json \
+  --place-id 7008 \
+  --max-observations-per-taxon 20
+```
+
+Corrected output:
+
+```text
+Snapshot fetched | snapshot_id=palier1-be-birds-50taxa-run001 | harvested=778 | downloaded=778 | path=data/raw/inaturalist/palier1-be-birds-50taxa-run001
+```
+
+Snapshot id (final):
+
+- `palier1-be-birds-50taxa-run001`
+
+Snapshot path (final):
+
+- `data/raw/inaturalist/palier1-be-birds-50taxa-run001`
+- manifest: `data/raw/inaturalist/palier1-be-birds-50taxa-run001/manifest.json`
+
+Fetch result summary (final):
+
+- observations harvested: `778`
+- images downloaded: `778`
+- taxa with results: `49/50`
+- taxa without results: `1/50`
+- download problems: `0`
+- approximate per-taxon coverage:
+  - `34` taxa at `20`
+  - `7` taxa between `10` and `19`
+  - `8` taxa between `1` and `9`
+  - `1` taxon at `0`
+
+Taxon without results:
+
+- `Corvus cornix` (`source_taxon_id=144757`)
+
+## 8. Run001 Snapshot Issues
+
+- Initial geo strategy issue confirmed: `country_code=BE` path routed to wrong iNaturalist place id.
+- Corrected strategy (`place_id=7008`) resolves bulk collection; run001 now harvested `778`.
+- Remaining low-coverage taxa (<10 candidates):
+  - `Acrocephalus scirpaceus` (`6`)
+  - `Larus michahellis` (`1`)
+  - `Athene noctua` (`2`)
+  - `Dryocopus martius` (`6`)
+  - `Riparia riparia` (`3`)
+  - `Alauda arvensis` (`4`)
+  - `Galerida cristata` (`1`)
+  - `Lanius collurio` (`7`)
+  - `Corvus cornix` (`0`)
+- No media download failure observed (`download_issues=0`).
