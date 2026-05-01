@@ -22,7 +22,7 @@ Ce document ne remplace pas `docs/runbooks/execution-plan.md`.
 
 Active chantier: Phase A - Verrouiller les gates  
 Status: in_progress  
-Next concrete output: `docs/runbooks/ingestion-quality-gates.md`  
+Next concrete output: palier 1 audit preparation  
 
 Do not start as structural implementation work before Phase A exit criteria:
 
@@ -37,14 +37,16 @@ Phase A exit criteria:
 - gates documentés avec statuts, reason codes, décision bloquante ou review;
 - reason codes existants inventoriés;
 - gaps entre code actuel et roadmap explicités;
+- mapping code actuel -> gate -> reason_code produit;
 - gates bloquants palier 1 identifiés;
+- premier audit palier 1 préparé;
 - aucun déplacement de logique runtime dans `database`.
 
 ## Phase Delivery Map
 
 | Phase | Livrable principal | Type | Repo | Statut |
 |---|---|---|---|---|
-| A | `docs/runbooks/ingestion-quality-gates.md` | doc/runbook | `database` | in_progress |
+| A | quality gates + code-to-gate map | doc/runbook | `database` | in_progress |
 | B | audit dedup pré-IA | script/report | `database` | todo |
 | C | feedback minimal utile | data/model/report | `database` | todo |
 | D | audit distracteurs `QuestionOption[]` | report | `database` + `runtime-app` | partial |
@@ -966,6 +968,7 @@ Ces sujets ne doivent pas être traités comme de simples détails d'implémenta
 - `docs/README.md`
 - `docs/runbooks/execution-plan.md`
 - `docs/runbooks/ingestion-quality-gates.md`
+- `docs/runbooks/ingestion-code-to-gate-map.md`
 - `docs/runbooks/v0.1-scope.md`
 - `docs/runbooks/program-kpis.md`
 - `docs/runbooks/phase3-distractor-strategy.md`

@@ -36,7 +36,7 @@ Règle de pilotage:
 
 Active chantier: Phase A - Verrouiller les gates  
 Status: in_progress  
-Next concrete output: mapping code actuel -> gates palier 1  
+Next concrete output: palier 1 audit preparation  
 
 Do not start as structural implementation work before Phase A exit criteria:
 
@@ -50,6 +50,8 @@ Phase A exit criteria:
 
 - gates et reason codes documentés;
 - reason codes existants inventoriés;
+- mapping code actuel -> gates palier 1 produit dans
+  `docs/runbooks/ingestion-code-to-gate-map.md`;
 - gaps explicitement listés;
 - gates bloquants palier 1 identifiés;
 - aucun changement de frontière `database` / `runtime-app`.
@@ -676,6 +678,7 @@ Gaps déjà visibles:
 ## 10. References
 
 - `docs/runbooks/pre-scale-ingestion-roadmap.md`
+- `docs/runbooks/ingestion-code-to-gate-map.md`
 - `docs/runbooks/v0.1-scope.md`
 - `docs/runbooks/program-kpis.md`
 - `docs/runbooks/phase3-distractor-strategy.md`
