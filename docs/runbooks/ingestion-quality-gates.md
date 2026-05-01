@@ -56,6 +56,16 @@ Phase A exit criteria:
 - gates bloquants palier 1 identifiés;
 - aucun changement de frontière `database` / `runtime-app`.
 
+## Phase A Decision
+
+Status: `ready_for_palier_1_audit`
+
+The current code-to-gate mapping shows no strict blocker before starting the
+Palier 1 audit. The implementation is sufficient to audit the current pipeline
+as-is, but not sufficient to promote Palier 1 as GO without a consolidated run
+report, distractor v2 audit, feedback coverage review, cost estimate and
+runtime E2E validation.
+
 ## 3. Status model
 
 Statuts de gate:
