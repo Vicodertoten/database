@@ -31,6 +31,9 @@ Le runtime lit des surfaces dediees (`playable_corpus.v1`, builds compiles, mate
 
 Source de verite: `docs/runbooks/v0.1-scope.md`.
 
+Roadmap complementaire de robustification ingestion avant montee en volume:
+`docs/runbooks/pre-scale-ingestion-roadmap.md`.
+
 Perimetre operationnel court terme:
 
 - oiseaux uniquement

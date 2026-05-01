@@ -27,6 +27,8 @@ This repository now uses a three-zone documentation architecture:
 - Foundation: `docs/foundation/`
 - Active runbooks: `docs/runbooks/`
 - Locked short-term scope v0.1: `docs/runbooks/v0.1-scope.md`
+- Pre-scale ingestion roadmap: `docs/runbooks/pre-scale-ingestion-roadmap.md`
+- Ingestion quality gates: `docs/runbooks/ingestion-quality-gates.md`
 - Phase 2 implementation runbook: `docs/runbooks/phase2-playable-corpus-v0.1.md`
 - Phase 3 distractor strategy: `docs/runbooks/phase3-distractor-strategy.md`
 - Archive index: `docs/archive/`
