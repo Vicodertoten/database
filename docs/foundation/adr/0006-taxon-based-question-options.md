@@ -1,6 +1,6 @@
 ---
 owner: database
-status: implemented
+status: stable
 last_reviewed: 2026-04-29
 source_of_truth: docs/foundation/adr/0006-taxon-based-question-options.md
 scope: foundation
