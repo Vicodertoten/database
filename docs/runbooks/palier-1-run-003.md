@@ -141,6 +141,9 @@ Strata:
 
 ## 6. References
 
+- manual review sheet: `docs/audits/palier-1-v11-manual-review-sheet.md`
+
+
 - comparison audit: `docs/audits/qualification-policy-v1-v11-comparison.md`
 - default pack audit: `docs/audits/palier-1-v11-default-pack-audit.md`
 - comparison metrics json: `data/exports/qualification_policy_v1_v11_comparison.json`

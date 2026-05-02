@@ -109,3 +109,8 @@ Execution guidance:
 - maintenir `v1` default global tant que l'audit manuel n'est pas cloture
 - traiter `Larus michahellis` hors scope palier 1 courant (source-limited)
 - ouvrir une remediation source dediee si ce taxon redevient prioritaire
+
+
+## 6. Manual review sheet
+
+- `docs/audits/palier-1-v11-manual-review-sheet.md`
