@@ -208,10 +208,7 @@ def test_low_confidence_requires_warnings_and_review() -> None:
         media_asset=_media_asset(),
     )
 
-    assert profile.profile_status in {
-        PedagogicalProfileStatus.MANUAL_REVIEW_REQUIRED,
-        PedagogicalProfileStatus.PROFILED_WITH_WARNINGS,
-    }
+    assert profile.profile_status == PedagogicalProfileStatus.MANUAL_REVIEW_REQUIRED
     assert profile.warnings
 
 
@@ -298,8 +295,47 @@ def test_low_technical_quality_blocks_primary_beginner_usage() -> None:
     )
 
     assert profile.overall_score < 55
+    assert profile.profile_status == PedagogicalProfileStatus.MANUAL_REVIEW_REQUIRED
     assert PedagogicalUsage.PRIMARY_QUESTION_BEGINNER not in profile.recommended_usages
     assert "technical_quality_too_low_for_primary_question" in profile.warnings
+
+
+def test_license_review_required_does_not_return_profiled_status() -> None:
+    resource = _qualified_resource(
+        license_safety_result=LicenseSafetyResult.REVIEW_REQUIRED,
+        export_eligible=False,
+    )
+    profile = build_pedagogical_image_profile(
+        resource,
+        ai_outcome=_ai_outcome(),
+        media_asset=_media_asset(),
+    )
+
+    assert profile.profile_status == PedagogicalProfileStatus.MANUAL_REVIEW_REQUIRED
+    assert "hard_gate_license_review_required" in profile.reason_codes
+    assert "license_review_required" in profile.warnings
+
+
+def test_ai_outcome_divergence_with_resource_triggers_manual_review() -> None:
+    resource = _qualified_resource(
+        technical_quality=TechnicalQuality.LOW,
+        pedagogical_quality=PedagogicalQuality.LOW,
+        ai_confidence=0.55,
+    )
+    profile = build_pedagogical_image_profile(
+        resource,
+        ai_outcome=_ai_outcome(
+            confidence=0.92,
+            technical_quality=TechnicalQuality.HIGH,
+            pedagogical_quality=PedagogicalQuality.HIGH,
+            difficulty_level=DifficultyLevel.MEDIUM,
+        ),
+        media_asset=_media_asset(),
+    )
+
+    assert profile.profile_status == PedagogicalProfileStatus.MANUAL_REVIEW_REQUIRED
+    assert "ai_outcome_qualified_resource_divergence" in profile.warnings
+    assert "manual_review_ai_outcome_resource_divergence" in profile.reason_codes
 
 
 def test_builder_scores_are_clamped_between_0_and_100() -> None:

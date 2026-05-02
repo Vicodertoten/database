@@ -64,6 +64,36 @@ def _average(values: list[int]) -> float:
     return round(sum(values) / len(values), 2)
 
 
+def _input_fidelity(input_mode: str) -> dict[str, object]:
+    if input_mode == "qualified":
+        return {
+            "level": "high",
+            "score": 1.0,
+            "source_contract": "qualification.staged.v1",
+            "notes": [
+                "Direct qualified resources payload with richest pedagogical "
+                "and provenance fields.",
+            ],
+        }
+    if input_mode == "export":
+        return {
+            "level": "medium",
+            "score": 0.7,
+            "source_contract": "export.bundle.v4",
+            "notes": [
+                "Some qualification fields are reconstructed for profiling.",
+            ],
+        }
+    return {
+        "level": "low",
+        "score": 0.45,
+        "source_contract": "playable_corpus.v1",
+        "notes": [
+            "Profile input is heavily reconstructed from runtime-facing payloads.",
+        ],
+    }
+
+
 def main() -> int:
     _bootstrap_src_path()
 
@@ -158,6 +188,7 @@ def main() -> int:
     report = {
         "generated_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
         "profile_version": "pedagogical_image_profile.v1",
+        "input_fidelity": _input_fidelity(input_mode),
         "input": {
             "mode": input_mode,
             "path": str(input_path),

@@ -37,6 +37,14 @@ CONFIDENCE_MANUAL_REVIEW_THRESHOLD = 50
 PRIMARY_BLOCK_TECHNICAL_THRESHOLD = 30
 RECOMMENDED_USAGE_THRESHOLD = 70
 AVOID_USAGE_THRESHOLD = 35
+AI_RESOURCE_DIVERGENCE_CONFIDENCE_DELTA = 0.20
+
+MANUAL_REVIEW_WARNING_SIGNALS = {
+    "ai_outcome_qualified_resource_divergence",
+    "cached_prompt_version_mismatch",
+    "license_review_required",
+    "low_confidence_requires_manual_review",
+}
 
 PENDING_AI_STATUSES = {
     "missing_cached_ai_output",
@@ -115,6 +123,15 @@ def build_pedagogical_image_profile(
             media_type=media_asset.media_type if media_asset else MediaType.IMAGE,
         )
 
+    divergence_reason_codes = _collect_ai_resource_divergence_reason_codes(
+        qualified_resource=qualified_resource,
+        ai_outcome=ai_outcome,
+    )
+    if divergence_reason_codes:
+        warnings.append("ai_outcome_qualified_resource_divergence")
+        reason_codes.append("manual_review_ai_outcome_resource_divergence")
+        reason_codes.extend(divergence_reason_codes)
+
     feedback = _build_feedback_profile(qualified_resource=qualified_resource, ai_outcome=ai_outcome)
     subscores = _compute_subscores(
         qualified_resource=qualified_resource,
@@ -144,11 +161,15 @@ def build_pedagogical_image_profile(
         warnings.append("limited_feedback_payload")
         reason_codes.append("feedback_not_available_for_explanation_usage")
 
+    has_recommended_candidate = _has_recommended_usage_candidate(usage_scores)
+    if not has_recommended_candidate:
+        reason_codes.append("manual_review_no_recommended_usage")
+
     status = _resolve_profile_status(
         blocked_status=blocked_status,
         ai_context=ai_context,
         warnings=warnings,
-        usage_scores=usage_scores,
+        has_recommended_candidate=has_recommended_candidate,
     )
 
     recommended_usages, avoid_usages = _resolve_usage_classification(
@@ -156,9 +177,6 @@ def build_pedagogical_image_profile(
         usage_scores=usage_scores,
         technical_primary_block=technical_primary_block,
     )
-
-    if status == PedagogicalProfileStatus.PROFILED_WITH_WARNINGS and not recommended_usages:
-        reason_codes.append("profiled_with_warnings_without_recommended_usage")
 
     reason_codes.append(f"score_band_{score_band.value}")
 
@@ -199,6 +217,11 @@ def _hard_gate_status(
     if qualified_resource.license_safety_result == LicenseSafetyResult.UNSAFE:
         reason_codes.append("hard_gate_unsafe_license")
         return PedagogicalProfileStatus.REJECTED_FOR_PLAYABLE_USE
+
+    if qualified_resource.license_safety_result == LicenseSafetyResult.REVIEW_REQUIRED:
+        warnings.append("license_review_required")
+        reason_codes.append("hard_gate_license_review_required")
+        return PedagogicalProfileStatus.MANUAL_REVIEW_REQUIRED
 
     if qualified_resource.qualification_status == QualificationStatus.REJECTED:
         reason_codes.append("hard_gate_rejected_qualification")
@@ -517,7 +540,7 @@ def _resolve_profile_status(
     blocked_status: PedagogicalProfileStatus | None,
     ai_context: _AiContext,
     warnings: list[str],
-    usage_scores: PedagogicalUsageScores,
+    has_recommended_candidate: bool,
 ) -> PedagogicalProfileStatus:
     if blocked_status is not None:
         return blocked_status
@@ -525,10 +548,20 @@ def _resolve_profile_status(
     if ai_context.confidence_score < CONFIDENCE_MANUAL_REVIEW_THRESHOLD:
         return PedagogicalProfileStatus.MANUAL_REVIEW_REQUIRED
 
+    if not has_recommended_candidate:
+        return PedagogicalProfileStatus.MANUAL_REVIEW_REQUIRED
+
+    if any(signal in warnings for signal in MANUAL_REVIEW_WARNING_SIGNALS):
+        return PedagogicalProfileStatus.MANUAL_REVIEW_REQUIRED
+
     if warnings:
         return PedagogicalProfileStatus.PROFILED_WITH_WARNINGS
 
-    has_recommended_candidate = any(
+    return PedagogicalProfileStatus.PROFILED
+
+
+def _has_recommended_usage_candidate(usage_scores: PedagogicalUsageScores) -> bool:
+    return any(
         score >= RECOMMENDED_USAGE_THRESHOLD
         for score in (
             usage_scores.primary_question_beginner,
@@ -539,10 +572,100 @@ def _resolve_profile_status(
             usage_scores.feedback_explanation,
         )
     )
-    if not has_recommended_candidate:
-        return PedagogicalProfileStatus.PROFILED_WITH_WARNINGS
 
-    return PedagogicalProfileStatus.PROFILED
+
+def _collect_ai_resource_divergence_reason_codes(
+    *,
+    qualified_resource: QualifiedResource,
+    ai_outcome: AIQualificationOutcome | None,
+) -> list[str]:
+    if ai_outcome is None or ai_outcome.qualification is None:
+        return []
+
+    ai_qualification = ai_outcome.qualification
+    reason_codes: list[str] = []
+
+    _append_divergence_if_mismatch(
+        reason_codes,
+        field_name="technical_quality",
+        ai_value=ai_qualification.technical_quality,
+        resource_value=qualified_resource.technical_quality,
+    )
+    _append_divergence_if_mismatch(
+        reason_codes,
+        field_name="pedagogical_quality",
+        ai_value=ai_qualification.pedagogical_quality,
+        resource_value=qualified_resource.pedagogical_quality,
+    )
+    _append_divergence_if_mismatch(
+        reason_codes,
+        field_name="view_angle",
+        ai_value=ai_qualification.view_angle,
+        resource_value=qualified_resource.view_angle,
+    )
+    _append_divergence_if_mismatch(
+        reason_codes,
+        field_name="difficulty_level",
+        ai_value=ai_qualification.difficulty_level,
+        resource_value=qualified_resource.difficulty_level,
+    )
+    _append_divergence_if_mismatch(
+        reason_codes,
+        field_name="media_role",
+        ai_value=ai_qualification.media_role,
+        resource_value=qualified_resource.media_role,
+    )
+    _append_divergence_if_mismatch(
+        reason_codes,
+        field_name="confusion_relevance",
+        ai_value=ai_qualification.confusion_relevance,
+        resource_value=qualified_resource.confusion_relevance,
+    )
+    _append_divergence_if_mismatch(
+        reason_codes,
+        field_name="diagnostic_feature_visibility",
+        ai_value=ai_qualification.diagnostic_feature_visibility,
+        resource_value=qualified_resource.diagnostic_feature_visibility,
+    )
+    _append_divergence_if_mismatch(
+        reason_codes,
+        field_name="learning_suitability",
+        ai_value=ai_qualification.learning_suitability,
+        resource_value=qualified_resource.learning_suitability,
+    )
+    _append_divergence_if_mismatch(
+        reason_codes,
+        field_name="uncertainty_reason",
+        ai_value=ai_qualification.uncertainty_reason,
+        resource_value=qualified_resource.uncertainty_reason,
+    )
+
+    ai_visible_parts = set(_dedupe_non_blank(ai_qualification.visible_parts))
+    resource_visible_parts = set(_dedupe_non_blank(qualified_resource.visible_parts))
+    if ai_visible_parts and resource_visible_parts and ai_visible_parts != resource_visible_parts:
+        reason_codes.append("divergence_visible_parts")
+
+    if qualified_resource.ai_confidence is not None:
+        confidence_delta = abs(ai_qualification.confidence - qualified_resource.ai_confidence)
+        if confidence_delta > AI_RESOURCE_DIVERGENCE_CONFIDENCE_DELTA:
+            reason_codes.append("divergence_ai_confidence")
+
+    provenance_ai_status = (qualified_resource.provenance_summary.ai_status or "").strip()
+    if provenance_ai_status and ai_outcome.status and ai_outcome.status != provenance_ai_status:
+        reason_codes.append("divergence_ai_status")
+
+    return list(dict.fromkeys(reason_codes))
+
+
+def _append_divergence_if_mismatch(
+    reason_codes: list[str],
+    *,
+    field_name: str,
+    ai_value: object,
+    resource_value: object,
+) -> None:
+    if str(ai_value) != str(resource_value):
+        reason_codes.append(f"divergence_{field_name}")
 
 
 def _resolve_usage_classification(

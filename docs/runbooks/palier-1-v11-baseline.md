@@ -18,8 +18,8 @@ artifacts and explicit hard gates.
 - Technical baseline: `GO`
 - Program decision: `GO_WITH_GUARDRAILS`
 - Doctrine status: `technical_stable / pedagogical_in_review`
-- Runtime true-baseline E2E: `pending`
-- Expected next runtime check: `Palier-1 v1.1 true baseline runtime consumption check`
+- Runtime offline E2E: `PASS`
+- Owner/Postgres E2E: `optional / environment-dependent`
 - Pedagogical quality: `in review`
 - Distractor quality: accepted for contract validation only, not product-level quality
 - Multilingual readiness: `pending`
@@ -76,7 +76,7 @@ The v2 compile target ordering uses deterministic round-robin by taxon
 - The current baseline validates `pack.compiled.v2` and `pack.materialization.v2`, not final quiz pedagogy.
 - v1.1 increases coverage via `accepted_with_flags`, so pack-level selection must remain stricter than raw exportability.
 - Manual quality review is not fully closed.
-- `runtime-app` still needs a true Palier-1 v1.1 run003 baseline consumption check.
+- Owner/Postgres runtime checks depend on dedicated test environment availability.
 
 ## Linked audits
 

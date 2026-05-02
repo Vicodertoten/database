@@ -50,7 +50,14 @@ Verification executee dans `/Users/ryelandt/Documents/runtime-app`:
 
 ```bash
 set -a; source .env; set +a
-export TEST_RUNTIME_DATABASE_URL="${TEST_RUNTIME_DATABASE_URL:-$RUNTIME_DATABASE_URL}"
+if [[ -z "${TEST_RUNTIME_DATABASE_URL:-}" ]]; then
+	echo "TEST_RUNTIME_DATABASE_URL is required for owner/Postgres runtime tests"
+	exit 1
+fi
+if [[ "${ALLOW_RUNTIME_TEST_DB_RESET:-}" != "true" ]]; then
+	echo "ALLOW_RUNTIME_TEST_DB_RESET=true is required to authorize runtime test DB reset"
+	exit 1
+fi
 pnpm --filter @runtime-app/api run migrate:runtime-db
 pnpm --filter @runtime-app/api run test:sessions:postgres
 pnpm --filter @runtime-app/api run test:sessions:postgres:learning
