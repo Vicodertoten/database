@@ -45,6 +45,7 @@ This repository now uses a four-zone documentation architecture:
 	- `docs/audits/qualification-policy-v1-v11-comparison.md`
 	- `docs/audits/palier-1-v11-default-pack-audit.md`
 	- `docs/audits/palier-1-v11-manual-review-sheet.md`
+	- `docs/audits/palier-1-v12-ai-review-contract.md`
 - Archive index: `docs/archive/`
 
 ## Governance rules

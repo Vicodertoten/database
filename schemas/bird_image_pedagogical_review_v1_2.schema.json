@@ -1,0 +1,421 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "bird_image_pedagogical_review_v1_2",
+  "type": "object",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/success_payload"
+    },
+    {
+      "$ref": "#/$defs/failed_payload"
+    }
+  ],
+  "$defs": {
+    "failure_reason": {
+      "type": "string",
+      "enum": [
+        "image_not_accessible",
+        "non_bird_subject",
+        "subject_too_occluded",
+        "image_too_blurry",
+        "insufficient_information",
+        "unsafe_or_invalid_content",
+        "model_output_invalid",
+        "schema_validation_failed"
+      ]
+    },
+    "success_payload": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "prompt_version",
+        "status",
+        "failure_reason",
+        "image_assessment",
+        "pedagogical_assessment",
+        "identification_features_visible_in_this_image",
+        "post_answer_feedback",
+        "limitations",
+        "overall_confidence"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "type": "string",
+          "const": "bird_image_pedagogical_review.v1.2"
+        },
+        "prompt_version": {
+          "type": "string",
+          "const": "bird_image_review_prompt.v1.2"
+        },
+        "status": {
+          "type": "string",
+          "const": "success"
+        },
+        "failure_reason": {
+          "type": "null"
+        },
+        "consistency_warning": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            null,
+            "obvious_non_bird_subject"
+          ]
+        },
+        "image_assessment": {
+          "type": "object",
+          "required": [
+            "technical_quality",
+            "subject_visibility",
+            "sharpness",
+            "lighting",
+            "background_clutter",
+            "occlusion",
+            "view_angle",
+            "visible_parts",
+            "confidence"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "technical_quality": {
+              "type": "string",
+              "enum": [
+                "high",
+                "medium",
+                "low",
+                "unusable"
+              ]
+            },
+            "subject_visibility": {
+              "type": "string",
+              "enum": [
+                "high",
+                "medium",
+                "low",
+                "none"
+              ]
+            },
+            "sharpness": {
+              "type": "string",
+              "enum": [
+                "high",
+                "medium",
+                "low"
+              ]
+            },
+            "lighting": {
+              "type": "string",
+              "enum": [
+                "high",
+                "medium",
+                "low"
+              ]
+            },
+            "background_clutter": {
+              "type": "string",
+              "enum": [
+                "low",
+                "medium",
+                "high"
+              ]
+            },
+            "occlusion": {
+              "type": "string",
+              "enum": [
+                "none",
+                "minor",
+                "major"
+              ]
+            },
+            "view_angle": {
+              "type": "string",
+              "enum": [
+                "lateral",
+                "frontal",
+                "rear",
+                "dorsal",
+                "ventral",
+                "mixed",
+                "unknown"
+              ]
+            },
+            "visible_parts": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "^[a-z0-9_ -]+$"
+              }
+            },
+            "confidence": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          }
+        },
+        "pedagogical_assessment": {
+          "type": "object",
+          "required": [
+            "pedagogical_quality",
+            "difficulty_level",
+            "media_role",
+            "diagnostic_feature_visibility",
+            "representativeness",
+            "learning_suitability",
+            "confusion_relevance",
+            "confidence"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "pedagogical_quality": {
+              "type": "string",
+              "enum": [
+                "high",
+                "medium",
+                "low"
+              ]
+            },
+            "difficulty_level": {
+              "type": "string",
+              "enum": [
+                "easy",
+                "medium",
+                "hard"
+              ]
+            },
+            "media_role": {
+              "type": "string",
+              "enum": [
+                "primary_identification",
+                "secondary_support",
+                "confusion_training",
+                "not_recommended"
+              ]
+            },
+            "diagnostic_feature_visibility": {
+              "type": "string",
+              "enum": [
+                "high",
+                "medium",
+                "low",
+                "none"
+              ]
+            },
+            "representativeness": {
+              "type": "string",
+              "enum": [
+                "high",
+                "medium",
+                "low"
+              ]
+            },
+            "learning_suitability": {
+              "type": "string",
+              "enum": [
+                "high",
+                "medium",
+                "low"
+              ]
+            },
+            "confusion_relevance": {
+              "type": "string",
+              "enum": [
+                "high",
+                "medium",
+                "low"
+              ]
+            },
+            "confidence": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          }
+        },
+        "identification_features_visible_in_this_image": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "feature",
+              "body_part",
+              "visibility",
+              "importance_for_identification",
+              "explanation"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "feature": {
+                "type": "string",
+                "minLength": 1
+              },
+              "body_part": {
+                "type": "string",
+                "minLength": 1
+              },
+              "visibility": {
+                "type": "string",
+                "enum": [
+                  "high",
+                  "medium",
+                  "low"
+                ]
+              },
+              "importance_for_identification": {
+                "type": "string",
+                "enum": [
+                  "high",
+                  "medium",
+                  "low"
+                ]
+              },
+              "explanation": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "post_answer_feedback": {
+          "type": "object",
+          "required": [
+            "correct",
+            "incorrect",
+            "identification_tips",
+            "confidence"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "correct": {
+              "type": "object",
+              "required": [
+                "short",
+                "long"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "short": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "long": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "incorrect": {
+              "type": "object",
+              "required": [
+                "short",
+                "long"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "short": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "long": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "identification_tips": {
+              "type": "array",
+              "minItems": 2,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "confidence": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          }
+        },
+        "limitations": {
+          "type": "object",
+          "required": [
+            "why_not_ideal",
+            "uncertainty_reason",
+            "requires_human_review"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "why_not_ideal": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "uncertainty_reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "requires_human_review": {
+              "type": "boolean"
+            }
+          }
+        },
+        "overall_confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+    "failed_payload": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "prompt_version",
+        "status",
+        "failure_reason",
+        "overall_confidence"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "type": "string",
+          "const": "bird_image_pedagogical_review.v1.2"
+        },
+        "prompt_version": {
+          "type": "string",
+          "const": "bird_image_review_prompt.v1.2"
+        },
+        "status": {
+          "type": "string",
+          "const": "failed"
+        },
+        "failure_reason": {
+          "$ref": "#/$defs/failure_reason"
+        },
+        "consistency_warning": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            null,
+            "obvious_non_bird_subject"
+          ]
+        },
+        "overall_confidence": {
+          "type": "number",
+          "const": 0
+        }
+      }
+    }
+  }
+}

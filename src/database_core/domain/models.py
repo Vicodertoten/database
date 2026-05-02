@@ -497,6 +497,18 @@ class PedagogicalUsageScores(DomainModel):
     feedback_explanation: int = Field(ge=0, le=100)
 
 
+class PostAnswerFeedbackVariant(DomainModel):
+    short: str | None = None
+    long: str | None = None
+
+
+class PostAnswerFeedback(DomainModel):
+    correct: PostAnswerFeedbackVariant = Field(default_factory=PostAnswerFeedbackVariant)
+    incorrect: PostAnswerFeedbackVariant = Field(default_factory=PostAnswerFeedbackVariant)
+    identification_tips: list[str] = Field(default_factory=list)
+    confidence: int = Field(default=0, ge=0, le=100)
+
+
 class PedagogicalFeedbackProfile(DomainModel):
     feedback_short: str | None = None
     feedback_long: str | None = None
@@ -506,6 +518,7 @@ class PedagogicalFeedbackProfile(DomainModel):
     beginner_hint: str | None = None
     expert_hint: str | None = None
     confusion_hint: str | None = None
+    post_answer_feedback: PostAnswerFeedback | None = None
     feedback_confidence: int = Field(default=0, ge=0, le=100)
 
 

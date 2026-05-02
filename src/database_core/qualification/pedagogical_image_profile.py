@@ -26,6 +26,8 @@ from database_core.domain.models import (
     PedagogicalImageProfile,
     PedagogicalImageSubscores,
     PedagogicalUsageScores,
+    PostAnswerFeedback,
+    PostAnswerFeedbackVariant,
     QualifiedResource,
 )
 from database_core.qualification.ai import AIQualificationOutcome
@@ -157,7 +159,7 @@ def build_pedagogical_image_profile(
         warnings.append("low_confidence_requires_manual_review")
         reason_codes.append("hard_gate_low_confidence_manual_review")
 
-    if feedback.feedback_short is None and not feedback.what_to_look_at:
+    if not _has_feedback_signal(feedback):
         warnings.append("limited_feedback_payload")
         reason_codes.append("feedback_not_available_for_explanation_usage")
 
@@ -337,6 +339,7 @@ def _build_blocked_profile(
         beginner_hint=None,
         expert_hint=None,
         confusion_hint=None,
+        post_answer_feedback=None,
         feedback_confidence=0,
     )
 
@@ -415,7 +418,7 @@ def _compute_subscores(
         (visible_parts_score * 0.45)
         + (diagnostic_visibility_score * 0.30)
         + (20 if feedback.feedback_short else 0)
-        + (10 if feedback.confusion_hint else 0)
+        + (10 if _has_post_answer_feedback(feedback) else 0)
     )
 
     confusion_potential = _clamp(
@@ -522,7 +525,7 @@ def _compute_usage_scores(
     if qualified_resource.media_role in {MediaRole.CONTEXT, MediaRole.NON_DIAGNOSTIC}:
         beginner = min(beginner, 35)
 
-    if feedback.feedback_short is None and not feedback.what_to_look_at:
+    if not _has_feedback_signal(feedback):
         feedback_explanation = min(feedback_explanation, 35)
 
     return PedagogicalUsageScores(
@@ -718,26 +721,55 @@ def _build_feedback_profile(
     ai_outcome: AIQualificationOutcome | None,
 ) -> PedagogicalFeedbackProfile:
     what_to_look_at = _dedupe_non_blank(qualified_resource.visible_parts)
-
-    confusion_hint = None
-    if qualified_resource.confusion_relevance in {
-        ConfusionRelevance.MEDIUM,
-        ConfusionRelevance.HIGH,
-    }:
-        if what_to_look_at:
-            confusion_hint = f"Compare field marks on: {', '.join(what_to_look_at[:3])}."
-        else:
-            confusion_hint = "Compare diagnostic field marks with common lookalikes."
-
     ai_note = _extract_ai_note(ai_outcome=ai_outcome, qualified_resource=qualified_resource)
 
-    feedback_short = _first_non_blank(
-        [
-            f"Observe {what_to_look_at[0]} first." if what_to_look_at else None,
-            confusion_hint,
-            ai_note,
-        ]
-    )
+    focus_parts = what_to_look_at[:3]
+    focus_phrase = _format_focus_parts(focus_parts)
+    primary_focus = focus_parts[0] if focus_parts else "la silhouette generale"
+
+    if focus_phrase:
+        feedback_short = f"Sur cette image, les indices les plus utiles sont {focus_phrase}."
+        incorrect_short = (
+            f"Pas tout a fait. Sur cette image, regarde d'abord {focus_phrase}."
+        )
+    else:
+        feedback_short = (
+            "Sur cette image, les meilleurs reperes sont la silhouette generale "
+            "et la forme du bec."
+        )
+        incorrect_short = (
+            "Pas tout a fait. Sur cette image, commence par la silhouette generale "
+            "puis verifie la forme du bec."
+        )
+
+    correct_long_parts = [
+        f"Sur cette image, le detail le plus utile est {primary_focus}.",
+        (
+            f"Ici, la combinaison {focus_phrase} aide a confirmer l'identification."
+            if focus_phrase
+            else "Ici, combine silhouette, posture et bec pour limiter les confusions."
+        ),
+        (
+            "Pour progresser, privilegie la combinaison de plusieurs criteres visibles "
+            "plutot qu'un seul detail."
+        ),
+        ai_note,
+    ]
+    correct_long = _join_sentences(correct_long_parts) or feedback_short
+
+    incorrect_long_parts = [
+        f"Sur cette image, commence par verifier {primary_focus}.",
+        (
+            f"Ensuite, controle {focus_phrase} avant de valider la reponse."
+            if focus_phrase
+            else (
+                "Ensuite, controle la posture et la silhouette generale "
+                "avant de valider la reponse."
+            )
+        ),
+        "Cette sequence aide a distinguer les especes proches sur une photo similaire.",
+    ]
+    incorrect_long = _join_sentences(incorrect_long_parts) or incorrect_short
 
     why_good_example: list[str] = []
     if qualified_resource.technical_quality in {TechnicalQuality.HIGH, TechnicalQuality.MEDIUM}:
@@ -758,31 +790,36 @@ def _build_feedback_profile(
     if not what_to_look_at:
         why_not_ideal.append("No clear visible-part cue extracted for focused feedback.")
 
-    beginner_hint = (
-        f"Start with {what_to_look_at[0]} and one additional field mark."
-        if what_to_look_at
-        else None
+    identification_tips = _build_identification_tips(
+        focus_parts=focus_parts,
+        focus_phrase=focus_phrase,
     )
 
-    expert_hint = (
-        "Validate multiple traits before final ID to reduce lookalike confusion."
-        if qualified_resource.diagnostic_feature_visibility
-        in {DiagnosticFeatureVisibility.HIGH, DiagnosticFeatureVisibility.MEDIUM}
-        else None
+    feedback_confidence = _clamp(
+        (_to_percent(qualified_resource.ai_confidence) * 0.70)
+        + (20 if feedback_short and incorrect_short else 0)
+        + (10 if len(identification_tips) >= 2 else 0)
+    )
+
+    post_answer_feedback = PostAnswerFeedback(
+        correct=PostAnswerFeedbackVariant(
+            short=feedback_short,
+            long=correct_long,
+        ),
+        incorrect=PostAnswerFeedbackVariant(
+            short=incorrect_short,
+            long=incorrect_long,
+        ),
+        identification_tips=identification_tips,
+        confidence=feedback_confidence,
     )
 
     feedback_long_parts = [
-        feedback_short,
+        correct_long,
         why_good_example[0] if why_good_example else None,
         why_not_ideal[0] if why_not_ideal else None,
     ]
     feedback_long = _join_sentences(feedback_long_parts)
-
-    feedback_confidence = _clamp(
-        (_to_percent(qualified_resource.ai_confidence) * 0.70)
-        + (20 if feedback_short else 0)
-        + (10 if len(what_to_look_at) >= 2 else 0)
-    )
 
     return PedagogicalFeedbackProfile(
         feedback_short=feedback_short,
@@ -790,11 +827,65 @@ def _build_feedback_profile(
         what_to_look_at=what_to_look_at,
         why_good_example=why_good_example,
         why_not_ideal=why_not_ideal,
-        beginner_hint=beginner_hint,
-        expert_hint=expert_hint,
-        confusion_hint=confusion_hint,
+        beginner_hint=None,
+        expert_hint=None,
+        confusion_hint=None,
+        post_answer_feedback=post_answer_feedback,
         feedback_confidence=feedback_confidence,
     )
+
+
+def _has_feedback_signal(feedback: PedagogicalFeedbackProfile) -> bool:
+    if feedback.feedback_short is not None and feedback.feedback_short.strip():
+        return True
+    if feedback.what_to_look_at:
+        return True
+    return _has_post_answer_feedback(feedback)
+
+
+def _has_post_answer_feedback(feedback: PedagogicalFeedbackProfile) -> bool:
+    post_answer_feedback = feedback.post_answer_feedback
+    if post_answer_feedback is None:
+        return False
+    if len(post_answer_feedback.identification_tips) < 2:
+        return False
+    return all(
+        value is not None and value.strip()
+        for value in (
+            post_answer_feedback.correct.short,
+            post_answer_feedback.correct.long,
+            post_answer_feedback.incorrect.short,
+            post_answer_feedback.incorrect.long,
+        )
+    )
+
+
+def _build_identification_tips(
+    *,
+    focus_parts: list[str],
+    focus_phrase: str | None,
+) -> list[str]:
+    tips: list[str] = []
+    for part in focus_parts:
+        tips.append(f"Sur cette image, repere d'abord {part}.")
+    if focus_phrase:
+        tips.append(f"Ici, combine {focus_phrase} plutot qu'un seul indice.")
+    if len(tips) < 2:
+        tips.append("Sur cette image, verifie la silhouette generale avant les details fins.")
+    if len(tips) < 2:
+        tips.append("Ici, combine couleur, bec et posture pour confirmer l'identification.")
+    return _dedupe_non_blank(tips)
+
+
+def _format_focus_parts(parts: list[str]) -> str | None:
+    cleaned = _dedupe_non_blank(parts)
+    if not cleaned:
+        return None
+    if len(cleaned) == 1:
+        return cleaned[0]
+    if len(cleaned) == 2:
+        return f"{cleaned[0]} et {cleaned[1]}"
+    return f"{cleaned[0]}, {cleaned[1]} et {cleaned[2]}"
 
 
 def _build_bird_image_features(

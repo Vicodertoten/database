@@ -187,6 +187,23 @@ def test_excellent_image_profiles_with_high_score_and_primary_usages() -> None:
     assert PedagogicalUsage.FEEDBACK_EXPLANATION in profile.recommended_usages
 
 
+def test_feedback_profile_builds_image_specific_post_answer_feedback() -> None:
+    resource = _qualified_resource(visible_parts=["breast", "beak", "tail"])
+    profile = build_pedagogical_image_profile(
+        resource,
+        ai_outcome=_ai_outcome(visible_parts=["breast", "beak", "tail"]),
+        media_asset=_media_asset(),
+    )
+
+    post_feedback = profile.feedback.post_answer_feedback
+    assert post_feedback is not None
+    assert "Sur cette image" in (post_feedback.correct.short or "")
+    assert "Sur cette image" in (post_feedback.incorrect.short or "")
+    assert len(post_feedback.identification_tips) >= 2
+    assert profile.feedback.beginner_hint is None
+    assert profile.feedback.expert_hint is None
+
+
 def test_missing_ai_forces_pending_ai_without_recommended_usage() -> None:
     resource = _qualified_resource(
         ai_confidence=None,
@@ -261,7 +278,13 @@ def test_high_confusion_relevance_increases_confusion_training() -> None:
     )
 
     assert profile.usage_scores.confusion_training >= 70
-    assert profile.feedback.confusion_hint is not None
+    assert profile.feedback.confusion_hint is None
+    assert profile.feedback.beginner_hint is None
+    assert profile.feedback.expert_hint is None
+    assert profile.feedback.post_answer_feedback is not None
+    assert profile.feedback.post_answer_feedback.correct.short is not None
+    assert profile.feedback.post_answer_feedback.incorrect.short is not None
+    assert len(profile.feedback.post_answer_feedback.identification_tips) >= 2
 
 
 def test_low_technical_quality_blocks_primary_beginner_usage() -> None:

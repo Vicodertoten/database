@@ -142,14 +142,22 @@ Le profil inclut un feedback structure:
 - `what_to_look_at`
 - `why_good_example`
 - `why_not_ideal`
-- `beginner_hint`
-- `expert_hint`
-- `confusion_hint`
+- `post_answer_feedback.correct.short`
+- `post_answer_feedback.correct.long`
+- `post_answer_feedback.incorrect.short`
+- `post_answer_feedback.incorrect.long`
+- `post_answer_feedback.identification_tips`
+- `post_answer_feedback.confidence`
 - `feedback_confidence`
 
 Le feedback peut etre construit via IA ou fallback deterministe prudent.
 
-Regle v1:
+Decision candidate v1.2:
+
+- les indices pre-reponse (`beginner_hint`, `expert_hint`, `confusion_hint`) sont de-priorises
+- le signal principal est le feedback post-reponse, image-specifique
+
+Regle v1/v1.2:
 
 - si aucun feedback pertinent ne peut etre produit, l'image est degradee pour les usages necessitant feedback (notamment `feedback_explanation`).
 
