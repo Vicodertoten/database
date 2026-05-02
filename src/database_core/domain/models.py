@@ -30,8 +30,11 @@ from database_core.domain.enums import (
     PackDifficultyPolicy,
     PackMaterializationPurpose,
     PackVisibility,
+    PedagogicalProfileStatus,
     PedagogicalQuality,
     PedagogicalRole,
+    PedagogicalScoreBand,
+    PedagogicalUsage,
     QualificationStage,
     QualificationStatus,
     ReferencedTaxonMappingStatus,
@@ -469,6 +472,118 @@ class QualifiedResource(DomainModel):
                 raise ValueError("exportable resources must be accepted")
             if self.license_safety_result != LicenseSafetyResult.SAFE:
                 raise ValueError("exportable resources must have a safe license result")
+        return self
+
+
+class PedagogicalImageSubscores(DomainModel):
+    technical_quality: int = Field(ge=0, le=100)
+    subject_visibility: int = Field(ge=0, le=100)
+    diagnostic_value: int = Field(ge=0, le=100)
+    pedagogical_clarity: int = Field(ge=0, le=100)
+    representativeness: int = Field(ge=0, le=100)
+    difficulty_fit: int = Field(ge=0, le=100)
+    feedback_potential: int = Field(ge=0, le=100)
+    confusion_potential: int = Field(ge=0, le=100)
+    context_value: int = Field(ge=0, le=100)
+    confidence: int = Field(ge=0, le=100)
+
+
+class PedagogicalUsageScores(DomainModel):
+    primary_question_beginner: int = Field(ge=0, le=100)
+    primary_question_intermediate: int = Field(ge=0, le=100)
+    primary_question_expert: int = Field(ge=0, le=100)
+    context_learning: int = Field(ge=0, le=100)
+    confusion_training: int = Field(ge=0, le=100)
+    feedback_explanation: int = Field(ge=0, le=100)
+
+
+class PedagogicalFeedbackProfile(DomainModel):
+    feedback_short: str | None = None
+    feedback_long: str | None = None
+    what_to_look_at: list[str] = Field(default_factory=list)
+    why_good_example: list[str] = Field(default_factory=list)
+    why_not_ideal: list[str] = Field(default_factory=list)
+    beginner_hint: str | None = None
+    expert_hint: str | None = None
+    confusion_hint: str | None = None
+    feedback_confidence: int = Field(default=0, ge=0, le=100)
+
+
+class BirdImagePedagogicalFeatures(DomainModel):
+    visible_bird_parts: list[str] = Field(default_factory=list)
+    pose: str | None = None
+    plumage_visibility: str | None = None
+    field_marks_visible: list[str] = Field(default_factory=list)
+    sex_or_life_stage_relevance: str | None = None
+    habitat_visible: str | None = None
+
+
+class PedagogicalImageProfile(DomainModel):
+    profile_version: str = "pedagogical_image_profile.v1"
+    profile_status: PedagogicalProfileStatus
+    qualified_resource_id: str
+    media_asset_id: str
+    canonical_taxon_id: str
+    taxon_group: TaxonGroup
+    media_type: MediaType
+    overall_score: int = Field(ge=0, le=100)
+    score_band: PedagogicalScoreBand
+    confidence: int = Field(ge=0, le=100)
+    subscores: PedagogicalImageSubscores
+    usage_scores: PedagogicalUsageScores
+    recommended_usages: list[PedagogicalUsage] = Field(default_factory=list)
+    avoid_usages: list[PedagogicalUsage] = Field(default_factory=list)
+    feedback: PedagogicalFeedbackProfile
+    reason_codes: list[str] = Field(default_factory=list)
+    warnings: list[str] = Field(default_factory=list)
+    bird_image: BirdImagePedagogicalFeatures | None = None
+    ai_required: bool = True
+    ai_profile_source: str | None = None
+    ai_prompt_version: str | None = None
+    model_name: str | None = None
+
+    @field_validator("recommended_usages", "avoid_usages")
+    @classmethod
+    def validate_unique_usages(
+        cls, value: list[PedagogicalUsage]
+    ) -> list[PedagogicalUsage]:
+        return list(dict.fromkeys(value))
+
+    @field_validator("reason_codes", "warnings")
+    @classmethod
+    def validate_non_blank_unique_strings(cls, value: list[str]) -> list[str]:
+        normalized = [item.strip() for item in value if item and item.strip()]
+        return list(dict.fromkeys(normalized))
+
+    @model_validator(mode="after")
+    def validate_profile_consistency(self) -> Self:
+        recommended = set(self.recommended_usages)
+        avoid = set(self.avoid_usages)
+        overlap = recommended.intersection(avoid)
+        if overlap:
+            raise ValueError(
+                "recommended_usages and avoid_usages must not overlap "
+                f"(overlap={sorted(item.value for item in overlap)})"
+            )
+
+        if self.profile_status == PedagogicalProfileStatus.PROFILED:
+            if self.confidence < 50:
+                raise ValueError("profiled profiles must have confidence >= 50")
+            if not self.recommended_usages:
+                raise ValueError("profiled profiles must recommend at least one usage")
+
+        if self.profile_status == PedagogicalProfileStatus.PENDING_AI:
+            if self.overall_score != 0:
+                raise ValueError("pending_ai profiles must keep overall_score at 0")
+            if self.recommended_usages:
+                raise ValueError("pending_ai profiles cannot have recommended usages")
+
+        if self.profile_status == PedagogicalProfileStatus.REJECTED_FOR_PLAYABLE_USE:
+            if self.recommended_usages:
+                raise ValueError(
+                    "rejected_for_playable_use profiles cannot have recommended usages"
+                )
+
         return self
 
 

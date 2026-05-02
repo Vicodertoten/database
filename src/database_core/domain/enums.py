@@ -121,6 +121,31 @@ class LearningSuitability(StrEnum):
     HIGH = "high"
 
 
+class PedagogicalProfileStatus(StrEnum):
+    PENDING_AI = "pending_ai"
+    PROFILED = "profiled"
+    PROFILED_WITH_WARNINGS = "profiled_with_warnings"
+    MANUAL_REVIEW_REQUIRED = "manual_review_required"
+    REJECTED_FOR_PLAYABLE_USE = "rejected_for_playable_use"
+
+
+class PedagogicalScoreBand(StrEnum):
+    A = "A"
+    B = "B"
+    C = "C"
+    D = "D"
+    E = "E"
+
+
+class PedagogicalUsage(StrEnum):
+    PRIMARY_QUESTION_BEGINNER = "primary_question_beginner"
+    PRIMARY_QUESTION_INTERMEDIATE = "primary_question_intermediate"
+    PRIMARY_QUESTION_EXPERT = "primary_question_expert"
+    CONTEXT_LEARNING = "context_learning"
+    CONFUSION_TRAINING = "confusion_training"
+    FEEDBACK_EXPLANATION = "feedback_explanation"
+
+
 class ObservationKind(StrEnum):
     FULL_BIRD = "full_bird"
     IN_FLIGHT = "in_flight"
