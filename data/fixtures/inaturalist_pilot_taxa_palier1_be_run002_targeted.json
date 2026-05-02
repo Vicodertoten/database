@@ -1,0 +1,51 @@
+[
+  {
+    "accepted_scientific_name": "Larus michahellis",
+    "canonical_rank": "species",
+    "canonical_taxon_id": "taxon:birds:000026",
+    "common_names": [],
+    "source_taxon_id": "59202"
+  },
+  {
+    "accepted_scientific_name": "Accipiter nisus",
+    "canonical_rank": "species",
+    "canonical_taxon_id": "taxon:birds:000032",
+    "common_names": [],
+    "source_taxon_id": "5106"
+  },
+  {
+    "accepted_scientific_name": "Athene noctua",
+    "canonical_rank": "species",
+    "canonical_taxon_id": "taxon:birds:000037",
+    "common_names": [],
+    "source_taxon_id": "19998"
+  },
+  {
+    "accepted_scientific_name": "Apus apus",
+    "canonical_rank": "species",
+    "canonical_taxon_id": "taxon:birds:000041",
+    "common_names": [],
+    "source_taxon_id": "6638"
+  },
+  {
+    "accepted_scientific_name": "Riparia riparia",
+    "canonical_rank": "species",
+    "canonical_taxon_id": "taxon:birds:000044",
+    "common_names": [],
+    "source_taxon_id": "11941"
+  },
+  {
+    "accepted_scientific_name": "Alauda arvensis",
+    "canonical_rank": "species",
+    "canonical_taxon_id": "taxon:birds:000045",
+    "common_names": [],
+    "source_taxon_id": "7347"
+  },
+  {
+    "accepted_scientific_name": "Lanius collurio",
+    "canonical_rank": "species",
+    "canonical_taxon_id": "taxon:birds:000047",
+    "common_names": [],
+    "source_taxon_id": "12038"
+  }
+]
