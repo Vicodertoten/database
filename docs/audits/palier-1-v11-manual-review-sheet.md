@@ -8,6 +8,13 @@ scope: audit
 
 # Palier 1 v1.1 Manual Review Sheet (60 items)
 
+## Review status
+
+- Review format: manual Markdown review
+- Current status: partially filled
+- Program impact: informs pedagogical adoption, not technical baseline validity
+- Required decision: `GO` / `GO_WITH_GUARDRAILS` / `NO_GO`
+
 ## Instructions (quick)
 
 - Remplir uniquement les champs `review_*`.
@@ -46,7 +53,9 @@ scope: audit
 | 19 | `taxon:birds:000003` | [photo 66350065](https://www.inaturalist.org/photos/66350065) | [obs 41815100](https://www.inaturalist.org/observations/41815100) | `core_id` | `high` | `-` | `high` |  |  |  |
 | 20 | `taxon:birds:000003` | [photo 227080840](https://www.inaturalist.org/photos/227080840) | [obs 133323648](https://www.inaturalist.org/observations/133323648) | `core_id` | `high` | `-` | `medium` |  |  |  |
 
-Toutes les photos core sont bien
+Review notes captured so far:
+
+- Core sample: "Toutes les photos core sont bien".
 
 
 ## B. Advanced/Context + Flags (20)
@@ -54,21 +63,29 @@ Toutes les photos core sont bien
 |---:|---|---|---|---|---|---|---|---|---|---|
 | 1 | `taxon:birds:000001` | [photo 12496624](https://www.inaturalist.org/photos/12496624) | [obs 9233444](https://www.inaturalist.org/observations/9233444) | `advanced_id` | `low` | `insufficient_technical_quality` | `low` |  |  |  |
 
-photo de dos et pas ouf qualité mais clairement exploitable
+Review note:
+
+- "photo de dos et pas ouf qualité mais clairement exploitable"
 
 | 2 | `taxon:birds:000001` | [photo 31578593](https://www.inaturalist.org/photos/31578593) | [obs 20451966](https://www.inaturalist.org/observations/20451966) | `context` | `low` | `insufficient_technical_quality` | `low` |  |  |  |
 
-photo pas ouf qualité mais espèce reconnaissable
+Review note:
+
+- "photo pas ouf qualité mais espèce reconnaissable"
 
 
 | 3 | `taxon:birds:000001` | [photo 31997700](https://www.inaturalist.org/photos/31997700) | [obs 20751209](https://www.inaturalist.org/observations/20751209) | `context` | `low` | `insufficient_technical_quality` | `low` |  |  |  |
 
-ok
+Review note:
+
+- "ok"
 
 
 | 4 | `taxon:birds:000001` | [photo 32016821](https://www.inaturalist.org/photos/32016821) | [obs 20762605](https://www.inaturalist.org/observations/20762605) | `advanced_id` | `low` | `insufficient_technical_quality` | `low` |  |  |  |
 
-ok
+Review note:
+
+- "ok"
 
 
 | 5 | `taxon:birds:000001` | [photo 32082329](https://www.inaturalist.org/photos/32082329) | [obs 20801161](https://www.inaturalist.org/observations/20801161) | `context` | `low` | `insufficient_technical_quality` | `low` |  |  |  |
@@ -79,7 +96,9 @@ ok
 | 10 | `taxon:birds:000001` | [photo 56156772](https://www.inaturalist.org/photos/56156772) | [obs 35602126](https://www.inaturalist.org/observations/35602126) | `advanced_id` | `low` | `insufficient_technical_quality` | `low` |  |  |  |
 | 11 | `taxon:birds:000001` | [photo 58164216](https://www.inaturalist.org/photos/58164216) | [obs 36762746](https://www.inaturalist.org/observations/36762746) | `context` | `low` | `insufficient_technical_quality` | `low` |  |  |  |
 
-a la limite, vraiment mauvaise qualité
+Review note:
+
+- "a la limite, vraiment mauvaise qualité"
 
 | 12 | `taxon:birds:000001` | [photo 63233564](https://www.inaturalist.org/photos/63233564) | [obs 39831425](https://www.inaturalist.org/observations/39831425) | `context` | `low` | `insufficient_technical_quality` | `low` |  |  |  |
 | 13 | `taxon:birds:000001` | [photo 73595668](https://www.inaturalist.org/photos/73595668) | [obs 46401920](https://www.inaturalist.org/observations/46401920) | `advanced_id` | `low` | `insufficient_technical_quality` | `low` |  |  |  |
@@ -90,7 +109,9 @@ a la limite, vraiment mauvaise qualité
 | 18 | `taxon:birds:000001` | [photo 449650275](https://www.inaturalist.org/photos/449650275) | [obs 251312734](https://www.inaturalist.org/observations/251312734) | `context` | `low` | `insufficient_technical_quality` | `low` |  |  |  |
 | 19 | `taxon:birds:000002` | [photo 29882573](https://www.inaturalist.org/photos/29882573) | [obs 19425547](https://www.inaturalist.org/observations/19425547) | `context` | `low` | `insufficient_technical_quality` | `low` |  |  |  |
 
-très très compliqué de reconnaitre
+Review note:
+
+- "très très compliqué de reconnaitre"
 
 | 20 | `taxon:birds:000002` | [photo 30026214](https://www.inaturalist.org/photos/30026214) | [obs 19511527](https://www.inaturalist.org/observations/19511527) | `context` | `low` | `insufficient_technical_quality` | `low` |  |  |  |
 

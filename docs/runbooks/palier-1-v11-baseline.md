@@ -13,6 +13,16 @@ scope: runbook
 Freeze an operational baseline for Palier 1 v1.1 with deterministic, reproducible
 artifacts and explicit hard gates.
 
+## Program decision
+
+- Technical baseline: `GO`
+- Program decision: `GO_WITH_GUARDRAILS`
+- Doctrine status: `technical_stable / pedagogical_in_review`
+- Runtime true-baseline E2E: `pending`
+- Pedagogical quality: `in review`
+- Distractor quality: accepted for contract validation only, not product-level quality
+- Multilingual readiness: `pending`
+
 ## Baseline contract (hard requirements)
 
 - `pack.compiled.v2`: `question_count_requested = 50`
@@ -58,3 +68,26 @@ This gate fails if any baseline hard requirement regresses.
 The v2 compile target ordering uses deterministic round-robin by taxon
 (`one-target-per-taxon-first`) so `question_count=50` can preserve
 `50` unique target taxa when the pack has at least one playable item per taxon.
+
+## Known limitations
+
+- Distractor quality is still weak, with a reason-code mix dominated by `diversity_fallback`.
+- The current baseline validates `pack.compiled.v2` and `pack.materialization.v2`, not final quiz pedagogy.
+- v1.1 increases coverage via `accepted_with_flags`, so pack-level selection must remain stricter than raw exportability.
+- Manual quality review is not fully closed.
+- `runtime-app` still needs a true Palier-1 v1.1 run003 baseline consumption check.
+
+## Linked audits
+
+- [Qualification policy v1 vs v1.1 comparison](../audits/qualification-policy-v1-v11-comparison.md)
+- [Palier 1 v1.1 default pack audit](../audits/palier-1-v11-default-pack-audit.md)
+- [Palier 1 v1.1 manual review sheet](../audits/palier-1-v11-manual-review-sheet.md)
+- [Phase 3 distractor audit report (evidence)](../audits/evidence/palier1_v11_baseline/phase3_distractor_audit_report.json)
+
+## Next documentation-sensitive chantiers
+
+- True runtime consumption check with Palier-1 v1.1 run003 materialization.
+- Pedagogical image usage layer.
+- Distractor quality policy.
+- Multilingual labels and feedback.
+- IA feedback quality.

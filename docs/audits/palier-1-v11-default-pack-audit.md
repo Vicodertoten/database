@@ -1,12 +1,21 @@
 ---
 owner: database
-status: in_progress
+status: stable
 last_reviewed: 2026-05-02
 source_of_truth: docs/audits/palier-1-v11-default-pack-audit.md
 scope: audit
 ---
 
 # Palier 1 v1.1 Default Pack Audit
+
+## Decision snapshot
+
+- Decision: `GO_WITH_GUARDRAILS`
+- Technical status: `pass`
+- Pedagogical status: `pending manual review / quality-limited`
+- Baseline reference: `docs/runbooks/palier-1-v11-baseline.md`
+
+This audit documents an intermediate/default state. The active baseline contract and program framing are maintained in `docs/runbooks/palier-1-v11-baseline.md`.
 
 ## 1. Scope
 

@@ -8,11 +8,10 @@ scope: runbook
 
 # Palier 1 Run 003 (Policy Compare + v1.1 Default Closure)
 
-Superseded baseline note:
+> Superseded by `docs/runbooks/palier-1-v11-baseline.md`.
+> This file is retained for historical run lineage only.
 
-- this document records the intermediate run003 default closure (`49` unique taxa)
-- the frozen Palier 1 v1.1 baseline contract is now tracked in
-  `docs/runbooks/palier-1-v11-baseline.md`
+This document records the intermediate run003 default closure (`49` unique taxa).
 
 ## 1. Purpose
 

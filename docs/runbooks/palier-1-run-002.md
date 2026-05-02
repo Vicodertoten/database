@@ -1,12 +1,15 @@
 ---
 owner: database
-status: in_progress
+status: stable
 last_reviewed: 2026-05-02
 source_of_truth: docs/runbooks/palier-1-run-002.md
 scope: runbook
 ---
 
 # Palier 1 Run 002
+
+> Superseded by `docs/runbooks/palier-1-v11-baseline.md`.
+> This file is retained for historical run lineage only.
 
 Run name target: `palier1_be_birds_50taxa_run002`
 

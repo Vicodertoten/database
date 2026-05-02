@@ -61,8 +61,10 @@ That is the main architectural priority before any significant new scope is adde
 ## Reference docs
 
 - Documentation index: `docs/README.md`
+- Active audits index: `docs/audits/`
 - Living audit reference: `docs/runbooks/audit-reference.md`
 - Codex execution plan (sequential gates): `docs/runbooks/execution-plan.md`
+- Palier 1 v1.1 baseline (technical stable / pedagogical in review): `docs/runbooks/palier-1-v11-baseline.md`
 - Stable canonical charter v1: `docs/foundation/canonical-charter-v1.md`
 - Canonical implementation ADR: `docs/foundation/adr/0001-charte-canonique-v1.md`
 - Noyau canonique fort ADR: `docs/foundation/adr/0002-noyau-canonique-fort-execution-sequentielle.md`

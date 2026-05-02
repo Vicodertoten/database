@@ -1,6 +1,6 @@
 ---
 owner: database
-status: in_progress
+status: stable
 last_reviewed: 2026-05-02
 source_of_truth: docs/audits/qualification-policy-v1-v11-comparison.md
 scope: audit
@@ -148,21 +148,21 @@ Compilation/materialization status:
 - default/core/mixed: **not compilable** (bloque par `min_media_per_taxon`)
 - compile attempts retournent: `reason_code=insufficient_media_per_taxon`
 
-## 9. Decision recommendation
+## 9. Conclusion and decision framing
 
-Recommendation immediate:
+Conclusion:
 
-1. garder `v1` comme defaut global (backward-safe),
-2. activer `v1.1` explicitement sur la pipeline palier (`--qualification-policy v1.1`),
-3. utiliser `mixed` pour exploration pedagogique/diagnostic,
-4. conserver `core` pour un mode strict qualitatif,
-5. avant adoption compile run003, traiter le blocage residuel `taxon:birds:000026` (>=2 medias exportables).
+- `v1.1` is technically useful because it expands coverage (`+703` exportables).
+- `v1` remains the safer default global policy unless explicitly overridden.
+- `v1.1` is accepted for Palier-1 under guardrails.
+- Pack profiles must control quality more strictly than raw exportability.
 
-Evaluation doctrine:
+Operational recommendation:
 
-- "base plus large, packs plus selectifs" est validee techniquement.
-- le gain de couverture est majeur (`+703` exportables),
-- le risque qualite est deplace vers les profils pack et doit etre complete par audit manuel cible (notamment sur `insufficient_technical_quality`).
+1. keep `v1` as global default (backward-safe),
+2. enable `v1.1` explicitly on Palier-1 pipelines,
+3. keep stricter pack-level gates for adoption-quality outputs,
+4. rely on manual quality review for pedagogical adoption decisions.
 
 ## 10. Artifacts produced
 

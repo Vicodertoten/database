@@ -8,11 +8,18 @@ scope: documentation_index
 
 # Documentation Index
 
-This repository now uses a three-zone documentation architecture:
+This repository now uses a four-zone documentation architecture:
 
 - `docs/foundation/`: stable doctrine and contracts
 - `docs/runbooks/`: active operational documentation
+- `docs/audits/`: active audits, policy comparisons, quality reviews, and adoption decisions
 - `docs/archive/`: historical logs, evidence, and retired material
+
+## Audit location rules
+
+- Active audits stay in `docs/audits/`.
+- Closed audits that remain referenced by an active baseline may stay in `docs/audits/` as retained evidence.
+- Superseded or purely historical audits must move to `docs/archive/audits/`.
 
 ## Inter-repo rule (single source of truth)
 
@@ -26,6 +33,7 @@ This repository now uses a three-zone documentation architecture:
 
 - Foundation: `docs/foundation/`
 - Active runbooks: `docs/runbooks/`
+- Active audits: `docs/audits/`
 - Locked short-term scope v0.1: `docs/runbooks/v0.1-scope.md`
 - Pre-scale ingestion roadmap: `docs/runbooks/pre-scale-ingestion-roadmap.md`
 - Ingestion quality gates: `docs/runbooks/ingestion-quality-gates.md`
@@ -33,6 +41,10 @@ This repository now uses a three-zone documentation architecture:
 - Phase 2 implementation runbook: `docs/runbooks/phase2-playable-corpus-v0.1.md`
 - Phase 3 distractor strategy: `docs/runbooks/phase3-distractor-strategy.md`
 - Palier 1 v1.1 baseline stabilization: `docs/runbooks/palier-1-v11-baseline.md`
+- Palier 1 v1.1 linked audits:
+	- `docs/audits/qualification-policy-v1-v11-comparison.md`
+	- `docs/audits/palier-1-v11-default-pack-audit.md`
+	- `docs/audits/palier-1-v11-manual-review-sheet.md`
 - Archive index: `docs/archive/`
 
 ## Governance rules

@@ -6,7 +6,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs"
-ACTIVE_DIRS = [DOCS / "foundation", DOCS / "runbooks"]
+ACTIVE_DIRS = [DOCS / "foundation", DOCS / "runbooks", DOCS / "audits"]
 ALLOWED_STATUS = {"planned", "in_progress", "blocked", "ready_for_validation", "stable"}
 REQUIRED_KEYS = {"owner", "status", "last_reviewed", "source_of_truth", "scope"}
 
