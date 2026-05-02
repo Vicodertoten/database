@@ -1926,6 +1926,43 @@ def test_compile_pack_v2_uses_referenced_only_inat_option(
     assert "auto_referenced_high_confidence" in json.loads(row["reason_codes_json"])
 
 
+def test_compile_pack_v2_round_robin_targets_one_per_taxon_first(
+    database_url: str,
+) -> None:
+    repository = _build_repository(database_url)
+    repository.initialize()
+    canonical_taxon_ids = _seed_pack_ready_playable_items(
+        repository,
+        run_id="run:20260502T001320Z:phase3v2rr",
+        taxon_count=10,
+        media_per_taxon=3,
+    )
+    payload = repository.create_pack(
+        pack_id="pack:compile:phase3:v2:round-robin",
+        parameters={
+            "canonical_taxon_ids": canonical_taxon_ids,
+            "difficulty_policy": "easy",
+            "country_code": None,
+            "location_bbox": None,
+            "location_point": None,
+            "location_radius_meters": None,
+            "observed_from": None,
+            "observed_to": None,
+            "owner_id": "owner:compile",
+            "org_id": None,
+            "visibility": "private",
+            "intended_use": "training",
+        },
+    )
+
+    build = repository.compile_pack_v2(pack_id=str(payload["pack_id"]), question_count=15)
+    targets = [str(question["target_canonical_taxon_id"]) for question in build["questions"]]
+
+    assert len(targets) == 15
+    assert len(set(targets[:10])) == 10
+    assert targets[:10] == canonical_taxon_ids
+
+
 def test_materialize_pack_v2_freezes_question_options(
     database_url: str,
 ) -> None:

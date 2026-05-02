@@ -1,0 +1,24 @@
+{
+  "attempt_id": "packdiag:pack:palier1:be:birds:run003-v11-baseline:1:26b0ef4a",
+  "attempted_at": "2026-05-02T16:13:21.994411Z",
+  "blocking_taxa": [],
+  "compilable": true,
+  "deficits": [],
+  "measured": {
+    "min_media_count_per_taxon": 2,
+    "questions_possible": 20,
+    "requested_taxa_count": 50,
+    "taxa_served": 50,
+    "total_playable_items": 1351
+  },
+  "pack_diagnostic_version": "pack.diagnostic.v1",
+  "pack_id": "pack:palier1:be:birds:run003-v11-baseline",
+  "reason_code": "compilable",
+  "revision": 1,
+  "schema_version": "database.schema.v16",
+  "thresholds": {
+    "min_media_per_taxon": 2,
+    "min_taxa_served": 10,
+    "min_total_questions": 20
+  }
+}

@@ -1,12 +1,18 @@
 ---
 owner: database
-status: in_progress
+status: stable
 last_reviewed: 2026-05-02
 source_of_truth: docs/runbooks/palier-1-run-003.md
 scope: runbook
 ---
 
 # Palier 1 Run 003 (Policy Compare + v1.1 Default Closure)
+
+Superseded baseline note:
+
+- this document records the intermediate run003 default closure (`49` unique taxa)
+- the frozen Palier 1 v1.1 baseline contract is now tracked in
+  `docs/runbooks/palier-1-v11-baseline.md`
 
 ## 1. Purpose
 

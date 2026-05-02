@@ -12,6 +12,7 @@ def main() -> int:
     _run_pytest_with_xdist_preferred()
     _run_step([sys.executable, "scripts/check_doc_code_coherence.py"])
     _run_step([sys.executable, "scripts/check_docs_hygiene.py"])
+    _run_step([sys.executable, "scripts/check_palier1_v11_baseline.py"])
     _run_step([sys.executable, "-m", "ruff", "check", "src", "tests", "scripts"])
     print("Repository verification complete")
     return 0

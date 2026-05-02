@@ -1,0 +1,379 @@
+{
+  "reports": [
+    {
+      "source": "data/exports/palier1_be_birds_run003_v11_baseline.compile_v2.json",
+      "summary": {
+        "questions": 50,
+        "options": 200,
+        "distractors": 150,
+        "contract_version": "pack.compiled.v2"
+      },
+      "invariants": {
+        "questions_with_4_options": {
+          "count": 50,
+          "percent": 100.0
+        },
+        "questions_with_exactly_1_correct": {
+          "count": 50,
+          "percent": 100.0
+        },
+        "distractors_with_reason_codes": {
+          "count": 150,
+          "percent": 100.0
+        },
+        "options_with_non_empty_label": {
+          "count": 200,
+          "percent": 100.0
+        },
+        "distractors_not_equal_target": {
+          "count": 150,
+          "percent": 100.0
+        },
+        "questions_with_unique_canonical_ids": {
+          "count": 50,
+          "percent": 100.0
+        }
+      },
+      "inat_coverage": {
+        "questions_with_inat_similar_species": {
+          "count": 0,
+          "percent": 0.0
+        },
+        "distractors_from_inat_similar_species": {
+          "count": 0,
+          "percent": 0.0
+        },
+        "inat_available_questions": 0,
+        "inat_available_but_unused": 0,
+        "inat_available_but_unused_percent": 0.0,
+        "availability_note": "Computed only when optional question-level fields inat_similar_available/inat_similar_candidate_count exist."
+      },
+      "out_of_pack": {
+        "distractors_out_of_pack": {
+          "count": 0,
+          "percent": 0.0
+        },
+        "questions_with_out_of_pack": {
+          "count": 0,
+          "percent": 0.0
+        },
+        "questions_with_3_out_of_pack": {
+          "count": 0,
+          "percent": 0.0
+        }
+      },
+      "referenced_only": {
+        "distractors_referenced_only": {
+          "count": 0,
+          "percent": 0.0
+        },
+        "questions_with_referenced_only": {
+          "count": 0,
+          "percent": 0.0
+        },
+        "referenced_only_without_label": 0,
+        "referenced_only_scientific_or_mixed_label": 0,
+        "referenced_only_low_confidence_or_ambiguous": 0
+      },
+      "reason_code_quality": {
+        "top_reason_codes": [
+          {
+            "code": "diversity_fallback",
+            "count": 150
+          }
+        ],
+        "diversity_fallback_only": {
+          "count": 150,
+          "percent": 100.0
+        },
+        "taxonomic_fallback_only": {
+          "count": 0,
+          "percent": 0.0
+        },
+        "inat_similar_species_any": {
+          "count": 0,
+          "percent": 0.0
+        }
+      },
+      "repetition": {
+        "top_20_repeated_distractor_taxa": [
+          {
+            "canonical_taxon_id": "taxon:birds:000002",
+            "count": 35
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000005",
+            "count": 34
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000007",
+            "count": 34
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000009",
+            "count": 1
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000012",
+            "count": 1
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000015",
+            "count": 1
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000018",
+            "count": 1
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000020",
+            "count": 1
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000021",
+            "count": 1
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000022",
+            "count": 1
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000024",
+            "count": 1
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000026",
+            "count": 1
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000027",
+            "count": 1
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000028",
+            "count": 1
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000030",
+            "count": 1
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000031",
+            "count": 1
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000032",
+            "count": 1
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000033",
+            "count": 1
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000036",
+            "count": 1
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000039",
+            "count": 1
+          }
+        ],
+        "average_repetitions_per_distractor_taxon": 3.0,
+        "target_distractor_pairs_reused": 0,
+        "target_distractor_pairs_reused_percent": 0.0,
+        "questions_with_repeated_pair_inside_question": 0,
+        "pair_cardinality_distribution": {
+          "3": 50
+        }
+      }
+    },
+    {
+      "source": "data/exports/palier1_be_birds_run003_v11_baseline.materialize_v2.json",
+      "summary": {
+        "questions": 50,
+        "options": 200,
+        "distractors": 150,
+        "contract_version": "pack.materialization.v2"
+      },
+      "invariants": {
+        "questions_with_4_options": {
+          "count": 50,
+          "percent": 100.0
+        },
+        "questions_with_exactly_1_correct": {
+          "count": 50,
+          "percent": 100.0
+        },
+        "distractors_with_reason_codes": {
+          "count": 150,
+          "percent": 100.0
+        },
+        "options_with_non_empty_label": {
+          "count": 200,
+          "percent": 100.0
+        },
+        "distractors_not_equal_target": {
+          "count": 150,
+          "percent": 100.0
+        },
+        "questions_with_unique_canonical_ids": {
+          "count": 50,
+          "percent": 100.0
+        }
+      },
+      "inat_coverage": {
+        "questions_with_inat_similar_species": {
+          "count": 0,
+          "percent": 0.0
+        },
+        "distractors_from_inat_similar_species": {
+          "count": 0,
+          "percent": 0.0
+        },
+        "inat_available_questions": 0,
+        "inat_available_but_unused": 0,
+        "inat_available_but_unused_percent": 0.0,
+        "availability_note": "Computed only when optional question-level fields inat_similar_available/inat_similar_candidate_count exist."
+      },
+      "out_of_pack": {
+        "distractors_out_of_pack": {
+          "count": 0,
+          "percent": 0.0
+        },
+        "questions_with_out_of_pack": {
+          "count": 0,
+          "percent": 0.0
+        },
+        "questions_with_3_out_of_pack": {
+          "count": 0,
+          "percent": 0.0
+        }
+      },
+      "referenced_only": {
+        "distractors_referenced_only": {
+          "count": 0,
+          "percent": 0.0
+        },
+        "questions_with_referenced_only": {
+          "count": 0,
+          "percent": 0.0
+        },
+        "referenced_only_without_label": 0,
+        "referenced_only_scientific_or_mixed_label": 0,
+        "referenced_only_low_confidence_or_ambiguous": 0
+      },
+      "reason_code_quality": {
+        "top_reason_codes": [
+          {
+            "code": "diversity_fallback",
+            "count": 150
+          }
+        ],
+        "diversity_fallback_only": {
+          "count": 150,
+          "percent": 100.0
+        },
+        "taxonomic_fallback_only": {
+          "count": 0,
+          "percent": 0.0
+        },
+        "inat_similar_species_any": {
+          "count": 0,
+          "percent": 0.0
+        }
+      },
+      "repetition": {
+        "top_20_repeated_distractor_taxa": [
+          {
+            "canonical_taxon_id": "taxon:birds:000002",
+            "count": 35
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000005",
+            "count": 34
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000007",
+            "count": 34
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000009",
+            "count": 1
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000012",
+            "count": 1
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000015",
+            "count": 1
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000018",
+            "count": 1
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000020",
+            "count": 1
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000021",
+            "count": 1
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000022",
+            "count": 1
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000024",
+            "count": 1
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000026",
+            "count": 1
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000027",
+            "count": 1
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000028",
+            "count": 1
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000030",
+            "count": 1
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000031",
+            "count": 1
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000032",
+            "count": 1
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000033",
+            "count": 1
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000036",
+            "count": 1
+          },
+          {
+            "canonical_taxon_id": "taxon:birds:000039",
+            "count": 1
+          }
+        ],
+        "average_repetitions_per_distractor_taxon": 3.0,
+        "target_distractor_pairs_reused": 0,
+        "target_distractor_pairs_reused_percent": 0.0,
+        "questions_with_repeated_pair_inside_question": 0,
+        "pair_cardinality_distribution": {
+          "3": 50
+        }
+      }
+    }
+  ],
+  "errors": {}
+}

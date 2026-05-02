@@ -32,6 +32,7 @@ This repository now uses a three-zone documentation architecture:
 - Ingestion code-to-gate map: `docs/runbooks/ingestion-code-to-gate-map.md`
 - Phase 2 implementation runbook: `docs/runbooks/phase2-playable-corpus-v0.1.md`
 - Phase 3 distractor strategy: `docs/runbooks/phase3-distractor-strategy.md`
+- Palier 1 v1.1 baseline stabilization: `docs/runbooks/palier-1-v11-baseline.md`
 - Archive index: `docs/archive/`
 
 ## Governance rules

@@ -1675,16 +1675,20 @@ class PostgresPackStore:
                 )
             )
 
-        target_rows: list[dict[str, object]] = []
+        ordered_rows_by_taxon: dict[str, list[dict[str, object]]] = {}
         for canonical_taxon_id in sorted_taxon_ids:
-            target_rows.extend(items_per_taxon[canonical_taxon_id])
-        target_rows.sort(
-            key=lambda row: self._pack_item_sort_key(
-                difficulty_policy=difficulty_policy,
-                canonical_taxon_id=str(row["canonical_taxon_id"]),
-                playable_item_id=str(row["playable_item_id"]),
-                difficulty_level=str(row["difficulty_level"]),
+            ordered_rows_by_taxon[canonical_taxon_id] = sorted(
+                items_per_taxon[canonical_taxon_id],
+                key=lambda row: self._pack_item_sort_key(
+                    difficulty_policy=difficulty_policy,
+                    canonical_taxon_id=str(row["canonical_taxon_id"]),
+                    playable_item_id=str(row["playable_item_id"]),
+                    difficulty_level=str(row["difficulty_level"]),
+                ),
             )
+        target_rows = self._round_robin_target_rows(
+            sorted_taxon_ids=sorted_taxon_ids,
+            rows_by_taxon=ordered_rows_by_taxon,
         )
 
         questions: list[CompiledPackQuestionV2] = []
@@ -1818,6 +1822,27 @@ class PostgresPackStore:
             if len(questions) >= question_count_requested:
                 break
         return questions
+
+    def _round_robin_target_rows(
+        self,
+        *,
+        sorted_taxon_ids: Sequence[str],
+        rows_by_taxon: dict[str, list[dict[str, object]]],
+    ) -> list[dict[str, object]]:
+        if not sorted_taxon_ids:
+            return []
+
+        max_rows = 0
+        for canonical_taxon_id in sorted_taxon_ids:
+            max_rows = max(max_rows, len(rows_by_taxon.get(canonical_taxon_id, [])))
+
+        ordered_rows: list[dict[str, object]] = []
+        for row_index in range(max_rows):
+            for canonical_taxon_id in sorted_taxon_ids:
+                rows = rows_by_taxon.get(canonical_taxon_id, [])
+                if row_index < len(rows):
+                    ordered_rows.append(rows[row_index])
+        return ordered_rows
 
     def _fetch_inat_similar_taxa_by_target(
         self,

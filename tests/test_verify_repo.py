@@ -40,6 +40,7 @@ def test_verify_repo_runs_compile_pytest_and_ruff_in_order(monkeypatch) -> None:
         ],
         [module.sys.executable, "scripts/check_doc_code_coherence.py"],
         [module.sys.executable, "scripts/check_docs_hygiene.py"],
+        [module.sys.executable, "scripts/check_palier1_v11_baseline.py"],
         [module.sys.executable, "-m", "ruff", "check", "src", "tests", "scripts"],
     ]
     assert "Repository verification complete" in buffer.getvalue()
