@@ -179,8 +179,8 @@ def load_snapshot_dataset(
         [_build_canonical_taxon(seed) for seed in manifest.taxon_seeds],
         key=lambda item: item.canonical_taxon_id,
     )
-    observations: list[SourceObservation] = []
-    media_assets: list[MediaAsset] = []
+    observations_by_uid: dict[str, SourceObservation] = {}
+    media_assets_by_id: dict[str, MediaAsset] = {}
     download_by_media_id = {
         source_external_key(
             source_name=manifest.source_name,
@@ -211,34 +211,33 @@ def load_snapshot_dataset(
                 response_path=seed.response_path,
                 raw_index=raw_index,
             )
-            observations.append(observation)
+            observations_by_uid.setdefault(observation.observation_uid, observation)
 
             primary_photo = (result.get("photos") or [None])[0]
             if primary_photo is None:
                 continue
 
-            media_assets.append(
-                _build_snapshot_media_asset(
-                    observation=observation,
-                    photo=primary_photo,
-                    download=download_by_media_id.get(
-                        source_external_key(
-                            source_name=manifest.source_name,
-                            external_id=str(primary_photo["id"]),
-                        )
-                    ),
-                    response_path=seed.response_path,
-                    raw_index=raw_index,
-                    snapshot_dir=snapshot_dir,
-                )
+            media_asset = _build_snapshot_media_asset(
+                observation=observation,
+                photo=primary_photo,
+                download=download_by_media_id.get(
+                    source_external_key(
+                        source_name=manifest.source_name,
+                        external_id=str(primary_photo["id"]),
+                    )
+                ),
+                response_path=seed.response_path,
+                raw_index=raw_index,
+                snapshot_dir=snapshot_dir,
             )
+            media_assets_by_id.setdefault(media_asset.media_id, media_asset)
 
     return SourceDataset(
         dataset_id=f"{manifest.source_name}:{manifest.snapshot_id}",
         captured_at=manifest.created_at,
         canonical_taxa=canonical_taxa,
-        observations=sorted(observations, key=lambda item: item.observation_uid),
-        media_assets=sorted(media_assets, key=lambda item: item.media_id),
+        observations=sorted(observations_by_uid.values(), key=lambda item: item.observation_uid),
+        media_assets=sorted(media_assets_by_id.values(), key=lambda item: item.media_id),
         ai_qualifications={},
         cached_image_paths_by_source_media_key={
             source_external_key(
@@ -502,7 +501,7 @@ def _parse_datetime(value: object) -> datetime | None:
         # `2018-07-06 5:40 AM -03` or `3/13/2010`; keep ingestion resilient by
         # preserving date-only information in UTC.
         date_only = normalized[:10]
-        for date_format in ("%Y-%m-%d", "%m/%d/%Y", "%m/%d/%y"):
+        for date_format in ("%Y-%m-%d", "%m/%d/%Y", "%m/%d/%y", "%m-%d-%Y", "%m-%d-%y"):
             try:
                 parsed = datetime.strptime(date_only, date_format)
                 return datetime.fromisoformat(parsed.strftime("%Y-%m-%dT00:00:00+00:00"))

@@ -1,7 +1,7 @@
 ---
 owner: database
 status: in_progress
-last_reviewed: 2026-05-01
+last_reviewed: 2026-05-02
 source_of_truth: docs/runbooks/palier-1-run-001.md
 scope: runbook
 ---
@@ -323,3 +323,479 @@ Taxon without results:
   - `Lanius collurio` (`7`)
   - `Corvus cornix` (`0`)
 - No media download failure observed (`download_issues=0`).
+
+## 9. Qualification + Cached Pipeline Attempt (2026-05-01)
+
+Scope executed:
+
+- qualification attempt on snapshot `palier1-be-birds-50taxa-run001`
+- cached pipeline attempt (`database-run-pipeline`)
+- smoke report generation
+
+### 9.1 Commands executed
+
+Environment check:
+
+```bash
+set -a; source .env; set +a
+```
+
+Qualification command:
+
+```bash
+python scripts/qualify_inat_snapshot.py \
+  --snapshot-id palier1-be-birds-50taxa-run001 \
+  --request-interval-seconds 0.2 \
+  --max-retries 4
+```
+
+Cached pipeline command:
+
+```bash
+database-run-pipeline \
+  --source-mode inat_snapshot \
+  --snapshot-id palier1-be-birds-50taxa-run001 \
+  --qualifier-mode cached \
+  --uncertain-policy reject \
+  --normalized-path data/normalized/palier1_be_birds_50taxa_run001.normalized.json \
+  --qualified-path data/qualified/palier1_be_birds_50taxa_run001.qualified.json \
+  --export-path data/exports/palier1_be_birds_50taxa_run001.export.json
+```
+
+Smoke report command:
+
+```bash
+python scripts/generate_smoke_report.py \
+  --snapshot-id palier1-be-birds-50taxa-run001 \
+  --output-path docs/archive/evidence/smoke-reports/palier1_be_birds_50taxa_run001.smoke_report.v1.json
+```
+
+### 9.2 Execution outputs
+
+Qualification output:
+
+- `FAILED` with parsing error:
+  - `ValueError: Invalid isoformat string: '11-21-2019T00:00:00+00:00'`
+
+Cached pipeline output:
+
+- `FAILED` with same parsing error during snapshot dataset load:
+  - `ValueError: Invalid isoformat string: '11-21-2019T00:00:00+00:00'`
+
+Smoke output:
+
+- `Smoke report generated | path=docs/archive/evidence/smoke-reports/palier1_be_birds_50taxa_run001.smoke_report.v1.json | overall_pass=True`
+
+### 9.3 Run metadata
+
+- run_id (new run001 pipeline): `NOT_CREATED` (pipeline failed before run completion)
+- latest_run reported by smoke (pre-existing DB state):
+  - `run:20260429T191649Z:847fc2c8`
+
+### 9.4 Collected metrics (evidence)
+
+From snapshot summary (`summarize_snapshot_manifest`) for run001:
+
+- images candidates (downloaded): `778`
+- images sent to Gemini: `0` (qualification did not execute)
+- Gemini valid outputs: `0`
+- Gemini errors: `MISSING_EVIDENCE` (no completed Gemini qualification pass)
+- pre-AI rejection counts: `{}`
+- main rejection reasons: `MISSING_EVIDENCE` for run001 (qualification blocked before staged outcomes)
+- taxa with results: `49`
+- taxa under-covered (<10 candidates): `9`
+  - `Acrocephalus scirpaceus` (6)
+  - `Larus michahellis` (1)
+  - `Athene noctua` (2)
+  - `Dryocopus martius` (6)
+  - `Riparia riparia` (3)
+  - `Alauda arvensis` (4)
+  - `Galerida cristata` (1)
+  - `Lanius collurio` (7)
+  - `Corvus cornix` (0)
+
+From DB/smoke (current persisted baseline, not run001 output):
+
+- qualified resources: `1500`
+- exportable resources: `1157`
+- review queue count: `0`
+- playable items: `1855`
+- attribution coverage on exportable/playable join:
+  - with licence: `1157/1157`
+  - with attribution: `1157/1157`
+  - with source URL: `1157/1157`
+- feedback coverage:
+  - specific (`what_to_look_at_specific`): `1855/1855`
+  - general (`what_to_look_at_general`): `0/1855`
+  - confusion hint: `0/1855`
+
+### 9.5 Evidence issues (no corrective change in this run)
+
+- Blocker: date parsing failure on snapshot observations with `observed_on_string='11/21/2019'`.
+- Affected observations identified in snapshot responses:
+  - `taxon_birds_000025.json` -> observation `262406356`
+  - `taxon_birds_000030.json` -> observation `262316677`
+  - `taxon_birds_000046.json` -> observation `262404409`
+- No threshold, schema, or business logic change applied during this execution.
+
+## 10. Post-fix Rerun (2026-05-02)
+
+Scope executed:
+
+- source date parsing fix applied
+- snapshot loader deduplication fix applied (duplicate observation/media ids)
+- Gemini qualification rerun completed
+- cached pipeline rerun completed
+- smoke report rerun completed
+
+### 10.1 Corrective changes applied
+
+Code changes (targeted, no threshold/model/schema contract change):
+
+- `src/database_core/adapters/inaturalist_snapshot.py`
+  - `_parse_datetime` now accepts month-first dashed dates (`%m-%d-%Y`, `%m-%d-%y`) such as `11-21-2019T00:00:00+00:00`.
+  - `load_snapshot_dataset` now deduplicates observations and media assets by stable ids before returning dataset payloads.
+- `tests/test_inat_snapshot.py`
+  - regression test for dashed month-first datetime parsing
+  - regression test for duplicate observation/media deduplication
+
+Validation executed:
+
+- `./.venv/bin/python -m pytest tests/test_inat_snapshot.py -k "deduplicates_duplicate_observation_and_media_ids or dash_separated_month_first_datetime" -q` -> `2 passed`
+- `./.venv/bin/python -m ruff check src/database_core/adapters/inaturalist_snapshot.py tests/test_inat_snapshot.py` -> `All checks passed`
+
+### 10.2 Commands executed (successful rerun)
+
+Qualification (Gemini):
+
+```bash
+set -a; source .env; set +a
+./.venv/bin/python scripts/qualify_inat_snapshot.py \
+  --snapshot-id palier1-be-birds-50taxa-run001 \
+  --request-interval-seconds 0.2 \
+  --max-retries 4 \
+  --initial-backoff-seconds 1 \
+  --max-backoff-seconds 16
+```
+
+Qualification output (final):
+
+```text
+Snapshot AI qualification complete | snapshot_id=palier1-be-birds-50taxa-run001 | processed=777 | sent_to_gemini=732 | ok=718 | insufficient_resolution=0 | pre_ai_rejected=45 | path=data/raw/inaturalist/palier1-be-birds-50taxa-run001/ai_outputs.json
+```
+
+Cached pipeline (isolated DB schema):
+
+```bash
+./.venv/bin/python scripts/run_pipeline.py \
+  --source-mode inat_snapshot \
+  --snapshot-id palier1-be-birds-50taxa-run001 \
+  --qualifier-mode cached \
+  --uncertain-policy reject \
+  --database-url "$RUN_DB_URL" \
+  --normalized-path data/normalized/palier1_be_birds_50taxa_run001.normalized.json \
+  --qualified-path data/qualified/palier1_be_birds_50taxa_run001.qualified.json \
+  --export-path data/exports/palier1_be_birds_50taxa_run001.export.json
+```
+
+Pipeline output (final):
+
+```text
+Pipeline complete | run_id=run:20260502T091349Z:10e95bc1 | qualified=777 | exportable=301 | review=0
+```
+
+Smoke report:
+
+```bash
+./.venv/bin/python scripts/generate_smoke_report.py \
+  --snapshot-id palier1-be-birds-50taxa-run001 \
+  --database-url "$RUN_DB_URL" \
+  --output-path docs/archive/evidence/smoke-reports/palier1_be_birds_50taxa_run001.smoke_report.v1.json
+```
+
+Smoke output (final):
+
+```text
+Smoke report generated | path=docs/archive/evidence/smoke-reports/palier1_be_birds_50taxa_run001.smoke_report.v1.json | overall_pass=True
+```
+
+### 10.3 Run metadata and artifacts
+
+- run_id: `run:20260502T091349Z:10e95bc1`
+- snapshot_id: `palier1-be-birds-50taxa-run001`
+- isolated DB url used for rerun: `data/exports/palier1_be_birds_50taxa_run001.database_url.txt`
+
+Key artifacts:
+
+- `data/raw/inaturalist/palier1-be-birds-50taxa-run001/ai_outputs.json`
+- `data/normalized/palier1_be_birds_50taxa_run001.normalized.json`
+- `data/qualified/palier1_be_birds_50taxa_run001.qualified.json`
+- `data/exports/palier1_be_birds_50taxa_run001.export.json`
+- `docs/archive/evidence/smoke-reports/palier1_be_birds_50taxa_run001.smoke_report.v1.json`
+- `data/exports/palier1_be_birds_50taxa_run001.qualify.log`
+- `data/exports/palier1_be_birds_50taxa_run001.pipeline_cached.log`
+- `data/exports/palier1_be_birds_50taxa_run001.smoke.log`
+- `data/exports/palier1_be_birds_50taxa_run001.qualification_metrics.json`
+- `data/exports/palier1_be_birds_50taxa_run001.postrun_metrics.json`
+
+### 10.4 Consolidated metrics (rerun evidence)
+
+Qualification / pre-AI:
+
+- images candidates downloaded: `778`
+- media assets loaded by pipeline after dedup: `777`
+- images sent to Gemini: `732`
+- valid Gemini outputs (`ok`): `718`
+- Gemini errors (`gemini_error`): `14`
+- pre-AI rejections (qualification outcomes): `45`
+  - `insufficient_resolution_pre_ai`: `43`
+  - `duplicate_pre_ai`: `2`
+- pre-AI reason counts on manifest downloads: `46`
+  - `insufficient_resolution_pre_ai`: `43`
+  - `duplicate_pre_ai`: `3`
+
+Pipeline / corpus:
+
+- qualified resources: `777`
+- exportable resources: `301`
+- review queue count: `0`
+- playable items: `301`
+
+Attribution coverage (playable items):
+
+- with licence: `301/301`
+- with attribution: `301/301`
+- with source URL: `301/301`
+
+Feedback coverage (playable items):
+
+- `feedback_short`: `301/301`
+- `what_to_look_at_specific`: `301/301`
+- `what_to_look_at_general`: `0/301`
+- `confusion_hint`: `0/301`
+
+Species coverage:
+
+- active taxa: `50`
+- taxa with `>=1` playable item: `43`
+- taxa with `>=10` playable items: `10`
+- median playable items per taxon: `5.0`
+
+Taxa under-covered on source candidates (<10):
+
+- `Acrocephalus scirpaceus`: `6`
+- `Larus michahellis`: `1`
+- `Athene noctua`: `2`
+- `Dryocopus martius`: `6`
+- `Riparia riparia`: `3`
+- `Alauda arvensis`: `4`
+- `Galerida cristata`: `1`
+- `Lanius collurio`: `7`
+- `Corvus cornix`: `0`
+
+### 10.5 Notes and remaining issues
+
+- Shared DB rerun without isolation can fail due to existing `referenced_taxa -> canonical_taxa` FK state; run001 rerun used an isolated schema search_path to preserve reproducibility.
+- Qualification + cached pipeline is now operational for run001 after source date and snapshot dedup fixes.
+- Distractor v2 audit and runtime-app `selectedOptionId` E2E validation are still pending evidence for final palier-1 decision closure.
+
+## 11. Pack v2 + Distractor Audit Execution (2026-05-02)
+
+Scope executed (observe-only, no distractor-strategy change, no manual option edits):
+
+- target pack id: `pack:palier1:be:birds:run001`
+- difficulty policy: `mixed`
+- country code: `BE`
+- visibility: `private`
+- intended use: `training`
+- canonical taxa source: `data/fixtures/inaturalist_pilot_taxa_palier1_be_50.json` (`50` ids)
+
+### 11.1 Commands executed
+
+Pack presence/parameters check:
+
+```bash
+python scripts/inspect_database.py pack-specs \
+  --database-url "$RUN_DB_URL" \
+  --pack-id "pack:palier1:be:birds:run001" \
+  --limit 5
+```
+
+Diagnose:
+
+```bash
+python scripts/manage_packs.py diagnose \
+  --database-url "$RUN_DB_URL" \
+  --pack-id "pack:palier1:be:birds:run001"
+```
+
+Compile v2:
+
+```bash
+python scripts/manage_packs.py compile \
+  --database-url "$RUN_DB_URL" \
+  --pack-id "pack:palier1:be:birds:run001" \
+  --question-count 50 \
+  --contract-version v2
+```
+
+Materialize v2:
+
+```bash
+python scripts/manage_packs.py materialize \
+  --database-url "$RUN_DB_URL" \
+  --pack-id "pack:palier1:be:birds:run001" \
+  --question-count 50 \
+  --contract-version v2 \
+  --purpose assignment
+```
+
+Inspect persisted artifacts:
+
+```bash
+python scripts/inspect_database.py compiled-pack-builds \
+  --database-url "$RUN_DB_URL" \
+  --pack-id "pack:palier1:be:birds:run001" \
+  --limit 20
+
+python scripts/inspect_database.py pack-materializations \
+  --database-url "$RUN_DB_URL" \
+  --pack-id "pack:palier1:be:birds:run001" \
+  --purpose assignment \
+  --limit 20
+```
+
+Distractor audit script run:
+
+```bash
+python scripts/audit_phase3_distractors.py \
+  /tmp/palier1_compiled_builds.json \
+  /tmp/palier1_materializations.json \
+  --output-json data/exports/palier1_be_birds_50taxa_run001.phase3_distractor_audit_report.json
+```
+
+### 11.2 Pack/diagnostic results
+
+- pack exists with expected run settings (`mixed`, `BE`, `private`, `training`, 50 taxa).
+- latest diagnose attempt:
+  - `compilable=false`
+  - `reason_code=insufficient_media_per_taxon`
+  - measured:
+    - `taxa_served=43`
+    - `total_playable_items=290`
+    - `questions_possible=20`
+    - `min_media_count_per_taxon=0`
+  - blocking taxa (`9`):
+    - `taxon:birds:000026`
+    - `taxon:birds:000032`
+    - `taxon:birds:000037`
+    - `taxon:birds:000041`
+    - `taxon:birds:000044`
+    - `taxon:birds:000045`
+    - `taxon:birds:000046`
+    - `taxon:birds:000047`
+    - `taxon:birds:000050`
+
+### 11.3 Compile/materialize v2 outcome
+
+- compile v2: `FAILED`
+  - `ValueError: Pack is not compilable for v2 build persistence (reason_code=insufficient_media_per_taxon, deficits=min_media_per_taxon:0/2)`
+- materialize v2: `FAILED`
+  - `ValueError: No v2 compiled build found for materialization. Run pack compile --contract-version v2 first for this revision.`
+- persisted artifacts found:
+  - compiled v2 for this pack: `[]`
+  - materialization v2 for this pack: `[]`
+
+### 11.4 Artifact localization
+
+No persisted `pack.compiled.v2` or `pack.materialization.v2` exists for this pack/revision after this execution.
+
+Collected execution evidence:
+
+- `/tmp/palier1_pack_diagnose.out`
+- `/tmp/palier1_pack_compile_v2.out`
+- `/tmp/palier1_pack_materialize_v2.out`
+- `/tmp/palier1_compiled_builds.json`
+- `/tmp/palier1_materializations.json`
+- `data/exports/palier1_be_birds_50taxa_run001.phase3_distractor_audit_report.json`
+
+### 11.5 Distractor audit summary (state observed)
+
+Audit script output:
+
+- `reports`: `[]`
+- `errors`:
+  - `/tmp/palier1_compiled_builds.json`: `'list' object has no attribute 'get'`
+  - `/tmp/palier1_materializations.json`: `'list' object has no attribute 'get'`
+
+Requested distractor metrics could not be measured on this run because there is no compiled/materialized v2 artifact for `pack:palier1:be:birds:run001`:
+
+- questions with 4 options: `NOT_MEASURABLE`
+- questions with exactly 1 correct option: `NOT_MEASURABLE`
+- options with non-empty labels: `NOT_MEASURABLE`
+- distractors with reason codes: `NOT_MEASURABLE`
+- iNaturalist similar species usage: `NOT_MEASURABLE`
+- `out_of_pack`: `NOT_MEASURABLE`
+- `referenced_only`: `NOT_MEASURABLE`
+- repetitions: `NOT_MEASURABLE`
+
+### 11.6 Issues for human audit
+
+- Structural blocker confirmed: pack not compilable in current run001 state (`insufficient_media_per_taxon`).
+- Decision needed: accept diagnostic state as expected for run001, or trigger a new ingestion/qualification pass to increase playable coverage before reattempting v2 compile/materialize.
+- `audit_phase3_distractors.py` currently expects compiled/materialized artifact objects; direct use of inspect-list outputs produces parser errors and should be handled explicitly in operator procedure.
+
+## 12. Coverage Audit Link (2026-05-02)
+
+Detailed per-taxon coverage audit:
+
+- `docs/audits/palier-1-run001-coverage-audit.md`
+
+Short summary:
+
+- run001 pack v2 compile blocker is confirmed as coverage-driven (`insufficient_media_per_taxon`);
+- only `43/50` taxa currently satisfy the minimal per-taxon playable threshold for compilation;
+- `9` taxa remain blocking (`active playable < 2`) and must be treated (more candidates and/or taxon replacement decisions) before reattempting full 50-taxa v2 compile/materialize.
+
+## 13. Temporary Reduced Pack (Coverage Pass, 2026-05-02)
+
+This temporary pack is explicitly for v2 mechanics/distractor audit only.  
+It does not replace the 50-taxa Palier 1 target pack.
+
+Pack id:
+
+- `pack:palier1:be:birds:run001:coverage-pass`
+
+Scope used:
+
+- taxa selected from run001 with `active playable >= 2` (`41` taxa)
+- policy/geo/visibility/use unchanged:
+  - `difficulty_policy=mixed`
+  - `country_code=BE`
+  - `visibility=private`
+  - `intended_use=training`
+
+Execution outcome:
+
+- diagnose: `compilable=true`
+- compile v2 (`question_count=20`): `SUCCESS`
+  - `build_id=packbuild:pack:palier1:be:birds:run001:coverage-pass:1:v2:0a728cc0`
+- materialize v2 (`purpose=assignment`, `question_count=20`): `SUCCESS`
+  - `materialization_id=packmat:pack:palier1:be:birds:run001:coverage-pass:1:assignment:v2:4cbd356d`
+
+Artifacts:
+
+- `data/exports/palier1_be_birds_50taxa_run001.coverage_pass.pack_compiled_v2.json`
+- `data/exports/palier1_be_birds_50taxa_run001.coverage_pass.pack_materialization_v2.json`
+- `data/exports/palier1_be_birds_50taxa_run001.coverage_pass.phase3_distractor_audit_report.json`
+
+Distractor audit summary (compiled + materialized v2):
+
+- questions with 4 options: `20/20` (`100%`)
+- questions with exactly 1 correct option: `20/20` (`100%`)
+- options with non-empty labels: `80/80` (`100%`)
+- distractors with reason codes: `60/60` (`100%`)
+- iNaturalist similar species usage: `0` (not used in this sample)
+- `out_of_pack` distractors: `0`
+- `referenced_only` distractors: `0`
+- dominant reason code: `diversity_fallback` (`60/60`)

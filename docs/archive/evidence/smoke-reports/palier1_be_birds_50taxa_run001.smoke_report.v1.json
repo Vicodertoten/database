@@ -1,0 +1,149 @@
+{
+  "compile_deficits_summary": {
+    "attempts_total": 0,
+    "non_compilable_attempts": 0,
+    "reason_counts": {},
+    "top_blocking_taxa": []
+  },
+  "database_url": "postgresql://postgres:***@db.cduiheqceeghzrlbtwom.supabase.co:5432/postgres?sslmode=require&options=-csearch_path%3Dpalier1_run001_20260501%2Cpublic",
+  "extended_kpis": {
+    "country_code_completeness_ratio": {
+      "actual": 0.963455,
+      "pass": null,
+      "stats": {
+        "playable_items_total": 301,
+        "playable_items_with_country": 290
+      },
+      "target": "baseline_observe"
+    },
+    "distractor_diversity_index": {
+      "actual": 0.0,
+      "pass": null,
+      "stats": {
+        "latest_compiled_payloads": 0,
+        "total_distractor_slots": 0,
+        "unique_directed_pairs": 0
+      },
+      "target": "baseline_observe"
+    },
+    "taxon_playable_coverage_ratio": {
+      "actual": 0.86,
+      "pass": null,
+      "stats": {
+        "accepted_taxa_total": 50,
+        "playable_taxa": 43,
+        "provisional_taxa_total": 0
+      },
+      "target": "baseline_observe"
+    },
+    "taxon_with_min2_media_ratio": {
+      "actual": 0.82,
+      "pass": null,
+      "stats": {
+        "accepted_taxa_total": 50,
+        "taxa_with_min2_media": 41
+      },
+      "target": "baseline_observe"
+    }
+  },
+  "generated_at": "2026-05-02T09:13:54.832880+00:00",
+  "governance_review_alerts": {
+    "avg_open_age_alert": false,
+    "avg_open_age_hours": 0.0,
+    "open_backlog": 0,
+    "open_backlog_alert": false,
+    "thresholds": {
+      "avg_open_age_hours": 72.0,
+      "open_backlog": 25
+    }
+  },
+  "kpis": {
+    "export_trace_flags_uncertainty_coverage": {
+      "actual": 1.0,
+      "pass": true,
+      "stats": {
+        "coverage_ratio": 1.0,
+        "covered": 301,
+        "missing_flags": 0,
+        "missing_trace": 0,
+        "total": 301,
+        "untyped_uncertainty": 0
+      },
+      "target": "== 1.0"
+    },
+    "exportable_unresolved_or_provisional": {
+      "actual": 0,
+      "pass": true,
+      "target": "== 0"
+    },
+    "governance_reason_and_signal_coverage": {
+      "actual": 1.0,
+      "pass": true,
+      "stats": {
+        "coverage_ratio": 1.0,
+        "covered": 50,
+        "missing_reason": 0,
+        "missing_signal_breakdown": 0,
+        "missing_source_delta": 0,
+        "total": 50
+      },
+      "target": "== 1.0"
+    }
+  },
+  "latest_run": {
+    "completed_at": "2026-05-02T09:13:53.845213+00:00",
+    "run_id": "run:20260502T091349Z:10e95bc1",
+    "run_status": "completed",
+    "started_at": "2026-05-02T09:13:50.095884+00:00"
+  },
+  "overall_pass": true,
+  "pre_ai_rejection_reason_counts": {
+    "duplicate_pre_ai": 3,
+    "insufficient_resolution_pre_ai": 43
+  },
+  "report_version": "smoke.report.v1",
+  "run_metrics": {
+    "cost": {
+      "ai_qualified_images": 718,
+      "estimated_ai_cost_eur": 0.8616
+    },
+    "governance": {
+      "avg_open_governance_review_age_hours": 0.0,
+      "decision_reason_counts": {
+        "new_taxon_detected": 50
+      },
+      "decision_status_counts": {
+        "auto_clear": 50
+      },
+      "open_governance_backlog_by_reason": {},
+      "open_governance_review_items": 0,
+      "resolved_governance_backlog_by_reason": {},
+      "resolved_governance_review_items": 0
+    },
+    "quality": {
+      "accepted_resources": 301,
+      "rejected_resources": 476,
+      "review_required_resources": 0,
+      "top_rejection_flags": {
+        "insufficient_resolution": 126,
+        "insufficient_resolution_pre_ai": 43,
+        "insufficient_technical_quality": 414,
+        "missing_view_angle": 90,
+        "missing_visible_parts": 67
+      }
+    },
+    "review_load": {
+      "avg_open_review_age_hours": 0.0,
+      "open_review_queue_items": 0
+    },
+    "run_id": null,
+    "volume": {
+      "canonical_taxa": 50,
+      "exportable_resources": 301,
+      "media_assets": 777,
+      "qualified_resources": 777,
+      "source_observations": 778
+    }
+  },
+  "snapshot_id": "palier1-be-birds-50taxa-run001"
+}
