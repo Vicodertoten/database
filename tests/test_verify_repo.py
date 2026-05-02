@@ -12,18 +12,13 @@ def test_verify_repo_runs_compile_pytest_and_ruff_in_order(monkeypatch) -> None:
     module = _load_verify_repo_module()
     commands: list[list[str]] = []
 
-    def fake_run(command, *, cwd, check):
-        del check
+    def fake_run(command, *, cwd, check, **kwargs):
+        del check, kwargs
         commands.append(command)
         assert cwd == module.ROOT
         return SimpleNamespace(returncode=0)
 
     monkeypatch.setattr(module.subprocess, "run", fake_run)
-    monkeypatch.setattr(
-        module.importlib.util,
-        "find_spec",
-        lambda name: object() if name == "ruff" else None,
-    )
 
     buffer = io.StringIO()
     with redirect_stdout(buffer):
@@ -31,7 +26,18 @@ def test_verify_repo_runs_compile_pytest_and_ruff_in_order(monkeypatch) -> None:
 
     assert commands == [
         [module.sys.executable, "-m", "compileall", "src", "tests"],
-        [module.sys.executable, "-m", "pytest", "-q", "-p", "no:capture"],
+        [
+            module.sys.executable,
+            "-m",
+            "pytest",
+            "-q",
+            "-p",
+            "no:capture",
+            "-n",
+            "auto",
+            "--dist",
+            "loadscope",
+        ],
         [module.sys.executable, "scripts/check_doc_code_coherence.py"],
         [module.sys.executable, "scripts/check_docs_hygiene.py"],
         [module.sys.executable, "-m", "ruff", "check", "src", "tests", "scripts"],

@@ -10,12 +10,14 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 from database_core.adapters import (
+    DEFAULT_GEMINI_CONCURRENCY,
     DEFAULT_INAT_SNAPSHOT_ROOT,
     DEFAULT_INITIAL_BACKOFF_SECONDS,
     DEFAULT_MAX_BACKOFF_SECONDS,
     DEFAULT_MAX_RETRIES,
     DEFAULT_PILOT_TAXA_PATH,
     DEFAULT_REQUEST_INTERVAL_SECONDS,
+    PacingRetryQualifier,
     fetch_inat_snapshot,
     qualify_inat_snapshot,
 )
@@ -46,7 +48,7 @@ from database_core.pipeline.runner import (
     DEFAULT_QUALIFIED_PATH,
     run_pipeline,
 )
-from database_core.qualification.ai import DEFAULT_GEMINI_MODEL
+from database_core.qualification.ai import DEFAULT_GEMINI_MODEL, GeminiVisionQualifier
 from database_core.review.overrides import (
     initialize_review_override_file,
     load_review_override_file,
@@ -94,6 +96,36 @@ def main() -> None:
     pipeline_parser.add_argument("--uncertain-policy", choices=["review", "reject"])
     pipeline_parser.add_argument("--gemini-api-key-env", default="GEMINI_API_KEY")
     pipeline_parser.add_argument("--gemini-model", default=DEFAULT_GEMINI_MODEL)
+    pipeline_parser.add_argument(
+        "--request-interval-seconds",
+        type=float,
+        default=DEFAULT_REQUEST_INTERVAL_SECONDS,
+        help="Gemini pacing interval between requests (used when --qualifier-mode gemini).",
+    )
+    pipeline_parser.add_argument(
+        "--max-retries",
+        type=int,
+        default=DEFAULT_MAX_RETRIES,
+        help="Gemini retry attempts on retryable errors (used when --qualifier-mode gemini).",
+    )
+    pipeline_parser.add_argument(
+        "--initial-backoff-seconds",
+        type=float,
+        default=DEFAULT_INITIAL_BACKOFF_SECONDS,
+        help="Initial retry backoff in seconds (used when --qualifier-mode gemini).",
+    )
+    pipeline_parser.add_argument(
+        "--max-backoff-seconds",
+        type=float,
+        default=DEFAULT_MAX_BACKOFF_SECONDS,
+        help="Max retry backoff in seconds (used when --qualifier-mode gemini).",
+    )
+    pipeline_parser.add_argument(
+        "--gemini-concurrency",
+        type=int,
+        default=DEFAULT_GEMINI_CONCURRENCY,
+        help="Gemini worker count (1..8) for parallel qualification.",
+    )
 
     fetch_parser = subparsers.add_parser("fetch-inat-snapshot")
     fetch_parser.add_argument("--snapshot-id", type=str)
@@ -125,6 +157,12 @@ def main() -> None:
     )
     qualify_parser.add_argument(
         "--max-backoff-seconds", type=float, default=DEFAULT_MAX_BACKOFF_SECONDS
+    )
+    qualify_parser.add_argument(
+        "--gemini-concurrency",
+        type=int,
+        default=DEFAULT_GEMINI_CONCURRENCY,
+        help="Gemini worker count (1..8) for parallel qualification.",
     )
 
     inspect_parser = subparsers.add_parser("inspect")
@@ -430,11 +468,23 @@ def main() -> None:
 
     args = parser.parse_args()
     if args.command == "run-pipeline":
+        _validate_gemini_concurrency(args.gemini_concurrency)
         gemini_api_key = None
+        ai_qualifier = None
         if args.qualifier_mode == "gemini":
             gemini_api_key = os.environ.get(args.gemini_api_key_env)
             if not gemini_api_key:
                 raise SystemExit(f"Missing Gemini API key in env var {args.gemini_api_key_env}")
+            ai_qualifier = PacingRetryQualifier(
+                base_qualifier=GeminiVisionQualifier(
+                    api_key=gemini_api_key,
+                    model_name=args.gemini_model,
+                ),
+                request_interval_seconds=args.request_interval_seconds,
+                max_retries=args.max_retries,
+                initial_backoff_seconds=args.initial_backoff_seconds,
+                max_backoff_seconds=args.max_backoff_seconds,
+            )
         result = run_pipeline(
             source_mode=args.source_mode,
             fixture_path=args.fixture_path,
@@ -450,6 +500,8 @@ def main() -> None:
             uncertain_policy=args.uncertain_policy,
             gemini_api_key=gemini_api_key,
             gemini_model=args.gemini_model,
+            gemini_concurrency=args.gemini_concurrency,
+            ai_qualifier=ai_qualifier,
             allow_schema_reset=args.allow_schema_reset,
         )
         print(
@@ -485,6 +537,7 @@ def main() -> None:
         return
 
     if args.command == "qualify-inat-snapshot":
+        _validate_gemini_concurrency(args.gemini_concurrency)
         gemini_api_key = os.environ.get(args.gemini_api_key_env)
         if not gemini_api_key:
             raise SystemExit(f"Missing Gemini API key in env var {args.gemini_api_key_env}")
@@ -497,6 +550,7 @@ def main() -> None:
             max_retries=args.max_retries,
             initial_backoff_seconds=args.initial_backoff_seconds,
             max_backoff_seconds=args.max_backoff_seconds,
+            gemini_concurrency=args.gemini_concurrency,
         )
         print(
             "Snapshot AI qualification complete | "
@@ -959,6 +1013,11 @@ def _parse_point_radius(value: str | None) -> tuple[float, float, float] | None:
     except ValueError as exc:  # pragma: no cover - CLI parse failure path.
         raise SystemExit("--point-radius values must be numeric") from exc
     return longitude, latitude, radius_meters
+
+
+def _validate_gemini_concurrency(value: int) -> None:
+    if value < 1 or value > 8:
+        raise SystemExit("--gemini-concurrency must be between 1 and 8")
 
 
 def _build_pack_revision_parameters_from_args(args: argparse.Namespace) -> PackRevisionParameters:

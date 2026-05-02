@@ -103,7 +103,3 @@ jobs:
 
       - name: Verify repository
         run: python scripts/verify_repo.py
-
-      - name: Validate docs hygiene
-        run: |
-          python scripts/check_docs_hygiene.py

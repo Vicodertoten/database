@@ -70,11 +70,67 @@ def test_cli_qualify_inat_snapshot_loads_dotenv(monkeypatch, tmp_path: Path) -> 
 
     assert calls["gemini_api_key"] == "dotenv-key"
     assert calls["gemini_model"] == "gemini-3.1-flash-lite-preview"
-    assert calls["request_interval_seconds"] == 0.5
+    assert calls["request_interval_seconds"] == 0.0
+    assert calls["gemini_concurrency"] == 4
     assert calls["max_retries"] == 2
     assert calls["initial_backoff_seconds"] == 1.0
     assert calls["max_backoff_seconds"] == 8.0
     assert "Snapshot AI qualification complete" in buffer.getvalue()
+
+
+def test_cli_run_pipeline_builds_paced_gemini_qualifier(monkeypatch, tmp_path: Path) -> None:
+    calls: dict[str, object] = {}
+
+    class FakePipelineResult:
+        run_id = "run:20260502T120000Z:abc12345"
+        qualified_resource_count = 10
+        exportable_resource_count = 8
+        review_queue_count = 2
+
+    def fake_run_pipeline(**kwargs):
+        calls.update(kwargs)
+        return FakePipelineResult()
+
+    monkeypatch.setattr(cli, "run_pipeline", fake_run_pipeline)
+    monkeypatch.setenv("GEMINI_API_KEY", "test-key")
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "database-core",
+            "run-pipeline",
+            "--source-mode",
+            "inat_snapshot",
+            "--snapshot-id",
+            "smoke-snapshot",
+            "--qualifier-mode",
+            "gemini",
+            "--request-interval-seconds",
+            "0.1",
+            "--max-retries",
+            "1",
+            "--initial-backoff-seconds",
+            "0.5",
+            "--max-backoff-seconds",
+            "2.0",
+            "--gemini-concurrency",
+            "6",
+        ],
+    )
+
+    buffer = io.StringIO()
+    with redirect_stdout(buffer):
+        cli.main()
+
+    assert calls["gemini_api_key"] == "test-key"
+    qualifier = calls["ai_qualifier"]
+    assert qualifier is not None
+    assert qualifier.request_interval_seconds == 0.1
+    assert qualifier.max_retries == 1
+    assert qualifier.initial_backoff_seconds == 0.5
+    assert qualifier.max_backoff_seconds == 2.0
+    assert calls["gemini_concurrency"] == 6
+    assert "Pipeline complete" in buffer.getvalue()
 
 
 def test_default_snapshot_id_uses_strict_inaturalist_prefix(monkeypatch) -> None:

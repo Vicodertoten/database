@@ -108,6 +108,7 @@ def run_pipeline(
     uncertain_policy: str | None = None,
     gemini_api_key: str | None = None,
     gemini_model: str = DEFAULT_GEMINI_MODEL,
+    gemini_concurrency: int = 1,
     ai_qualifier: AIQualifier | None = None,
     allow_schema_reset: bool = False,
     run_id: str | None = None,
@@ -157,6 +158,7 @@ def run_pipeline(
         uncertain_policy=resolved_uncertain_policy,
         gemini_api_key=gemini_api_key,
         gemini_model=gemini_model,
+        gemini_concurrency=gemini_concurrency,
         ai_qualifier=ai_qualifier,
         review_overrides_path=resolved_review_overrides_path,
         snapshot_id=resolved_snapshot_id,
@@ -271,6 +273,7 @@ def _prepare_pipeline_state(
     uncertain_policy: str,
     gemini_api_key: str | None,
     gemini_model: str,
+    gemini_concurrency: int,
     ai_qualifier: AIQualifier | None,
     review_overrides_path: Path | None,
     snapshot_id: str | None,
@@ -305,6 +308,7 @@ def _prepare_pipeline_state(
         cached_image_paths_by_source_media_key=dataset.cached_image_paths_by_source_media_key,
         gemini_api_key=gemini_api_key,
         gemini_model=gemini_model,
+        gemini_concurrency=gemini_concurrency,
         qualifier=ai_qualifier,
     )
     qualified_resources, review_items = qualify_media_assets(

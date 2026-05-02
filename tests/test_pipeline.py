@@ -189,6 +189,77 @@ def test_pipeline_overwrites_previous_run_outputs_on_same_database(
     assert governance_count > 0
 
 
+def test_pipeline_overwrite_clears_referenced_taxa_before_canonical_reset(
+    tmp_path: Path,
+    database_url: str,
+) -> None:
+    run_pipeline(
+        fixture_path=Path("data/fixtures/birds_pilot.json"),
+        database_url=database_url,
+        normalized_snapshot_path=tmp_path / "ref_taxa_1.normalized.json",
+        qualification_snapshot_path=tmp_path / "ref_taxa_1.qualified.json",
+        export_path=tmp_path / "ref_taxa_1.export.json",
+        uncertain_policy="reject",
+        run_id="run:20260502T110000Z:aaaaaaaa",
+    )
+    repository = _build_repository(database_url)
+    repository.initialize()
+    with repository.connect() as connection:
+        connection.execute(
+            """
+            INSERT INTO referenced_taxa (
+                referenced_taxon_id,
+                source,
+                source_taxon_id,
+                scientific_name,
+                preferred_common_name,
+                common_names_i18n_json,
+                rank,
+                taxon_group,
+                mapping_status,
+                mapped_canonical_taxon_id,
+                reason_codes_json,
+                created_at,
+                payload_json
+            ) VALUES (
+                'reftaxon:inaturalist:test-fk',
+                'inaturalist',
+                'test-fk',
+                'Test Species',
+                'Test Species',
+                '[]',
+                'species',
+                'birds',
+                'mapped',
+                'taxon:birds:000014',
+                '["test"]',
+                now(),
+                '{}'
+            )
+            """
+        )
+
+    # Before the fix this second run could fail with FK violation on
+    # referenced_taxa -> canonical_taxa.
+    run_pipeline(
+        fixture_path=Path("data/fixtures/birds_pilot.json"),
+        database_url=database_url,
+        normalized_snapshot_path=tmp_path / "ref_taxa_2.normalized.json",
+        qualification_snapshot_path=tmp_path / "ref_taxa_2.qualified.json",
+        export_path=tmp_path / "ref_taxa_2.export.json",
+        uncertain_policy="reject",
+        run_id="run:20260502T110100Z:bbbbbbbb",
+    )
+
+    with repository.connect() as connection:
+        row = connection.execute(
+            "SELECT COUNT(*) AS count FROM referenced_taxa WHERE referenced_taxon_id = %s",
+            ("reftaxon:inaturalist:test-fk",),
+        ).fetchone()
+    assert row is not None
+    assert int(row["count"]) == 0
+
+
 def test_run_metrics_support_run_scope(tmp_path: Path, database_url: str) -> None:
     first_run_id = "run:20260408T000000Z:aaaaaaaa"
     second_run_id = "run:20260408T000100Z:bbbbbbbb"

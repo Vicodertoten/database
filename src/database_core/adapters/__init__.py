@@ -2,6 +2,7 @@ from database_core.adapters.common import SourceDataset
 from database_core.adapters.inaturalist_fixture import load_fixture_dataset
 from database_core.adapters.inaturalist_harvest import HarvestResult, fetch_inat_snapshot
 from database_core.adapters.inaturalist_qualification import (
+    DEFAULT_GEMINI_CONCURRENCY,
     DEFAULT_INITIAL_BACKOFF_SECONDS,
     DEFAULT_MAX_BACKOFF_SECONDS,
     DEFAULT_MAX_RETRIES,
@@ -25,6 +26,7 @@ from database_core.adapters.inaturalist_snapshot import (
 __all__ = [
     "DEFAULT_INAT_SNAPSHOT_ROOT",
     "DEFAULT_PILOT_TAXA_PATH",
+    "DEFAULT_GEMINI_CONCURRENCY",
     "DEFAULT_INITIAL_BACKOFF_SECONDS",
     "DEFAULT_MAX_BACKOFF_SECONDS",
     "DEFAULT_MAX_RETRIES",

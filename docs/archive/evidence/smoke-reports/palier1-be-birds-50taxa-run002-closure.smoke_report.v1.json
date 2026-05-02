@@ -4,60 +4,60 @@
     "non_compilable_attempts": 2,
     "reason_counts": {
       "compilable": 1,
-      "insufficient_taxa_served": 1,
+      "insufficient_media_per_taxon": 1,
       "no_playable_items": 1
     },
     "top_blocking_taxa": [
       {
-        "canonical_taxon_id": "taxon:birds:000014",
+        "canonical_taxon_id": "taxon:birds:000026",
         "count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000032",
+        "count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000037",
+        "count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000040",
+        "count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000041",
+        "count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000044",
+        "count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000045",
+        "count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000047",
+        "count": 2
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000014",
+        "count": 1
       },
       {
         "canonical_taxon_id": "taxon:birds:000004",
-        "count": 2
-      },
-      {
-        "canonical_taxon_id": "taxon:birds:000009",
-        "count": 2
-      },
-      {
-        "canonical_taxon_id": "taxon:birds:000003",
-        "count": 2
-      },
-      {
-        "canonical_taxon_id": "taxon:birds:000008",
-        "count": 2
-      },
-      {
-        "canonical_taxon_id": "taxon:birds:000010",
-        "count": 2
-      },
-      {
-        "canonical_taxon_id": "taxon:birds:000005",
-        "count": 2
-      },
-      {
-        "canonical_taxon_id": "taxon:birds:000001",
-        "count": 2
-      },
-      {
-        "canonical_taxon_id": "taxon:birds:000011",
-        "count": 2
-      },
-      {
-        "canonical_taxon_id": "taxon:birds:000015",
-        "count": 2
+        "count": 1
       }
     ]
   },
   "database_url": "postgresql://postgres:***@db.cduiheqceeghzrlbtwom.supabase.co:5432/postgres?sslmode=require",
   "extended_kpis": {
     "country_code_completeness_ratio": {
-      "actual": 0.017761,
+      "actual": 0.242188,
       "pass": null,
       "stats": {
-        "playable_items_total": 1858,
-        "playable_items_with_country": 33
+        "playable_items_total": 2432,
+        "playable_items_with_country": 589
       },
       "target": "baseline_observe"
     },
@@ -72,26 +72,26 @@
       "target": "baseline_observe"
     },
     "taxon_playable_coverage_ratio": {
-      "actual": 14.285714,
+      "actual": 2.0,
       "pass": null,
       "stats": {
-        "accepted_taxa_total": 7,
+        "accepted_taxa_total": 50,
         "playable_taxa": 100,
         "provisional_taxa_total": 0
       },
       "target": "baseline_observe"
     },
     "taxon_with_min2_media_ratio": {
-      "actual": 14.285714,
+      "actual": 2.0,
       "pass": null,
       "stats": {
-        "accepted_taxa_total": 7,
+        "accepted_taxa_total": 50,
         "taxa_with_min2_media": 100
       },
       "target": "baseline_observe"
     }
   },
-  "generated_at": "2026-05-02T10:25:53.743882+00:00",
+  "generated_at": "2026-05-02T11:29:56.851987+00:00",
   "governance_review_alerts": {
     "avg_open_age_alert": false,
     "avg_open_age_hours": 0.0,
@@ -108,10 +108,10 @@
       "pass": true,
       "stats": {
         "coverage_ratio": 1.0,
-        "covered": 3,
+        "covered": 581,
         "missing_flags": 0,
         "missing_trace": 0,
-        "total": 3,
+        "total": 581,
         "untyped_uncertainty": 0
       },
       "target": "== 1.0"
@@ -126,38 +126,39 @@
       "pass": true,
       "stats": {
         "coverage_ratio": 1.0,
-        "covered": 162,
+        "covered": 205,
         "missing_reason": 0,
         "missing_signal_breakdown": 0,
         "missing_source_delta": 0,
-        "total": 162
+        "total": 205
       },
       "target": "== 1.0"
     }
   },
   "latest_run": {
-    "completed_at": "2026-05-02T10:25:46.833061+00:00",
-    "run_id": "run:20260502T102543Z:9bbcb4e7",
+    "completed_at": "2026-05-02T11:29:47.679287+00:00",
+    "run_id": "run:20260502T112940Z:5c268034",
     "run_status": "completed",
-    "started_at": "2026-05-02T10:25:44.017915+00:00"
+    "started_at": "2026-05-02T11:29:41.943714+00:00"
   },
   "overall_pass": true,
   "pre_ai_rejection_reason_counts": {
-    "insufficient_resolution_pre_ai": 6
+    "duplicate_pre_ai": 3,
+    "insufficient_resolution_pre_ai": 78
   },
   "report_version": "smoke.report.v1",
   "run_metrics": {
     "cost": {
-      "ai_qualified_images": 35,
-      "estimated_ai_cost_eur": 0.042
+      "ai_qualified_images": 1333,
+      "estimated_ai_cost_eur": 1.5996
     },
     "governance": {
       "avg_open_governance_review_age_hours": 0.0,
       "decision_reason_counts": {
-        "new_taxon_detected": 162
+        "new_taxon_detected": 205
       },
       "decision_status_counts": {
-        "auto_clear": 162
+        "auto_clear": 205
       },
       "open_governance_backlog_by_reason": {},
       "open_governance_review_items": 0,
@@ -165,15 +166,15 @@
       "resolved_governance_review_items": 0
     },
     "quality": {
-      "accepted_resources": 3,
-      "rejected_resources": 38,
+      "accepted_resources": 581,
+      "rejected_resources": 832,
       "review_required_resources": 0,
       "top_rejection_flags": {
-        "insufficient_resolution": 17,
-        "insufficient_resolution_pre_ai": 6,
-        "insufficient_technical_quality": 35,
-        "missing_view_angle": 10,
-        "missing_visible_parts": 6
+        "insufficient_resolution": 212,
+        "insufficient_resolution_pre_ai": 78,
+        "insufficient_technical_quality": 740,
+        "missing_view_angle": 121,
+        "missing_visible_parts": 90
       }
     },
     "review_load": {
@@ -182,12 +183,12 @@
     },
     "run_id": null,
     "volume": {
-      "canonical_taxa": 7,
-      "exportable_resources": 3,
-      "media_assets": 41,
-      "qualified_resources": 41,
-      "source_observations": 41
+      "canonical_taxa": 50,
+      "exportable_resources": 581,
+      "media_assets": 1413,
+      "qualified_resources": 1413,
+      "source_observations": 1414
     }
   },
-  "snapshot_id": "palier1-be-birds-blocking-run002"
+  "snapshot_id": "palier1-be-birds-50taxa-run002-closure"
 }

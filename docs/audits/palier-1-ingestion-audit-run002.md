@@ -177,3 +177,143 @@ Mandatory GO/GO_WITH_WARNINGS criteria not met:
 - non-empty labels on full pack: `MISSING_EVIDENCE`
 - exactly one correct option on full pack: `MISSING_EVIDENCE`
 - distractor reason codes on full pack: `MISSING_EVIDENCE`
+
+## 18. Update after DB FK fix and rerun
+
+### 18.1 FK cause racine (`referenced_taxa`)
+
+- failing path: pipeline `reset_materialized_state` deleted `canonical_taxa` while `referenced_taxa` still referenced them.
+- FK involved:
+  - `referenced_taxa.mapped_canonical_taxon_id -> canonical_taxa.canonical_taxon_id`
+  - `referenced_taxon_events.referenced_taxon_id -> referenced_taxa.referenced_taxon_id`
+
+Applied correction:
+
+- file: `src/database_core/storage/postgres.py`
+- function: `PostgresStorageInternal.reset_materialized_state`
+- change: add `DELETE FROM referenced_taxa` before `DELETE FROM canonical_taxa`
+- rationale: minimal, explicit, compatible with phase-3 referenced-only lifecycle; avoids masking errors.
+
+### 18.2 Qualification rerun status
+
+Command rerun:
+
+- `python scripts/qualify_inat_snapshot.py --snapshot-id palier1-be-birds-blocking-run002`
+
+Observed:
+
+- candidates: `41`
+- sent to Gemini: `35`
+- valid Gemini outputs (`ok`): `35`
+- Gemini errors: `0`
+- pre-AI rejections: `6` (`insufficient_resolution_pre_ai`)
+
+### 18.3 Pipeline run002 status after fix
+
+Command rerun:
+
+- `python scripts/run_pipeline.py --source-mode inat_snapshot --snapshot-id palier1-be-birds-blocking-run002 --qualifier-mode cached --uncertain-policy reject --database-url "$DATABASE_URL" --normalized-path data/normalized/palier1_be_birds_50taxa_run002.normalized.json --qualified-path data/qualified/palier1_be_birds_50taxa_run002.qualified.json --export-path data/exports/palier1_be_birds_50taxa_run002.export.json`
+
+Observed:
+
+- `PASS`
+- `run_id=run:20260502T102543Z:9bbcb4e7`
+- `qualified=41`
+- `exportable=3`
+- `review=0`
+
+Design behavior observed:
+
+- pipeline replaces active materialized state (not incremental merge of run001 + run002 datasets).
+- with a targeted 7-taxa snapshot, this drops 50-taxa pack readiness.
+
+### 18.4 Diagnose/compile/materialize/audit status after fix
+
+Diagnose rerun:
+
+- `compilable=false`
+- `reason_code=insufficient_taxa_served`
+- `taxa_served=2`
+- `questions_possible=0`
+- `min_media_count_per_taxon=0`
+
+Consequences:
+
+- compile v2: `NOT_RUN` (as required)
+- materialize v2: `NOT_RUN`
+- distractor audit: `NOT_RUN` (no v2 artifacts)
+
+### 18.5 Updated final decision
+
+Decision remains `NO_GO`.
+
+Main remaining blocker is now run design, not FK:
+
+- a targeted run002 snapshot alone cannot close a full 50-taxa pack when pipeline overwrite semantics are used.
+
+## 19. Closure snapshot 50 execution update
+
+### 19.1 Snapshot/fetch closure status
+
+- closure snapshot id: `palier1-be-birds-50taxa-run002-closure`
+- harvested observations: `1414`
+- downloaded images: `1414`
+- taxa in fixture: `50`
+- taxon still `<2` observations before qualification: `Larus michahellis` (`1`)
+- targeted deep fetch `Larus` to `60`: no improvement (`1`) -> `unresolved_coverage_after_60`
+
+### 19.2 Qualification closure status
+
+- candidates/media processed: `1413`
+- sent to Gemini: `1333`
+- valid outputs (`ok`): `1333`
+- Gemini errors: `0`
+- pre-AI rejections: `80`
+  - `insufficient_resolution_pre_ai: 78`
+  - `duplicate_pre_ai: 3`
+- estimated AI cost (smoke report): `€1.5996`
+
+### 19.3 Pipeline closure status
+
+- pipeline cached rerun: `PASS`
+- `run_id=run:20260502T112940Z:5c268034`
+- `qualified=1413`
+- `exportable=581`
+- `review=0`
+- closure artifacts produced:
+  - `data/normalized/palier1_be_birds_50taxa_run002_closure.normalized.json`
+  - `data/qualified/palier1_be_birds_50taxa_run002_closure.qualified.json`
+  - `data/exports/palier1_be_birds_50taxa_run002_closure.export.json`
+
+### 19.4 Diagnose/compile/materialize/audit closure status
+
+Diagnose (`pack:palier1:be:birds:run002`):
+
+- `compilable=false`
+- `reason_code=insufficient_media_per_taxon`
+- `taxa_served=45`
+- `questions_possible=20`
+- `min_media_count_per_taxon=0`
+- blocking taxa: `8`
+  - `taxon:birds:000026`
+  - `taxon:birds:000032`
+  - `taxon:birds:000037`
+  - `taxon:birds:000040`
+  - `taxon:birds:000041`
+  - `taxon:birds:000044`
+  - `taxon:birds:000045`
+  - `taxon:birds:000047`
+
+Gate enforcement:
+
+- compile v2: `NOT_RUN`
+- materialize v2: `NOT_RUN`
+- distractor audit: `NOT_RUN`
+
+### 19.5 Final decision update
+
+Decision remains `NO_GO`.
+
+Reason:
+
+- closure improved to `45/50` taxa served, but mandatory full-pack compile precondition (`>=2` playable for every requested taxon) still fails on 8 taxa.

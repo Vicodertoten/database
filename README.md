@@ -211,9 +211,19 @@ For cached iNaturalist snapshots, the nominal flow is:
 
 The CLI auto-loads `.env` and expects `GEMINI_API_KEY` there for the live Gemini step.
 The default live model is `gemini-3.1-flash-lite-preview`.
-Snapshot qualification keeps a sequential flow, but the default Gemini pacing is tuned for faster paid-account usage.
+Snapshot qualification supports controlled parallel Gemini workers.
+Default pacing is now `0` seconds between requests, with retry/backoff on transient API errors.
 `qualify_inat_snapshot.py` now prints per-image progress so long runs are observable.
 Cached AI outputs are version-governed through a prompt bundle version, so stale caches are rejected rather than silently mixed with current qualification logic.
+
+For full pipeline runs in live Gemini mode, `run-pipeline` now exposes the same pacing/retry knobs:
+
+```bash
+python scripts/run_pipeline.py --source-mode inat_snapshot --snapshot-id <id> \
+  --qualifier-mode gemini --uncertain-policy reject \
+  --request-interval-seconds 0 --gemini-concurrency 4 \
+  --max-retries 2 --initial-backoff-seconds 1.0 --max-backoff-seconds 8.0
+```
 
 ## Common commands
 

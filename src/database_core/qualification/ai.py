@@ -6,6 +6,7 @@ import json
 import re
 import urllib.request
 from collections.abc import Callable, Mapping, Sequence
+from concurrent.futures import Future, ThreadPoolExecutor
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -412,6 +413,7 @@ def collect_ai_qualification_outcomes(
     gemini_model: str = DEFAULT_GEMINI_MODEL,
     prompt_version: str = DEFAULT_GEMINI_PROMPT_VERSION,
     qualifier: AIQualifier | None = None,
+    gemini_concurrency: int = 1,
     progress_callback: Callable[[int, int, MediaAsset, AIQualificationOutcome], None] | None = None,
 ) -> dict[SourceExternalKey, AIQualificationOutcome]:
     if qualifier_mode == "rules":
@@ -481,18 +483,40 @@ def collect_ai_qualification_outcomes(
     image_paths = dict(cached_image_paths_by_source_media_key or {})
     outcomes: dict[SourceExternalKey, AIQualificationOutcome] = {}
     total = len(media_assets)
-    for index, media_asset in enumerate(media_assets, start=1):
-        media_key = source_external_key_for_media(media_asset)
-        outcome = _collect_single_ai_outcome(
-            media_asset=media_asset,
-            image_path=image_paths.get(media_key),
-            qualifier=qualifier,
-            gemini_model=gemini_model,
-            prompt_version=prompt_version,
-        )
-        outcomes[media_key] = outcome
-        if progress_callback is not None:
-            progress_callback(index, total, media_asset, outcome)
+    resolved_concurrency = max(1, gemini_concurrency)
+    if resolved_concurrency == 1 or total <= 1:
+        for index, media_asset in enumerate(media_assets, start=1):
+            media_key = source_external_key_for_media(media_asset)
+            outcome = _collect_single_ai_outcome(
+                media_asset=media_asset,
+                image_path=image_paths.get(media_key),
+                qualifier=qualifier,
+                gemini_model=gemini_model,
+                prompt_version=prompt_version,
+            )
+            outcomes[media_key] = outcome
+            if progress_callback is not None:
+                progress_callback(index, total, media_asset, outcome)
+        return outcomes
+
+    with ThreadPoolExecutor(max_workers=resolved_concurrency) as executor:
+        futures_by_key: dict[SourceExternalKey, Future[AIQualificationOutcome]] = {}
+        for media_asset in media_assets:
+            media_key = source_external_key_for_media(media_asset)
+            futures_by_key[media_key] = executor.submit(
+                _collect_single_ai_outcome,
+                media_asset=media_asset,
+                image_path=image_paths.get(media_key),
+                qualifier=qualifier,
+                gemini_model=gemini_model,
+                prompt_version=prompt_version,
+            )
+        for index, media_asset in enumerate(media_assets, start=1):
+            media_key = source_external_key_for_media(media_asset)
+            outcome = futures_by_key[media_key].result()
+            outcomes[media_key] = outcome
+            if progress_callback is not None:
+                progress_callback(index, total, media_asset, outcome)
     return outcomes
 
 

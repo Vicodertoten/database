@@ -31,10 +31,11 @@ from database_core.qualification.ai import (
     source_external_key_for_media,
 )
 
-DEFAULT_REQUEST_INTERVAL_SECONDS = 0.5
+DEFAULT_REQUEST_INTERVAL_SECONDS = 0.0
 DEFAULT_MAX_RETRIES = 2
 DEFAULT_INITIAL_BACKOFF_SECONDS = 1.0
 DEFAULT_MAX_BACKOFF_SECONDS = 8.0
+DEFAULT_GEMINI_CONCURRENCY = 4
 MIN_PRE_AI_BLUR_SCORE = 10.0
 PRE_AI_REJECTION_REASONS = {
     "insufficient_resolution_pre_ai",
@@ -75,6 +76,7 @@ def qualify_inat_snapshot(
     max_retries: int = DEFAULT_MAX_RETRIES,
     initial_backoff_seconds: float = DEFAULT_INITIAL_BACKOFF_SECONDS,
     max_backoff_seconds: float = DEFAULT_MAX_BACKOFF_SECONDS,
+    gemini_concurrency: int = DEFAULT_GEMINI_CONCURRENCY,
     qualifier: AIQualifier | None = None,
     progress_stream: TextIO | None = None,
 ) -> SnapshotQualificationResult:
@@ -108,7 +110,8 @@ def qualify_inat_snapshot(
             f"snapshot_id={manifest.snapshot_id} | "
             f"media={len(dataset.media_assets)} | "
             f"pre_ai_filtered={len(pre_ai_rejections_by_source_media_id)} | "
-            f"request_interval_seconds={request_interval_seconds}",
+            f"request_interval_seconds={request_interval_seconds} | "
+            f"gemini_concurrency={gemini_concurrency}",
             file=resolved_progress_stream,
             flush=True,
         )
@@ -121,6 +124,7 @@ def qualify_inat_snapshot(
         gemini_model=gemini_model,
         prompt_version=prompt_version,
         qualifier=qualifier,
+        gemini_concurrency=gemini_concurrency,
         progress_callback=_build_progress_callback(resolved_progress_stream),
     )
     outcomes: dict[object, AIQualificationOutcome] = dict(gemini_outcomes)

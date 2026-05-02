@@ -413,3 +413,227 @@ Recommended next actions:
 1. Provide `GEMINI_API_KEY` and rerun qualification for snapshot run002.
 2. Resolve pipeline DB reset blocker (`referenced_taxa` FK) before rerunning cached pipeline.
 3. Rerun diagnose on refreshed playable state and continue compile/materialize/audit only if compilable.
+
+## 10. Run002 update after FK fix (2026-05-02)
+
+### 10.1 FK root cause and fix
+
+Root cause:
+
+- `reset_materialized_state()` deleted `canonical_taxa` but did not clear `referenced_taxa`.
+- `referenced_taxa.mapped_canonical_taxon_id -> canonical_taxa.canonical_taxon_id` caused FK violation.
+
+Code location:
+
+- file: `src/database_core/storage/postgres.py`
+- function: `PostgresStorageInternal.reset_materialized_state`
+
+Applied fix (minimal):
+
+- added `DELETE FROM referenced_taxa` before `DELETE FROM canonical_taxa`.
+- this preserves governance semantics and keeps reset coherent with phase-3 referenced-only data lifecycle.
+
+Test added:
+
+- `tests/test_pipeline.py::test_pipeline_overwrite_clears_referenced_taxa_before_canonical_reset`
+- validates second pipeline run no longer fails when referenced taxa exist.
+
+### 10.2 Qualification rerun (with GEMINI_API_KEY)
+
+Executed:
+
+```bash
+python scripts/qualify_inat_snapshot.py \
+  --snapshot-id palier1-be-birds-blocking-run002
+```
+
+Observed:
+
+- candidates/images: `41`
+- sent to Gemini: `35`
+- valid outputs (`ok`): `35`
+- Gemini errors: `0`
+- pre-AI rejections: `6` (`insufficient_resolution_pre_ai`)
+
+### 10.3 Pipeline cached rerun
+
+Executed:
+
+```bash
+python scripts/run_pipeline.py \
+  --source-mode inat_snapshot \
+  --snapshot-id palier1-be-birds-blocking-run002 \
+  --qualifier-mode cached \
+  --uncertain-policy reject \
+  --database-url "$DATABASE_URL" \
+  --normalized-path data/normalized/palier1_be_birds_50taxa_run002.normalized.json \
+  --qualified-path data/qualified/palier1_be_birds_50taxa_run002.qualified.json \
+  --export-path data/exports/palier1_be_birds_50taxa_run002.export.json
+```
+
+Observed:
+
+- `PASS`
+- `run_id=run:20260502T102543Z:9bbcb4e7`
+- `qualified=41`
+- `exportable=3`
+- `review=0`
+
+Behavior confirmed:
+
+- pipeline overwrites current materialized state rather than merging run001 + run002.
+- because snapshot run002 is targeted (7 taxa), the full 50-taxa pack loses prior run001 playable coverage.
+- this is a design blocker for run002 closure, not a runtime/qualification rule issue.
+
+### 10.4 Diagnose rerun
+
+Executed:
+
+```bash
+python scripts/manage_packs.py diagnose \
+  --database-url "$DATABASE_URL" \
+  --pack-id "pack:palier1:be:birds:run002"
+```
+
+Observed:
+
+- `compilable=false`
+- `reason_code=insufficient_taxa_served`
+- `taxa_served=2`
+- `questions_possible=0`
+- `min_media_count_per_taxon=0`
+
+Decision impact:
+
+- compile v2/materialize v2/audit distractors not run (blocked by diagnose).
+
+### 10.5 Updated run002 decision
+
+- decision remains: `NO_GO`
+- primary remaining blocker: run design (targeted snapshot pipeline overwrite without merge with run001 baseline).
+
+## 11. Closure snapshot 50 run (2026-05-02)
+
+Snapshot id:
+
+- `palier1-be-birds-50taxa-run002-closure`
+
+### 11.1 Fetch closure 50
+
+Executed:
+
+```bash
+python scripts/fetch_inat_snapshot.py \
+  --snapshot-id palier1-be-birds-50taxa-run002-closure \
+  --pilot-taxa-path data/fixtures/inaturalist_pilot_taxa_palier1_be_50_run002.json \
+  --place-id 7008 \
+  --max-observations-per-taxon 40
+```
+
+Observed:
+
+- harvested: `1414`
+- downloaded: `1414`
+- taxon seeds: `50`
+- under-covered `<2` observations before qualification: `1` taxon (`Larus michahellis=1`)
+
+Targeted deep fetch for Larus:
+
+```bash
+python scripts/fetch_inat_snapshot.py \
+  --snapshot-id palier1-be-birds-50taxa-run002-closure-larus60 \
+  --pilot-taxa-path <larus-only fixture> \
+  --place-id 7008 \
+  --max-observations-per-taxon 60
+```
+
+Observed:
+
+- `Larus michahellis` remained at `1` observation (`unresolved_coverage_after_60`)
+
+### 11.2 Qualification closure (single pass)
+
+Executed:
+
+```bash
+python scripts/qualify_inat_snapshot.py \
+  --snapshot-id palier1-be-birds-50taxa-run002-closure
+```
+
+Observed:
+
+- candidates/media: `1413`
+- sent to Gemini: `1333`
+- valid outputs (`ok`): `1333`
+- Gemini errors: `0`
+- pre-AI rejections: `80` (`78 insufficient_resolution_pre_ai`, `3 duplicate_pre_ai`)
+
+### 11.3 Pipeline closure (cached)
+
+Executed:
+
+```bash
+python scripts/run_pipeline.py \
+  --source-mode inat_snapshot \
+  --snapshot-id palier1-be-birds-50taxa-run002-closure \
+  --qualifier-mode cached \
+  --uncertain-policy reject \
+  --database-url "$DATABASE_URL" \
+  --normalized-path data/normalized/palier1_be_birds_50taxa_run002_closure.normalized.json \
+  --qualified-path data/qualified/palier1_be_birds_50taxa_run002_closure.qualified.json \
+  --export-path data/exports/palier1_be_birds_50taxa_run002_closure.export.json
+```
+
+Observed:
+
+- `PASS`
+- `run_id=run:20260502T112940Z:5c268034`
+- `qualified=1413`
+- `exportable=581`
+- `review=0`
+
+Artifacts:
+
+- `data/normalized/palier1_be_birds_50taxa_run002_closure.normalized.json` (`canonical_taxa=50`)
+- `data/qualified/palier1_be_birds_50taxa_run002_closure.qualified.json` (`qualified_resources=1413`)
+- `data/exports/palier1_be_birds_50taxa_run002_closure.export.json` (`canonical_taxa=45`, `qualified_resources=581`)
+
+### 11.4 Smoke + diagnose gate
+
+Smoke:
+
+```bash
+python scripts/generate_smoke_report.py \
+  --snapshot-id palier1-be-birds-50taxa-run002-closure
+```
+
+- report: `docs/archive/evidence/smoke-reports/palier1-be-birds-50taxa-run002-closure.smoke_report.v1.json`
+- overall pass: `true`
+- estimated AI cost EUR: `1.5996`
+
+Diagnose:
+
+```bash
+python scripts/manage_packs.py diagnose \
+  --database-url "$DATABASE_URL" \
+  --pack-id "pack:palier1:be:birds:run002"
+```
+
+Observed:
+
+- `compilable=false`
+- `reason_code=insufficient_media_per_taxon`
+- `taxa_served=45`
+- `questions_possible=20`
+- `min_media_count_per_taxon=0`
+- blocking taxa: `8` (`000026`, `000032`, `000037`, `000040`, `000041`, `000044`, `000045`, `000047`)
+
+Gate consequence:
+
+- compile v2: `NOT_RUN`
+- materialize v2: `NOT_RUN`
+- distractor audit: `NOT_RUN`
+
+### 11.5 Updated decision
+
+- run002 decision remains `NO_GO`.

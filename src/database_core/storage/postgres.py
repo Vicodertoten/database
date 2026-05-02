@@ -172,6 +172,10 @@ class PostgresStorageInternal:
             "DELETE FROM qualified_resources",
             "DELETE FROM media_assets",
             "DELETE FROM source_observations",
+            # Phase 3 referenced-only taxa may point to canonical taxa.
+            # Clear them before canonical reset to avoid FK violations
+            # during pipeline overwrite runs.
+            "DELETE FROM referenced_taxa",
             "DELETE FROM canonical_taxa",
         ):
             connection.execute(statement)
