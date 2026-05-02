@@ -1,0 +1,2865 @@
+{
+  "created_at": "2026-05-02T16:13:23.664645Z",
+  "expires_at": null,
+  "materialization_id": "packmat:pack:palier1:be:birds:run003-v11-baseline:1:assignment:v2:1f45ca60",
+  "pack_id": "pack:palier1:be:birds:run003-v11-baseline",
+  "pack_materialization_version": "pack.materialization.v2",
+  "purpose": "assignment",
+  "question_count": 50,
+  "questions": [
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000014",
+          "is_correct": true,
+          "option_id": "q1:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:106685027",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Eurasian Blackbird"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "is_correct": false,
+          "option_id": "q1:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:179697316",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Carrion Crow"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000005",
+          "is_correct": false,
+          "option_id": "q1:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:30812264",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Common Chaffinch"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000007",
+          "is_correct": false,
+          "option_id": "q1:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:14878944",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "White Wagtail"
+        }
+      ],
+      "position": 1,
+      "target_canonical_taxon_id": "taxon:birds:000014",
+      "target_playable_item_id": "playable:qr:media:inaturalist:106685027"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000004",
+          "is_correct": true,
+          "option_id": "q2:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:108990173",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "European Robin"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000009",
+          "is_correct": false,
+          "option_id": "q2:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:128796357",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "House Sparrow"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000012",
+          "is_correct": false,
+          "option_id": "q2:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:92947678",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Eurasian Blackcap"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000015",
+          "is_correct": false,
+          "option_id": "q2:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:205550561",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Song Thrush"
+        }
+      ],
+      "position": 2,
+      "target_canonical_taxon_id": "taxon:birds:000004",
+      "target_playable_item_id": "playable:qr:media:inaturalist:108990173"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000009",
+          "is_correct": true,
+          "option_id": "q3:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:113198384",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "House Sparrow"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000018",
+          "is_correct": false,
+          "option_id": "q3:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:138601109",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Common Reed Warbler"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000020",
+          "is_correct": false,
+          "option_id": "q3:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:143807565",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Black Redstart"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000021",
+          "is_correct": false,
+          "option_id": "q3:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:122963324",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Mallard"
+        }
+      ],
+      "position": 3,
+      "target_canonical_taxon_id": "taxon:birds:000009",
+      "target_playable_item_id": "playable:qr:media:inaturalist:113198384"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000003",
+          "is_correct": true,
+          "option_id": "q4:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:11889278",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Eurasian Blue Tit"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000022",
+          "is_correct": false,
+          "option_id": "q4:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:106553706",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Greylag Goose"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000024",
+          "is_correct": false,
+          "option_id": "q4:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:13370671",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Eurasian Coot"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000026",
+          "is_correct": false,
+          "option_id": "q4:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:123601681",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Yellow-legged Gull"
+        }
+      ],
+      "position": 4,
+      "target_canonical_taxon_id": "taxon:birds:000003",
+      "target_playable_item_id": "playable:qr:media:inaturalist:11889278"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000008",
+          "is_correct": true,
+          "option_id": "q5:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:108990786",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Great Tit"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000027",
+          "is_correct": false,
+          "option_id": "q5:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:150126557",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "European Herring Gull"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000028",
+          "is_correct": false,
+          "option_id": "q5:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:350879955",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Great Cormorant"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000030",
+          "is_correct": false,
+          "option_id": "q5:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:551776775",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Little Egret"
+        }
+      ],
+      "position": 5,
+      "target_canonical_taxon_id": "taxon:birds:000008",
+      "target_playable_item_id": "playable:qr:media:inaturalist:108990786"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000010",
+          "is_correct": true,
+          "option_id": "q6:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:108293198",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Eurasian Magpie"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000031",
+          "is_correct": false,
+          "option_id": "q6:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:506240740",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Common Buzzard"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000032",
+          "is_correct": false,
+          "option_id": "q6:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:619782073",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Eurasian Sparrowhawk"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000033",
+          "is_correct": false,
+          "option_id": "q6:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:359085915",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Eurasian Kestrel"
+        }
+      ],
+      "position": 6,
+      "target_canonical_taxon_id": "taxon:birds:000010",
+      "target_playable_item_id": "playable:qr:media:inaturalist:108293198"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000005",
+          "is_correct": true,
+          "option_id": "q7:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:101911464",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Common Chaffinch"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000036",
+          "is_correct": false,
+          "option_id": "q7:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:16656851",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Long-eared Owl"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000039",
+          "is_correct": false,
+          "option_id": "q7:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:218460267",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Great Spotted Woodpecker"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000049",
+          "is_correct": false,
+          "option_id": "q7:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:268210352",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Rook"
+        }
+      ],
+      "position": 7,
+      "target_canonical_taxon_id": "taxon:birds:000005",
+      "target_playable_item_id": "playable:qr:media:inaturalist:101911464"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000001",
+          "is_correct": true,
+          "option_id": "q8:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:100909260",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Common Wood-Pigeon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000079",
+          "is_correct": false,
+          "option_id": "q8:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:283826786",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Eurasian Collared-Dove"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000003",
+          "is_correct": false,
+          "option_id": "q8:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:227080840",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Eurasian Blue Tit"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000004",
+          "is_correct": false,
+          "option_id": "q8:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:50864269",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "European Robin"
+        }
+      ],
+      "position": 8,
+      "target_canonical_taxon_id": "taxon:birds:000001",
+      "target_playable_item_id": "playable:qr:media:inaturalist:100909260"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000011",
+          "is_correct": true,
+          "option_id": "q9:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:12159188",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "European Starling"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000001",
+          "is_correct": false,
+          "option_id": "q9:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:12496624",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Common Wood-Pigeon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000006",
+          "is_correct": false,
+          "option_id": "q9:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:384104979",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Eurasian Jay"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000008",
+          "is_correct": false,
+          "option_id": "q9:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:161347039",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Great Tit"
+        }
+      ],
+      "position": 9,
+      "target_canonical_taxon_id": "taxon:birds:000011",
+      "target_playable_item_id": "playable:qr:media:inaturalist:12159188"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000015",
+          "is_correct": true,
+          "option_id": "q10:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:108788210",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Song Thrush"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000010",
+          "is_correct": false,
+          "option_id": "q10:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:576899206",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Eurasian Magpie"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000011",
+          "is_correct": false,
+          "option_id": "q10:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:257262747",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "European Starling"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000013",
+          "is_correct": false,
+          "option_id": "q10:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:186230200",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Eurasian Wren"
+        }
+      ],
+      "position": 10,
+      "target_canonical_taxon_id": "taxon:birds:000015",
+      "target_playable_item_id": "playable:qr:media:inaturalist:108788210"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000012",
+          "is_correct": true,
+          "option_id": "q11:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:124138505",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Eurasian Blackcap"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000014",
+          "is_correct": false,
+          "option_id": "q11:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:12179282",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Eurasian Blackbird"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000016",
+          "is_correct": false,
+          "option_id": "q11:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:409995121",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "European Goldfinch"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000017",
+          "is_correct": false,
+          "option_id": "q11:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:113276653",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "European Greenfinch"
+        }
+      ],
+      "position": 11,
+      "target_canonical_taxon_id": "taxon:birds:000012",
+      "target_playable_item_id": "playable:qr:media:inaturalist:124138505"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000007",
+          "is_correct": true,
+          "option_id": "q12:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:14878944",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "White Wagtail"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000019",
+          "is_correct": false,
+          "option_id": "q12:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:602985992",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Hawfinch"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000023",
+          "is_correct": false,
+          "option_id": "q12:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:113662532",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Mute Swan"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000025",
+          "is_correct": false,
+          "option_id": "q12:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:217064402",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Common Moorhen"
+        }
+      ],
+      "position": 12,
+      "target_canonical_taxon_id": "taxon:birds:000007",
+      "target_playable_item_id": "playable:qr:media:inaturalist:14878944"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000006",
+          "is_correct": true,
+          "option_id": "q13:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:109294786",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Eurasian Jay"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000029",
+          "is_correct": false,
+          "option_id": "q13:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:244910202",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Grey Heron"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000034",
+          "is_correct": false,
+          "option_id": "q13:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:155810806",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Peregrine Falcon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000035",
+          "is_correct": false,
+          "option_id": "q13:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:35691299",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Tawny Owl"
+        }
+      ],
+      "position": 13,
+      "target_canonical_taxon_id": "taxon:birds:000006",
+      "target_playable_item_id": "playable:qr:media:inaturalist:109294786"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "is_correct": true,
+          "option_id": "q14:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:109294921",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Carrion Crow"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000037",
+          "is_correct": false,
+          "option_id": "q14:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:153104665",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Little Owl"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000038",
+          "is_correct": false,
+          "option_id": "q14:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:277421462",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Eurasian Green Woodpecker"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000042",
+          "is_correct": false,
+          "option_id": "q14:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:24712785",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Western House Martin"
+        }
+      ],
+      "position": 14,
+      "target_canonical_taxon_id": "taxon:birds:000002",
+      "target_playable_item_id": "playable:qr:media:inaturalist:109294921"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000013",
+          "is_correct": true,
+          "option_id": "q15:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:101912004",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Eurasian Wren"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000043",
+          "is_correct": false,
+          "option_id": "q15:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:34445250",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Barn Swallow"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000044",
+          "is_correct": false,
+          "option_id": "q15:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:380254778",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Bank Swallow"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000047",
+          "is_correct": false,
+          "option_id": "q15:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:547330655",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Red-backed Shrike"
+        }
+      ],
+      "position": 15,
+      "target_canonical_taxon_id": "taxon:birds:000013",
+      "target_playable_item_id": "playable:qr:media:inaturalist:101912004"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000016",
+          "is_correct": true,
+          "option_id": "q16:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:111276293",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "European Goldfinch"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000048",
+          "is_correct": false,
+          "option_id": "q16:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:139033108",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Eurasian Jackdaw"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000070",
+          "is_correct": false,
+          "option_id": "q16:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:14306882",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Great Crested Grebe"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000040",
+          "is_correct": false,
+          "option_id": "q16:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:352129210",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Black Woodpecker"
+        }
+      ],
+      "position": 16,
+      "target_canonical_taxon_id": "taxon:birds:000016",
+      "target_playable_item_id": "playable:qr:media:inaturalist:111276293"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000017",
+          "is_correct": true,
+          "option_id": "q17:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:112996341",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "European Greenfinch"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000041",
+          "is_correct": false,
+          "option_id": "q17:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:404163351",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Common Swift"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000045",
+          "is_correct": false,
+          "option_id": "q17:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:607671460",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Eurasian Skylark"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "is_correct": false,
+          "option_id": "q17:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:179697316",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Carrion Crow"
+        }
+      ],
+      "position": 17,
+      "target_canonical_taxon_id": "taxon:birds:000017",
+      "target_playable_item_id": "playable:qr:media:inaturalist:112996341"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000018",
+          "is_correct": true,
+          "option_id": "q18:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:138601109",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Common Reed Warbler"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "is_correct": false,
+          "option_id": "q18:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:179697316",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Carrion Crow"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000005",
+          "is_correct": false,
+          "option_id": "q18:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:30812264",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Common Chaffinch"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000007",
+          "is_correct": false,
+          "option_id": "q18:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:14878944",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "White Wagtail"
+        }
+      ],
+      "position": 18,
+      "target_canonical_taxon_id": "taxon:birds:000018",
+      "target_playable_item_id": "playable:qr:media:inaturalist:138601109"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000019",
+          "is_correct": true,
+          "option_id": "q19:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:113362223",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Hawfinch"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "is_correct": false,
+          "option_id": "q19:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:179697316",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Carrion Crow"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000005",
+          "is_correct": false,
+          "option_id": "q19:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:30812264",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Common Chaffinch"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000007",
+          "is_correct": false,
+          "option_id": "q19:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:14878944",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "White Wagtail"
+        }
+      ],
+      "position": 19,
+      "target_canonical_taxon_id": "taxon:birds:000019",
+      "target_playable_item_id": "playable:qr:media:inaturalist:113362223"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000020",
+          "is_correct": true,
+          "option_id": "q20:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:118383191",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Black Redstart"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "is_correct": false,
+          "option_id": "q20:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:179697316",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Carrion Crow"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000005",
+          "is_correct": false,
+          "option_id": "q20:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:30812264",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Common Chaffinch"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000007",
+          "is_correct": false,
+          "option_id": "q20:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:14878944",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "White Wagtail"
+        }
+      ],
+      "position": 20,
+      "target_canonical_taxon_id": "taxon:birds:000020",
+      "target_playable_item_id": "playable:qr:media:inaturalist:118383191"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000021",
+          "is_correct": true,
+          "option_id": "q21:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:113273957",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Mallard"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "is_correct": false,
+          "option_id": "q21:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:179697316",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Carrion Crow"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000005",
+          "is_correct": false,
+          "option_id": "q21:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:30812264",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Common Chaffinch"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000007",
+          "is_correct": false,
+          "option_id": "q21:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:14878944",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "White Wagtail"
+        }
+      ],
+      "position": 21,
+      "target_canonical_taxon_id": "taxon:birds:000021",
+      "target_playable_item_id": "playable:qr:media:inaturalist:113273957"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000022",
+          "is_correct": true,
+          "option_id": "q22:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:106553706",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Greylag Goose"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "is_correct": false,
+          "option_id": "q22:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:179697316",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Carrion Crow"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000005",
+          "is_correct": false,
+          "option_id": "q22:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:30812264",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Common Chaffinch"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000007",
+          "is_correct": false,
+          "option_id": "q22:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:14878944",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "White Wagtail"
+        }
+      ],
+      "position": 22,
+      "target_canonical_taxon_id": "taxon:birds:000022",
+      "target_playable_item_id": "playable:qr:media:inaturalist:106553706"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000023",
+          "is_correct": true,
+          "option_id": "q23:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:108344756",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Mute Swan"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "is_correct": false,
+          "option_id": "q23:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:179697316",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Carrion Crow"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000005",
+          "is_correct": false,
+          "option_id": "q23:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:30812264",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Common Chaffinch"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000007",
+          "is_correct": false,
+          "option_id": "q23:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:14878944",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "White Wagtail"
+        }
+      ],
+      "position": 23,
+      "target_canonical_taxon_id": "taxon:birds:000023",
+      "target_playable_item_id": "playable:qr:media:inaturalist:108344756"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000024",
+          "is_correct": true,
+          "option_id": "q24:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:100906257",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Eurasian Coot"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "is_correct": false,
+          "option_id": "q24:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:179697316",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Carrion Crow"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000005",
+          "is_correct": false,
+          "option_id": "q24:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:30812264",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Common Chaffinch"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000007",
+          "is_correct": false,
+          "option_id": "q24:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:14878944",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "White Wagtail"
+        }
+      ],
+      "position": 24,
+      "target_canonical_taxon_id": "taxon:birds:000024",
+      "target_playable_item_id": "playable:qr:media:inaturalist:100906257"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000025",
+          "is_correct": true,
+          "option_id": "q25:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:11908352",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Common Moorhen"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "is_correct": false,
+          "option_id": "q25:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:179697316",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Carrion Crow"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000005",
+          "is_correct": false,
+          "option_id": "q25:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:30812264",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Common Chaffinch"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000007",
+          "is_correct": false,
+          "option_id": "q25:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:14878944",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "White Wagtail"
+        }
+      ],
+      "position": 25,
+      "target_canonical_taxon_id": "taxon:birds:000025",
+      "target_playable_item_id": "playable:qr:media:inaturalist:11908352"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000026",
+          "is_correct": true,
+          "option_id": "q26:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:123601681",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Yellow-legged Gull"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "is_correct": false,
+          "option_id": "q26:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:179697316",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Carrion Crow"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000005",
+          "is_correct": false,
+          "option_id": "q26:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:30812264",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Common Chaffinch"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000007",
+          "is_correct": false,
+          "option_id": "q26:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:14878944",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "White Wagtail"
+        }
+      ],
+      "position": 26,
+      "target_canonical_taxon_id": "taxon:birds:000026",
+      "target_playable_item_id": "playable:qr:media:inaturalist:123601681"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000027",
+          "is_correct": true,
+          "option_id": "q27:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:150126557",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "European Herring Gull"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "is_correct": false,
+          "option_id": "q27:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:179697316",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Carrion Crow"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000005",
+          "is_correct": false,
+          "option_id": "q27:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:30812264",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Common Chaffinch"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000007",
+          "is_correct": false,
+          "option_id": "q27:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:14878944",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "White Wagtail"
+        }
+      ],
+      "position": 27,
+      "target_canonical_taxon_id": "taxon:birds:000027",
+      "target_playable_item_id": "playable:qr:media:inaturalist:150126557"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000028",
+          "is_correct": true,
+          "option_id": "q28:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:107266654",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Great Cormorant"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "is_correct": false,
+          "option_id": "q28:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:179697316",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Carrion Crow"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000005",
+          "is_correct": false,
+          "option_id": "q28:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:30812264",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Common Chaffinch"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000007",
+          "is_correct": false,
+          "option_id": "q28:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:14878944",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "White Wagtail"
+        }
+      ],
+      "position": 28,
+      "target_canonical_taxon_id": "taxon:birds:000028",
+      "target_playable_item_id": "playable:qr:media:inaturalist:107266654"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000029",
+          "is_correct": true,
+          "option_id": "q29:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:100422597",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Grey Heron"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "is_correct": false,
+          "option_id": "q29:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:179697316",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Carrion Crow"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000005",
+          "is_correct": false,
+          "option_id": "q29:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:30812264",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Common Chaffinch"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000007",
+          "is_correct": false,
+          "option_id": "q29:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:14878944",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "White Wagtail"
+        }
+      ],
+      "position": 29,
+      "target_canonical_taxon_id": "taxon:birds:000029",
+      "target_playable_item_id": "playable:qr:media:inaturalist:100422597"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000030",
+          "is_correct": true,
+          "option_id": "q30:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:151588446",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Little Egret"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "is_correct": false,
+          "option_id": "q30:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:179697316",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Carrion Crow"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000005",
+          "is_correct": false,
+          "option_id": "q30:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:30812264",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Common Chaffinch"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000007",
+          "is_correct": false,
+          "option_id": "q30:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:14878944",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "White Wagtail"
+        }
+      ],
+      "position": 30,
+      "target_canonical_taxon_id": "taxon:birds:000030",
+      "target_playable_item_id": "playable:qr:media:inaturalist:151588446"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000031",
+          "is_correct": true,
+          "option_id": "q31:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:109009676",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Common Buzzard"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "is_correct": false,
+          "option_id": "q31:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:179697316",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Carrion Crow"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000005",
+          "is_correct": false,
+          "option_id": "q31:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:30812264",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Common Chaffinch"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000007",
+          "is_correct": false,
+          "option_id": "q31:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:14878944",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "White Wagtail"
+        }
+      ],
+      "position": 31,
+      "target_canonical_taxon_id": "taxon:birds:000031",
+      "target_playable_item_id": "playable:qr:media:inaturalist:109009676"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000032",
+          "is_correct": true,
+          "option_id": "q32:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:10333212",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Eurasian Sparrowhawk"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "is_correct": false,
+          "option_id": "q32:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:179697316",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Carrion Crow"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000005",
+          "is_correct": false,
+          "option_id": "q32:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:30812264",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Common Chaffinch"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000007",
+          "is_correct": false,
+          "option_id": "q32:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:14878944",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "White Wagtail"
+        }
+      ],
+      "position": 32,
+      "target_canonical_taxon_id": "taxon:birds:000032",
+      "target_playable_item_id": "playable:qr:media:inaturalist:10333212"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000033",
+          "is_correct": true,
+          "option_id": "q33:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:103441671",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Eurasian Kestrel"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "is_correct": false,
+          "option_id": "q33:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:179697316",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Carrion Crow"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000005",
+          "is_correct": false,
+          "option_id": "q33:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:30812264",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Common Chaffinch"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000007",
+          "is_correct": false,
+          "option_id": "q33:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:14878944",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "White Wagtail"
+        }
+      ],
+      "position": 33,
+      "target_canonical_taxon_id": "taxon:birds:000033",
+      "target_playable_item_id": "playable:qr:media:inaturalist:103441671"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000034",
+          "is_correct": true,
+          "option_id": "q34:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:14342212",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Peregrine Falcon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "is_correct": false,
+          "option_id": "q34:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:179697316",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Carrion Crow"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000005",
+          "is_correct": false,
+          "option_id": "q34:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:30812264",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Common Chaffinch"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000007",
+          "is_correct": false,
+          "option_id": "q34:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:14878944",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "White Wagtail"
+        }
+      ],
+      "position": 34,
+      "target_canonical_taxon_id": "taxon:birds:000034",
+      "target_playable_item_id": "playable:qr:media:inaturalist:14342212"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000035",
+          "is_correct": true,
+          "option_id": "q35:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:219382150",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Tawny Owl"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "is_correct": false,
+          "option_id": "q35:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:179697316",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Carrion Crow"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000005",
+          "is_correct": false,
+          "option_id": "q35:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:30812264",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Common Chaffinch"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000007",
+          "is_correct": false,
+          "option_id": "q35:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:14878944",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "White Wagtail"
+        }
+      ],
+      "position": 35,
+      "target_canonical_taxon_id": "taxon:birds:000035",
+      "target_playable_item_id": "playable:qr:media:inaturalist:219382150"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000036",
+          "is_correct": true,
+          "option_id": "q36:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:109106813",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Long-eared Owl"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "is_correct": false,
+          "option_id": "q36:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:179697316",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Carrion Crow"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000005",
+          "is_correct": false,
+          "option_id": "q36:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:30812264",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Common Chaffinch"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000007",
+          "is_correct": false,
+          "option_id": "q36:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:14878944",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "White Wagtail"
+        }
+      ],
+      "position": 36,
+      "target_canonical_taxon_id": "taxon:birds:000036",
+      "target_playable_item_id": "playable:qr:media:inaturalist:109106813"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000037",
+          "is_correct": true,
+          "option_id": "q37:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:153104665",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Little Owl"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "is_correct": false,
+          "option_id": "q37:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:179697316",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Carrion Crow"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000005",
+          "is_correct": false,
+          "option_id": "q37:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:30812264",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Common Chaffinch"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000007",
+          "is_correct": false,
+          "option_id": "q37:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:14878944",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "White Wagtail"
+        }
+      ],
+      "position": 37,
+      "target_canonical_taxon_id": "taxon:birds:000037",
+      "target_playable_item_id": "playable:qr:media:inaturalist:153104665"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000038",
+          "is_correct": true,
+          "option_id": "q38:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:142277868",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Eurasian Green Woodpecker"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "is_correct": false,
+          "option_id": "q38:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:179697316",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Carrion Crow"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000005",
+          "is_correct": false,
+          "option_id": "q38:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:30812264",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Common Chaffinch"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000007",
+          "is_correct": false,
+          "option_id": "q38:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:14878944",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "White Wagtail"
+        }
+      ],
+      "position": 38,
+      "target_canonical_taxon_id": "taxon:birds:000038",
+      "target_playable_item_id": "playable:qr:media:inaturalist:142277868"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000039",
+          "is_correct": true,
+          "option_id": "q39:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:108991122",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Great Spotted Woodpecker"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "is_correct": false,
+          "option_id": "q39:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:179697316",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Carrion Crow"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000005",
+          "is_correct": false,
+          "option_id": "q39:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:30812264",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Common Chaffinch"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000007",
+          "is_correct": false,
+          "option_id": "q39:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:14878944",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "White Wagtail"
+        }
+      ],
+      "position": 39,
+      "target_canonical_taxon_id": "taxon:birds:000039",
+      "target_playable_item_id": "playable:qr:media:inaturalist:108991122"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000040",
+          "is_correct": true,
+          "option_id": "q40:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:252411697",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Black Woodpecker"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "is_correct": false,
+          "option_id": "q40:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:179697316",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Carrion Crow"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000005",
+          "is_correct": false,
+          "option_id": "q40:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:30812264",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Common Chaffinch"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000007",
+          "is_correct": false,
+          "option_id": "q40:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:14878944",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "White Wagtail"
+        }
+      ],
+      "position": 40,
+      "target_canonical_taxon_id": "taxon:birds:000040",
+      "target_playable_item_id": "playable:qr:media:inaturalist:252411697"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000041",
+          "is_correct": true,
+          "option_id": "q41:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:382696152",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Common Swift"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "is_correct": false,
+          "option_id": "q41:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:179697316",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Carrion Crow"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000005",
+          "is_correct": false,
+          "option_id": "q41:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:30812264",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Common Chaffinch"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000007",
+          "is_correct": false,
+          "option_id": "q41:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:14878944",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "White Wagtail"
+        }
+      ],
+      "position": 41,
+      "target_canonical_taxon_id": "taxon:birds:000041",
+      "target_playable_item_id": "playable:qr:media:inaturalist:382696152"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000042",
+          "is_correct": true,
+          "option_id": "q42:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:131285019",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Western House Martin"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "is_correct": false,
+          "option_id": "q42:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:179697316",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Carrion Crow"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000005",
+          "is_correct": false,
+          "option_id": "q42:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:30812264",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Common Chaffinch"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000007",
+          "is_correct": false,
+          "option_id": "q42:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:14878944",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "White Wagtail"
+        }
+      ],
+      "position": 42,
+      "target_canonical_taxon_id": "taxon:birds:000042",
+      "target_playable_item_id": "playable:qr:media:inaturalist:131285019"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000043",
+          "is_correct": true,
+          "option_id": "q43:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:120221697",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Barn Swallow"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "is_correct": false,
+          "option_id": "q43:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:179697316",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Carrion Crow"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000005",
+          "is_correct": false,
+          "option_id": "q43:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:30812264",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Common Chaffinch"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000007",
+          "is_correct": false,
+          "option_id": "q43:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:14878944",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "White Wagtail"
+        }
+      ],
+      "position": 43,
+      "target_canonical_taxon_id": "taxon:birds:000043",
+      "target_playable_item_id": "playable:qr:media:inaturalist:120221697"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000044",
+          "is_correct": true,
+          "option_id": "q44:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:380254778",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Bank Swallow"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "is_correct": false,
+          "option_id": "q44:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:179697316",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Carrion Crow"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000005",
+          "is_correct": false,
+          "option_id": "q44:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:30812264",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Common Chaffinch"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000007",
+          "is_correct": false,
+          "option_id": "q44:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:14878944",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "White Wagtail"
+        }
+      ],
+      "position": 44,
+      "target_canonical_taxon_id": "taxon:birds:000044",
+      "target_playable_item_id": "playable:qr:media:inaturalist:380254778"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000045",
+          "is_correct": true,
+          "option_id": "q45:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:606909013",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Eurasian Skylark"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "is_correct": false,
+          "option_id": "q45:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:179697316",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Carrion Crow"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000005",
+          "is_correct": false,
+          "option_id": "q45:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:30812264",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Common Chaffinch"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000007",
+          "is_correct": false,
+          "option_id": "q45:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:14878944",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "White Wagtail"
+        }
+      ],
+      "position": 45,
+      "target_canonical_taxon_id": "taxon:birds:000045",
+      "target_playable_item_id": "playable:qr:media:inaturalist:606909013"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000070",
+          "is_correct": true,
+          "option_id": "q46:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:14306882",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Great Crested Grebe"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "is_correct": false,
+          "option_id": "q46:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:179697316",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Carrion Crow"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000005",
+          "is_correct": false,
+          "option_id": "q46:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:30812264",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Common Chaffinch"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000007",
+          "is_correct": false,
+          "option_id": "q46:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:14878944",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "White Wagtail"
+        }
+      ],
+      "position": 46,
+      "target_canonical_taxon_id": "taxon:birds:000070",
+      "target_playable_item_id": "playable:qr:media:inaturalist:14306882"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000047",
+          "is_correct": true,
+          "option_id": "q47:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:518180607",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Red-backed Shrike"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "is_correct": false,
+          "option_id": "q47:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:179697316",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Carrion Crow"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000005",
+          "is_correct": false,
+          "option_id": "q47:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:30812264",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Common Chaffinch"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000007",
+          "is_correct": false,
+          "option_id": "q47:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:14878944",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "White Wagtail"
+        }
+      ],
+      "position": 47,
+      "target_canonical_taxon_id": "taxon:birds:000047",
+      "target_playable_item_id": "playable:qr:media:inaturalist:518180607"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000048",
+          "is_correct": true,
+          "option_id": "q48:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:106017436",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Eurasian Jackdaw"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "is_correct": false,
+          "option_id": "q48:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:179697316",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Carrion Crow"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000005",
+          "is_correct": false,
+          "option_id": "q48:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:30812264",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Common Chaffinch"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000007",
+          "is_correct": false,
+          "option_id": "q48:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:14878944",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "White Wagtail"
+        }
+      ],
+      "position": 48,
+      "target_canonical_taxon_id": "taxon:birds:000048",
+      "target_playable_item_id": "playable:qr:media:inaturalist:106017436"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000049",
+          "is_correct": true,
+          "option_id": "q49:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:143943080",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Rook"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "is_correct": false,
+          "option_id": "q49:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:179697316",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Carrion Crow"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000005",
+          "is_correct": false,
+          "option_id": "q49:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:30812264",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Common Chaffinch"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000007",
+          "is_correct": false,
+          "option_id": "q49:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:14878944",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "White Wagtail"
+        }
+      ],
+      "position": 49,
+      "target_canonical_taxon_id": "taxon:birds:000049",
+      "target_playable_item_id": "playable:qr:media:inaturalist:143943080"
+    },
+    {
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000079",
+          "is_correct": true,
+          "option_id": "q50:opt:target",
+          "playable_item_id": "playable:qr:media:inaturalist:115183713",
+          "reason_codes": [],
+          "referenced_only": false,
+          "score": 1.0,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Eurasian Collared-Dove"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "is_correct": false,
+          "option_id": "q50:opt:d1",
+          "playable_item_id": "playable:qr:media:inaturalist:179697316",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Carrion Crow"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000005",
+          "is_correct": false,
+          "option_id": "q50:opt:d2",
+          "playable_item_id": "playable:qr:media:inaturalist:30812264",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "Common Chaffinch"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000007",
+          "is_correct": false,
+          "option_id": "q50:opt:d3",
+          "playable_item_id": "playable:qr:media:inaturalist:14878944",
+          "reason_codes": [
+            "diversity_fallback"
+          ],
+          "referenced_only": false,
+          "score": 0.1,
+          "source": "playable_corpus.v1",
+          "taxon_label": "White Wagtail"
+        }
+      ],
+      "position": 50,
+      "target_canonical_taxon_id": "taxon:birds:000079",
+      "target_playable_item_id": "playable:qr:media:inaturalist:115183713"
+    }
+  ],
+  "revision": 1,
+  "schema_version": "database.schema.v16",
+  "source_build_id": "packbuild:pack:palier1:be:birds:run003-v11-baseline:1:v2:3d45ebad",
+  "ttl_hours": null
+}

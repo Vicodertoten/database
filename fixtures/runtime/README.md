@@ -8,6 +8,12 @@ These three files are the official owner-side reference fixtures for runtime v1 
 - `pack_compiled.sample.json`
 - `pack_materialization.sample.json`
 
+Additional baseline fixtures are also provided for Palier-1 v1.1 runtime validation:
+
+- `palier1_v11_baseline.playable_corpus.json`
+- `palier1_v11_baseline.pack_compiled_v2.json`
+- `palier1_v11_baseline.pack_materialization_v2.json`
+
 They are locked by chantier `INT-003` in `database`.
 
 ## Fixture policy
@@ -17,6 +23,12 @@ They are locked by chantier `INT-003` in `database`.
 - `pack_compiled.sample.json` is a real `pack.compiled.v1` output with `question_count=1`.
 - `pack_materialization.sample.json` is a real `pack.materialization.v1` output with `question_count=1` and `purpose="daily_challenge"`.
 - Scope target is local runtime integration, not product-wide dataset coverage.
+
+Palier-1 v1.1 fixture provenance:
+
+- `palier1_v11_baseline.pack_compiled_v2.json` and `palier1_v11_baseline.pack_materialization_v2.json` are copied from official baseline evidence artifacts under `docs/audits/evidence/palier1_v11_baseline/`.
+- `palier1_v11_baseline.playable_corpus.json` is a derived fixture built from the same baseline state (`data/exports/palier1_be_birds_50taxa_run003_v11_baseline.export.json` + baseline materialization option IDs), to guarantee that every `target_playable_item_id`/option `playable_item_id` referenced by the baseline materialization exists in `playable_corpus.items`.
+- This derived fixture is for runtime contract validation only and does not redefine canonical owner logic.
 
 ## Local assumptions
 

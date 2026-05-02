@@ -19,6 +19,7 @@ artifacts and explicit hard gates.
 - Program decision: `GO_WITH_GUARDRAILS`
 - Doctrine status: `technical_stable / pedagogical_in_review`
 - Runtime true-baseline E2E: `pending`
+- Expected next runtime check: `Palier-1 v1.1 true baseline runtime consumption check`
 - Pedagogical quality: `in review`
 - Distractor quality: accepted for contract validation only, not product-level quality
 - Multilingual readiness: `pending`
