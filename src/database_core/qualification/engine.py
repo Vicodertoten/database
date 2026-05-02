@@ -19,7 +19,9 @@ from database_core.qualification.ai import (
     serialize_source_external_key,
     source_external_key_for_media,
 )
+from database_core.qualification.classification import derive_minimal_classification
 from database_core.qualification.policy import (
+    DEFAULT_QUALIFICATION_POLICY,
     build_notes,
     qualification_method,
     resolve_qualification_status,
@@ -42,6 +44,7 @@ def qualify_media_assets(
     created_at: datetime,
     run_id: str,
     uncertain_policy: str = "review",
+    qualification_policy: str = DEFAULT_QUALIFICATION_POLICY,
 ) -> tuple[list[QualifiedResource], list[ReviewItem]]:
     observations_by_uid = {item.observation_uid: item for item in observations}
     taxon_status_by_id = {
@@ -62,6 +65,7 @@ def qualify_media_assets(
                 ai_outcome=ai_outcome,
                 run_id=run_id,
                 uncertain_policy=uncertain_policy,
+                qualification_policy=qualification_policy,
             )
         )
     return qualified_resources, build_review_items(qualified_resources, created_at=created_at)
@@ -75,11 +79,16 @@ def _qualify_single_media(
     ai_outcome: AIQualificationOutcome | None,
     run_id: str,
     uncertain_policy: str,
+    qualification_policy: str,
 ) -> QualifiedResource:
     ai_qualification = ai_outcome.qualification if ai_outcome else None
     compliance = run_compliance_screening(media_asset=media_asset, observation=observation)
     semantic = run_fast_semantic_screening(media_asset=media_asset)
-    expert = run_expert_qualification(media_asset=media_asset, ai_qualification=ai_qualification)
+    expert = run_expert_qualification(
+        media_asset=media_asset,
+        ai_qualification=ai_qualification,
+        qualification_policy=qualification_policy,
+    )
 
     qualification_flags = list(ai_outcome.flags) if ai_outcome else []
     qualification_flags.extend(compliance.flags)
@@ -89,7 +98,11 @@ def _qualify_single_media(
     if canonical_taxon_status == "deprecated":
         qualification_flags.append("deprecated_canonical_taxon")
     qualification_flags = list(dict.fromkeys(qualification_flags))
-    status = resolve_qualification_status(qualification_flags, uncertain_policy=uncertain_policy)
+    status = resolve_qualification_status(
+        qualification_flags,
+        uncertain_policy=uncertain_policy,
+        qualification_policy=qualification_policy,
+    )
     if canonical_taxon_status == "deprecated":
         status = QualificationStatus.REJECTED
 
@@ -115,6 +128,16 @@ def _qualify_single_media(
         ai_status=ai_outcome.status if ai_outcome else "rules_only",
     )
     notes = build_notes(qualification_flags, ai_qualification, ai_outcome)
+    if (
+        qualification_policy == "v1.1"
+        and status == QualificationStatus.ACCEPTED
+        and qualification_flags
+    ):
+        notes = " | ".join(
+            item
+            for item in [notes, "policy:v1.1:accepted_with_flags"]
+            if item
+        )
     pedagogy_note = (
         "pedagogy:"
         f"difficulty={expert.difficulty_level};"
@@ -129,6 +152,22 @@ def _qualify_single_media(
         status == QualificationStatus.ACCEPTED
         and compliance.license_safety_result == LicenseSafetyResult.SAFE
         and canonical_taxon_status != "provisional"
+    )
+    derived_classification = derive_minimal_classification(
+        {
+            "qualification_status": status,
+            "technical_quality": expert.technical_quality,
+            "difficulty_level": expert.difficulty_level,
+            "media_role": expert.media_role,
+            "learning_suitability": expert.learning_suitability,
+            "diagnostic_feature_visibility": expert.diagnostic_feature_visibility,
+            "uncertainty_reason": expert.uncertainty_reason,
+            "visible_parts": expert.visible_parts,
+            "life_stage": expert.life_stage,
+            "qualification_flags": qualification_flags,
+            "qualification_notes": notes,
+            "ai_confidence": ai_qualification.confidence if ai_qualification else None,
+        }
     )
 
     return QualifiedResource(
@@ -157,6 +196,7 @@ def _qualify_single_media(
         license_safety_result=compliance.license_safety_result,
         export_eligible=export_eligible,
         ai_confidence=ai_qualification.confidence if ai_qualification else None,
+        derived_classification=derived_classification,
     )
 
 

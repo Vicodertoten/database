@@ -121,6 +121,39 @@ class LearningSuitability(StrEnum):
     HIGH = "high"
 
 
+class ObservationKind(StrEnum):
+    FULL_BIRD = "full_bird"
+    IN_FLIGHT = "in_flight"
+    PARTIAL = "partial"
+    NEST_OR_EGGS = "nest_or_eggs"
+    TRACE_OR_FEATHER = "trace_or_feather"
+    CARCASS = "carcass"
+    HABITAT_CONTEXT = "habitat_context"
+    UNKNOWN = "unknown"
+
+
+class DiagnosticStrength(StrEnum):
+    HIGH = "high"
+    MEDIUM = "medium"
+    LOW = "low"
+    UNKNOWN = "unknown"
+
+
+class PedagogicalRole(StrEnum):
+    CORE_ID = "core_id"
+    ADVANCED_ID = "advanced_id"
+    CONTEXT = "context"
+    FORENSICS = "forensics"
+    EXCLUDED = "excluded"
+
+
+class DifficultyBand(StrEnum):
+    STARTER = "starter"
+    INTERMEDIATE = "intermediate"
+    EXPERT = "expert"
+    UNKNOWN = "unknown"
+
+
 class UncertaintyReason(StrEnum):
     NONE = "none"
     OCCLUSION = "occlusion"
@@ -184,6 +217,11 @@ class PackDifficultyPolicy(StrEnum):
     EASY = "easy"
     BALANCED = "balanced"
     HARD = "hard"
+    MIXED = "mixed"
+
+
+class PackProfile(StrEnum):
+    CORE = "core"
     MIXED = "mixed"
 
 

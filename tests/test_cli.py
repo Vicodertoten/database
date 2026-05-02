@@ -130,6 +130,7 @@ def test_cli_run_pipeline_builds_paced_gemini_qualifier(monkeypatch, tmp_path: P
     assert qualifier.initial_backoff_seconds == 0.5
     assert qualifier.max_backoff_seconds == 2.0
     assert calls["gemini_concurrency"] == 6
+    assert calls["qualification_policy"] == "v1"
     assert "Pipeline complete" in buffer.getvalue()
 
 
@@ -744,6 +745,8 @@ def test_pack_cli_create_revise_diagnose_and_inspect(monkeypatch, database_url: 
             database_url,
             "--pack-id",
             "pack:test:cli",
+            "--pack-profile",
+            "core",
         ],
     )
     with redirect_stdout(diagnose_buffer):
@@ -861,6 +864,8 @@ def test_pack_cli_compile_materialize_and_inspect(monkeypatch, database_url: str
             "pack:test:gate4",
             "--question-count",
             "20",
+            "--pack-profile",
+            "mixed",
         ],
     )
     with redirect_stdout(compile_buffer):

@@ -9,8 +9,12 @@ from uuid import uuid4
 import psycopg
 
 from database_core.domain.enums import (
+    DiagnosticStrength,
+    ObservationKind,
     PackCompilationReasonCode,
     PackMaterializationPurpose,
+    PackProfile,
+    PedagogicalRole,
     ReferencedTaxonMappingStatus,
 )
 from database_core.domain.models import (
@@ -36,6 +40,7 @@ from database_core.pack import (
     validate_pack_materialization,
     validate_pack_spec,
 )
+from database_core.qualification.classification import derive_minimal_classification
 from database_core.versioning import (
     COMPILED_PACK_V2_VERSION,
     COMPILED_PACK_VERSION,
@@ -299,6 +304,7 @@ class PostgresPackStore:
         *,
         pack_id: str,
         revision: int | None = None,
+        pack_profile: str | None = None,
         connection: psycopg.Connection | None = None,
     ) -> dict[str, object]:
         if connection is None:
@@ -306,6 +312,7 @@ class PostgresPackStore:
                 return self.diagnose_pack(
                     pack_id=pack_id,
                     revision=revision,
+                    pack_profile=pack_profile,
                     connection=owned_connection,
                 )
 
@@ -314,6 +321,7 @@ class PostgresPackStore:
             pack_id=pack_id,
             revision=revision,
             question_count_requested=MIN_PACK_TOTAL_QUESTIONS,
+            pack_profile=pack_profile,
         )
 
         attempted_at = datetime.now(UTC)
@@ -377,6 +385,7 @@ class PostgresPackStore:
         pack_id: str,
         revision: int | None = None,
         question_count: int = MIN_PACK_TOTAL_QUESTIONS,
+        pack_profile: str | None = None,
         connection: psycopg.Connection | None = None,
     ) -> dict[str, object]:
         if question_count < 1:
@@ -388,6 +397,7 @@ class PostgresPackStore:
                     pack_id=pack_id,
                     revision=revision,
                     question_count=question_count,
+                    pack_profile=pack_profile,
                     connection=owned_connection,
                 )
 
@@ -396,6 +406,7 @@ class PostgresPackStore:
             pack_id=pack_id,
             revision=revision,
             question_count_requested=max(question_count, MIN_PACK_TOTAL_QUESTIONS),
+            pack_profile=pack_profile,
         )
         if not context["compilable"]:
             deficits = ", ".join(
@@ -467,6 +478,7 @@ class PostgresPackStore:
         revision: int | None = None,
         question_count: int = MIN_PACK_TOTAL_QUESTIONS,
         distractor_policy: DistractorPolicy | dict[str, object] | None = None,
+        pack_profile: str | None = None,
         connection: psycopg.Connection | None = None,
     ) -> dict[str, object]:
         if question_count < 1:
@@ -479,6 +491,7 @@ class PostgresPackStore:
                     revision=revision,
                     question_count=question_count,
                     distractor_policy=distractor_policy,
+                    pack_profile=pack_profile,
                     connection=owned_connection,
                 )
 
@@ -493,6 +506,7 @@ class PostgresPackStore:
             revision=revision,
             question_count_requested=max(question_count, MIN_PACK_TOTAL_QUESTIONS),
             distractor_policy=policy,
+            pack_profile=pack_profile,
         )
         if not context["compilable"]:
             deficits = ", ".join(
@@ -918,6 +932,7 @@ class PostgresPackStore:
         pack_id: str,
         revision: int | None,
         question_count_requested: int,
+        pack_profile: str | None = None,
     ) -> dict[str, object]:
         revision_payload = self._fetch_pack_revision_payload(
             connection,
@@ -926,7 +941,11 @@ class PostgresPackStore:
         )
         revision_value = int(revision_payload["revision"])
         parameters = PackRevisionParameters(**revision_payload["parameters"])
-        rows = self._fetch_playable_rows_for_pack(connection, parameters=parameters)
+        rows = self._fetch_playable_rows_for_pack(
+            connection,
+            parameters=parameters,
+            pack_profile=pack_profile,
+        )
         requested_taxa = list(parameters.canonical_taxon_ids)
 
         items_per_taxon: dict[str, list[dict[str, object]]] = defaultdict(list)
@@ -1052,6 +1071,7 @@ class PostgresPackStore:
         revision: int | None,
         question_count_requested: int,
         distractor_policy: DistractorPolicy | None = None,
+        pack_profile: str | None = None,
     ) -> dict[str, object]:
         policy = distractor_policy or DistractorPolicy()
         revision_payload = self._fetch_pack_revision_payload(
@@ -1061,7 +1081,11 @@ class PostgresPackStore:
         )
         revision_value = int(revision_payload["revision"])
         parameters = PackRevisionParameters(**revision_payload["parameters"])
-        rows = self._fetch_playable_rows_for_pack(connection, parameters=parameters)
+        rows = self._fetch_playable_rows_for_pack(
+            connection,
+            parameters=parameters,
+            pack_profile=pack_profile,
+        )
         requested_taxa = list(parameters.canonical_taxon_ids)
 
         items_per_taxon: dict[str, list[dict[str, object]]] = defaultdict(list)
@@ -1415,30 +1439,31 @@ class PostgresPackStore:
         connection: psycopg.Connection,
         *,
         parameters: PackRevisionParameters,
+        pack_profile: str | None = None,
     ) -> list[dict[str, object]]:
-        where_clauses = ["canonical_taxon_id = ANY(%s)"]
+        where_clauses = ["p.canonical_taxon_id = ANY(%s)"]
         query_params: list[object] = [parameters.canonical_taxon_ids]
 
         if parameters.country_code:
-            where_clauses.append("country_code = %s")
+            where_clauses.append("p.country_code = %s")
             query_params.append(parameters.country_code)
         if parameters.observed_from:
-            where_clauses.append("observed_at >= %s")
+            where_clauses.append("p.observed_at >= %s")
             query_params.append(parameters.observed_from.isoformat())
         if parameters.observed_to:
-            where_clauses.append("observed_at <= %s")
+            where_clauses.append("p.observed_at <= %s")
             query_params.append(parameters.observed_to.isoformat())
         if parameters.location_bbox is not None:
             where_clauses.append(
                 """
                 (
-                    (location_bbox IS NOT NULL AND ST_Intersects(
-                        location_bbox,
+                    (p.location_bbox IS NOT NULL AND ST_Intersects(
+                        p.location_bbox,
                         ST_MakeEnvelope(%s, %s, %s, %s, 4326)
                     ))
                     OR
-                    (location_point IS NOT NULL AND ST_Intersects(
-                        location_point,
+                    (p.location_point IS NOT NULL AND ST_Intersects(
+                        p.location_point,
                         ST_MakeEnvelope(%s, %s, %s, %s, 4326)
                     ))
                 )
@@ -1459,9 +1484,9 @@ class PostgresPackStore:
         if parameters.location_point is not None and parameters.location_radius_meters is not None:
             where_clauses.append(
                 """
-                location_point IS NOT NULL
+                p.location_point IS NOT NULL
                 AND ST_DWithin(
-                    location_point::geography,
+                    p.location_point::geography,
                     ST_SetSRID(ST_MakePoint(%s, %s), 4326)::geography,
                     %s
                 )
@@ -1475,27 +1500,38 @@ class PostgresPackStore:
                 ]
             )
         where_sql = " AND ".join(where_clauses)
-        return [
+        rows = [
             self._normalize_playable_pack_row(dict(row))
             for row in connection.execute(
                 f"""
                 SELECT
-                    playable_item_id,
-                    canonical_taxon_id,
-                    scientific_name,
-                    common_names_i18n_json,
-                    difficulty_level,
-                    media_role,
-                    confusion_relevance,
-                    similar_taxon_ids_json,
-                    run_id
-                FROM playable_corpus_v1
+                    p.playable_item_id,
+                    p.qualified_resource_id,
+                    p.canonical_taxon_id,
+                    p.scientific_name,
+                    p.common_names_i18n_json,
+                    p.difficulty_level,
+                    p.media_role,
+                    p.learning_suitability,
+                    p.diagnostic_feature_visibility,
+                    p.confusion_relevance,
+                    p.similar_taxon_ids_json,
+                    p.run_id,
+                    q.technical_quality,
+                    q.qualification_flags_json,
+                    q.qualification_notes
+                FROM playable_corpus_v1 AS p
+                LEFT JOIN qualified_resources AS q
+                    ON q.qualified_resource_id = p.qualified_resource_id
                 WHERE {where_sql}
-                ORDER BY canonical_taxon_id, playable_item_id
+                ORDER BY p.canonical_taxon_id, p.playable_item_id
                 """,
                 query_params,
             ).fetchall()
         ]
+        if pack_profile is None:
+            return rows
+        return self._filter_rows_by_pack_profile(rows, pack_profile=PackProfile(pack_profile))
 
     def _fetch_latest_compiled_payload(
         self,
@@ -2111,7 +2147,74 @@ class PostgresPackStore:
 
     def _normalize_playable_pack_row(self, row: dict[str, object]) -> dict[str, object]:
         row["similar_taxon_ids"] = self._normalize_similar_taxon_ids(row)
+        row["qualification_flags"] = self._parse_json_string_list(
+            row.get("qualification_flags_json")
+        )
         return row
+
+    def _filter_rows_by_pack_profile(
+        self,
+        rows: list[dict[str, object]],
+        *,
+        pack_profile: PackProfile,
+    ) -> list[dict[str, object]]:
+        return [
+            row
+            for row in rows
+            if self._row_matches_pack_profile(row, pack_profile=pack_profile)
+        ]
+
+    def _row_matches_pack_profile(
+        self,
+        row: dict[str, object],
+        *,
+        pack_profile: PackProfile,
+    ) -> bool:
+        derived = derive_minimal_classification(
+            {
+                **row,
+                "qualification_status": "accepted",
+            }
+        )
+        observation_kind = derived.observation_kind
+        diagnostic_strength = derived.diagnostic_strength
+        pedagogical_role = derived.pedagogical_role
+        flags = set(self._parse_json_string_list(row.get("qualification_flags")))
+        critical_flags = {
+            "missing_visible_parts",
+            "missing_view_angle",
+            "insufficient_technical_quality",
+        }
+
+        if pack_profile == PackProfile.CORE:
+            if pedagogical_role != PedagogicalRole.CORE_ID:
+                return False
+            if diagnostic_strength not in {DiagnosticStrength.HIGH, DiagnosticStrength.MEDIUM}:
+                return False
+            if observation_kind in {
+                ObservationKind.TRACE_OR_FEATHER,
+                ObservationKind.CARCASS,
+                ObservationKind.HABITAT_CONTEXT,
+            }:
+                return False
+            if flags.intersection(critical_flags):
+                return False
+            return True
+
+        if pedagogical_role in {PedagogicalRole.FORENSICS, PedagogicalRole.EXCLUDED}:
+            return False
+        if observation_kind in {ObservationKind.TRACE_OR_FEATHER, ObservationKind.CARCASS}:
+            return False
+        if pedagogical_role == PedagogicalRole.CONTEXT:
+            return diagnostic_strength in {DiagnosticStrength.HIGH, DiagnosticStrength.MEDIUM}
+        if pedagogical_role in {PedagogicalRole.CORE_ID, PedagogicalRole.ADVANCED_ID}:
+            if not flags:
+                return True
+            return (
+                diagnostic_strength in {DiagnosticStrength.HIGH, DiagnosticStrength.MEDIUM}
+                or pedagogical_role == PedagogicalRole.ADVANCED_ID
+            )
+        return False
 
     def _normalize_similar_taxon_ids(self, row: dict[str, object]) -> list[str]:
         raw_value = row.get("similar_taxon_ids")

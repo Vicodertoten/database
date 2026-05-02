@@ -20,8 +20,11 @@ from database_core.qualification.ai import AIQualificationOutcome
 SAFE_LICENSES = {"cc0", "cc-by", "cc-by-sa", "public domain", "pd"}
 UNSAFE_LICENSE_MARKERS = ("nc", "nd", "all rights reserved")
 AI_CONFIDENCE_THRESHOLD = 0.8
+AI_CONFIDENCE_REJECT_FLOOR = 0.35
 MIN_ACCEPTED_WIDTH = 1000
 MIN_ACCEPTED_HEIGHT = 750
+DEFAULT_QUALIFICATION_POLICY = "v1"
+SUPPORTED_QUALIFICATION_POLICIES = ("v1", "v1.1")
 
 COMPLIANCE_REJECTION_FLAGS = ("unsupported_media_type", "unsafe_license")
 FAST_SCREENING_FLAGS = (
@@ -44,6 +47,30 @@ EXPERT_REVIEW_FLAGS = (
     "missing_view_angle",
     "insufficient_technical_quality",
 )
+HARD_REJECTION_FLAGS_V11 = (
+    "unsafe_license",
+    "unsupported_media_type",
+    "insufficient_resolution_pre_ai",
+    "decode_error_pre_ai",
+    "blur_pre_ai",
+    "duplicate_pre_ai",
+    "low_ai_confidence_below_floor",
+)
+TECHNICAL_FAILURE_FLAGS_V11 = (
+    "missing_cached_image",
+    "missing_cached_ai_output",
+    "cached_prompt_version_mismatch",
+    "gemini_error",
+    "invalid_gemini_json",
+    "missing_fixture_ai_output",
+)
+ACCEPTED_WITH_FLAGS_V11 = (
+    "incomplete_required_tags",
+    "low_ai_confidence",
+    "missing_visible_parts",
+    "missing_view_angle",
+    "insufficient_technical_quality",
+)
 REVIEW_PRIORITY_BY_REASON = {
     "cached_prompt_version_mismatch": ReviewPriority.HIGH,
     "gemini_error": ReviewPriority.HIGH,
@@ -56,6 +83,7 @@ REVIEW_PRIORITY_BY_REASON = {
     "decode_error_pre_ai": ReviewPriority.MEDIUM,
     "blur_pre_ai": ReviewPriority.MEDIUM,
     "duplicate_pre_ai": ReviewPriority.MEDIUM,
+    "low_ai_confidence_below_floor": ReviewPriority.MEDIUM,
     "low_ai_confidence": ReviewPriority.MEDIUM,
     "missing_visible_parts": ReviewPriority.MEDIUM,
     "missing_view_angle": ReviewPriority.MEDIUM,
@@ -75,6 +103,7 @@ REVIEW_STAGE_BY_REASON = {
     "decode_error_pre_ai": QualificationStage.FAST_SEMANTIC_SCREENING,
     "blur_pre_ai": QualificationStage.FAST_SEMANTIC_SCREENING,
     "duplicate_pre_ai": QualificationStage.FAST_SEMANTIC_SCREENING,
+    "low_ai_confidence_below_floor": QualificationStage.EXPERT_QUALIFICATION,
     "low_ai_confidence": QualificationStage.EXPERT_QUALIFICATION,
     "missing_visible_parts": QualificationStage.EXPERT_QUALIFICATION,
     "missing_view_angle": QualificationStage.EXPERT_QUALIFICATION,
@@ -94,6 +123,7 @@ PRIMARY_REVIEW_REASON_ORDER = (
     "decode_error_pre_ai",
     "blur_pre_ai",
     "duplicate_pre_ai",
+    "low_ai_confidence_below_floor",
     "incomplete_required_tags",
     "low_ai_confidence",
     "missing_visible_parts",
@@ -123,15 +153,42 @@ def resolve_qualification_status(
     flags: list[str],
     *,
     uncertain_policy: str,
+    qualification_policy: str = DEFAULT_QUALIFICATION_POLICY,
 ) -> QualificationStatus:
     if uncertain_policy not in {"review", "reject"}:
         raise ValueError(f"Unsupported uncertain_policy: {uncertain_policy}")
-    if any(flag in flags for flag in COMPLIANCE_REJECTION_FLAGS):
+    if qualification_policy not in SUPPORTED_QUALIFICATION_POLICIES:
+        raise ValueError(f"Unsupported qualification_policy: {qualification_policy}")
+
+    if qualification_policy == "v1":
+        if any(flag in flags for flag in COMPLIANCE_REJECTION_FLAGS):
+            return QualificationStatus.REJECTED
+        if any(flag in flags for flag in FAST_SCREENING_FLAGS + EXPERT_REVIEW_FLAGS):
+            if uncertain_policy == "review":
+                return QualificationStatus.REVIEW_REQUIRED
+            return QualificationStatus.REJECTED
+        return QualificationStatus.ACCEPTED
+
+    flag_set = set(flags)
+    if flag_set.intersection(HARD_REJECTION_FLAGS_V11):
         return QualificationStatus.REJECTED
-    if any(flag in flags for flag in FAST_SCREENING_FLAGS + EXPERT_REVIEW_FLAGS):
+    if flag_set.intersection(TECHNICAL_FAILURE_FLAGS_V11):
         if uncertain_policy == "review":
             return QualificationStatus.REVIEW_REQUIRED
         return QualificationStatus.REJECTED
+    if flag_set.intersection(ACCEPTED_WITH_FLAGS_V11):
+        return QualificationStatus.ACCEPTED
+
+    unknown_flags = flag_set.difference(
+        set(HARD_REJECTION_FLAGS_V11)
+        .union(TECHNICAL_FAILURE_FLAGS_V11)
+        .union(ACCEPTED_WITH_FLAGS_V11)
+    )
+    if unknown_flags:
+        if uncertain_policy == "review":
+            return QualificationStatus.REVIEW_REQUIRED
+        return QualificationStatus.REJECTED
+
     return QualificationStatus.ACCEPTED
 
 

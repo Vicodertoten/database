@@ -94,6 +94,11 @@ def main() -> None:
         "--qualifier-mode", choices=["fixture", "rules", "cached", "gemini"]
     )
     pipeline_parser.add_argument("--uncertain-policy", choices=["review", "reject"])
+    pipeline_parser.add_argument(
+        "--qualification-policy",
+        choices=["v1", "v1.1"],
+        default="v1",
+    )
     pipeline_parser.add_argument("--gemini-api-key-env", default="GEMINI_API_KEY")
     pipeline_parser.add_argument("--gemini-model", default=DEFAULT_GEMINI_MODEL)
     pipeline_parser.add_argument(
@@ -329,6 +334,7 @@ def main() -> None:
     )
     pack_diagnose_parser.add_argument("--pack-id", required=True)
     pack_diagnose_parser.add_argument("--revision", type=int)
+    pack_diagnose_parser.add_argument("--pack-profile", choices=["core", "mixed"])
 
     pack_compile_parser = pack_subparsers.add_parser("compile")
     pack_compile_parser.add_argument(
@@ -339,6 +345,7 @@ def main() -> None:
     pack_compile_parser.add_argument("--pack-id", required=True)
     pack_compile_parser.add_argument("--revision", type=int)
     pack_compile_parser.add_argument("--question-count", type=int, default=20)
+    pack_compile_parser.add_argument("--pack-profile", choices=["core", "mixed"])
     pack_compile_parser.add_argument(
         "--contract-version",
         choices=["v1", "v2"],
@@ -498,6 +505,7 @@ def main() -> None:
             apply_review_overrides=args.apply_review_overrides,
             qualifier_mode=args.qualifier_mode,
             uncertain_policy=args.uncertain_policy,
+            qualification_policy=args.qualification_policy,
             gemini_api_key=gemini_api_key,
             gemini_model=args.gemini_model,
             gemini_concurrency=args.gemini_concurrency,
@@ -588,6 +596,7 @@ def main() -> None:
             payload = pack_store.diagnose_pack(
                 pack_id=args.pack_id,
                 revision=args.revision,
+                pack_profile=args.pack_profile,
             )
             print(json.dumps(payload, indent=2, sort_keys=True))
             return
@@ -597,12 +606,14 @@ def main() -> None:
                     pack_id=args.pack_id,
                     revision=args.revision,
                     question_count=args.question_count,
+                    pack_profile=args.pack_profile,
                 )
             else:
                 payload = pack_store.compile_pack(
                     pack_id=args.pack_id,
                     revision=args.revision,
                     question_count=args.question_count,
+                    pack_profile=args.pack_profile,
                 )
             print(json.dumps(payload, indent=2, sort_keys=True))
             return

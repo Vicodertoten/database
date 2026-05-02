@@ -13,6 +13,8 @@ from database_core.domain.enums import (
     CanonicalRank,
     ConfusionRelevance,
     DiagnosticFeatureVisibility,
+    DiagnosticStrength,
+    DifficultyBand,
     DifficultyLevel,
     EnrichmentExecutionStatus,
     EnrichmentRequestReasonCode,
@@ -23,11 +25,13 @@ from database_core.domain.enums import (
     LicenseSafetyResult,
     MediaRole,
     MediaType,
+    ObservationKind,
     PackCompilationReasonCode,
     PackDifficultyPolicy,
     PackMaterializationPurpose,
     PackVisibility,
     PedagogicalQuality,
+    PedagogicalRole,
     QualificationStage,
     QualificationStatus,
     ReferencedTaxonMappingStatus,
@@ -405,6 +409,13 @@ class ProvenanceSummary(DomainModel):
     ai_status: str | None = None
 
 
+class DerivedClassification(DomainModel):
+    observation_kind: ObservationKind = ObservationKind.UNKNOWN
+    diagnostic_strength: DiagnosticStrength = DiagnosticStrength.UNKNOWN
+    pedagogical_role: PedagogicalRole = PedagogicalRole.EXCLUDED
+    difficulty_band: DifficultyBand = DifficultyBand.UNKNOWN
+
+
 class QualifiedResource(DomainModel):
     qualified_resource_id: str
     canonical_taxon_id: str
@@ -433,6 +444,7 @@ class QualifiedResource(DomainModel):
     license_safety_result: LicenseSafetyResult
     export_eligible: bool
     ai_confidence: float | None = None
+    derived_classification: DerivedClassification | None = None
 
     @field_validator("qualified_resource_id", "canonical_taxon_id", "media_asset_id")
     @classmethod

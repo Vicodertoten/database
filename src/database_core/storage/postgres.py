@@ -1554,11 +1554,13 @@ class PostgresStorageInternal:
         *,
         pack_id: str,
         revision: int | None = None,
+        pack_profile: str | None = None,
         connection: psycopg.Connection | None = None,
     ) -> dict[str, object]:
         return self.pack_store.diagnose_pack(
             pack_id=pack_id,
             revision=revision,
+            pack_profile=pack_profile,
             connection=connection,
         )
 
@@ -1568,12 +1570,14 @@ class PostgresStorageInternal:
         pack_id: str,
         revision: int | None = None,
         question_count: int = MIN_PACK_TOTAL_QUESTIONS,
+        pack_profile: str | None = None,
         connection: psycopg.Connection | None = None,
     ) -> dict[str, object]:
         return self.pack_store.compile_pack(
             pack_id=pack_id,
             revision=revision,
             question_count=question_count,
+            pack_profile=pack_profile,
             connection=connection,
         )
 
@@ -1583,12 +1587,14 @@ class PostgresStorageInternal:
         pack_id: str,
         revision: int | None = None,
         question_count: int = MIN_PACK_TOTAL_QUESTIONS,
+        pack_profile: str | None = None,
         connection: psycopg.Connection | None = None,
     ) -> dict[str, object]:
         return self.pack_store.compile_pack_v2(
             pack_id=pack_id,
             revision=revision,
             question_count=question_count,
+            pack_profile=pack_profile,
             connection=connection,
         )
 

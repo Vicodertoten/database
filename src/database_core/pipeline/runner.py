@@ -37,6 +37,7 @@ from database_core.qualification.ai import (
     AIQualifier,
     collect_ai_qualification_outcomes,
 )
+from database_core.qualification.policy import DEFAULT_QUALIFICATION_POLICY
 from database_core.qualification.rules import (
     QUALIFICATION_VERSION,
     build_review_items,
@@ -106,6 +107,7 @@ def run_pipeline(
     apply_review_overrides: bool = False,
     qualifier_mode: str | None = None,
     uncertain_policy: str | None = None,
+    qualification_policy: str = DEFAULT_QUALIFICATION_POLICY,
     gemini_api_key: str | None = None,
     gemini_model: str = DEFAULT_GEMINI_MODEL,
     gemini_concurrency: int = 1,
@@ -156,6 +158,7 @@ def run_pipeline(
         run_id=resolved_run_id,
         qualifier_mode=resolved_qualifier_mode,
         uncertain_policy=resolved_uncertain_policy,
+        qualification_policy=qualification_policy,
         gemini_api_key=gemini_api_key,
         gemini_model=gemini_model,
         gemini_concurrency=gemini_concurrency,
@@ -271,6 +274,7 @@ def _prepare_pipeline_state(
     run_id: str,
     qualifier_mode: str,
     uncertain_policy: str,
+    qualification_policy: str,
     gemini_api_key: str | None,
     gemini_model: str,
     gemini_concurrency: int,
@@ -319,6 +323,7 @@ def _prepare_pipeline_state(
         created_at=dataset.captured_at,
         run_id=run_id,
         uncertain_policy=uncertain_policy,
+        qualification_policy=qualification_policy,
     )
     override_file = (
         load_review_override_file(review_overrides_path, snapshot_id=snapshot_id)

@@ -1108,6 +1108,76 @@ def test_pack_diagnostic_questions_possible_requires_three_distinct_distractors(
     assert diagnostic["compilable"] is False
 
 
+def test_pack_profile_core_and_mixed_filter_candidates_without_changing_default(
+    database_url: str,
+) -> None:
+    repository = _build_repository(database_url)
+    repository.initialize()
+    canonical_taxon_ids = _seed_pack_ready_playable_items(
+        repository,
+        run_id="run:20260408T001050Z:pppppppp",
+        taxon_count=10,
+        media_per_taxon=2,
+    )
+    context_taxon = canonical_taxon_ids[0]
+    flagged_taxon = canonical_taxon_ids[1]
+    with repository.connect() as connection:
+        connection.execute(
+            """
+            UPDATE playable_items
+            SET
+                media_role = 'context',
+                diagnostic_feature_visibility = 'medium',
+                learning_suitability = 'medium'
+            WHERE canonical_taxon_id = %s
+            """,
+            (context_taxon,),
+        )
+        connection.execute(
+            """
+            UPDATE qualified_resources
+            SET qualification_flags_json = %s
+            WHERE canonical_taxon_id = %s
+            """,
+            (json.dumps(["missing_visible_parts"]), flagged_taxon),
+        )
+
+    payload = repository.create_pack(
+        pack_id="pack:profile:core-mixed",
+        parameters={
+            "canonical_taxon_ids": canonical_taxon_ids,
+            "difficulty_policy": "easy",
+            "country_code": None,
+            "location_bbox": None,
+            "location_point": None,
+            "location_radius_meters": None,
+            "observed_from": None,
+            "observed_to": None,
+            "owner_id": "owner:profile",
+            "org_id": None,
+            "visibility": "private",
+            "intended_use": "training",
+        },
+    )
+
+    default_diagnostic = repository.diagnose_pack(pack_id=str(payload["pack_id"]))
+    core_diagnostic = repository.diagnose_pack(
+        pack_id=str(payload["pack_id"]),
+        pack_profile="core",
+    )
+    mixed_diagnostic = repository.diagnose_pack(
+        pack_id=str(payload["pack_id"]),
+        pack_profile="mixed",
+    )
+
+    assert default_diagnostic["compilable"] is True
+    assert default_diagnostic["measured"]["taxa_served"] == 10
+    assert core_diagnostic["compilable"] is False
+    assert core_diagnostic["measured"]["taxa_served"] == 8
+    assert mixed_diagnostic["compilable"] is True
+    assert mixed_diagnostic["measured"]["taxa_served"] == 10
+
+
 def test_compile_pack_persists_validated_payload_and_is_deterministic(
     database_url: str,
 ) -> None:
