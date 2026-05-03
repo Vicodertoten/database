@@ -35,14 +35,26 @@ class StaticQualifier:
     def __init__(self, qualification: AIQualification) -> None:
         self.qualification = qualification
 
-    def qualify(self, media_asset, *, image_bytes: bytes | None = None) -> AIQualification | None:
-        del media_asset, image_bytes
+    def qualify(
+        self,
+        media_asset,
+        *,
+        image_bytes: bytes | None = None,
+        bird_image_review_input=None,
+    ) -> AIQualification | None:
+        del media_asset, image_bytes, bird_image_review_input
         return self.qualification
 
 
 class InvalidJsonQualifier:
-    def qualify(self, media_asset, *, image_bytes: bytes | None = None) -> AIQualification | None:
-        del media_asset, image_bytes
+    def qualify(
+        self,
+        media_asset,
+        *,
+        image_bytes: bytes | None = None,
+        bird_image_review_input=None,
+    ) -> AIQualification | None:
+        del media_asset, image_bytes, bird_image_review_input
         raise json.JSONDecodeError("invalid", "{}", 0)
 
 
@@ -51,8 +63,14 @@ class RecordingQualifier:
         self.qualification = qualification
         self.called_source_media_ids: list[str] = []
 
-    def qualify(self, media_asset, *, image_bytes: bytes | None = None) -> AIQualification | None:
-        del image_bytes
+    def qualify(
+        self,
+        media_asset,
+        *,
+        image_bytes: bytes | None = None,
+        bird_image_review_input=None,
+    ) -> AIQualification | None:
+        del image_bytes, bird_image_review_input
         self.called_source_media_ids.append(media_asset.source_media_id)
         return self.qualification
 

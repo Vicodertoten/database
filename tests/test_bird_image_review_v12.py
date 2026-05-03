@@ -155,3 +155,28 @@ def test_failed_review_cannot_be_playable_or_mature() -> None:
     assert not is_playable_bird_image_review_v12(parsed)
     score = compute_bird_image_pedagogical_score_v12(parsed)
     assert score["overall"] == 0
+
+
+def test_generic_feedback_is_rejected_for_playable_use() -> None:
+    payload = _success_payload()
+    payload["post_answer_feedback"]["correct"]["short"] = (
+        "Sur cette image, regarde la couleur et la forme generale."
+    )
+    payload["post_answer_feedback"]["correct"]["long"] = (
+        "Sur cette image, regarde la couleur et la forme generale."
+    )
+    payload["post_answer_feedback"]["incorrect"]["short"] = (
+        "Ici, regarde la couleur et la forme generale."
+    )
+    payload["post_answer_feedback"]["incorrect"]["long"] = (
+        "Ici, regarde la couleur et la forme generale."
+    )
+    payload["post_answer_feedback"]["identification_tips"] = [
+        "Sur cette image, regarde la forme generale.",
+        "Ici, regarde la couleur generale.",
+    ]
+
+    parsed = parse_bird_image_pedagogical_review_v12(json.dumps(payload))
+
+    assert parsed["status"] == "failed"
+    assert parsed["failure_reason"] == "insufficient_information"

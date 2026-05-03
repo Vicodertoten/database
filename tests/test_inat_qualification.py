@@ -24,8 +24,14 @@ class RetryingQualifier:
         self.failures_remaining = failures_before_success
         self.calls = 0
 
-    def qualify(self, media_asset, *, image_bytes: bytes | None = None):
-        del media_asset, image_bytes
+    def qualify(
+        self,
+        media_asset,
+        *,
+        image_bytes: bytes | None = None,
+        bird_image_review_input=None,
+    ):
+        del media_asset, image_bytes, bird_image_review_input
         self.calls += 1
         if self.failures_remaining > 0:
             self.failures_remaining -= 1
@@ -52,8 +58,14 @@ class SuccessfulQualifier:
     def __init__(self) -> None:
         self.calls = 0
 
-    def qualify(self, media_asset, *, image_bytes: bytes | None = None):
-        del media_asset, image_bytes
+    def qualify(
+        self,
+        media_asset,
+        *,
+        image_bytes: bytes | None = None,
+        bird_image_review_input=None,
+    ):
+        del media_asset, image_bytes, bird_image_review_input
         self.calls += 1
         return AIQualification(
             technical_quality="high",
@@ -72,8 +84,14 @@ class WrappedRetryingQualifier:
         self.failures_remaining = failures_before_success
         self.calls = 0
 
-    def qualify(self, media_asset, *, image_bytes: bytes | None = None):
-        del media_asset, image_bytes
+    def qualify(
+        self,
+        media_asset,
+        *,
+        image_bytes: bytes | None = None,
+        bird_image_review_input=None,
+    ):
+        del media_asset, image_bytes, bird_image_review_input
         self.calls += 1
         if self.failures_remaining > 0:
             self.failures_remaining -= 1

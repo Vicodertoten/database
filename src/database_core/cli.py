@@ -102,6 +102,15 @@ def main() -> None:
     pipeline_parser.add_argument("--gemini-api-key-env", default="GEMINI_API_KEY")
     pipeline_parser.add_argument("--gemini-model", default=DEFAULT_GEMINI_MODEL)
     pipeline_parser.add_argument(
+        "--ai-review-contract-version",
+        choices=["v1_1", "v1_2"],
+        default=None,
+        help=(
+            "AI image review contract version selector. "
+            "Default keeps current baseline behavior (v1_1)."
+        ),
+    )
+    pipeline_parser.add_argument(
         "--request-interval-seconds",
         type=float,
         default=DEFAULT_REQUEST_INTERVAL_SECONDS,
@@ -153,6 +162,11 @@ def main() -> None:
     qualify_parser.add_argument("--snapshot-root", type=Path, default=DEFAULT_INAT_SNAPSHOT_ROOT)
     qualify_parser.add_argument("--gemini-api-key-env", default="GEMINI_API_KEY")
     qualify_parser.add_argument("--gemini-model", default=DEFAULT_GEMINI_MODEL)
+    qualify_parser.add_argument(
+        "--ai-review-contract-version",
+        choices=["v1_1", "v1_2"],
+        default=None,
+    )
     qualify_parser.add_argument(
         "--request-interval-seconds", type=float, default=DEFAULT_REQUEST_INTERVAL_SECONDS
     )
@@ -486,6 +500,7 @@ def main() -> None:
                 base_qualifier=GeminiVisionQualifier(
                     api_key=gemini_api_key,
                     model_name=args.gemini_model,
+                    review_contract_version=args.ai_review_contract_version,
                 ),
                 request_interval_seconds=args.request_interval_seconds,
                 max_retries=args.max_retries,
@@ -509,6 +524,7 @@ def main() -> None:
             gemini_api_key=gemini_api_key,
             gemini_model=args.gemini_model,
             gemini_concurrency=args.gemini_concurrency,
+            ai_review_contract_version=args.ai_review_contract_version,
             ai_qualifier=ai_qualifier,
             allow_schema_reset=args.allow_schema_reset,
         )
@@ -559,6 +575,7 @@ def main() -> None:
             initial_backoff_seconds=args.initial_backoff_seconds,
             max_backoff_seconds=args.max_backoff_seconds,
             gemini_concurrency=args.gemini_concurrency,
+            ai_review_contract_version=args.ai_review_contract_version,
         )
         print(
             "Snapshot AI qualification complete | "

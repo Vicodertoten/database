@@ -35,6 +35,7 @@ from database_core.export.json_exporter import (
 from database_core.qualification.ai import (
     DEFAULT_GEMINI_MODEL,
     AIQualifier,
+    build_bird_image_review_inputs_by_source_media_key,
     collect_ai_qualification_outcomes,
 )
 from database_core.qualification.policy import DEFAULT_QUALIFICATION_POLICY
@@ -111,6 +112,7 @@ def run_pipeline(
     gemini_api_key: str | None = None,
     gemini_model: str = DEFAULT_GEMINI_MODEL,
     gemini_concurrency: int = 1,
+    ai_review_contract_version: str | None = None,
     ai_qualifier: AIQualifier | None = None,
     allow_schema_reset: bool = False,
     run_id: str | None = None,
@@ -162,6 +164,7 @@ def run_pipeline(
         gemini_api_key=gemini_api_key,
         gemini_model=gemini_model,
         gemini_concurrency=gemini_concurrency,
+        ai_review_contract_version=ai_review_contract_version,
         ai_qualifier=ai_qualifier,
         review_overrides_path=resolved_review_overrides_path,
         snapshot_id=resolved_snapshot_id,
@@ -278,6 +281,7 @@ def _prepare_pipeline_state(
     gemini_api_key: str | None,
     gemini_model: str,
     gemini_concurrency: int,
+    ai_review_contract_version: str | None,
     ai_qualifier: AIQualifier | None,
     review_overrides_path: Path | None,
     snapshot_id: str | None,
@@ -304,15 +308,21 @@ def _prepare_pipeline_state(
             f"(media_asset_ids={','.join(deprecated_media_asset_ids)})"
         )
 
+    bird_image_review_inputs = build_bird_image_review_inputs_by_source_media_key(
+        media_assets=dataset.media_assets,
+        canonical_taxa=canonical_taxa,
+    )
     ai_qualifications = collect_ai_qualification_outcomes(
         dataset.media_assets,
         qualifier_mode=qualifier_mode,
         precomputed_ai_qualifications=dataset.ai_qualifications,
         precomputed_ai_outcomes=dataset.ai_qualification_outcomes,
         cached_image_paths_by_source_media_key=dataset.cached_image_paths_by_source_media_key,
+        bird_image_review_inputs_by_source_media_key=bird_image_review_inputs,
         gemini_api_key=gemini_api_key,
         gemini_model=gemini_model,
         gemini_concurrency=gemini_concurrency,
+        review_contract_version=ai_review_contract_version,
         qualifier=ai_qualifier,
     )
     qualified_resources, review_items = qualify_media_assets(

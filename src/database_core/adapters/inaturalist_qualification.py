@@ -18,7 +18,6 @@ from database_core.adapters.inaturalist_snapshot import (
 from database_core.export.json_exporter import write_json
 from database_core.qualification.ai import (
     DEFAULT_GEMINI_MODEL,
-    DEFAULT_GEMINI_PROMPT_VERSION,
     MIN_AI_IMAGE_HEIGHT,
     MIN_AI_IMAGE_WIDTH,
     AIQualificationOutcome,
@@ -26,8 +25,11 @@ from database_core.qualification.ai import (
     GeminiRequestError,
     GeminiVisionQualifier,
     build_ai_outputs_payload,
+    build_bird_image_review_inputs_by_source_media_key,
     collect_ai_qualification_outcomes,
+    default_prompt_version_for_review_contract,
     inspect_image_dimensions,
+    resolve_ai_review_contract_version,
     source_external_key_for_media,
 )
 
@@ -71,7 +73,8 @@ def qualify_inat_snapshot(
     snapshot_root: Path = DEFAULT_INAT_SNAPSHOT_ROOT,
     gemini_api_key: str,
     gemini_model: str = DEFAULT_GEMINI_MODEL,
-    prompt_version: str = DEFAULT_GEMINI_PROMPT_VERSION,
+    prompt_version: str | None = None,
+    ai_review_contract_version: str | None = None,
     request_interval_seconds: float = DEFAULT_REQUEST_INTERVAL_SECONDS,
     max_retries: int = DEFAULT_MAX_RETRIES,
     initial_backoff_seconds: float = DEFAULT_INITIAL_BACKOFF_SECONDS,
@@ -80,6 +83,12 @@ def qualify_inat_snapshot(
     qualifier: AIQualifier | None = None,
     progress_stream: TextIO | None = None,
 ) -> SnapshotQualificationResult:
+    resolved_review_contract_version = resolve_ai_review_contract_version(
+        ai_review_contract_version
+    )
+    resolved_prompt_version = prompt_version or default_prompt_version_for_review_contract(
+        resolved_review_contract_version
+    )
     manifest, snapshot_dir = load_snapshot_manifest(
         snapshot_id=snapshot_id,
         snapshot_root=snapshot_root,
@@ -87,7 +96,11 @@ def qualify_inat_snapshot(
     dataset = load_snapshot_dataset(snapshot_id=snapshot_id, snapshot_root=snapshot_root)
     if qualifier is None:
         qualifier = PacingRetryQualifier(
-            base_qualifier=GeminiVisionQualifier(api_key=gemini_api_key, model_name=gemini_model),
+            base_qualifier=GeminiVisionQualifier(
+                api_key=gemini_api_key,
+                model_name=gemini_model,
+                review_contract_version=resolved_review_contract_version,
+            ),
             request_interval_seconds=request_interval_seconds,
             max_retries=max_retries,
             initial_backoff_seconds=initial_backoff_seconds,
@@ -103,6 +116,10 @@ def qualify_inat_snapshot(
         media for media in dataset.media_assets
         if media.source_media_id not in pre_ai_rejections_by_source_media_id
     ]
+    bird_image_review_inputs = build_bird_image_review_inputs_by_source_media_key(
+        media_assets=eligible_media_assets,
+        canonical_taxa=dataset.canonical_taxa,
+    )
 
     if resolved_progress_stream is not None:
         print(
@@ -120,9 +137,11 @@ def qualify_inat_snapshot(
         eligible_media_assets,
         qualifier_mode="gemini",
         cached_image_paths_by_source_media_key=dataset.cached_image_paths_by_source_media_key,
+        bird_image_review_inputs_by_source_media_key=bird_image_review_inputs,
         gemini_api_key=gemini_api_key,
         gemini_model=gemini_model,
-        prompt_version=prompt_version,
+        prompt_version=resolved_prompt_version,
+        review_contract_version=resolved_review_contract_version,
         qualifier=qualifier,
         gemini_concurrency=gemini_concurrency,
         progress_callback=_build_progress_callback(resolved_progress_stream),
@@ -137,7 +156,8 @@ def qualify_inat_snapshot(
             qualification=None,
             flags=(reason,),
             note=f"pre-ai filtered ({reason}) for {source_media_id}",
-            prompt_version=prompt_version,
+            prompt_version=resolved_prompt_version,
+            review_contract_version=resolved_review_contract_version,
         )
 
     ai_outputs_path = snapshot_dir / "ai_outputs.json"
@@ -272,7 +292,13 @@ class PacingRetryQualifier:
         self._clock = clock_func
         self._last_request_started_at: float | None = None
 
-    def qualify(self, media_asset, *, image_bytes: bytes | None = None):
+    def qualify(
+        self,
+        media_asset,
+        *,
+        image_bytes: bytes | None = None,
+        bird_image_review_input=None,
+    ):
         retry_count = 0
         backoff_seconds = self.initial_backoff_seconds
 
@@ -280,7 +306,11 @@ class PacingRetryQualifier:
             self._sleep_for_pacing()
             self._last_request_started_at = self._clock()
             try:
-                return self.base_qualifier.qualify(media_asset, image_bytes=image_bytes)
+                return self.base_qualifier.qualify(
+                    media_asset,
+                    image_bytes=image_bytes,
+                    bird_image_review_input=bird_image_review_input,
+                )
             except (GeminiRequestError, HTTPError, TimeoutError, URLError, OSError) as exc:
                 if not _is_retryable_gemini_error(exc) or retry_count >= self.max_retries:
                     raise

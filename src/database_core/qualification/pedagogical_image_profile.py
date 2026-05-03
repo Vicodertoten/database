@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 
 from database_core.domain.enums import (
@@ -58,6 +59,7 @@ PENDING_AI_STATUSES = {
     "blur_pre_ai",
     "duplicate_pre_ai",
     "rules_only",
+    "bird_image_review_failed",
 }
 
 MANUAL_REVIEW_AI_STATUSES = {
@@ -722,6 +724,14 @@ def _build_feedback_profile(
 ) -> PedagogicalFeedbackProfile:
     what_to_look_at = _dedupe_non_blank(qualified_resource.visible_parts)
     ai_note = _extract_ai_note(ai_outcome=ai_outcome, qualified_resource=qualified_resource)
+    v12_feedback_profile = _build_feedback_profile_from_v12_review(
+        ai_outcome=ai_outcome,
+        fallback_what_to_look_at=what_to_look_at,
+        ai_note=ai_note,
+        qualified_resource=qualified_resource,
+    )
+    if v12_feedback_profile is not None:
+        return v12_feedback_profile
 
     focus_parts = what_to_look_at[:3]
     focus_phrase = _format_focus_parts(focus_parts)
@@ -824,6 +834,102 @@ def _build_feedback_profile(
     return PedagogicalFeedbackProfile(
         feedback_short=feedback_short,
         feedback_long=feedback_long,
+        what_to_look_at=what_to_look_at,
+        why_good_example=why_good_example,
+        why_not_ideal=why_not_ideal,
+        beginner_hint=None,
+        expert_hint=None,
+        confusion_hint=None,
+        post_answer_feedback=post_answer_feedback,
+        feedback_confidence=feedback_confidence,
+    )
+
+
+def _build_feedback_profile_from_v12_review(
+    *,
+    ai_outcome: AIQualificationOutcome | None,
+    fallback_what_to_look_at: list[str],
+    ai_note: str | None,
+    qualified_resource: QualifiedResource,
+) -> PedagogicalFeedbackProfile | None:
+    review_payload = _as_mapping(
+        ai_outcome.bird_image_pedagogical_review if ai_outcome is not None else None
+    )
+    if review_payload.get("status") != "success":
+        return None
+
+    post_answer_feedback_payload = _as_mapping(review_payload.get("post_answer_feedback"))
+    correct_payload = _as_mapping(post_answer_feedback_payload.get("correct"))
+    incorrect_payload = _as_mapping(post_answer_feedback_payload.get("incorrect"))
+
+    correct_short = _first_non_blank([_as_text(correct_payload.get("short"))])
+    correct_long = _first_non_blank([_as_text(correct_payload.get("long"))])
+    incorrect_short = _first_non_blank([_as_text(incorrect_payload.get("short"))])
+    incorrect_long = _first_non_blank([_as_text(incorrect_payload.get("long"))])
+    identification_tips = _dedupe_non_blank(
+        _as_string_list(post_answer_feedback_payload.get("identification_tips"))
+    )
+
+    if (
+        correct_short is None
+        or correct_long is None
+        or incorrect_short is None
+        or incorrect_long is None
+        or len(identification_tips) < 2
+    ):
+        return None
+
+    limitations_payload = _as_mapping(review_payload.get("limitations"))
+    why_not_ideal = _dedupe_non_blank(_as_string_list(limitations_payload.get("why_not_ideal")))
+
+    feature_payload = review_payload.get("identification_features_visible_in_this_image")
+    feature_parts: list[str] = []
+    if isinstance(feature_payload, Sequence) and not isinstance(feature_payload, (str, bytes)):
+        for item in feature_payload:
+            if not isinstance(item, Mapping):
+                continue
+            part = _as_text(item.get("body_part"))
+            if part:
+                feature_parts.append(part)
+
+    what_to_look_at = _dedupe_non_blank([*fallback_what_to_look_at, *feature_parts])
+
+    pedagogical_assessment = _as_mapping(review_payload.get("pedagogical_assessment"))
+    image_assessment = _as_mapping(review_payload.get("image_assessment"))
+    why_good_example: list[str] = []
+    if _as_text(image_assessment.get("technical_quality")) in {"high", "medium"}:
+        why_good_example.append("Image quality is sufficient for identification use.")
+    if _as_text(pedagogical_assessment.get("diagnostic_feature_visibility")) in {
+        "high",
+        "medium",
+    }:
+        why_good_example.append("Diagnostic features are visible enough for learning.")
+
+    feedback_confidence = _normalize_review_feedback_confidence(
+        post_answer_feedback_payload.get("confidence")
+    )
+    if feedback_confidence == 0:
+        feedback_confidence = _clamp(_to_percent(qualified_resource.ai_confidence))
+
+    post_answer_feedback = PostAnswerFeedback(
+        correct=PostAnswerFeedbackVariant(short=correct_short, long=correct_long),
+        incorrect=PostAnswerFeedbackVariant(short=incorrect_short, long=incorrect_long),
+        identification_tips=identification_tips,
+        confidence=feedback_confidence,
+    )
+
+    feedback_long = _join_sentences(
+        [
+            correct_long,
+            ai_note if ai_note and ai_note not in correct_long else None,
+            why_good_example[0] if why_good_example else None,
+            why_not_ideal[0] if why_not_ideal else None,
+        ]
+    )
+
+    return PedagogicalFeedbackProfile(
+        feedback_short=correct_short,
+        feedback_long=feedback_long or correct_long,
         what_to_look_at=what_to_look_at,
         why_good_example=why_good_example,
         why_not_ideal=why_not_ideal,
@@ -1100,6 +1206,44 @@ def _first_non_blank(values: list[str | None]) -> str | None:
         if value and value.strip():
             return value.strip()
     return None
+
+
+def _as_mapping(value: object) -> Mapping[str, object]:
+    if isinstance(value, Mapping):
+        return value
+    return {}
+
+
+def _as_string_list(value: object) -> list[str]:
+    if value is None:
+        return []
+    if isinstance(value, Sequence) and not isinstance(value, (str, bytes)):
+        return [str(item).strip() for item in value if str(item).strip()]
+    text = str(value).strip()
+    if not text:
+        return []
+    return [text]
+
+
+def _as_text(value: object) -> str | None:
+    if value is None:
+        return None
+    text = str(value).strip()
+    return text or None
+
+
+def _normalize_review_feedback_confidence(value: object) -> int:
+    if value is None:
+        return 0
+    try:
+        numeric = float(value)
+    except (TypeError, ValueError):
+        return 0
+    if numeric < 0:
+        return 0
+    if numeric <= 1:
+        return _clamp(round(numeric * 100))
+    return _clamp(round(numeric))
 
 
 def _dedupe_non_blank(values: list[str]) -> list[str]:

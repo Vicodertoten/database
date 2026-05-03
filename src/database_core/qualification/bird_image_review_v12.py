@@ -57,6 +57,36 @@ _REQUIRED_SUCCESS_KEYS = {
     "overall_confidence",
 }
 
+_IMAGE_CONTEXT_MARKERS = (
+    "sur cette image",
+    "ici",
+    "dans cette image",
+)
+
+_FEATURE_KEYWORDS = {
+    "bec",
+    "beak",
+    "tete",
+    "head",
+    "poitrine",
+    "breast",
+    "aile",
+    "wing",
+    "queue",
+    "tail",
+    "oeil",
+    "eye",
+    "silhouette",
+    "profil",
+    "posture",
+    "plumage",
+    "gorge",
+    "dos",
+    "ventre",
+    "nuque",
+    "pattes",
+}
+
 
 def build_bird_image_review_prompt_v12(
     *,
@@ -336,14 +366,36 @@ def is_playable_bird_image_review_v12(payload: Mapping[str, object]) -> bool:
     correct = _mapping(post_answer_feedback.get("correct"))
     incorrect = _mapping(post_answer_feedback.get("incorrect"))
     tips = _normalize_string_list(post_answer_feedback.get("identification_tips"))
+    correct_short = _non_empty(correct.get("short"))
+    correct_long = _non_empty(correct.get("long"))
+    incorrect_short = _non_empty(incorrect.get("short"))
+    incorrect_long = _non_empty(incorrect.get("long"))
 
     required_feedback = (
-        _non_empty(correct.get("short"))
-        and _non_empty(correct.get("long"))
-        and _non_empty(incorrect.get("short"))
-        and _non_empty(incorrect.get("long"))
+        correct_short
+        and correct_long
+        and incorrect_short
+        and incorrect_long
     )
-    return required_feedback and len(tips) >= 2
+    if not required_feedback or len(tips) < 2:
+        return False
+
+    if _normalize_feedback_text(correct_short) == _normalize_feedback_text(incorrect_short):
+        return False
+    if _normalize_feedback_text(correct_long) == _normalize_feedback_text(incorrect_long):
+        return False
+
+    feedback_texts = [correct_short, correct_long, incorrect_short, incorrect_long, *tips]
+    if not _has_image_context_reference(feedback_texts):
+        return False
+    if not _feedback_lengths_are_acceptable(feedback_texts):
+        return False
+    if _count_feature_keyword_mentions(" ".join(feedback_texts)) < 2:
+        return False
+    if _count_concrete_tips(tips) < 2:
+        return False
+
+    return True
 
 
 def compute_bird_image_pedagogical_score_v12(payload: Mapping[str, object]) -> dict[str, object]:
@@ -628,20 +680,72 @@ def _feedback_quality_level(post_answer_feedback: Mapping[str, object]) -> str:
     incorrect = _mapping(post_answer_feedback.get("incorrect"))
     tips = _normalize_string_list(post_answer_feedback.get("identification_tips"))
     confidence = _normalize_confidence(post_answer_feedback.get("confidence"), default=0.0)
+    correct_short = _non_empty(correct.get("short"))
+    correct_long = _non_empty(correct.get("long"))
+    incorrect_short = _non_empty(incorrect.get("short"))
+    incorrect_long = _non_empty(incorrect.get("long"))
 
     has_required_text = (
-        _non_empty(correct.get("short"))
-        and _non_empty(correct.get("long"))
-        and _non_empty(incorrect.get("short"))
-        and _non_empty(incorrect.get("long"))
+        correct_short
+        and correct_long
+        and incorrect_short
+        and incorrect_long
     )
     if not has_required_text or len(tips) < 2:
+        return "low"
+
+    feedback_texts = [correct_short, correct_long, incorrect_short, incorrect_long, *tips]
+    if (
+        not _has_image_context_reference(feedback_texts)
+        or not _feedback_lengths_are_acceptable(feedback_texts)
+        or _count_feature_keyword_mentions(" ".join(feedback_texts)) < 2
+        or _count_concrete_tips(tips) < 2
+    ):
         return "low"
     if confidence >= 0.75 and len(tips) >= 3:
         return "high"
     if confidence >= 0.40:
         return "medium"
     return "low"
+
+
+def _normalize_feedback_text(value: str) -> str:
+    text = value.lower()
+    text = text.replace("'", " ")
+    text = text.replace("-", " ")
+    text = text.replace("é", "e").replace("è", "e").replace("ê", "e")
+    text = text.replace("à", "a").replace("â", "a")
+    text = text.replace("î", "i").replace("ï", "i")
+    text = text.replace("ô", "o")
+    text = text.replace("ù", "u").replace("û", "u")
+    text = text.replace("ç", "c")
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def _has_image_context_reference(texts: Sequence[str]) -> bool:
+    normalized = " ".join(_normalize_feedback_text(item) for item in texts)
+    return any(marker in normalized for marker in _IMAGE_CONTEXT_MARKERS)
+
+
+def _feedback_lengths_are_acceptable(texts: Sequence[str]) -> bool:
+    for text in texts:
+        length = len(text.strip())
+        if length < 8 or length > 480:
+            return False
+    return True
+
+
+def _count_feature_keyword_mentions(text: str) -> int:
+    normalized = _normalize_feedback_text(text)
+    return sum(1 for keyword in _FEATURE_KEYWORDS if keyword in normalized)
+
+
+def _count_concrete_tips(tips: Sequence[str]) -> int:
+    return sum(
+        1
+        for tip in tips
+        if len(tip.split()) >= 4 and _count_feature_keyword_mentions(tip) >= 1
+    )
 
 
 def _weighted_score(level: object, weight: int) -> int:
