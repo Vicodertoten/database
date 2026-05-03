@@ -1,0 +1,294 @@
+{
+  "ai_review_contract_version": "v1_2",
+  "comparison_baseline_contract_version": "v1_1",
+  "decision": "INVESTIGATE_LIVE_FAILURES",
+  "decision_thresholds": {
+    "ready_for_distractors_v1_2": {
+      "feedback_completeness_rate_gte": 0.8,
+      "generic_feedback_rate_lte": 0.3,
+      "runtime_contract_regression_detected": false,
+      "v1_2_fail_closed_rate_lte": 0.2,
+      "v1_2_parse_validation_success_rate_gte": 0.8
+    }
+  },
+  "execution_status": "completed",
+  "generated_at": "2026-05-03T07:53:53.626472Z",
+  "per_image_results": [
+    {
+      "canonical_taxon_id": "taxon:birds:000029",
+      "common_names": {},
+      "media_id": "media:inaturalist:100422597",
+      "scientific_name": "Ardea cinerea",
+      "source_media_id": "100422597",
+      "source_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/100422597/original.jpeg",
+      "v1_1": {
+        "export_eligible": true,
+        "flags": [],
+        "mature_playable": false,
+        "note": "The image is heavily blurred by reflection and window glass; subject is recognizable as a heron, likely Ardea cinerea, but detail is insufficient for precise diagnostic identification.",
+        "profile_overall_score": 45,
+        "profile_status": "manual_review_required",
+        "status": "ok"
+      },
+      "v1_2": {
+        "export_eligible": false,
+        "failure_reason": "schema_validation_failed",
+        "flags": [
+          "bird_image_review_failed",
+          "bird_image_review_failed_schema_validation_failed"
+        ],
+        "mature_playable": false,
+        "normalized_review": {
+          "consistency_warning": null,
+          "failure_reason": "schema_validation_failed",
+          "overall_confidence": 0,
+          "prompt_version": "bird_image_review_prompt.v1.2",
+          "schema_version": "bird_image_pedagogical_review.v1.2",
+          "status": "failed"
+        },
+        "note": "bird image review v1.2 failed: schema_validation_failed",
+        "post_answer_feedback": {},
+        "profile_overall_score": 0,
+        "profile_status": "rejected_for_playable_use",
+        "score_overall": 0,
+        "score_payload": {
+          "overall": 0,
+          "subscores": {
+            "diagnostic_feature_visibility": 0,
+            "feedback_quality": 0,
+            "representativeness": 0,
+            "subject_visibility": 0,
+            "technical_quality": 0
+          }
+        },
+        "status": "bird_image_review_failed"
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000024",
+      "common_names": {},
+      "media_id": "media:inaturalist:100906257",
+      "scientific_name": "Fulica atra",
+      "source_media_id": "100906257",
+      "source_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/100906257/original.jpeg",
+      "v1_1": {
+        "export_eligible": true,
+        "flags": [],
+        "mature_playable": true,
+        "note": "Eurasian Coot partially obscured by tree branches, but the diagnostic white frontal shield and beak are clearly visible.",
+        "profile_overall_score": 72,
+        "profile_status": "profiled",
+        "status": "ok"
+      },
+      "v1_2": {
+        "export_eligible": false,
+        "failure_reason": "schema_validation_failed",
+        "flags": [
+          "bird_image_review_failed",
+          "bird_image_review_failed_schema_validation_failed"
+        ],
+        "mature_playable": false,
+        "normalized_review": {
+          "consistency_warning": null,
+          "failure_reason": "schema_validation_failed",
+          "overall_confidence": 0,
+          "prompt_version": "bird_image_review_prompt.v1.2",
+          "schema_version": "bird_image_pedagogical_review.v1.2",
+          "status": "failed"
+        },
+        "note": "bird image review v1.2 failed: schema_validation_failed",
+        "post_answer_feedback": {},
+        "profile_overall_score": 0,
+        "profile_status": "rejected_for_playable_use",
+        "score_overall": 0,
+        "score_payload": {
+          "overall": 0,
+          "subscores": {
+            "diagnostic_feature_visibility": 0,
+            "feedback_quality": 0,
+            "representativeness": 0,
+            "subject_visibility": 0,
+            "technical_quality": 0
+          }
+        },
+        "status": "bird_image_review_failed"
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000001",
+      "common_names": {},
+      "media_id": "media:inaturalist:100909260",
+      "scientific_name": "Columba palumbus",
+      "source_media_id": "100909260",
+      "source_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/100909260/original.jpeg",
+      "v1_1": {
+        "export_eligible": true,
+        "flags": [],
+        "mature_playable": false,
+        "note": "The image shows a single detached bird feather, not the bird itself. Identification of species from a lone feather is very difficult.",
+        "profile_overall_score": 55,
+        "profile_status": "manual_review_required",
+        "status": "ok"
+      },
+      "v1_2": {
+        "export_eligible": false,
+        "failure_reason": "schema_validation_failed",
+        "flags": [
+          "bird_image_review_failed",
+          "bird_image_review_failed_schema_validation_failed"
+        ],
+        "mature_playable": false,
+        "normalized_review": {
+          "consistency_warning": null,
+          "failure_reason": "schema_validation_failed",
+          "overall_confidence": 0,
+          "prompt_version": "bird_image_review_prompt.v1.2",
+          "schema_version": "bird_image_pedagogical_review.v1.2",
+          "status": "failed"
+        },
+        "note": "bird image review v1.2 failed: schema_validation_failed",
+        "post_answer_feedback": {},
+        "profile_overall_score": 0,
+        "profile_status": "rejected_for_playable_use",
+        "score_overall": 0,
+        "score_payload": {
+          "overall": 0,
+          "subscores": {
+            "diagnostic_feature_visibility": 0,
+            "feedback_quality": 0,
+            "representativeness": 0,
+            "subject_visibility": 0,
+            "technical_quality": 0
+          }
+        },
+        "status": "bird_image_review_failed"
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000005",
+      "common_names": {},
+      "media_id": "media:inaturalist:101911464",
+      "scientific_name": "Fringilla coelebs",
+      "source_media_id": "101911464",
+      "source_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/101911464/original.jpeg",
+      "v1_1": {
+        "export_eligible": true,
+        "flags": [],
+        "mature_playable": false,
+        "note": "The subject is heavily obscured by foliage and underexposed, making identification impossible.",
+        "profile_overall_score": 39,
+        "profile_status": "manual_review_required",
+        "status": "ok"
+      },
+      "v1_2": {
+        "export_eligible": false,
+        "failure_reason": "schema_validation_failed",
+        "flags": [
+          "bird_image_review_failed",
+          "bird_image_review_failed_schema_validation_failed"
+        ],
+        "mature_playable": false,
+        "normalized_review": {
+          "consistency_warning": null,
+          "failure_reason": "schema_validation_failed",
+          "overall_confidence": 0,
+          "prompt_version": "bird_image_review_prompt.v1.2",
+          "schema_version": "bird_image_pedagogical_review.v1.2",
+          "status": "failed"
+        },
+        "note": "bird image review v1.2 failed: schema_validation_failed",
+        "post_answer_feedback": {},
+        "profile_overall_score": 0,
+        "profile_status": "rejected_for_playable_use",
+        "score_overall": 0,
+        "score_payload": {
+          "overall": 0,
+          "subscores": {
+            "diagnostic_feature_visibility": 0,
+            "feedback_quality": 0,
+            "representativeness": 0,
+            "subject_visibility": 0,
+            "technical_quality": 0
+          }
+        },
+        "status": "bird_image_review_failed"
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000013",
+      "common_names": {},
+      "media_id": "media:inaturalist:101912004",
+      "scientific_name": "Troglodytes troglodytes",
+      "source_media_id": "101912004",
+      "source_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/101912004/original.jpeg",
+      "v1_1": {
+        "export_eligible": true,
+        "flags": [],
+        "mature_playable": false,
+        "note": "The subject is severely underexposed and distant, making identification impossible.",
+        "profile_overall_score": 45,
+        "profile_status": "manual_review_required",
+        "status": "ok"
+      },
+      "v1_2": {
+        "export_eligible": false,
+        "failure_reason": "schema_validation_failed",
+        "flags": [
+          "bird_image_review_failed",
+          "bird_image_review_failed_schema_validation_failed"
+        ],
+        "mature_playable": false,
+        "normalized_review": {
+          "consistency_warning": null,
+          "failure_reason": "schema_validation_failed",
+          "overall_confidence": 0,
+          "prompt_version": "bird_image_review_prompt.v1.2",
+          "schema_version": "bird_image_pedagogical_review.v1.2",
+          "status": "failed"
+        },
+        "note": "bird image review v1.2 failed: schema_validation_failed",
+        "post_answer_feedback": {},
+        "profile_overall_score": 0,
+        "profile_status": "rejected_for_playable_use",
+        "score_overall": 0,
+        "score_payload": {
+          "overall": 0,
+          "subscores": {
+            "diagnostic_feature_visibility": 0,
+            "feedback_quality": 0,
+            "representativeness": 0,
+            "subject_visibility": 0,
+            "technical_quality": 0
+          }
+        },
+        "status": "bird_image_review_failed"
+      }
+    }
+  ],
+  "requested_sample_size": 5,
+  "run_id": "audit:bird-image-review-v12-live-mini:eefa441c",
+  "sample_size": 5,
+  "schema_version": "bird_image_review_v12_live_mini_run_audit.v1",
+  "snapshot_id": "palier1-be-birds-50taxa-run003-v11-baseline",
+  "snapshot_manifest_path": null,
+  "snapshot_root": "data/raw/inaturalist",
+  "summary": {
+    "feedback_completeness_rate": 0.0,
+    "feedback_image_specificity_rate": 0.0,
+    "generic_feedback_rate": 0.0,
+    "profiles_blocked_by_v1_2_policy_count": 5,
+    "profiles_mature_playable_count": 0,
+    "qualitative_v1_2_feedback_examples": [],
+    "runtime_contract_regression_detected": false,
+    "sample_size": 5,
+    "v1_1_average_score_if_available": 51.2,
+    "v1_1_success_count": 5,
+    "v1_2_average_score": 0.0,
+    "v1_2_fail_closed_count": 5,
+    "v1_2_failure_reason_distribution": {
+      "schema_validation_failed": 5
+    },
+    "v1_2_score_decomposition_average": {},
+    "v1_2_success_count": 0
+  }
+}

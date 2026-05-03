@@ -1,7 +1,7 @@
 ---
 owner: database
 status: ready_for_validation
-last_reviewed: 2026-05-02
+last_reviewed: 2026-05-03
 source_of_truth: docs/audits/palier-1-v12-ai-review-contract.md
 scope: audit
 ---
@@ -217,3 +217,9 @@ The report includes:
 Latest local fixture evidence file:
 
 - `docs/audits/evidence/bird_image_review_v12_dry_run.json`
+
+## 15. Phase D live mini-run companion
+
+Phase D (controlled live Gemini mini-run with `v1_1` vs `v1_2` comparison) is documented in:
+
+- `docs/audits/palier-1-v12-live-mini-run-audit.md`

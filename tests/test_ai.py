@@ -7,13 +7,17 @@ from urllib.error import HTTPError
 from database_core.domain.enums import MediaType, SourceName
 from database_core.domain.models import AIQualification, MediaAsset
 from database_core.qualification.ai import (
+    AI_REVIEW_CONTRACT_V1_2,
+    AI_REVIEW_CONTRACT_VERSION_ENV,
     AIQualificationOutcome,
     GeminiVisionQualifier,
     _normalize_gemini_candidate,
     build_prompt_bundle,
     collect_ai_qualification_outcomes,
+    resolve_ai_review_contract_version,
     source_external_key_for_media,
 )
+from database_core.qualification.bird_image_review_v12 import BIRD_IMAGE_REVIEW_PROMPT_VERSION
 
 
 def test_normalize_gemini_candidate_recovers_common_schema_drift() -> None:
@@ -252,3 +256,99 @@ def test_prompt_bundle_supports_multiple_tasks() -> None:
 
     assert screening_bundle.version == "phase1.inat.screening.v1"
     assert feature_bundle.version == "phase1.inat.feature_visibility.v1"
+
+
+def test_review_contract_version_defaults_to_v1_1(monkeypatch) -> None:
+    monkeypatch.delenv(AI_REVIEW_CONTRACT_VERSION_ENV, raising=False)
+    assert resolve_ai_review_contract_version(None) == "v1_1"
+
+
+def test_cached_ai_defaults_to_v1_1_when_no_selector_is_provided() -> None:
+    media_asset = MediaAsset(
+        media_id="media:fixture:cached-v12-default",
+        source_name=SourceName.INATURALIST,
+        source_media_id="cached-v12-default",
+        media_type=MediaType.IMAGE,
+        source_url="fixture://media/cached-v12-default",
+        attribution="fixture",
+        license="CC-BY",
+        mime_type="image/jpeg",
+        file_extension="jpg",
+        width=1600,
+        height=1200,
+        source_observation_uid="obs:fixture:2",
+        canonical_taxon_id="taxon:birds:000014",
+        raw_payload_ref="fixture.json#/media/cached-v12-default",
+    )
+    media_key = source_external_key_for_media(media_asset)
+
+    outcomes = collect_ai_qualification_outcomes(
+        [media_asset],
+        qualifier_mode="cached",
+        precomputed_ai_outcomes={
+            media_key: AIQualificationOutcome(
+                status="ok",
+                prompt_version=BIRD_IMAGE_REVIEW_PROMPT_VERSION,
+                qualification=AIQualification(
+                    technical_quality="high",
+                    pedagogical_quality="high",
+                    life_stage="adult",
+                    sex="unknown",
+                    visible_parts=["head", "beak"],
+                    view_angle="lateral",
+                    confidence=0.9,
+                    model_name="gemini-test",
+                    notes="v1.2 payload",
+                ),
+            )
+        },
+    )
+
+    assert outcomes[media_key].status == "cached_prompt_version_mismatch"
+
+
+def test_cached_ai_uses_v1_2_only_when_explicitly_selected() -> None:
+    media_asset = MediaAsset(
+        media_id="media:fixture:cached-v12-explicit",
+        source_name=SourceName.INATURALIST,
+        source_media_id="cached-v12-explicit",
+        media_type=MediaType.IMAGE,
+        source_url="fixture://media/cached-v12-explicit",
+        attribution="fixture",
+        license="CC-BY",
+        mime_type="image/jpeg",
+        file_extension="jpg",
+        width=1600,
+        height=1200,
+        source_observation_uid="obs:fixture:3",
+        canonical_taxon_id="taxon:birds:000014",
+        raw_payload_ref="fixture.json#/media/cached-v12-explicit",
+    )
+    media_key = source_external_key_for_media(media_asset)
+
+    outcomes = collect_ai_qualification_outcomes(
+        [media_asset],
+        qualifier_mode="cached",
+        precomputed_ai_outcomes={
+            media_key: AIQualificationOutcome(
+                status="ok",
+                prompt_version=BIRD_IMAGE_REVIEW_PROMPT_VERSION,
+                review_contract_version=AI_REVIEW_CONTRACT_V1_2,
+                qualification=AIQualification(
+                    technical_quality="high",
+                    pedagogical_quality="high",
+                    life_stage="adult",
+                    sex="unknown",
+                    visible_parts=["head", "beak"],
+                    view_angle="lateral",
+                    confidence=0.9,
+                    model_name="gemini-test",
+                    notes="v1.2 payload",
+                ),
+            )
+        },
+        review_contract_version=AI_REVIEW_CONTRACT_V1_2,
+    )
+
+    assert outcomes[media_key].status == "ok"
+    assert outcomes[media_key].prompt_version == BIRD_IMAGE_REVIEW_PROMPT_VERSION
