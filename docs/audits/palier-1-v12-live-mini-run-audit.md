@@ -74,7 +74,14 @@ Summary fields include:
 - `v1_1_success_count`
 - `v1_2_success_count`
 - `v1_2_fail_closed_count`
+- `v1_2_status_distribution`
+- `v1_2_non_fail_closed_failure_count`
 - `v1_2_failure_reason_distribution`
+- `schema_failure_cause_distribution`
+- `top_schema_error_paths`
+- `examples_by_failure_cause`
+- `parsed_json_available_count`
+- `schema_error_total`
 - `v1_1_average_score_if_available`
 - `v1_2_average_score`
 - `v1_2_score_decomposition_average`
@@ -89,6 +96,14 @@ Per-image evidence includes:
 
 - status and flags for `v1_1` and `v1_2`
 - normalized `v1_2` review payload
+- structured `schema_diagnostics` for failed reviews
+  - `parsed_json_available`
+  - `schema_error_count`
+  - `schema_errors[]` (`path`, `message`, `validator`, `expected`, `actual`, `cause`)
+  - `schema_failure_cause`
+  - `raw_model_output_sha256`
+  - `raw_model_output_excerpt` (truncated)
+  - `prompt_version`, `schema_version`, `gemini_model`, `media_id`, `canonical_taxon_id`, `scientific_name`
 - `v1_2` deterministic score payload
 - `post_answer_feedback`
 - profile/export eligibility summaries
@@ -100,6 +115,8 @@ Per-image evidence includes:
   usable pedagogical feedback.
 - High `generic_feedback_rate` indicates prompt/validation quality issues to correct.
 - `profiles_blocked_by_v1_2_policy_count` should track fail-closed behavior.
+- `v1_2_non_fail_closed_failure_count` should remain `0`; any positive value is a live-path stability issue.
+- `schema_failure_cause_distribution` + `top_schema_error_paths` should guide prompt/normalization hardening.
 
 ## 9. Decision Field
 
@@ -134,22 +151,53 @@ Evidence file:
 
 - `docs/audits/evidence/bird_image_review_v12_live_mini_run.json`
 
-Latest recorded run summary:
+Phase D2 hardening changes applied:
+
+- prompt hardened with:
+  - explicit "choose exactly one enum value" wording
+  - compact enum reference outside JSON example
+  - concrete JSON example without pipe placeholders
+  - strict "single JSON object only" instruction
+- parser/validator hardened with actionable diagnostics payload on failures
+- schema failure causes classified deterministically
+- safe normalization expanded only for semantically equivalent variants
+- v1.2 path now attempts Gemini structured JSON schema mode, with safe fallback to JSON-only mode when structured mode is unstable
+- fail-closed policy remains unchanged
+
+Before/after (same snapshot and sample policy):
 
 - snapshot: `palier1-be-birds-50taxa-run003-v11-baseline`
 - sample_size: `5`
-- v1.1 success: `5/5`
-- v1.2 success: `0/5`
-- v1.2 fail-closed: `5/5`
-- v1.2 failure reasons: `schema_validation_failed=5`
-- v1.1 average score (if available): `51.2`
-- v1.2 average score: `0.0`
-- profiles mature/playable (v1.2 path): `0`
-- profiles blocked by v1.2 policy: `5`
-- decision: `INVESTIGATE_LIVE_FAILURES`
+- baseline before D2:
+  - v1.1 success: `5/5`
+  - v1.2 success: `0/5`
+  - v1.2 fail-closed: `5/5`
+  - decision: `INVESTIGATE_LIVE_FAILURES`
+- latest D2 rerun:
+  - v1.1 success: `5/5`
+  - v1.2 success: `1/5`
+  - v1.2 fail-closed: `4/5`
+  - v1.2 non-fail-closed failures: `0/5`
+  - v1.2 failure reasons: `schema_validation_failed=1`, `insufficient_information=3`
+  - schema failure causes: `malformed_success_failed_shape=1`, `missing_feedback=3`
+  - feedback completeness rate (successful v1.2): `1.0`
+  - generic feedback rate (successful v1.2): `0.0`
+  - profiles mature/playable (v1.2 path): `1`
+  - profiles blocked by v1.2 policy: `4`
+  - decision: `ADJUST_PROMPT_OR_VALIDATION`
 
-Interpretation:
+Root-cause summary from D2 diagnostics:
 
-- live v1.2 prompt/parser wiring is active and fail-closed behavior is enforced
-- runtime contract regression was not detected
-- next step is prompt/schema alignment hardening before distractor v1.2 work
+- the dominant blocker is no longer pure schema enum/type mismatch
+- the main residual issue is pedagogical quality gating (`insufficient_information`) on hard images
+- one output had malformed success/failed shape (`{}`), now explicitly diagnosed with hash + excerpt
+
+Residual risks:
+
+- success rate remains below the readiness threshold for distractors (`1/5 < 80%`)
+- sample size is intentionally small; more controlled live samples are still required
+- quality gates are strict by design and should remain strict
+
+Current decision:
+
+- `ADJUST_PROMPT_OR_VALIDATION` (not ready for distractors v1.2 yet)

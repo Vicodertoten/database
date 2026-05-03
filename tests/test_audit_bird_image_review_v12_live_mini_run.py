@@ -70,6 +70,54 @@ def test_v12_failure_reason_distribution_is_computed() -> None:
     }
 
 
+def test_schema_failure_cause_distribution_and_top_paths_are_computed() -> None:
+    module = _load_script_module()
+    v12_entries = [
+        {
+            "status": "bird_image_review_failed",
+            "normalized_review": {
+                "diagnostics": {
+                    "schema_failure_cause": "enum_mismatch",
+                    "schema_errors": [
+                        {"path": "image_assessment.technical_quality"},
+                        {"path": "pedagogical_assessment.media_role"},
+                    ],
+                }
+            },
+        },
+        {
+            "status": "bird_image_review_failed",
+            "normalized_review": {
+                "diagnostics": {
+                    "schema_failure_cause": "missing_feedback",
+                    "schema_errors": [
+                        {"path": "post_answer_feedback.identification_tips"},
+                        {"path": "image_assessment.technical_quality"},
+                    ],
+                }
+            },
+        },
+    ]
+    per_image_results = [
+        {"source_media_id": "1", "media_id": "m1", "v1_2": v12_entries[0]},
+        {"source_media_id": "2", "media_id": "m2", "v1_2": v12_entries[1]},
+    ]
+
+    cause_distribution = module.compute_schema_failure_cause_distribution(v12_entries)
+    assert cause_distribution == {
+        "enum_mismatch": 1,
+        "missing_feedback": 1,
+    }
+
+    top_paths = module.compute_top_schema_error_paths(v12_entries)
+    assert top_paths[0]["path"] == "image_assessment.technical_quality"
+    assert top_paths[0]["count"] == 2
+
+    examples = module.build_examples_by_failure_cause(per_image_results)
+    assert "enum_mismatch" in examples
+    assert "missing_feedback" in examples
+
+
 def test_feedback_metrics_and_generic_feedback_are_deterministic() -> None:
     module = _load_script_module()
     complete_specific_review = {
@@ -195,3 +243,17 @@ def test_comparison_report_schema_validation() -> None:
     }
 
     assert module.validate_comparison_report_schema(report) is True
+
+
+def test_decision_investigate_when_non_fail_closed_errors_exist() -> None:
+    module = _load_script_module()
+    summary = {
+        "sample_size": 5,
+        "v1_2_success_count": 0,
+        "v1_2_fail_closed_count": 0,
+        "v1_2_non_fail_closed_failure_count": 5,
+        "feedback_completeness_rate": 0.0,
+        "generic_feedback_rate": 0.0,
+        "v1_2_failure_reason_distribution": {},
+    }
+    assert module.decide_v12_mini_run_outcome(summary) == "INVESTIGATE_LIVE_FAILURES"

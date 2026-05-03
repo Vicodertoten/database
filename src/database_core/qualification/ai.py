@@ -10,6 +10,7 @@ from collections.abc import Callable, Mapping, Sequence
 from concurrent.futures import Future, ThreadPoolExecutor
 from dataclasses import dataclass
 from datetime import UTC, datetime
+from functools import lru_cache
 from pathlib import Path
 from typing import Protocol
 from urllib.error import HTTPError, URLError
@@ -20,6 +21,7 @@ from database_core.domain.enums import SourceName, TaxonGroup, ViewAngle
 from database_core.domain.models import AIQualification, CanonicalTaxon, MediaAsset
 from database_core.qualification.bird_image_review_v12 import (
     BIRD_IMAGE_REVIEW_PROMPT_VERSION,
+    DEFAULT_BIRD_IMAGE_REVIEW_SCHEMA_PATH,
     build_bird_image_review_prompt_v12,
     compute_bird_image_pedagogical_score_v12,
     parse_bird_image_pedagogical_review_v12,
@@ -179,6 +181,11 @@ STRICT_GEMINI_RESPONSE_SCHEMA: dict[str, object] = {
     ],
     "additionalProperties": False,
 }
+
+
+@lru_cache(maxsize=1)
+def _v12_response_json_schema() -> dict[str, object]:
+    return json.loads(DEFAULT_BIRD_IMAGE_REVIEW_SCHEMA_PATH.read_text(encoding="utf-8"))
 
 
 @dataclass(frozen=True)
@@ -540,7 +547,7 @@ class GeminiVisionQualifier:
             common_names=review_input.common_names,
             image_url=review_input.image_url or media_asset.source_url,
         )
-        payload = {
+        payload_with_schema = {
             "contents": [
                 {
                     "parts": [
@@ -556,16 +563,39 @@ class GeminiVisionQualifier:
             ],
             "generationConfig": {
                 "responseMimeType": "application/json",
+                "responseJsonSchema": _v12_response_json_schema(),
                 "mediaResolution": "MEDIA_RESOLUTION_HIGH",
             },
         }
-        response_payload = _send_gemini_request(
-            api_key=self.api_key,
-            model_name=self.model_name,
-            payload=payload,
-        )
+        response_payload: Mapping[str, object]
+        try:
+            response_payload = _send_gemini_request(
+                api_key=self.api_key,
+                model_name=self.model_name,
+                payload=payload_with_schema,
+            )
+        except (GeminiRequestError, TimeoutError, URLError, OSError):
+            # Keep JSON mode even when structured schema support is unstable.
+            payload_without_schema = {
+                "contents": payload_with_schema["contents"],
+                "generationConfig": {
+                    "responseMimeType": "application/json",
+                    "mediaResolution": "MEDIA_RESOLUTION_HIGH",
+                },
+            }
+            response_payload = _send_gemini_request(
+                api_key=self.api_key,
+                model_name=self.model_name,
+                payload=payload_without_schema,
+            )
         text = response_payload["candidates"][0]["content"]["parts"][0]["text"]
-        review_payload = parse_bird_image_pedagogical_review_v12(text)
+        review_payload = parse_bird_image_pedagogical_review_v12(
+            text,
+            gemini_model=self.model_name,
+            media_id=media_asset.media_id,
+            canonical_taxon_id=media_asset.canonical_taxon_id,
+            scientific_name=review_input.scientific_name,
+        )
         review_score = compute_bird_image_pedagogical_score_v12(review_payload)
 
         if review_payload.get("status") != "success":

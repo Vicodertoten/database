@@ -1,0 +1,176 @@
+{
+  "fixture_version": "bird_image_review_v12_live_failures.v1",
+  "generated_at": "2026-05-03T08:39:35.895881Z",
+  "items": [
+    {
+      "failure_reason": "schema_validation_failed",
+      "media_id": "media:inaturalist:100422597",
+      "normalized_review": {
+        "consistency_warning": null,
+        "diagnostics": {
+          "canonical_taxon_id": "taxon:birds:000029",
+          "gemini_model": "gemini-3.1-flash-lite-preview",
+          "media_id": "media:inaturalist:100422597",
+          "parsed_json_available": true,
+          "prompt_version": "bird_image_review_prompt.v1.2",
+          "raw_model_output_excerpt": "{ }",
+          "raw_model_output_sha256": "6a7d6c657821ea00f85331bfa314b256ea76a5f75163278240a065560afb5267",
+          "schema_error_count": 0,
+          "schema_errors": [],
+          "schema_failure_cause": "malformed_success_failed_shape",
+          "schema_version": "bird_image_pedagogical_review.v1.2",
+          "scientific_name": "Ardea cinerea"
+        },
+        "failure_reason": "schema_validation_failed",
+        "overall_confidence": 0,
+        "prompt_version": "bird_image_review_prompt.v1.2",
+        "schema_version": "bird_image_pedagogical_review.v1.2",
+        "status": "failed"
+      },
+      "schema_diagnostics": {
+        "canonical_taxon_id": "taxon:birds:000029",
+        "gemini_model": "gemini-3.1-flash-lite-preview",
+        "media_id": "media:inaturalist:100422597",
+        "parsed_json_available": true,
+        "prompt_version": "bird_image_review_prompt.v1.2",
+        "raw_model_output_excerpt": "{ }",
+        "raw_model_output_sha256": "6a7d6c657821ea00f85331bfa314b256ea76a5f75163278240a065560afb5267",
+        "schema_error_count": 0,
+        "schema_errors": [],
+        "schema_failure_cause": "malformed_success_failed_shape",
+        "schema_version": "bird_image_pedagogical_review.v1.2",
+        "scientific_name": "Ardea cinerea"
+      },
+      "source_media_id": "100422597",
+      "status": "bird_image_review_failed"
+    },
+    {
+      "failure_reason": "insufficient_information",
+      "media_id": "media:inaturalist:100909260",
+      "normalized_review": {
+        "consistency_warning": null,
+        "diagnostics": {
+          "canonical_taxon_id": "taxon:birds:000001",
+          "gemini_model": "gemini-3.1-flash-lite-preview",
+          "media_id": "media:inaturalist:100909260",
+          "parsed_json_available": true,
+          "prompt_version": "bird_image_review_prompt.v1.2",
+          "raw_model_output_excerpt": "{ \"schema_version\": \"bird_image_pedagogical_review.v1.2\", \"prompt_version\": \"bird_image_review_prompt.v1.2\", \"status\": \"success\", \"failure_reason\": null, \"consistency_warning\": null, \"image_assessment\": { \"technical_quality\": \"high\", \"subject_visibility\": \"high\", \"sharpness\": \"high\", \"lighting\": \"high\", \"background_clutter\": \"high\", \"occlusion\": \"none\", \"view_angle\": \"dorsal\", \"visible_parts\": [ \"feather\" ], \"confidence\": 0.95 }, \"pedagogical_assessment\": { \"pedagogical_quality\": \"medium\", \"difficulty_level\": \"hard\", \"media_role\": \"secondary_support\", \"diagnostic_feature_visibility\": \"high\", \"representativeness\": \"low\", \"learning_suitability\": \"medium\", \"confusion_relevance\": \"medium\", \"confidence\": 0.85 }, \"identification_features_visible_in_this_image\": [ { \"feature\": \"motif de bande alaire blanche\", \"body_part\": \"feather\", \"visibility\": \"high\", \"importance_for_identification\": \"high\", \"explanation\": \"Sur cette image, le motif distinctif de la plume avec sa bande blanche est un indice cl\u00e9 pour Columba palumbus.\" } ], \"post_answer_feedback\": { \"correct\": { \"short\": \"Exact, il s'agit d'une plume secondaire de pigeon ramier.\", \"long\": \"Sur cette image, la disposition sp\u00e9cifique des ",
+          "raw_model_output_sha256": "6cb53b836bdc411ff79e48e815abd473a8ed54950e641f9c537f99eed7f1a17c",
+          "schema_error_count": 0,
+          "schema_errors": [],
+          "schema_failure_cause": "missing_feedback",
+          "schema_version": "bird_image_pedagogical_review.v1.2",
+          "scientific_name": "Columba palumbus"
+        },
+        "failure_reason": "insufficient_information",
+        "overall_confidence": 0,
+        "prompt_version": "bird_image_review_prompt.v1.2",
+        "schema_version": "bird_image_pedagogical_review.v1.2",
+        "status": "failed"
+      },
+      "schema_diagnostics": {
+        "canonical_taxon_id": "taxon:birds:000001",
+        "gemini_model": "gemini-3.1-flash-lite-preview",
+        "media_id": "media:inaturalist:100909260",
+        "parsed_json_available": true,
+        "prompt_version": "bird_image_review_prompt.v1.2",
+        "raw_model_output_excerpt": "{ \"schema_version\": \"bird_image_pedagogical_review.v1.2\", \"prompt_version\": \"bird_image_review_prompt.v1.2\", \"status\": \"success\", \"failure_reason\": null, \"consistency_warning\": null, \"image_assessment\": { \"technical_quality\": \"high\", \"subject_visibility\": \"high\", \"sharpness\": \"high\", \"lighting\": \"high\", \"background_clutter\": \"high\", \"occlusion\": \"none\", \"view_angle\": \"dorsal\", \"visible_parts\": [ \"feather\" ], \"confidence\": 0.95 }, \"pedagogical_assessment\": { \"pedagogical_quality\": \"medium\", \"difficulty_level\": \"hard\", \"media_role\": \"secondary_support\", \"diagnostic_feature_visibility\": \"high\", \"representativeness\": \"low\", \"learning_suitability\": \"medium\", \"confusion_relevance\": \"medium\", \"confidence\": 0.85 }, \"identification_features_visible_in_this_image\": [ { \"feature\": \"motif de bande alaire blanche\", \"body_part\": \"feather\", \"visibility\": \"high\", \"importance_for_identification\": \"high\", \"explanation\": \"Sur cette image, le motif distinctif de la plume avec sa bande blanche est un indice cl\u00e9 pour Columba palumbus.\" } ], \"post_answer_feedback\": { \"correct\": { \"short\": \"Exact, il s'agit d'une plume secondaire de pigeon ramier.\", \"long\": \"Sur cette image, la disposition sp\u00e9cifique des ",
+        "raw_model_output_sha256": "6cb53b836bdc411ff79e48e815abd473a8ed54950e641f9c537f99eed7f1a17c",
+        "schema_error_count": 0,
+        "schema_errors": [],
+        "schema_failure_cause": "missing_feedback",
+        "schema_version": "bird_image_pedagogical_review.v1.2",
+        "scientific_name": "Columba palumbus"
+      },
+      "source_media_id": "100909260",
+      "status": "bird_image_review_failed"
+    },
+    {
+      "failure_reason": "insufficient_information",
+      "media_id": "media:inaturalist:101911464",
+      "normalized_review": {
+        "consistency_warning": null,
+        "diagnostics": {
+          "canonical_taxon_id": "taxon:birds:000005",
+          "gemini_model": "gemini-3.1-flash-lite-preview",
+          "media_id": "media:inaturalist:101911464",
+          "parsed_json_available": true,
+          "prompt_version": "bird_image_review_prompt.v1.2",
+          "raw_model_output_excerpt": "{ \"schema_version\": \"bird_image_pedagogical_review.v1.2\", \"prompt_version\": \"bird_image_review_prompt.v1.2\", \"status\": \"success\", \"failure_reason\": null, \"consistency_warning\": \"L'image est tr\u00e8s sombre et le sujet est fortement masqu\u00e9 par le feuillage, rendant l'identification quasi impossible pour un d\u00e9butant.\", \"image_assessment\": { \"technical_quality\": \"low\", \"subject_visibility\": \"low\", \"sharpness\": \"low\", \"lighting\": \"low\", \"background_clutter\": \"high\", \"occlusion\": \"major\", \"view_angle\": \"lateral\", \"visible_parts\": [ \"head\", \"body\" ], \"confidence\": 0.9 }, \"pedagogical_assessment\": { \"pedagogical_quality\": \"low\", \"difficulty_level\": \"hard\", \"media_role\": \"not_recommended\", \"diagnostic_feature_visibility\": \"low\", \"representativeness\": \"low\", \"learning_suitability\": \"low\", \"confusion_relevance\": \"high\", \"confidence\": 0.95 }, \"identification_features_visible_in_this_image\": [ { \"feature\": \"silhouette g\u00e9n\u00e9rale\", \"body_part\": \"corps\", \"visibility\": \"low\", \"importance_for_identification\": \"medium\", \"explanation\": \"Sur cette image, seule une faible silhouette est discernable au milieu du feuillage dense.\" } ], \"post_answer_feedback\": { \"correct\": { \"short\": \"Oui, c'est bien un Pinson",
+          "raw_model_output_sha256": "c9da40802e23281af8d371cf9bef51082ecfeba4091550bb55a1c721ee799d74",
+          "schema_error_count": 0,
+          "schema_errors": [],
+          "schema_failure_cause": "missing_feedback",
+          "schema_version": "bird_image_pedagogical_review.v1.2",
+          "scientific_name": "Fringilla coelebs"
+        },
+        "failure_reason": "insufficient_information",
+        "overall_confidence": 0,
+        "prompt_version": "bird_image_review_prompt.v1.2",
+        "schema_version": "bird_image_pedagogical_review.v1.2",
+        "status": "failed"
+      },
+      "schema_diagnostics": {
+        "canonical_taxon_id": "taxon:birds:000005",
+        "gemini_model": "gemini-3.1-flash-lite-preview",
+        "media_id": "media:inaturalist:101911464",
+        "parsed_json_available": true,
+        "prompt_version": "bird_image_review_prompt.v1.2",
+        "raw_model_output_excerpt": "{ \"schema_version\": \"bird_image_pedagogical_review.v1.2\", \"prompt_version\": \"bird_image_review_prompt.v1.2\", \"status\": \"success\", \"failure_reason\": null, \"consistency_warning\": \"L'image est tr\u00e8s sombre et le sujet est fortement masqu\u00e9 par le feuillage, rendant l'identification quasi impossible pour un d\u00e9butant.\", \"image_assessment\": { \"technical_quality\": \"low\", \"subject_visibility\": \"low\", \"sharpness\": \"low\", \"lighting\": \"low\", \"background_clutter\": \"high\", \"occlusion\": \"major\", \"view_angle\": \"lateral\", \"visible_parts\": [ \"head\", \"body\" ], \"confidence\": 0.9 }, \"pedagogical_assessment\": { \"pedagogical_quality\": \"low\", \"difficulty_level\": \"hard\", \"media_role\": \"not_recommended\", \"diagnostic_feature_visibility\": \"low\", \"representativeness\": \"low\", \"learning_suitability\": \"low\", \"confusion_relevance\": \"high\", \"confidence\": 0.95 }, \"identification_features_visible_in_this_image\": [ { \"feature\": \"silhouette g\u00e9n\u00e9rale\", \"body_part\": \"corps\", \"visibility\": \"low\", \"importance_for_identification\": \"medium\", \"explanation\": \"Sur cette image, seule une faible silhouette est discernable au milieu du feuillage dense.\" } ], \"post_answer_feedback\": { \"correct\": { \"short\": \"Oui, c'est bien un Pinson",
+        "raw_model_output_sha256": "c9da40802e23281af8d371cf9bef51082ecfeba4091550bb55a1c721ee799d74",
+        "schema_error_count": 0,
+        "schema_errors": [],
+        "schema_failure_cause": "missing_feedback",
+        "schema_version": "bird_image_pedagogical_review.v1.2",
+        "scientific_name": "Fringilla coelebs"
+      },
+      "source_media_id": "101911464",
+      "status": "bird_image_review_failed"
+    },
+    {
+      "failure_reason": "insufficient_information",
+      "media_id": "media:inaturalist:101912004",
+      "normalized_review": {
+        "consistency_warning": null,
+        "diagnostics": {
+          "canonical_taxon_id": "taxon:birds:000013",
+          "gemini_model": "gemini-3.1-flash-lite-preview",
+          "media_id": "media:inaturalist:101912004",
+          "parsed_json_available": true,
+          "prompt_version": "bird_image_review_prompt.v1.2",
+          "raw_model_output_excerpt": "{ \"schema_version\": \"bird_image_pedagogical_review.v1.2\", \"prompt_version\": \"bird_image_review_prompt.v1.2\", \"status\": \"success\", \"failure_reason\": null, \"consistency_warning\": null, \"image_assessment\": { \"technical_quality\": \"unusable\", \"subject_visibility\": \"low\", \"sharpness\": \"low\", \"lighting\": \"low\", \"background_clutter\": \"high\", \"occlusion\": \"major\", \"view_angle\": \"lateral\", \"visible_parts\": [ \"silhouette\" ], \"confidence\": 0.95 }, \"pedagogical_assessment\": { \"pedagogical_quality\": \"low\", \"difficulty_level\": \"hard\", \"media_role\": \"not_recommended\", \"diagnostic_feature_visibility\": \"none\", \"representativeness\": \"low\", \"learning_suitability\": \"low\", \"confusion_relevance\": \"medium\", \"confidence\": 0.95 }, \"identification_features_visible_in_this_image\": [ { \"feature\": \"silhouette g\u00e9n\u00e9rale\", \"body_part\": \"corps\", \"visibility\": \"low\", \"importance_for_identification\": \"medium\", \"explanation\": \"Sur cette image, seule la silhouette sombre du Troglodyte mignon est discernable au milieu du feuillage dense.\" } ], \"post_answer_feedback\": { \"correct\": { \"short\": \"Oui, il s'agit bien d'un Troglodyte mignon.\", \"long\": \"Sur cette image, bien que la luminosit\u00e9 soit tr\u00e8s faible, la petite silhoue",
+          "raw_model_output_sha256": "bcedd1bd567c59f08110ec4eb26940638f24092c7a370c0ceafa0c974b21e4f4",
+          "schema_error_count": 0,
+          "schema_errors": [],
+          "schema_failure_cause": "missing_feedback",
+          "schema_version": "bird_image_pedagogical_review.v1.2",
+          "scientific_name": "Troglodytes troglodytes"
+        },
+        "failure_reason": "insufficient_information",
+        "overall_confidence": 0,
+        "prompt_version": "bird_image_review_prompt.v1.2",
+        "schema_version": "bird_image_pedagogical_review.v1.2",
+        "status": "failed"
+      },
+      "schema_diagnostics": {
+        "canonical_taxon_id": "taxon:birds:000013",
+        "gemini_model": "gemini-3.1-flash-lite-preview",
+        "media_id": "media:inaturalist:101912004",
+        "parsed_json_available": true,
+        "prompt_version": "bird_image_review_prompt.v1.2",
+        "raw_model_output_excerpt": "{ \"schema_version\": \"bird_image_pedagogical_review.v1.2\", \"prompt_version\": \"bird_image_review_prompt.v1.2\", \"status\": \"success\", \"failure_reason\": null, \"consistency_warning\": null, \"image_assessment\": { \"technical_quality\": \"unusable\", \"subject_visibility\": \"low\", \"sharpness\": \"low\", \"lighting\": \"low\", \"background_clutter\": \"high\", \"occlusion\": \"major\", \"view_angle\": \"lateral\", \"visible_parts\": [ \"silhouette\" ], \"confidence\": 0.95 }, \"pedagogical_assessment\": { \"pedagogical_quality\": \"low\", \"difficulty_level\": \"hard\", \"media_role\": \"not_recommended\", \"diagnostic_feature_visibility\": \"none\", \"representativeness\": \"low\", \"learning_suitability\": \"low\", \"confusion_relevance\": \"medium\", \"confidence\": 0.95 }, \"identification_features_visible_in_this_image\": [ { \"feature\": \"silhouette g\u00e9n\u00e9rale\", \"body_part\": \"corps\", \"visibility\": \"low\", \"importance_for_identification\": \"medium\", \"explanation\": \"Sur cette image, seule la silhouette sombre du Troglodyte mignon est discernable au milieu du feuillage dense.\" } ], \"post_answer_feedback\": { \"correct\": { \"short\": \"Oui, il s'agit bien d'un Troglodyte mignon.\", \"long\": \"Sur cette image, bien que la luminosit\u00e9 soit tr\u00e8s faible, la petite silhoue",
+        "raw_model_output_sha256": "bcedd1bd567c59f08110ec4eb26940638f24092c7a370c0ceafa0c974b21e4f4",
+        "schema_error_count": 0,
+        "schema_errors": [],
+        "schema_failure_cause": "missing_feedback",
+        "schema_version": "bird_image_pedagogical_review.v1.2",
+        "scientific_name": "Troglodytes troglodytes"
+      },
+      "source_media_id": "101912004",
+      "status": "bird_image_review_failed"
+    }
+  ],
+  "sample_size": 5,
+  "snapshot_id": "palier1-be-birds-50taxa-run003-v11-baseline"
+}

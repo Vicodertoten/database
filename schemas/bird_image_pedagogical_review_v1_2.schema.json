@@ -24,6 +24,118 @@
         "schema_validation_failed"
       ]
     },
+    "schema_error_item": {
+      "type": "object",
+      "required": [
+        "path",
+        "message",
+        "cause"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1
+        },
+        "validator": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "expected": {},
+        "actual": {},
+        "cause": {
+          "type": "string",
+          "enum": [
+            "missing_required_field",
+            "enum_mismatch",
+            "wrong_type",
+            "additional_property",
+            "invalid_confidence_range",
+            "missing_feedback",
+            "missing_identification_features",
+            "wrong_version",
+            "malformed_success_failed_shape",
+            "unknown_schema_failure"
+          ]
+        }
+      }
+    },
+    "debug_diagnostics": {
+      "type": "object",
+      "required": [
+        "parsed_json_available",
+        "schema_error_count",
+        "schema_errors",
+        "schema_failure_cause",
+        "raw_model_output_sha256",
+        "raw_model_output_excerpt",
+        "prompt_version",
+        "schema_version"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "parsed_json_available": {
+          "type": "boolean"
+        },
+        "schema_error_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "schema_errors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/schema_error_item"
+          }
+        },
+        "schema_failure_cause": {
+          "type": "string",
+          "enum": [
+            "missing_required_field",
+            "enum_mismatch",
+            "wrong_type",
+            "additional_property",
+            "invalid_confidence_range",
+            "missing_feedback",
+            "missing_identification_features",
+            "wrong_version",
+            "malformed_success_failed_shape",
+            "unknown_schema_failure"
+          ]
+        },
+        "raw_model_output_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "raw_model_output_excerpt": {
+          "type": "string",
+          "maxLength": 1200
+        },
+        "prompt_version": {
+          "type": "string"
+        },
+        "schema_version": {
+          "type": "string"
+        },
+        "gemini_model": {
+          "type": "string"
+        },
+        "media_id": {
+          "type": "string"
+        },
+        "canonical_taxon_id": {
+          "type": "string"
+        },
+        "scientific_name": {
+          "type": "string"
+        }
+      }
+    },
     "success_payload": {
       "type": "object",
       "required": [
@@ -414,6 +526,9 @@
         "overall_confidence": {
           "type": "number",
           "const": 0
+        },
+        "diagnostics": {
+          "$ref": "#/$defs/debug_diagnostics"
         }
       }
     }

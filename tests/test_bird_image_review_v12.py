@@ -120,6 +120,11 @@ def test_missing_required_fields_fails_closed() -> None:
 
     assert parsed["status"] == "failed"
     assert parsed["failure_reason"] == "schema_validation_failed"
+    diagnostics = parsed.get("diagnostics") or {}
+    assert diagnostics.get("parsed_json_available") is True
+    assert diagnostics.get("schema_error_count", 0) >= 1
+    assert diagnostics.get("raw_model_output_sha256")
+    assert diagnostics.get("raw_model_output_excerpt")
 
 
 def test_wrong_enum_values_are_rejected_by_schema() -> None:
@@ -155,6 +160,47 @@ def test_failed_review_cannot_be_playable_or_mature() -> None:
     assert not is_playable_bird_image_review_v12(parsed)
     score = compute_bird_image_pedagogical_score_v12(parsed)
     assert score["overall"] == 0
+
+
+def test_safe_enum_and_view_alias_normalization_is_supported() -> None:
+    payload = _success_payload()
+    payload["image_assessment"]["technical_quality"] = "good"
+    payload["image_assessment"]["occlusion"] = "partially_occluded"
+    payload["image_assessment"]["view_angle"] = "side_view"
+    payload["pedagogical_assessment"]["diagnostic_feature_visibility"] = "not_visible"
+
+    parsed = parse_bird_image_pedagogical_review_v12(json.dumps(payload))
+
+    assert parsed["status"] == "success"
+    assert parsed["image_assessment"]["technical_quality"] == "high"
+    assert parsed["image_assessment"]["occlusion"] == "minor"
+    assert parsed["image_assessment"]["view_angle"] == "lateral"
+    assert (
+        parsed["pedagogical_assessment"]["diagnostic_feature_visibility"] == "none"
+    )
+
+
+def test_identification_features_are_not_invented_when_missing() -> None:
+    payload = _success_payload()
+    payload["identification_features_visible_in_this_image"] = []
+
+    parsed = parse_bird_image_pedagogical_review_v12(json.dumps(payload))
+
+    assert parsed["status"] == "failed"
+    assert parsed["failure_reason"] == "schema_validation_failed"
+    diagnostics = parsed.get("diagnostics") or {}
+    assert diagnostics.get("schema_failure_cause") == "missing_identification_features"
+
+
+def test_malformed_shape_failure_has_diagnostics() -> None:
+    parsed = parse_bird_image_pedagogical_review_v12(json.dumps({}))
+
+    assert parsed["status"] == "failed"
+    assert parsed["failure_reason"] == "schema_validation_failed"
+    diagnostics = parsed.get("diagnostics") or {}
+    assert diagnostics.get("parsed_json_available") is True
+    assert diagnostics.get("schema_failure_cause") == "malformed_success_failed_shape"
+    assert diagnostics.get("raw_model_output_sha256")
 
 
 def test_generic_feedback_is_rejected_for_playable_use() -> None:

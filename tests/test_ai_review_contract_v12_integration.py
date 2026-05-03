@@ -233,6 +233,10 @@ def test_v12_gemini_path_reaches_profile_with_post_answer_feedback(monkeypatch) 
 
     prompt_text = captured["payload"]["contents"][0]["parts"][0]["text"]
     assert "bird_image_pedagogical_review.v1.2" in prompt_text
+    generation_config = captured["payload"]["generationConfig"]
+    assert generation_config["responseMimeType"] == "application/json"
+    assert generation_config["responseJsonSchema"]["type"] == "object"
+    assert generation_config["responseJsonSchema"]["oneOf"]
 
     outcome = outcomes[media_key]
     assert outcome.status == "ok"

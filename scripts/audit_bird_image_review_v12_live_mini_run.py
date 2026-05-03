@@ -244,6 +244,87 @@ def compute_v12_failure_reason_distribution(
     return dict(sorted(counter.items()))
 
 
+def _extract_schema_diagnostics(v12_entry: dict[str, Any]) -> dict[str, Any]:
+    normalized_review = v12_entry.get("normalized_review")
+    if not isinstance(normalized_review, dict):
+        return {}
+    diagnostics = normalized_review.get("diagnostics")
+    if not isinstance(diagnostics, dict):
+        return {}
+    return diagnostics
+
+
+def compute_schema_failure_cause_distribution(
+    v12_outcome_summaries: list[dict[str, Any]],
+) -> dict[str, int]:
+    counter: Counter[str] = Counter()
+    for item in v12_outcome_summaries:
+        if item.get("status") != "bird_image_review_failed":
+            continue
+        diagnostics = _extract_schema_diagnostics(item)
+        cause = str(diagnostics.get("schema_failure_cause") or "unknown_schema_failure")
+        counter[cause] += 1
+    return dict(sorted(counter.items()))
+
+
+def compute_top_schema_error_paths(
+    v12_outcome_summaries: list[dict[str, Any]],
+    *,
+    limit: int = 10,
+) -> list[dict[str, Any]]:
+    counter: Counter[str] = Counter()
+    for item in v12_outcome_summaries:
+        diagnostics = _extract_schema_diagnostics(item)
+        errors = diagnostics.get("schema_errors")
+        if not isinstance(errors, list):
+            continue
+        for error in errors:
+            if not isinstance(error, dict):
+                continue
+            path = str(error.get("path") or "<unknown>")
+            counter[path] += 1
+    return [
+        {"path": path, "count": count}
+        for path, count in counter.most_common(limit)
+    ]
+
+
+def build_examples_by_failure_cause(
+    per_image_results: list[dict[str, Any]],
+    *,
+    max_per_cause: int = 2,
+) -> dict[str, list[dict[str, Any]]]:
+    examples: dict[str, list[dict[str, Any]]] = {}
+    for item in per_image_results:
+        v12 = item.get("v1_2")
+        if not isinstance(v12, dict) or v12.get("status") != "bird_image_review_failed":
+            continue
+        diagnostics = _extract_schema_diagnostics(v12)
+        cause = str(diagnostics.get("schema_failure_cause") or "unknown_schema_failure")
+        bucket = examples.setdefault(cause, [])
+        if len(bucket) >= max_per_cause:
+            continue
+        schema_errors = diagnostics.get("schema_errors")
+        first_error = schema_errors[0] if isinstance(schema_errors, list) and schema_errors else {}
+        bucket.append(
+            {
+                "source_media_id": item.get("source_media_id"),
+                "media_id": item.get("media_id"),
+                "failure_reason": v12.get("failure_reason"),
+                "schema_error_count": diagnostics.get("schema_error_count"),
+                "first_error_path": (
+                    first_error.get("path") if isinstance(first_error, dict) else None
+                ),
+                "first_error_message": first_error.get("message")
+                if isinstance(first_error, dict)
+                else None,
+                "raw_model_output_sha256": diagnostics.get("raw_model_output_sha256"),
+                "raw_model_output_excerpt": diagnostics.get("raw_model_output_excerpt"),
+            }
+        )
+    return dict(sorted(examples.items()))
+
+
 def _average(values: list[float]) -> float:
     if not values:
         return 0.0
@@ -321,6 +402,14 @@ def compute_comparison_summary(per_image_results: list[dict[str, Any]]) -> dict[
     v12_fail_closed_count = sum(
         1 for item in v12_entries if item.get("status") == "bird_image_review_failed"
     )
+    v12_status_distribution = dict(
+        sorted(Counter(str(item.get("status") or "unknown") for item in v12_entries).items())
+    )
+    v12_non_fail_closed_failure_count = sum(
+        1
+        for item in v12_entries
+        if item.get("status") not in {"ok", "bird_image_review_failed"}
+    )
 
     v11_scores = [
         float(item["profile_overall_score"])
@@ -360,13 +449,27 @@ def compute_comparison_summary(per_image_results: list[dict[str, Any]]) -> dict[
         for item in v12_entries
         if item.get("status") == "bird_image_review_failed"
     )
+    parsed_json_available_count = 0
+    schema_error_total = 0
+    for entry in v12_entries:
+        diagnostics = _extract_schema_diagnostics(entry)
+        if bool(diagnostics.get("parsed_json_available")):
+            parsed_json_available_count += 1
+        schema_error_total += int(diagnostics.get("schema_error_count") or 0)
 
     summary = {
         "sample_size": sample_size,
         "v1_1_success_count": v11_success_count,
         "v1_2_success_count": v12_success_count,
         "v1_2_fail_closed_count": v12_fail_closed_count,
+        "v1_2_status_distribution": v12_status_distribution,
+        "v1_2_non_fail_closed_failure_count": v12_non_fail_closed_failure_count,
         "v1_2_failure_reason_distribution": compute_v12_failure_reason_distribution(v12_entries),
+        "schema_failure_cause_distribution": compute_schema_failure_cause_distribution(v12_entries),
+        "top_schema_error_paths": compute_top_schema_error_paths(v12_entries),
+        "examples_by_failure_cause": build_examples_by_failure_cause(per_image_results),
+        "parsed_json_available_count": parsed_json_available_count,
+        "schema_error_total": schema_error_total,
         "v1_1_average_score_if_available": _average(v11_scores),
         "v1_2_average_score": _average(v12_scores),
         "v1_2_score_decomposition_average": _average_subscores(v12_score_payloads),
@@ -391,8 +494,14 @@ def decide_v12_mini_run_outcome(summary: dict[str, Any]) -> str:
 
     success_rate = float(summary.get("v1_2_success_count", 0)) / sample_size
     fail_closed_rate = float(summary.get("v1_2_fail_closed_count", 0)) / sample_size
+    non_fail_closed_failure_count = int(summary.get("v1_2_non_fail_closed_failure_count") or 0)
     completeness_rate = float(summary.get("feedback_completeness_rate", 0.0))
     generic_rate = float(summary.get("generic_feedback_rate", 1.0))
+
+    if non_fail_closed_failure_count > 0:
+        return DECISION_INVESTIGATE
+    if int(summary.get("v1_2_success_count", 0)) == 0:
+        return DECISION_INVESTIGATE
 
     if (
         success_rate >= 0.8
@@ -442,18 +551,65 @@ def validate_comparison_report_schema(report: dict[str, Any]) -> bool:
     return True
 
 
+def _load_previous_summary(output_path: Path) -> dict[str, Any] | None:
+    if not output_path.exists():
+        return None
+    try:
+        payload = json.loads(output_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    summary = payload.get("summary")
+    if not isinstance(summary, dict):
+        return None
+    return summary
+
+
+def _summary_delta_vs_previous(
+    *,
+    current_summary: dict[str, Any],
+    previous_summary: dict[str, Any] | None,
+) -> dict[str, Any] | None:
+    if previous_summary is None:
+        return None
+    delta_fields = (
+        "v1_2_success_count",
+        "v1_2_fail_closed_count",
+        "v1_2_non_fail_closed_failure_count",
+        "feedback_completeness_rate",
+        "generic_feedback_rate",
+        "v1_2_average_score",
+        "profiles_mature_playable_count",
+        "profiles_blocked_by_v1_2_policy_count",
+    )
+    delta: dict[str, Any] = {}
+    for key in delta_fields:
+        current_value = current_summary.get(key)
+        previous_value = previous_summary.get(key)
+        if isinstance(current_value, (int, float)) and isinstance(previous_value, (int, float)):
+            delta[key] = round(float(current_value) - float(previous_value), 4)
+    return delta
+
+
 def _skipped_report(
     *,
     run_id: str,
     gemini_api_key_env: str,
     output_path: Path,
+    previous_summary: dict[str, Any] | None,
 ) -> dict[str, Any]:
     summary = {
         "sample_size": 0,
         "v1_1_success_count": 0,
         "v1_2_success_count": 0,
         "v1_2_fail_closed_count": 0,
+        "v1_2_status_distribution": {},
+        "v1_2_non_fail_closed_failure_count": 0,
         "v1_2_failure_reason_distribution": {},
+        "schema_failure_cause_distribution": {},
+        "top_schema_error_paths": [],
+        "examples_by_failure_cause": {},
+        "parsed_json_available_count": 0,
+        "schema_error_total": 0,
         "v1_1_average_score_if_available": 0.0,
         "v1_2_average_score": 0.0,
         "v1_2_score_decomposition_average": {},
@@ -466,7 +622,7 @@ def _skipped_report(
         "runtime_contract_regression_detected": False,
         "skip_reason": "missing_live_credentials",
     }
-    return {
+    report = {
         "schema_version": LIVE_AUDIT_SCHEMA_VERSION,
         "run_id": run_id,
         "generated_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
@@ -483,6 +639,13 @@ def _skipped_report(
             "output_path": str(output_path),
         },
     }
+    if previous_summary is not None:
+        report["previous_summary"] = previous_summary
+        report["summary_delta_vs_previous"] = _summary_delta_vs_previous(
+            current_summary=summary,
+            previous_summary=previous_summary,
+        )
+    return report
 
 
 def _snapshot_scientific_name(
@@ -556,6 +719,11 @@ def _summarize_v12_entry(
         else {}
     )
     feedback_payload = _extract_post_answer_feedback(review_payload)
+    diagnostics_payload = (
+        dict(review_payload.get("diagnostics"))
+        if isinstance(review_payload.get("diagnostics"), dict)
+        else {}
+    )
     return {
         "status": outcome.status,
         "flags": list(outcome.flags),
@@ -564,6 +732,9 @@ def _summarize_v12_entry(
         "score_overall": score_payload.get("overall"),
         "score_payload": score_payload,
         "normalized_review": review_payload,
+        "schema_diagnostics": diagnostics_payload,
+        "raw_model_output_sha256": diagnostics_payload.get("raw_model_output_sha256"),
+        "raw_model_output_excerpt": diagnostics_payload.get("raw_model_output_excerpt"),
         "post_answer_feedback": feedback_payload,
         "profile_status": profile.profile_status.value if profile else None,
         "profile_overall_score": profile.overall_score if profile else None,
@@ -632,11 +803,13 @@ def run_live_mini_audit(
     output_path: Path,
 ) -> dict[str, Any]:
     run_id = f"audit:bird-image-review-v12-live-mini:{uuid4().hex[:8]}"
+    previous_summary = _load_previous_summary(output_path)
     if not gemini_api_key:
         return _skipped_report(
             run_id=run_id,
             gemini_api_key_env=gemini_api_key_env,
             output_path=output_path,
+            previous_summary=previous_summary,
         )
 
     if sample_size < MIN_SAMPLE_SIZE or sample_size > MAX_SAMPLE_SIZE:
@@ -788,6 +961,12 @@ def run_live_mini_audit(
             }
         },
     }
+    if previous_summary is not None:
+        report["previous_summary"] = previous_summary
+        report["summary_delta_vs_previous"] = _summary_delta_vs_previous(
+            current_summary=summary,
+            previous_summary=previous_summary,
+        )
     validate_comparison_report_schema(report)
     return report
 

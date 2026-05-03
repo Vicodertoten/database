@@ -1,7 +1,7 @@
 {
   "ai_review_contract_version": "v1_2",
   "comparison_baseline_contract_version": "v1_1",
-  "decision": "INVESTIGATE_LIVE_FAILURES",
+  "decision": "ADJUST_PROMPT_OR_VALIDATION",
   "decision_thresholds": {
     "ready_for_distractors_v1_2": {
       "feedback_completeness_rate_gte": 0.8,
@@ -12,7 +12,7 @@
     }
   },
   "execution_status": "completed",
-  "generated_at": "2026-05-03T07:53:53.626472Z",
+  "generated_at": "2026-05-03T08:39:35.895881Z",
   "per_image_results": [
     {
       "canonical_taxon_id": "taxon:birds:000029",
@@ -25,8 +25,8 @@
         "export_eligible": true,
         "flags": [],
         "mature_playable": false,
-        "note": "The image is heavily blurred by reflection and window glass; subject is recognizable as a heron, likely Ardea cinerea, but detail is insufficient for precise diagnostic identification.",
-        "profile_overall_score": 45,
+        "note": "The image is heavily blurred by the window glass and distance, making it unsuitable for confident species identification though likely a Grey Heron.",
+        "profile_overall_score": 42,
         "profile_status": "manual_review_required",
         "status": "ok"
       },
@@ -40,6 +40,20 @@
         "mature_playable": false,
         "normalized_review": {
           "consistency_warning": null,
+          "diagnostics": {
+            "canonical_taxon_id": "taxon:birds:000029",
+            "gemini_model": "gemini-3.1-flash-lite-preview",
+            "media_id": "media:inaturalist:100422597",
+            "parsed_json_available": true,
+            "prompt_version": "bird_image_review_prompt.v1.2",
+            "raw_model_output_excerpt": "{ }",
+            "raw_model_output_sha256": "6a7d6c657821ea00f85331bfa314b256ea76a5f75163278240a065560afb5267",
+            "schema_error_count": 0,
+            "schema_errors": [],
+            "schema_failure_cause": "malformed_success_failed_shape",
+            "schema_version": "bird_image_pedagogical_review.v1.2",
+            "scientific_name": "Ardea cinerea"
+          },
           "failure_reason": "schema_validation_failed",
           "overall_confidence": 0,
           "prompt_version": "bird_image_review_prompt.v1.2",
@@ -50,6 +64,22 @@
         "post_answer_feedback": {},
         "profile_overall_score": 0,
         "profile_status": "rejected_for_playable_use",
+        "raw_model_output_excerpt": "{ }",
+        "raw_model_output_sha256": "6a7d6c657821ea00f85331bfa314b256ea76a5f75163278240a065560afb5267",
+        "schema_diagnostics": {
+          "canonical_taxon_id": "taxon:birds:000029",
+          "gemini_model": "gemini-3.1-flash-lite-preview",
+          "media_id": "media:inaturalist:100422597",
+          "parsed_json_available": true,
+          "prompt_version": "bird_image_review_prompt.v1.2",
+          "raw_model_output_excerpt": "{ }",
+          "raw_model_output_sha256": "6a7d6c657821ea00f85331bfa314b256ea76a5f75163278240a065560afb5267",
+          "schema_error_count": 0,
+          "schema_errors": [],
+          "schema_failure_cause": "malformed_success_failed_shape",
+          "schema_version": "bird_image_pedagogical_review.v1.2",
+          "scientific_name": "Ardea cinerea"
+        },
         "score_overall": 0,
         "score_payload": {
           "overall": 0,
@@ -75,43 +105,122 @@
         "export_eligible": true,
         "flags": [],
         "mature_playable": true,
-        "note": "Eurasian Coot partially obscured by tree branches, but the diagnostic white frontal shield and beak are clearly visible.",
-        "profile_overall_score": 72,
+        "note": "Eurasian Coot partially obscured by foliage, but diagnostic white shield is clearly visible.",
+        "profile_overall_score": 77,
         "profile_status": "profiled",
         "status": "ok"
       },
       "v1_2": {
-        "export_eligible": false,
-        "failure_reason": "schema_validation_failed",
-        "flags": [
-          "bird_image_review_failed",
-          "bird_image_review_failed_schema_validation_failed"
-        ],
-        "mature_playable": false,
+        "export_eligible": true,
+        "failure_reason": null,
+        "flags": [],
+        "mature_playable": true,
         "normalized_review": {
           "consistency_warning": null,
-          "failure_reason": "schema_validation_failed",
-          "overall_confidence": 0,
+          "failure_reason": null,
+          "identification_features_visible_in_this_image": [
+            {
+              "body_part": "head",
+              "explanation": "Sur cette image, la plaque frontale blanche, caract\u00e9ristique de l'esp\u00e8ce, est tr\u00e8s bien mise en \u00e9vidence sur le front sombre.",
+              "feature": "white frontal shield",
+              "importance_for_identification": "high",
+              "visibility": "high"
+            },
+            {
+              "body_part": "body",
+              "explanation": "Sur cette image, le plumage sombre uniforme permet d'\u00e9carter rapidement d'autres esp\u00e8ces aquatiques.",
+              "feature": "plumage noir uniforme",
+              "importance_for_identification": "medium",
+              "visibility": "medium"
+            }
+          ],
+          "image_assessment": {
+            "background_clutter": "high",
+            "confidence": 0.85,
+            "lighting": "medium",
+            "occlusion": "major",
+            "sharpness": "medium",
+            "subject_visibility": "medium",
+            "technical_quality": "medium",
+            "view_angle": "lateral",
+            "visible_parts": [
+              "head",
+              "beak",
+              "body"
+            ]
+          },
+          "limitations": {
+            "requires_human_review": false,
+            "uncertainty_reason": null,
+            "why_not_ideal": [
+              "La pr\u00e9sence de nombreuses branches obstruant une partie de l'oiseau r\u00e9duit la visibilit\u00e9 globale."
+            ]
+          },
+          "overall_confidence": 0.85,
+          "pedagogical_assessment": {
+            "confidence": 0.8,
+            "confusion_relevance": "medium",
+            "diagnostic_feature_visibility": "high",
+            "difficulty_level": "easy",
+            "learning_suitability": "medium",
+            "media_role": "primary_identification",
+            "pedagogical_quality": "medium",
+            "representativeness": "high"
+          },
+          "post_answer_feedback": {
+            "confidence": 0.9,
+            "correct": {
+              "long": "Sur cette image, la plaque frontale blanche contrastant avec le plumage noir est l'indice cl\u00e9 pour identifier la Foulque macroule.",
+              "short": "Exact, c'est bien une Foulque macroule."
+            },
+            "identification_tips": [
+              "Sur cette image, concentrez-vous sur la plaque frontale blanche bien nette.",
+              "Ici, observez le contraste entre le bec blanc et le plumage noir uniforme.",
+              "Sur cette image, notez la forme de la t\u00eate typique de la Foulque macroule."
+            ],
+            "incorrect": {
+              "long": "Ici, examine attentivement la plaque frontale blanche sur le front de l'oiseau : c'est un crit\u00e8re diagnostique majeur sur cette image.",
+              "short": "Ce n'est pas la bonne esp\u00e8ce."
+            }
+          },
           "prompt_version": "bird_image_review_prompt.v1.2",
           "schema_version": "bird_image_pedagogical_review.v1.2",
-          "status": "failed"
+          "status": "success"
         },
-        "note": "bird image review v1.2 failed: schema_validation_failed",
-        "post_answer_feedback": {},
-        "profile_overall_score": 0,
-        "profile_status": "rejected_for_playable_use",
-        "score_overall": 0,
-        "score_payload": {
-          "overall": 0,
-          "subscores": {
-            "diagnostic_feature_visibility": 0,
-            "feedback_quality": 0,
-            "representativeness": 0,
-            "subject_visibility": 0,
-            "technical_quality": 0
+        "note": "Sur cette image, la plaque frontale blanche, caract\u00e9ristique de l'esp\u00e8ce, est tr\u00e8s bien mise en \u00e9vidence sur le front sombre. | La pr\u00e9sence de nombreuses branches obstruant une partie de l'oiseau r\u00e9duit la visibilit\u00e9 globale.",
+        "post_answer_feedback": {
+          "confidence": 0.9,
+          "correct": {
+            "long": "Sur cette image, la plaque frontale blanche contrastant avec le plumage noir est l'indice cl\u00e9 pour identifier la Foulque macroule.",
+            "short": "Exact, c'est bien une Foulque macroule."
+          },
+          "identification_tips": [
+            "Sur cette image, concentrez-vous sur la plaque frontale blanche bien nette.",
+            "Ici, observez le contraste entre le bec blanc et le plumage noir uniforme.",
+            "Sur cette image, notez la forme de la t\u00eate typique de la Foulque macroule."
+          ],
+          "incorrect": {
+            "long": "Ici, examine attentivement la plaque frontale blanche sur le front de l'oiseau : c'est un crit\u00e8re diagnostique majeur sur cette image.",
+            "short": "Ce n'est pas la bonne esp\u00e8ce."
           }
         },
-        "status": "bird_image_review_failed"
+        "profile_overall_score": 77,
+        "profile_status": "profiled",
+        "raw_model_output_excerpt": null,
+        "raw_model_output_sha256": null,
+        "schema_diagnostics": {},
+        "score_overall": 84,
+        "score_payload": {
+          "overall": 84,
+          "subscores": {
+            "diagnostic_feature_visibility": 25,
+            "feedback_quality": 20,
+            "representativeness": 15,
+            "subject_visibility": 12,
+            "technical_quality": 12
+          }
+        },
+        "status": "ok"
       }
     },
     {
@@ -123,33 +232,65 @@
       "source_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/100909260/original.jpeg",
       "v1_1": {
         "export_eligible": true,
-        "flags": [],
+        "flags": [
+          "incomplete_required_tags"
+        ],
         "mature_playable": false,
-        "note": "The image shows a single detached bird feather, not the bird itself. Identification of species from a lone feather is very difficult.",
-        "profile_overall_score": 55,
+        "note": "The image shows a single feather on the ground, not a bird itself, making it unsuitable for bird species identification.",
+        "profile_overall_score": 49,
         "profile_status": "manual_review_required",
         "status": "ok"
       },
       "v1_2": {
         "export_eligible": false,
-        "failure_reason": "schema_validation_failed",
+        "failure_reason": "insufficient_information",
         "flags": [
           "bird_image_review_failed",
-          "bird_image_review_failed_schema_validation_failed"
+          "bird_image_review_failed_insufficient_information"
         ],
         "mature_playable": false,
         "normalized_review": {
           "consistency_warning": null,
-          "failure_reason": "schema_validation_failed",
+          "diagnostics": {
+            "canonical_taxon_id": "taxon:birds:000001",
+            "gemini_model": "gemini-3.1-flash-lite-preview",
+            "media_id": "media:inaturalist:100909260",
+            "parsed_json_available": true,
+            "prompt_version": "bird_image_review_prompt.v1.2",
+            "raw_model_output_excerpt": "{ \"schema_version\": \"bird_image_pedagogical_review.v1.2\", \"prompt_version\": \"bird_image_review_prompt.v1.2\", \"status\": \"success\", \"failure_reason\": null, \"consistency_warning\": null, \"image_assessment\": { \"technical_quality\": \"high\", \"subject_visibility\": \"high\", \"sharpness\": \"high\", \"lighting\": \"high\", \"background_clutter\": \"high\", \"occlusion\": \"none\", \"view_angle\": \"dorsal\", \"visible_parts\": [ \"feather\" ], \"confidence\": 0.95 }, \"pedagogical_assessment\": { \"pedagogical_quality\": \"medium\", \"difficulty_level\": \"hard\", \"media_role\": \"secondary_support\", \"diagnostic_feature_visibility\": \"high\", \"representativeness\": \"low\", \"learning_suitability\": \"medium\", \"confusion_relevance\": \"medium\", \"confidence\": 0.85 }, \"identification_features_visible_in_this_image\": [ { \"feature\": \"motif de bande alaire blanche\", \"body_part\": \"feather\", \"visibility\": \"high\", \"importance_for_identification\": \"high\", \"explanation\": \"Sur cette image, le motif distinctif de la plume avec sa bande blanche est un indice cl\u00e9 pour Columba palumbus.\" } ], \"post_answer_feedback\": { \"correct\": { \"short\": \"Exact, il s'agit d'une plume secondaire de pigeon ramier.\", \"long\": \"Sur cette image, la disposition sp\u00e9cifique des ",
+            "raw_model_output_sha256": "6cb53b836bdc411ff79e48e815abd473a8ed54950e641f9c537f99eed7f1a17c",
+            "schema_error_count": 0,
+            "schema_errors": [],
+            "schema_failure_cause": "missing_feedback",
+            "schema_version": "bird_image_pedagogical_review.v1.2",
+            "scientific_name": "Columba palumbus"
+          },
+          "failure_reason": "insufficient_information",
           "overall_confidence": 0,
           "prompt_version": "bird_image_review_prompt.v1.2",
           "schema_version": "bird_image_pedagogical_review.v1.2",
           "status": "failed"
         },
-        "note": "bird image review v1.2 failed: schema_validation_failed",
+        "note": "bird image review v1.2 failed: insufficient_information",
         "post_answer_feedback": {},
         "profile_overall_score": 0,
         "profile_status": "rejected_for_playable_use",
+        "raw_model_output_excerpt": "{ \"schema_version\": \"bird_image_pedagogical_review.v1.2\", \"prompt_version\": \"bird_image_review_prompt.v1.2\", \"status\": \"success\", \"failure_reason\": null, \"consistency_warning\": null, \"image_assessment\": { \"technical_quality\": \"high\", \"subject_visibility\": \"high\", \"sharpness\": \"high\", \"lighting\": \"high\", \"background_clutter\": \"high\", \"occlusion\": \"none\", \"view_angle\": \"dorsal\", \"visible_parts\": [ \"feather\" ], \"confidence\": 0.95 }, \"pedagogical_assessment\": { \"pedagogical_quality\": \"medium\", \"difficulty_level\": \"hard\", \"media_role\": \"secondary_support\", \"diagnostic_feature_visibility\": \"high\", \"representativeness\": \"low\", \"learning_suitability\": \"medium\", \"confusion_relevance\": \"medium\", \"confidence\": 0.85 }, \"identification_features_visible_in_this_image\": [ { \"feature\": \"motif de bande alaire blanche\", \"body_part\": \"feather\", \"visibility\": \"high\", \"importance_for_identification\": \"high\", \"explanation\": \"Sur cette image, le motif distinctif de la plume avec sa bande blanche est un indice cl\u00e9 pour Columba palumbus.\" } ], \"post_answer_feedback\": { \"correct\": { \"short\": \"Exact, il s'agit d'une plume secondaire de pigeon ramier.\", \"long\": \"Sur cette image, la disposition sp\u00e9cifique des ",
+        "raw_model_output_sha256": "6cb53b836bdc411ff79e48e815abd473a8ed54950e641f9c537f99eed7f1a17c",
+        "schema_diagnostics": {
+          "canonical_taxon_id": "taxon:birds:000001",
+          "gemini_model": "gemini-3.1-flash-lite-preview",
+          "media_id": "media:inaturalist:100909260",
+          "parsed_json_available": true,
+          "prompt_version": "bird_image_review_prompt.v1.2",
+          "raw_model_output_excerpt": "{ \"schema_version\": \"bird_image_pedagogical_review.v1.2\", \"prompt_version\": \"bird_image_review_prompt.v1.2\", \"status\": \"success\", \"failure_reason\": null, \"consistency_warning\": null, \"image_assessment\": { \"technical_quality\": \"high\", \"subject_visibility\": \"high\", \"sharpness\": \"high\", \"lighting\": \"high\", \"background_clutter\": \"high\", \"occlusion\": \"none\", \"view_angle\": \"dorsal\", \"visible_parts\": [ \"feather\" ], \"confidence\": 0.95 }, \"pedagogical_assessment\": { \"pedagogical_quality\": \"medium\", \"difficulty_level\": \"hard\", \"media_role\": \"secondary_support\", \"diagnostic_feature_visibility\": \"high\", \"representativeness\": \"low\", \"learning_suitability\": \"medium\", \"confusion_relevance\": \"medium\", \"confidence\": 0.85 }, \"identification_features_visible_in_this_image\": [ { \"feature\": \"motif de bande alaire blanche\", \"body_part\": \"feather\", \"visibility\": \"high\", \"importance_for_identification\": \"high\", \"explanation\": \"Sur cette image, le motif distinctif de la plume avec sa bande blanche est un indice cl\u00e9 pour Columba palumbus.\" } ], \"post_answer_feedback\": { \"correct\": { \"short\": \"Exact, il s'agit d'une plume secondaire de pigeon ramier.\", \"long\": \"Sur cette image, la disposition sp\u00e9cifique des ",
+          "raw_model_output_sha256": "6cb53b836bdc411ff79e48e815abd473a8ed54950e641f9c537f99eed7f1a17c",
+          "schema_error_count": 0,
+          "schema_errors": [],
+          "schema_failure_cause": "missing_feedback",
+          "schema_version": "bird_image_pedagogical_review.v1.2",
+          "scientific_name": "Columba palumbus"
+        },
         "score_overall": 0,
         "score_payload": {
           "overall": 0,
@@ -182,24 +323,54 @@
       },
       "v1_2": {
         "export_eligible": false,
-        "failure_reason": "schema_validation_failed",
+        "failure_reason": "insufficient_information",
         "flags": [
           "bird_image_review_failed",
-          "bird_image_review_failed_schema_validation_failed"
+          "bird_image_review_failed_insufficient_information"
         ],
         "mature_playable": false,
         "normalized_review": {
           "consistency_warning": null,
-          "failure_reason": "schema_validation_failed",
+          "diagnostics": {
+            "canonical_taxon_id": "taxon:birds:000005",
+            "gemini_model": "gemini-3.1-flash-lite-preview",
+            "media_id": "media:inaturalist:101911464",
+            "parsed_json_available": true,
+            "prompt_version": "bird_image_review_prompt.v1.2",
+            "raw_model_output_excerpt": "{ \"schema_version\": \"bird_image_pedagogical_review.v1.2\", \"prompt_version\": \"bird_image_review_prompt.v1.2\", \"status\": \"success\", \"failure_reason\": null, \"consistency_warning\": \"L'image est tr\u00e8s sombre et le sujet est fortement masqu\u00e9 par le feuillage, rendant l'identification quasi impossible pour un d\u00e9butant.\", \"image_assessment\": { \"technical_quality\": \"low\", \"subject_visibility\": \"low\", \"sharpness\": \"low\", \"lighting\": \"low\", \"background_clutter\": \"high\", \"occlusion\": \"major\", \"view_angle\": \"lateral\", \"visible_parts\": [ \"head\", \"body\" ], \"confidence\": 0.9 }, \"pedagogical_assessment\": { \"pedagogical_quality\": \"low\", \"difficulty_level\": \"hard\", \"media_role\": \"not_recommended\", \"diagnostic_feature_visibility\": \"low\", \"representativeness\": \"low\", \"learning_suitability\": \"low\", \"confusion_relevance\": \"high\", \"confidence\": 0.95 }, \"identification_features_visible_in_this_image\": [ { \"feature\": \"silhouette g\u00e9n\u00e9rale\", \"body_part\": \"corps\", \"visibility\": \"low\", \"importance_for_identification\": \"medium\", \"explanation\": \"Sur cette image, seule une faible silhouette est discernable au milieu du feuillage dense.\" } ], \"post_answer_feedback\": { \"correct\": { \"short\": \"Oui, c'est bien un Pinson",
+            "raw_model_output_sha256": "c9da40802e23281af8d371cf9bef51082ecfeba4091550bb55a1c721ee799d74",
+            "schema_error_count": 0,
+            "schema_errors": [],
+            "schema_failure_cause": "missing_feedback",
+            "schema_version": "bird_image_pedagogical_review.v1.2",
+            "scientific_name": "Fringilla coelebs"
+          },
+          "failure_reason": "insufficient_information",
           "overall_confidence": 0,
           "prompt_version": "bird_image_review_prompt.v1.2",
           "schema_version": "bird_image_pedagogical_review.v1.2",
           "status": "failed"
         },
-        "note": "bird image review v1.2 failed: schema_validation_failed",
+        "note": "bird image review v1.2 failed: insufficient_information",
         "post_answer_feedback": {},
         "profile_overall_score": 0,
         "profile_status": "rejected_for_playable_use",
+        "raw_model_output_excerpt": "{ \"schema_version\": \"bird_image_pedagogical_review.v1.2\", \"prompt_version\": \"bird_image_review_prompt.v1.2\", \"status\": \"success\", \"failure_reason\": null, \"consistency_warning\": \"L'image est tr\u00e8s sombre et le sujet est fortement masqu\u00e9 par le feuillage, rendant l'identification quasi impossible pour un d\u00e9butant.\", \"image_assessment\": { \"technical_quality\": \"low\", \"subject_visibility\": \"low\", \"sharpness\": \"low\", \"lighting\": \"low\", \"background_clutter\": \"high\", \"occlusion\": \"major\", \"view_angle\": \"lateral\", \"visible_parts\": [ \"head\", \"body\" ], \"confidence\": 0.9 }, \"pedagogical_assessment\": { \"pedagogical_quality\": \"low\", \"difficulty_level\": \"hard\", \"media_role\": \"not_recommended\", \"diagnostic_feature_visibility\": \"low\", \"representativeness\": \"low\", \"learning_suitability\": \"low\", \"confusion_relevance\": \"high\", \"confidence\": 0.95 }, \"identification_features_visible_in_this_image\": [ { \"feature\": \"silhouette g\u00e9n\u00e9rale\", \"body_part\": \"corps\", \"visibility\": \"low\", \"importance_for_identification\": \"medium\", \"explanation\": \"Sur cette image, seule une faible silhouette est discernable au milieu du feuillage dense.\" } ], \"post_answer_feedback\": { \"correct\": { \"short\": \"Oui, c'est bien un Pinson",
+        "raw_model_output_sha256": "c9da40802e23281af8d371cf9bef51082ecfeba4091550bb55a1c721ee799d74",
+        "schema_diagnostics": {
+          "canonical_taxon_id": "taxon:birds:000005",
+          "gemini_model": "gemini-3.1-flash-lite-preview",
+          "media_id": "media:inaturalist:101911464",
+          "parsed_json_available": true,
+          "prompt_version": "bird_image_review_prompt.v1.2",
+          "raw_model_output_excerpt": "{ \"schema_version\": \"bird_image_pedagogical_review.v1.2\", \"prompt_version\": \"bird_image_review_prompt.v1.2\", \"status\": \"success\", \"failure_reason\": null, \"consistency_warning\": \"L'image est tr\u00e8s sombre et le sujet est fortement masqu\u00e9 par le feuillage, rendant l'identification quasi impossible pour un d\u00e9butant.\", \"image_assessment\": { \"technical_quality\": \"low\", \"subject_visibility\": \"low\", \"sharpness\": \"low\", \"lighting\": \"low\", \"background_clutter\": \"high\", \"occlusion\": \"major\", \"view_angle\": \"lateral\", \"visible_parts\": [ \"head\", \"body\" ], \"confidence\": 0.9 }, \"pedagogical_assessment\": { \"pedagogical_quality\": \"low\", \"difficulty_level\": \"hard\", \"media_role\": \"not_recommended\", \"diagnostic_feature_visibility\": \"low\", \"representativeness\": \"low\", \"learning_suitability\": \"low\", \"confusion_relevance\": \"high\", \"confidence\": 0.95 }, \"identification_features_visible_in_this_image\": [ { \"feature\": \"silhouette g\u00e9n\u00e9rale\", \"body_part\": \"corps\", \"visibility\": \"low\", \"importance_for_identification\": \"medium\", \"explanation\": \"Sur cette image, seule une faible silhouette est discernable au milieu du feuillage dense.\" } ], \"post_answer_feedback\": { \"correct\": { \"short\": \"Oui, c'est bien un Pinson",
+          "raw_model_output_sha256": "c9da40802e23281af8d371cf9bef51082ecfeba4091550bb55a1c721ee799d74",
+          "schema_error_count": 0,
+          "schema_errors": [],
+          "schema_failure_cause": "missing_feedback",
+          "schema_version": "bird_image_pedagogical_review.v1.2",
+          "scientific_name": "Fringilla coelebs"
+        },
         "score_overall": 0,
         "score_payload": {
           "overall": 0,
@@ -225,31 +396,61 @@
         "export_eligible": true,
         "flags": [],
         "mature_playable": false,
-        "note": "The subject is severely underexposed and distant, making identification impossible.",
-        "profile_overall_score": 45,
+        "note": "The subject is heavily obscured by foliage and is underexposed, making identification impossible.",
+        "profile_overall_score": 36,
         "profile_status": "manual_review_required",
         "status": "ok"
       },
       "v1_2": {
         "export_eligible": false,
-        "failure_reason": "schema_validation_failed",
+        "failure_reason": "insufficient_information",
         "flags": [
           "bird_image_review_failed",
-          "bird_image_review_failed_schema_validation_failed"
+          "bird_image_review_failed_insufficient_information"
         ],
         "mature_playable": false,
         "normalized_review": {
           "consistency_warning": null,
-          "failure_reason": "schema_validation_failed",
+          "diagnostics": {
+            "canonical_taxon_id": "taxon:birds:000013",
+            "gemini_model": "gemini-3.1-flash-lite-preview",
+            "media_id": "media:inaturalist:101912004",
+            "parsed_json_available": true,
+            "prompt_version": "bird_image_review_prompt.v1.2",
+            "raw_model_output_excerpt": "{ \"schema_version\": \"bird_image_pedagogical_review.v1.2\", \"prompt_version\": \"bird_image_review_prompt.v1.2\", \"status\": \"success\", \"failure_reason\": null, \"consistency_warning\": null, \"image_assessment\": { \"technical_quality\": \"unusable\", \"subject_visibility\": \"low\", \"sharpness\": \"low\", \"lighting\": \"low\", \"background_clutter\": \"high\", \"occlusion\": \"major\", \"view_angle\": \"lateral\", \"visible_parts\": [ \"silhouette\" ], \"confidence\": 0.95 }, \"pedagogical_assessment\": { \"pedagogical_quality\": \"low\", \"difficulty_level\": \"hard\", \"media_role\": \"not_recommended\", \"diagnostic_feature_visibility\": \"none\", \"representativeness\": \"low\", \"learning_suitability\": \"low\", \"confusion_relevance\": \"medium\", \"confidence\": 0.95 }, \"identification_features_visible_in_this_image\": [ { \"feature\": \"silhouette g\u00e9n\u00e9rale\", \"body_part\": \"corps\", \"visibility\": \"low\", \"importance_for_identification\": \"medium\", \"explanation\": \"Sur cette image, seule la silhouette sombre du Troglodyte mignon est discernable au milieu du feuillage dense.\" } ], \"post_answer_feedback\": { \"correct\": { \"short\": \"Oui, il s'agit bien d'un Troglodyte mignon.\", \"long\": \"Sur cette image, bien que la luminosit\u00e9 soit tr\u00e8s faible, la petite silhoue",
+            "raw_model_output_sha256": "bcedd1bd567c59f08110ec4eb26940638f24092c7a370c0ceafa0c974b21e4f4",
+            "schema_error_count": 0,
+            "schema_errors": [],
+            "schema_failure_cause": "missing_feedback",
+            "schema_version": "bird_image_pedagogical_review.v1.2",
+            "scientific_name": "Troglodytes troglodytes"
+          },
+          "failure_reason": "insufficient_information",
           "overall_confidence": 0,
           "prompt_version": "bird_image_review_prompt.v1.2",
           "schema_version": "bird_image_pedagogical_review.v1.2",
           "status": "failed"
         },
-        "note": "bird image review v1.2 failed: schema_validation_failed",
+        "note": "bird image review v1.2 failed: insufficient_information",
         "post_answer_feedback": {},
         "profile_overall_score": 0,
         "profile_status": "rejected_for_playable_use",
+        "raw_model_output_excerpt": "{ \"schema_version\": \"bird_image_pedagogical_review.v1.2\", \"prompt_version\": \"bird_image_review_prompt.v1.2\", \"status\": \"success\", \"failure_reason\": null, \"consistency_warning\": null, \"image_assessment\": { \"technical_quality\": \"unusable\", \"subject_visibility\": \"low\", \"sharpness\": \"low\", \"lighting\": \"low\", \"background_clutter\": \"high\", \"occlusion\": \"major\", \"view_angle\": \"lateral\", \"visible_parts\": [ \"silhouette\" ], \"confidence\": 0.95 }, \"pedagogical_assessment\": { \"pedagogical_quality\": \"low\", \"difficulty_level\": \"hard\", \"media_role\": \"not_recommended\", \"diagnostic_feature_visibility\": \"none\", \"representativeness\": \"low\", \"learning_suitability\": \"low\", \"confusion_relevance\": \"medium\", \"confidence\": 0.95 }, \"identification_features_visible_in_this_image\": [ { \"feature\": \"silhouette g\u00e9n\u00e9rale\", \"body_part\": \"corps\", \"visibility\": \"low\", \"importance_for_identification\": \"medium\", \"explanation\": \"Sur cette image, seule la silhouette sombre du Troglodyte mignon est discernable au milieu du feuillage dense.\" } ], \"post_answer_feedback\": { \"correct\": { \"short\": \"Oui, il s'agit bien d'un Troglodyte mignon.\", \"long\": \"Sur cette image, bien que la luminosit\u00e9 soit tr\u00e8s faible, la petite silhoue",
+        "raw_model_output_sha256": "bcedd1bd567c59f08110ec4eb26940638f24092c7a370c0ceafa0c974b21e4f4",
+        "schema_diagnostics": {
+          "canonical_taxon_id": "taxon:birds:000013",
+          "gemini_model": "gemini-3.1-flash-lite-preview",
+          "media_id": "media:inaturalist:101912004",
+          "parsed_json_available": true,
+          "prompt_version": "bird_image_review_prompt.v1.2",
+          "raw_model_output_excerpt": "{ \"schema_version\": \"bird_image_pedagogical_review.v1.2\", \"prompt_version\": \"bird_image_review_prompt.v1.2\", \"status\": \"success\", \"failure_reason\": null, \"consistency_warning\": null, \"image_assessment\": { \"technical_quality\": \"unusable\", \"subject_visibility\": \"low\", \"sharpness\": \"low\", \"lighting\": \"low\", \"background_clutter\": \"high\", \"occlusion\": \"major\", \"view_angle\": \"lateral\", \"visible_parts\": [ \"silhouette\" ], \"confidence\": 0.95 }, \"pedagogical_assessment\": { \"pedagogical_quality\": \"low\", \"difficulty_level\": \"hard\", \"media_role\": \"not_recommended\", \"diagnostic_feature_visibility\": \"none\", \"representativeness\": \"low\", \"learning_suitability\": \"low\", \"confusion_relevance\": \"medium\", \"confidence\": 0.95 }, \"identification_features_visible_in_this_image\": [ { \"feature\": \"silhouette g\u00e9n\u00e9rale\", \"body_part\": \"corps\", \"visibility\": \"low\", \"importance_for_identification\": \"medium\", \"explanation\": \"Sur cette image, seule la silhouette sombre du Troglodyte mignon est discernable au milieu du feuillage dense.\" } ], \"post_answer_feedback\": { \"correct\": { \"short\": \"Oui, il s'agit bien d'un Troglodyte mignon.\", \"long\": \"Sur cette image, bien que la luminosit\u00e9 soit tr\u00e8s faible, la petite silhoue",
+          "raw_model_output_sha256": "bcedd1bd567c59f08110ec4eb26940638f24092c7a370c0ceafa0c974b21e4f4",
+          "schema_error_count": 0,
+          "schema_errors": [],
+          "schema_failure_cause": "missing_feedback",
+          "schema_version": "bird_image_pedagogical_review.v1.2",
+          "scientific_name": "Troglodytes troglodytes"
+        },
         "score_overall": 0,
         "score_payload": {
           "overall": 0,
@@ -265,30 +466,185 @@
       }
     }
   ],
+  "previous_summary": {
+    "examples_by_failure_cause": {
+      "missing_feedback": [
+        {
+          "failure_reason": "insufficient_information",
+          "first_error_message": null,
+          "first_error_path": null,
+          "media_id": "media:inaturalist:100909260",
+          "raw_model_output_excerpt": "{ \"schema_version\": \"bird_image_pedagogical_review.v1.2\", \"prompt_version\": \"bird_image_review_prompt.v1.2\", \"status\": \"success\", \"failure_reason\": null, \"consistency_warning\": null, \"image_assessment\": { \"technical_quality\": \"high\", \"subject_visibility\": \"high\", \"sharpness\": \"high\", \"lighting\": \"high\", \"background_clutter\": \"high\", \"occlusion\": \"none\", \"view_angle\": \"unknown\", \"visible_parts\": [ \"feather\" ], \"confidence\": 0.95 }, \"pedagogical_assessment\": { \"pedagogical_quality\": \"medium\", \"difficulty_level\": \"hard\", \"media_role\": \"secondary_support\", \"diagnostic_feature_visibility\": \"high\", \"representativeness\": \"low\", \"learning_suitability\": \"medium\", \"confusion_relevance\": \"medium\", \"confidence\": 0.85 }, \"identification_features_visible_in_this_image\": [ { \"feature\": \"Feather pattern\", \"body_part\": \"feather\", \"visibility\": \"high\", \"importance_for_identification\": \"high\", \"explanation\": \"Sur cette image, les bandes caract\u00e9ristiques de la plume du Pigeon ramier sont clairement identifiables.\" } ], \"post_answer_feedback\": { \"correct\": { \"short\": \"Exact. Sur cette image, cette plume isol\u00e9e est typique du Pigeon ramier.\", \"long\": \"Sur cette image, on observe la structure et la color",
+          "raw_model_output_sha256": "a1fc6c64310d42ba7dca805e38b73b39eff343a615f998fd304f3374af67dd1a",
+          "schema_error_count": 0,
+          "source_media_id": "100909260"
+        }
+      ],
+      "unknown_schema_failure": [
+        {
+          "failure_reason": "schema_validation_failed",
+          "first_error_message": null,
+          "first_error_path": null,
+          "media_id": "media:inaturalist:100422597",
+          "raw_model_output_excerpt": null,
+          "raw_model_output_sha256": null,
+          "schema_error_count": null,
+          "source_media_id": "100422597"
+        },
+        {
+          "failure_reason": "schema_validation_failed",
+          "first_error_message": null,
+          "first_error_path": null,
+          "media_id": "media:inaturalist:100906257",
+          "raw_model_output_excerpt": null,
+          "raw_model_output_sha256": null,
+          "schema_error_count": null,
+          "source_media_id": "100906257"
+        }
+      ]
+    },
+    "feedback_completeness_rate": 1.0,
+    "feedback_image_specificity_rate": 1.0,
+    "generic_feedback_rate": 0.0,
+    "parsed_json_available_count": 1,
+    "profiles_blocked_by_v1_2_policy_count": 4,
+    "profiles_mature_playable_count": 0,
+    "qualitative_v1_2_feedback_examples": [
+      {
+        "correct_short": "Oui, il s'agit bien d'un Pinson des arbres.",
+        "incorrect_short": "Non, ce n'est pas le bon sp\u00e9cimen.",
+        "source_media_id": "101911464",
+        "tip_1": "Sur cette image, le sujet est trop obscur pour observer les d\u00e9tails du plumage.",
+        "tip_2": "Ici, la forte occlusion par les feuilles emp\u00eache toute analyse diagnostique fiable."
+      }
+    ],
+    "runtime_contract_regression_detected": false,
+    "sample_size": 5,
+    "schema_error_total": 0,
+    "schema_failure_cause_distribution": {
+      "missing_feedback": 1,
+      "unknown_schema_failure": 3
+    },
+    "top_schema_error_paths": [],
+    "v1_1_average_score_if_available": 49.6,
+    "v1_1_success_count": 5,
+    "v1_2_average_score": 34.0,
+    "v1_2_fail_closed_count": 4,
+    "v1_2_failure_reason_distribution": {
+      "insufficient_information": 1,
+      "schema_validation_failed": 3
+    },
+    "v1_2_non_fail_closed_failure_count": 0,
+    "v1_2_score_decomposition_average": {
+      "diagnostic_feature_visibility": 0.0,
+      "feedback_quality": 20.0,
+      "representativeness": 4.0,
+      "subject_visibility": 5.0,
+      "technical_quality": 5.0
+    },
+    "v1_2_status_distribution": {
+      "bird_image_review_failed": 4,
+      "ok": 1
+    },
+    "v1_2_success_count": 1
+  },
   "requested_sample_size": 5,
-  "run_id": "audit:bird-image-review-v12-live-mini:eefa441c",
+  "run_id": "audit:bird-image-review-v12-live-mini:44747cc1",
   "sample_size": 5,
   "schema_version": "bird_image_review_v12_live_mini_run_audit.v1",
   "snapshot_id": "palier1-be-birds-50taxa-run003-v11-baseline",
   "snapshot_manifest_path": null,
   "snapshot_root": "data/raw/inaturalist",
   "summary": {
-    "feedback_completeness_rate": 0.0,
-    "feedback_image_specificity_rate": 0.0,
+    "examples_by_failure_cause": {
+      "malformed_success_failed_shape": [
+        {
+          "failure_reason": "schema_validation_failed",
+          "first_error_message": null,
+          "first_error_path": null,
+          "media_id": "media:inaturalist:100422597",
+          "raw_model_output_excerpt": "{ }",
+          "raw_model_output_sha256": "6a7d6c657821ea00f85331bfa314b256ea76a5f75163278240a065560afb5267",
+          "schema_error_count": 0,
+          "source_media_id": "100422597"
+        }
+      ],
+      "missing_feedback": [
+        {
+          "failure_reason": "insufficient_information",
+          "first_error_message": null,
+          "first_error_path": null,
+          "media_id": "media:inaturalist:100909260",
+          "raw_model_output_excerpt": "{ \"schema_version\": \"bird_image_pedagogical_review.v1.2\", \"prompt_version\": \"bird_image_review_prompt.v1.2\", \"status\": \"success\", \"failure_reason\": null, \"consistency_warning\": null, \"image_assessment\": { \"technical_quality\": \"high\", \"subject_visibility\": \"high\", \"sharpness\": \"high\", \"lighting\": \"high\", \"background_clutter\": \"high\", \"occlusion\": \"none\", \"view_angle\": \"dorsal\", \"visible_parts\": [ \"feather\" ], \"confidence\": 0.95 }, \"pedagogical_assessment\": { \"pedagogical_quality\": \"medium\", \"difficulty_level\": \"hard\", \"media_role\": \"secondary_support\", \"diagnostic_feature_visibility\": \"high\", \"representativeness\": \"low\", \"learning_suitability\": \"medium\", \"confusion_relevance\": \"medium\", \"confidence\": 0.85 }, \"identification_features_visible_in_this_image\": [ { \"feature\": \"motif de bande alaire blanche\", \"body_part\": \"feather\", \"visibility\": \"high\", \"importance_for_identification\": \"high\", \"explanation\": \"Sur cette image, le motif distinctif de la plume avec sa bande blanche est un indice cl\u00e9 pour Columba palumbus.\" } ], \"post_answer_feedback\": { \"correct\": { \"short\": \"Exact, il s'agit d'une plume secondaire de pigeon ramier.\", \"long\": \"Sur cette image, la disposition sp\u00e9cifique des ",
+          "raw_model_output_sha256": "6cb53b836bdc411ff79e48e815abd473a8ed54950e641f9c537f99eed7f1a17c",
+          "schema_error_count": 0,
+          "source_media_id": "100909260"
+        },
+        {
+          "failure_reason": "insufficient_information",
+          "first_error_message": null,
+          "first_error_path": null,
+          "media_id": "media:inaturalist:101911464",
+          "raw_model_output_excerpt": "{ \"schema_version\": \"bird_image_pedagogical_review.v1.2\", \"prompt_version\": \"bird_image_review_prompt.v1.2\", \"status\": \"success\", \"failure_reason\": null, \"consistency_warning\": \"L'image est tr\u00e8s sombre et le sujet est fortement masqu\u00e9 par le feuillage, rendant l'identification quasi impossible pour un d\u00e9butant.\", \"image_assessment\": { \"technical_quality\": \"low\", \"subject_visibility\": \"low\", \"sharpness\": \"low\", \"lighting\": \"low\", \"background_clutter\": \"high\", \"occlusion\": \"major\", \"view_angle\": \"lateral\", \"visible_parts\": [ \"head\", \"body\" ], \"confidence\": 0.9 }, \"pedagogical_assessment\": { \"pedagogical_quality\": \"low\", \"difficulty_level\": \"hard\", \"media_role\": \"not_recommended\", \"diagnostic_feature_visibility\": \"low\", \"representativeness\": \"low\", \"learning_suitability\": \"low\", \"confusion_relevance\": \"high\", \"confidence\": 0.95 }, \"identification_features_visible_in_this_image\": [ { \"feature\": \"silhouette g\u00e9n\u00e9rale\", \"body_part\": \"corps\", \"visibility\": \"low\", \"importance_for_identification\": \"medium\", \"explanation\": \"Sur cette image, seule une faible silhouette est discernable au milieu du feuillage dense.\" } ], \"post_answer_feedback\": { \"correct\": { \"short\": \"Oui, c'est bien un Pinson",
+          "raw_model_output_sha256": "c9da40802e23281af8d371cf9bef51082ecfeba4091550bb55a1c721ee799d74",
+          "schema_error_count": 0,
+          "source_media_id": "101911464"
+        }
+      ]
+    },
+    "feedback_completeness_rate": 1.0,
+    "feedback_image_specificity_rate": 1.0,
     "generic_feedback_rate": 0.0,
-    "profiles_blocked_by_v1_2_policy_count": 5,
-    "profiles_mature_playable_count": 0,
-    "qualitative_v1_2_feedback_examples": [],
+    "parsed_json_available_count": 4,
+    "profiles_blocked_by_v1_2_policy_count": 4,
+    "profiles_mature_playable_count": 1,
+    "qualitative_v1_2_feedback_examples": [
+      {
+        "correct_short": "Exact, c'est bien une Foulque macroule.",
+        "incorrect_short": "Ce n'est pas la bonne esp\u00e8ce.",
+        "source_media_id": "100906257",
+        "tip_1": "Sur cette image, concentrez-vous sur la plaque frontale blanche bien nette.",
+        "tip_2": "Ici, observez le contraste entre le bec blanc et le plumage noir uniforme."
+      }
+    ],
     "runtime_contract_regression_detected": false,
     "sample_size": 5,
-    "v1_1_average_score_if_available": 51.2,
-    "v1_1_success_count": 5,
-    "v1_2_average_score": 0.0,
-    "v1_2_fail_closed_count": 5,
-    "v1_2_failure_reason_distribution": {
-      "schema_validation_failed": 5
+    "schema_error_total": 0,
+    "schema_failure_cause_distribution": {
+      "malformed_success_failed_shape": 1,
+      "missing_feedback": 3
     },
-    "v1_2_score_decomposition_average": {},
-    "v1_2_success_count": 0
+    "top_schema_error_paths": [],
+    "v1_1_average_score_if_available": 48.6,
+    "v1_1_success_count": 5,
+    "v1_2_average_score": 84.0,
+    "v1_2_fail_closed_count": 4,
+    "v1_2_failure_reason_distribution": {
+      "insufficient_information": 3,
+      "schema_validation_failed": 1
+    },
+    "v1_2_non_fail_closed_failure_count": 0,
+    "v1_2_score_decomposition_average": {
+      "diagnostic_feature_visibility": 25.0,
+      "feedback_quality": 20.0,
+      "representativeness": 15.0,
+      "subject_visibility": 12.0,
+      "technical_quality": 12.0
+    },
+    "v1_2_status_distribution": {
+      "bird_image_review_failed": 4,
+      "ok": 1
+    },
+    "v1_2_success_count": 1
+  },
+  "summary_delta_vs_previous": {
+    "feedback_completeness_rate": 0.0,
+    "generic_feedback_rate": 0.0,
+    "profiles_blocked_by_v1_2_policy_count": 0.0,
+    "profiles_mature_playable_count": 1.0,
+    "v1_2_average_score": 50.0,
+    "v1_2_fail_closed_count": 0.0,
+    "v1_2_non_fail_closed_failure_count": 0.0,
+    "v1_2_success_count": 0.0
   }
 }

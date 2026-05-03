@@ -223,3 +223,15 @@ Latest local fixture evidence file:
 Phase D (controlled live Gemini mini-run with `v1_1` vs `v1_2` comparison) is documented in:
 
 - `docs/audits/palier-1-v12-live-mini-run-audit.md`
+
+## 16. Phase D2 hardening notes
+
+Phase D2 added prompt/schema alignment hardening without relaxing fail-closed behavior:
+
+- actionable diagnostics in failed v1.2 reviews (`diagnostics` payload)
+- deterministic schema failure cause classification
+- safe normalization only for semantically equivalent variants
+- strict guardrail retained: no invented feedback or identification features
+- v1.2 Gemini path now tries structured JSON schema mode first and falls back to JSON-only mode when structured mode is unstable
+
+These changes are additive and do not alter runtime contracts.
