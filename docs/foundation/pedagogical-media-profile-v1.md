@@ -1,7 +1,7 @@
 ---
 owner: database
-status: draft_for_validation
-last_reviewed: 2026-05-03
+status: stable
+last_reviewed: 2026-05-04
 source_of_truth: docs/foundation/pedagogical-media-profile-v1.md
 scope: foundation
 ---
@@ -23,29 +23,30 @@ The central doctrine is:
 ```txt
 database qualifies now
 downstream systems select later
+```
 
 The contract should help answer:
 
-What kind of media/evidence is this?
-Which organism group is concerned?
-What is visible?
-What is not visible?
-How technically usable is the media?
-Which biological traits are visible, if any?
-Which visual field marks are visible?
-How strong is the visual evidence for the provided taxon?
-What are the limitations of this media?
-What is its pedagogical value?
-Which future learning uses could it support?
+- What kind of media/evidence is this?
+- Which organism group is concerned?
+- What is visible?
+- What is not visible?
+- How technically usable is the media?
+- Which biological traits are visible, if any?
+- Which visual field marks are visible?
+- How strong is the visual evidence for the provided taxon?
+- What are the limitations of this media?
+- What is its pedagogical value?
+- Which future learning uses could it support?
 
 The contract should not answer:
 
-Should this media item be in Palier-1?
-Should this media item be in a beginner quiz?
-Should this media item be exported to runtime?
-Should this media item generate feedback now?
-Should this media item be selected for a specific pack?
-Is this media item “good” or “bad” in general?
+- Should this media item be in Palier-1?
+- Should this media item be in a beginner quiz?
+- Should this media item be exported to runtime?
+- Should this media item generate feedback now?
+- Should this media item be selected for a specific pack?
+- Is this media item “good” or “bad” in general?
 
 A difficult media item is not necessarily bad.
 
@@ -55,16 +56,16 @@ A low basic_identification score does not mean the profile failed.
 
 A valid profile can describe a media item as weak for one future use and strong for another.
 
-2. Strategic shift
+## 2. Strategic shift
 
 Earlier image-review work, especially bird_image_review.v1.2, focused on bird images, post-answer feedback and playable-readiness signals.
 
 That direction was useful experimentally, but it mixed several concerns:
 
-image review;
-pedagogical quality;
-playability;
-post-answer feedback;
+- image review
+- pedagogical quality
+- playability
+- post-answer feedback
 final usage readiness.
 
 pedagogical_media_profile.v1 deliberately separates those concerns.
@@ -85,13 +86,13 @@ The database must preserve nuance.
 
 A media item may be:
 
-poor for direct species identification;
-good for field observation;
-useful for indirect evidence learning;
-useful for morphology;
-weak as a species-card illustration;
+- poor for direct species identification
+- good for field observation
+- useful for indirect evidence learning
+- useful for morphology
+- weak as a species-card illustration
 valid as a profile even if not selected for any current pack.
-3. Relationship with biodiversity metadata
+## 3. Relationship with biodiversity metadata
 
 pedagogical_media_profile.v1 does not replace taxonomic, occurrence, observation or media-source metadata.
 
@@ -105,9 +106,9 @@ taxon / observation / media source
 
 This means:
 
-canonical taxonomy remains outside this contract;
-the source observation remains outside this contract;
-source media IDs remain outside this contract;
+- canonical taxonomy remains outside this contract
+- the source observation remains outside this contract
+- source media IDs remain outside this contract
 this contract qualifies what is visible and pedagogically useful in the media.
 
 The AI must not override or rename the provided taxon.
@@ -129,7 +130,7 @@ The image itself provides limited visual evidence for the provided taxon.
 It does not mean:
 
 The provided taxon is wrong.
-4. Contract identity and versioning
+## 4. Contract identity and versioning
 
 Canonical contract name:
 
@@ -156,8 +157,8 @@ It must not modify runtime contracts.
 It must not modify selectedOptionId.
 It must not modify existing playable corpus contracts.
 It must not remove legacy compatibility fields.
-5. Core principles
-5.1 The profile is not a selector
+## 5. Core principles
+### 5.1 The profile is not a selector
 
 The profile must not encode final product decisions.
 
@@ -173,13 +174,13 @@ Future systems may derive those decisions from scores and signals.
 
 The profile itself stores:
 
-structured observations;
-quality signals;
-identification signals;
-pedagogical signals;
-deterministic scores;
+- structured observations
+- quality signals
+- identification signals
+- pedagogical signals
+- deterministic scores
 limitations.
-5.2 Review validity is separate from media usefulness
+### 5.2 Review validity is separate from media usefulness
 
 review_status describes whether the profile output is structurally valid.
 
@@ -195,33 +196,33 @@ A media item can be valid with:
     "indirect_evidence_learning": 80
   }
 }
-5.3 Weak usefulness is not failure
+### 5.3 Weak usefulness is not failure
 
 failed must never mean:
 
-difficult image;
-partial organism;
-feather;
-nest;
-egg;
-track;
-habitat;
-weak basic identification potential;
-no feedback;
-low visual evidence strength;
+- difficult image
+- partial organism
+- feather
+- nest
+- egg
+- track
+- habitat
+- weak basic identification potential
+- no feedback
+- low visual evidence strength
 low global score.
 
 failed is reserved for invalid or impossible reviews.
 
-5.4 Feedback is out of scope for v1
+### 5.4 Feedback is out of scope for v1
 
 pedagogical_media_profile.v1 does not generate feedback.
 
 It does not include:
 
-post_answer_feedback;
-feedback_profile;
-feedback_possible;
+- post_answer_feedback
+- feedback_profile
+- feedback_possible
 identification_tips.
 
 A future contract may be introduced later:
@@ -230,7 +231,7 @@ pedagogical_feedback_profile.v1
 
 That future contract should use the structured media profile as input.
 
-5.5 AI provides signals; system computes scores
+### 5.5 AI provides signals; system computes scores
 
 The AI may produce normalized qualitative signals such as:
 
@@ -254,7 +255,7 @@ The system computes final numeric scores:
 
 The model must not be treated as the final scoring authority.
 
-6. Top-level structure
+## 6. Top-level structure
 
 Canonical conceptual shape:
 
@@ -291,7 +292,7 @@ pedagogical_profile
 group_specific_profile
 scores
 limitations
-7. review_status
+## 7. review_status
 Purpose
 
 Indicates whether the review/profile output itself is valid.
@@ -307,11 +308,11 @@ Use valid when the media has been structurally qualified.
 
 A valid profile may still describe the media as:
 
-difficult;
-weak for basic identification;
-indirect evidence;
-visually ambiguous;
-poor for some uses;
+- difficult
+- weak for basic identification
+- indirect evidence
+- visually ambiguous
+- poor for some uses
 strong for other uses.
 failed
 
@@ -319,33 +320,33 @@ Use failed only for cases where a structured profile cannot be trusted or produc
 
 Examples:
 
-invalid JSON;
-schema validation failure;
-empty model output;
-model output impossible to normalize;
-media inaccessible;
-unsafe media;
-media impossible to inspect;
+- invalid JSON
+- schema validation failure
+- empty model output
+- model output impossible to normalize
+- media inaccessible
+- unsafe media
+- media impossible to inspect
 technical failure.
 Non-failure examples
 
 The following are not failures by themselves:
 
-feather;
-egg;
-nest;
-track;
-scat;
-burrow;
-habitat;
-dead organism;
-multiple organisms;
-distant organism;
-partial organism;
-low basic_identification;
-low visual_evidence_strength;
+- feather
+- egg
+- nest
+- track
+- scat
+- burrow
+- habitat
+- dead organism
+- multiple organisms
+- distant organism
+- partial organism
+- low basic_identification
+- low visual_evidence_strength
 low global_quality_score.
-8. organism_group
+## 8. organism_group
 Purpose
 
 Describes the broad biological group associated with the media.
@@ -375,17 +376,17 @@ Future work
 
 Future versions may define additional group-specific profiles for:
 
-plants;
-fungi;
-mammals;
-insects;
-fish;
-lichens;
+- plants
+- fungi
+- mammals
+- insects
+- fish
+- lichens
 other groups.
 
 The exact future granularity is not fixed.
 
-9. evidence_type
+## 9. evidence_type
 Purpose
 
 Describes what kind of biological or ecological evidence the media shows.
@@ -456,7 +457,7 @@ A non-whole-organism media item is not invalid.
 
 It should receive scores that reflect its actual learning potential.
 
-10. technical_profile
+## 10. technical_profile
 Purpose
 
 Describes the technical quality of the media.
@@ -520,7 +521,7 @@ Examples:
 distance_to_subject may be unknown for habitat images.
 background_clutter may be unknown for non-photographic or atypical media.
 technical_quality = unusable should not automatically mean review_status = failed if the media can still be profiled structurally, but it should strongly reduce scores.
-11. observation_profile
+## 11. observation_profile
 Purpose
 
 Describes what is visible in the media.
@@ -605,9 +606,9 @@ For birds, it may overlap with group_specific_profile.bird.bird_visible_parts.
 
 This temporary redundancy is accepted in v1 because:
 
-core visible_parts supports cross-group inspection;
+- core visible_parts supports cross-group inspection
 bird-specific parts support better bird-focused normalization.
-12. biological_profile_visible
+## 12. biological_profile_visible
 Purpose
 
 Describes biological attributes visible in the media, when they can be inferred visually.
@@ -712,7 +713,7 @@ It should only be asserted when visible evidence supports it or when media metad
 
 For v1 AI-only profiling, prefer unknown unless visual evidence is clear.
 
-13. identification_profile
+## 13. identification_profile
 Purpose
 
 Describes how strongly the visible media supports visual identification of the provided taxon.
@@ -847,7 +848,7 @@ Example:
   "tail not visible",
   "lighting reduces color reliability"
 ]
-14. pedagogical_profile
+## 14. pedagogical_profile
 Purpose
 
 Describes the media’s learning value and difficulty without selecting a final use.
@@ -922,7 +923,7 @@ requires_prior_knowledge
 
 How much prior knowledge is needed to use the media effectively.
 
-15. group_specific_profile
+## 15. group_specific_profile
 Purpose
 
 Stores organism-group-specific observations.
@@ -1017,7 +1018,7 @@ observation_profile.context_visible
 
 Do not duplicate habitat in the bird-specific profile for v1.
 
-16. scores
+## 16. scores
 Purpose
 
 Provide deterministic, system-computed numeric scores.
@@ -1045,9 +1046,9 @@ global_quality_score
 
 A general-purpose quality score used for:
 
-simple sorting;
-audit;
-pack generation without advanced filtering;
+- simple sorting
+- audit
+- pack generation without advanced filtering
 quick comparison between media items.
 
 It is not a final usage decision.
@@ -1100,7 +1101,7 @@ and still be valid.
 
 A feather may have a correct or even good global_quality_score if technically clear and pedagogically useful, even if it is poor for direct identification.
 
-17. limitations
+## 17. limitations
 Purpose
 
 List concise limitations of the media.
@@ -1121,7 +1122,7 @@ Limitations explain profile signals and scores.
 
 They do not automatically reject the media.
 
-18. Diagnostics
+## 18. Diagnostics
 
 Diagnostics are only required for failed reviews.
 
@@ -1150,7 +1151,7 @@ unknown_failure
 
 Diagnostics should not be required for valid profiles.
 
-19. Language policy
+## 19. Language policy
 
 All short free-text fields should use English in v1.
 
@@ -1164,23 +1165,23 @@ not:
 
 Rationale:
 
-easier normalization;
-easier testing;
-simpler multilingual support later;
+- easier normalization
+- easier testing
+- simpler multilingual support later
 consistency with field-mark and biological terminology.
 
 Future user-facing translations belong to UI or localization layers, not this profile contract.
 
-20. Feedback policy
+## 20. Feedback policy
 
 Feedback is not part of pedagogical_media_profile.v1.
 
 The contract must not include:
 
-post_answer_feedback;
-feedback_profile;
-feedback_possible;
-identification_tips;
+- post_answer_feedback
+- feedback_profile
+- feedback_possible
+- identification_tips
 pre-answer hints.
 
 Future feedback can be built later from this structured profile.
@@ -1188,69 +1189,69 @@ Future feedback can be built later from this structured profile.
 Potential future contract:
 
 pedagogical_feedback_profile.v1
-21. AI role
+## 21. AI role
 
 The AI should act as a structured media annotator.
 
 It should produce:
 
-qualitative signals;
-visible evidence descriptions;
-field marks;
-limitations;
-confidence values;
+- qualitative signals
+- visible evidence descriptions
+- field marks
+- limitations
+- confidence values
 conservative biological attributes.
 
 It should not produce:
 
-final scores;
-quiz selection decisions;
-pack selection decisions;
-runtime decisions;
-feedback;
+- final scores
+- quiz selection decisions
+- pack selection decisions
+- runtime decisions
+- feedback
 taxonomic corrections.
 AI rules
 
 The AI must:
 
-return strict JSON;
-follow the schema;
-use controlled enums;
-prefer unknown over weak inference;
-not invent invisible traits;
-not rename the provided taxon;
+- return strict JSON
+- follow the schema
+- use controlled enums
+- prefer unknown over weak inference
+- not invent invisible traits
+- not rename the provided taxon
 not challenge canonical taxonomy.
-22. Structured output and model strategy
+## 22. Structured output and model strategy
 
 pedagogical_media_profile.v1 should remain simple enough for structured-output generation.
 
 Design constraints:
 
-avoid excessive nesting;
-avoid complex polymorphism;
-avoid heavy oneOf or conditional schema logic in v1;
-use clear enums;
-limit arrays;
-keep free text short;
+- avoid excessive nesting
+- avoid complex polymorphism
+- avoid heavy oneOf or conditional schema logic in v1
+- use clear enums
+- limit arrays
+- keep free text short
 validate outputs in application code.
 
 The model choice is not fixed in this foundation.
 
 A future benchmark should compare candidate models on:
 
-schema pass rate;
-enum stability;
-field-mark relevance;
-prudence on biological attributes;
-latency;
-cost;
-consistency across difficult media;
+- schema pass rate
+- enum stability
+- field-mark relevance
+- prudence on biological attributes
+- latency
+- cost
+- consistency across difficult media
 usefulness of generated limitations.
 
 Testing must not depend on live model access.
 
-23. Examples
-23.1 Clear bird image
+## 23. Examples
+### 23.1 Clear bird image
 {
   "schema_version": "pedagogical_media_profile.v1",
   "review_status": "valid",
@@ -1346,7 +1347,7 @@ Testing must not depend on live model access.
   },
   "limitations": []
 }
-23.2 Feather media
+### 23.2 Feather media
 {
   "schema_version": "pedagogical_media_profile.v1",
   "review_status": "valid",
@@ -1447,16 +1448,16 @@ Testing must not depend on live model access.
     "species-level identification from the media alone is limited"
   ]
 }
-24. Compatibility with existing layers
+## 24. Compatibility with existing layers
 
 This contract is additive.
 
 It does not replace:
 
-AIQualification;
-PedagogicalImageProfile;
-bird_image_review.v1.2;
-playable corpus contracts;
+- AIQualification
+- PedagogicalImageProfile
+- bird_image_review.v1.2
+- playable corpus contracts
 runtime consumption contracts.
 
 It introduces a broader media qualification layer.
@@ -1469,7 +1470,7 @@ AIQualification / source metadata
 
 Existing runtime surfaces remain unchanged.
 
-25. Implementation roadmap
+## 25. Implementation roadmap
 Phase 0 — Foundation documentation
 
 Create this document and validate the contract doctrine.
@@ -1486,15 +1487,15 @@ tests/test_pedagogical_media_profile_v1.py
 
 Include:
 
-strict JSON schema;
-valid payload fixture;
-failed payload fixture;
-parser;
-normalizer;
-validator;
-enum validation;
-confidence validation;
-array length validation;
+- strict JSON schema
+- valid payload fixture
+- failed payload fixture
+- parser
+- normalizer
+- validator
+- enum validation
+- confidence validation
+- array length validation
 diagnostics for failed payloads.
 Phase 2 — Deterministic scoring
 
@@ -1504,7 +1505,7 @@ The AI provides qualitative signals.
 
 The system computes:
 
-global_quality_score;
+- global_quality_score
 usage_scores.
 Phase 3 — Prompt and fixture-based dry run
 
@@ -1524,16 +1525,16 @@ Phase 5 — Controlled live mini-run
 
 Run on a small sample and audit:
 
-valid profile count;
-failed profile count;
-evidence type distribution;
-organism group distribution;
-global score distribution;
-usage score averages;
-field mark quality;
-biological profile prudence;
-schema failures;
-model latency;
+- valid profile count
+- failed profile count
+- evidence type distribution
+- organism group distribution
+- global score distribution
+- usage score averages
+- field mark quality
+- biological profile prudence
+- schema failures
+- model latency
 model cost.
 Phase 6 — Model benchmark
 
@@ -1541,7 +1542,7 @@ Compare candidate model/configurations.
 
 Do not choose the long-term model before benchmark evidence exists.
 
-26. Acceptance criteria for the foundation
+## 26. Acceptance criteria for the foundation
 
 The foundation is valid when:
 
@@ -1559,7 +1560,7 @@ It defines global and modular usage scores.
 It states that AI provides signals and the system computes scores.
 It preserves runtime compatibility.
 It documents open future work.
-27. Open future work
+## 27. Open future work
 
 The following are intentionally not fully fixed in v1 foundation:
 
@@ -1575,7 +1576,7 @@ Future feedback contract.
 Future multilingual display layer.
 Future selection policies for packs and runtime experiences.
 Future audio-specific profile if sound media becomes first-class.
-28. Final design statement
+## 28. Final design statement
 
 pedagogical_media_profile.v1 is a modular naturalist media qualification contract.
 

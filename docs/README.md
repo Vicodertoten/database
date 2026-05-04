@@ -32,6 +32,7 @@ This repository now uses a four-zone documentation architecture:
 ## Start here
 
 - Foundation: `docs/foundation/`
+  - Pedagogical media qualification contract: `docs/foundation/pedagogical-media-profile-v1.md`
 - Active runbooks: `docs/runbooks/`
 - Active audits: `docs/audits/`
 - Locked short-term scope v0.1: `docs/runbooks/v0.1-scope.md`
