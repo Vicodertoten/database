@@ -33,6 +33,14 @@ from database_core.qualification.pedagogical_media_profile_v1 import (
     parse_pedagogical_media_profile_v1,
     validate_pedagogical_media_profile_v1,
 )
+from database_core.qualification.pmp_policy_v1 import (
+    PMP_POLICY_VERSION,
+    classify_usage_score,
+    evaluate_pmp_outcome_policy,
+    evaluate_pmp_profile_policy,
+    is_complex_evidence_type,
+    is_indirect_evidence_type,
+)
 from database_core.qualification.rules import qualify_media_assets
 
 __all__ = [
@@ -59,6 +67,12 @@ __all__ = [
     "normalize_pedagogical_media_profile_v1",
     "parse_bird_image_pedagogical_review_v12",
     "parse_pedagogical_media_profile_v1",
+    "PMP_POLICY_VERSION",
+    "classify_usage_score",
+    "evaluate_pmp_outcome_policy",
+    "evaluate_pmp_profile_policy",
+    "is_complex_evidence_type",
+    "is_indirect_evidence_type",
     "qualify_media_assets",
     "validate_bird_image_pedagogical_review_v12",
     "validate_pedagogical_media_profile_v1",

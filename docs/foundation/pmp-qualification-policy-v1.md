@@ -66,6 +66,15 @@ Status per usage:
 - `not_recommended`
 - `not_applicable`
 
+Meaning clarification:
+- `confusion_learning` is an image/profile-level signal.
+- It indicates that the media may be useful for learning discriminative visual
+  criteria.
+- It does not imply distractor readiness.
+- It does not imply similar-species candidate availability.
+- It does not imply that a confusion-training quiz can already be generated.
+- Confusion-set generation remains a separate future layer.
+
 3. PMP policy status (`pmp_policy_status`)
 - `profile_valid`
 - `profile_failed`
@@ -88,6 +97,20 @@ Base thresholds (usage score):
 - `not_applicable`: usage not meaningful for evidence type or score missing
 
 Stricter rules by evidence type may override base thresholds.
+
+## Threshold calibration warnings
+
+These thresholds are heuristic v1 defaults, not final truth.
+
+Warnings:
+- `eligible >= 70` is a calibration starting point, not a permanent rule.
+- `field_observation` may currently be permissive and needs human review.
+- `species_card` may currently be permissive and likely needs stricter review.
+- broader corpus audit may reveal taxon-specific or evidence-type-specific bias.
+- human review must check whether usage eligibility is too broad or too strict.
+
+Open calibration questions are tracked in:
+`docs/audits/pmp-policy-v1-open-questions.md`
 
 ## Status mapping rules
 

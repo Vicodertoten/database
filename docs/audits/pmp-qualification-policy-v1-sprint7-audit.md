@@ -97,6 +97,13 @@ Guardrail checks:
 - high global score forcing basic_identification: no violations
 - indirect evidence eligible for indirect_evidence_learning: yes
 
+Clarification:
+- `confusion_learning` here is an image/profile-level suitability signal for
+  learning discriminative visual criteria.
+- It is not a distractor-readiness signal.
+- It does not mean similar species candidates or confusion-set generation are
+  already available.
+
 ## Examples by evidence type
 
 Observed examples include:
@@ -128,6 +135,16 @@ Observed examples include:
 - thresholds are heuristic and need broader-corpus calibration,
 - current evidence is bird-focused even though the policy shape is generic,
 - no production-scale rollout validation in Sprint 7.
+
+## Threshold calibration warnings
+
+- `field_observation` may be too permissive and needs calibration.
+- `species_card` may be too permissive and likely needs stricter review.
+- broader corpus audit may reveal bias by taxon and evidence type.
+- human review is required before any policy promotion.
+
+Open calibration questions now live in:
+`docs/audits/pmp-policy-v1-open-questions.md`
 
 ## Decision
 

@@ -46,6 +46,7 @@ USAGE_NAMES = (
 )
 
 TARGET_REVIEW_CONTRACT_VERSION = "pedagogical_media_profile_v1"
+TOP_TAXON_LIMIT = 12
 
 
 def _parse_args() -> argparse.Namespace:
@@ -57,9 +58,158 @@ def _parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--snapshot-id", required=True)
     parser.add_argument("--snapshot-root", type=Path, default=DEFAULT_SNAPSHOT_ROOT)
+    parser.add_argument("--manifest-path", type=Path)
     parser.add_argument("--ai-outputs-path", type=Path)
     parser.add_argument("--output-path", type=Path, default=DEFAULT_OUTPUT_PATH)
     return parser.parse_args()
+
+
+def _load_snapshot_metadata(
+    *,
+    snapshot_id: str,
+    snapshot_root: Path,
+    manifest_path: Path | None,
+) -> tuple[str, dict[str, dict[str, str]]]:
+    resolved_manifest = (
+        manifest_path
+        if manifest_path is not None
+        else snapshot_root / snapshot_id / "manifest.json"
+    )
+    if not resolved_manifest.exists():
+        return "not_available", {}
+
+    try:
+        manifest = json.loads(resolved_manifest.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return "invalid_manifest", {}
+
+    snapshot_dir = resolved_manifest.parent
+    media_downloads = manifest.get("media_downloads")
+    media_by_id: dict[str, dict[str, str]] = {}
+    if isinstance(media_downloads, list):
+        for item in media_downloads:
+            if not isinstance(item, dict):
+                continue
+            media_id = str(item.get("source_media_id") or "").strip()
+            if not media_id:
+                continue
+            media_by_id[media_id] = {
+                "source_observation_id": str(item.get("source_observation_id") or "").strip(),
+                "image_url": str(item.get("source_url") or "").strip(),
+                "local_image_path": (
+                    str((snapshot_dir / str(item.get("image_path") or "")).resolve())
+                    if item.get("image_path")
+                    else ""
+                ),
+            }
+
+    taxon_payloads_by_canonical_taxon_id: dict[str, dict[str, object]] = {}
+    taxon_seeds = manifest.get("taxon_seeds")
+    if isinstance(taxon_seeds, list):
+        for seed in taxon_seeds:
+            if not isinstance(seed, dict):
+                continue
+            canonical_taxon_id = str(seed.get("canonical_taxon_id") or "").strip()
+            taxon_payload_path = str(seed.get("taxon_payload_path") or "").strip()
+            if not canonical_taxon_id or not taxon_payload_path:
+                continue
+            resolved_taxon_path = snapshot_dir / taxon_payload_path
+            if not resolved_taxon_path.exists():
+                continue
+            try:
+                taxon_payloads_by_canonical_taxon_id[canonical_taxon_id] = json.loads(
+                    resolved_taxon_path.read_text(encoding="utf-8")
+                )
+            except (json.JSONDecodeError, OSError):
+                continue
+
+    metadata_by_media_key: dict[str, dict[str, str]] = {}
+    if isinstance(taxon_seeds, list):
+        for seed in taxon_seeds:
+            if not isinstance(seed, dict):
+                continue
+            response_path_raw = seed.get("response_path")
+            if not isinstance(response_path_raw, str) or not response_path_raw.strip():
+                continue
+            response_path = snapshot_dir / response_path_raw
+            if not response_path.exists():
+                continue
+
+            try:
+                payload = json.loads(response_path.read_text(encoding="utf-8"))
+            except (json.JSONDecodeError, OSError):
+                continue
+
+            canonical_taxon_id = str(seed.get("canonical_taxon_id") or "").strip()
+            taxon_payload = taxon_payloads_by_canonical_taxon_id.get(canonical_taxon_id, {})
+            preferred_common_name = str(
+                taxon_payload.get("preferred_common_name")
+                or taxon_payload.get("english_common_name")
+                or (seed.get("common_names") or [""])[0]
+                or ""
+            ).strip()
+
+            for result in payload.get("results", []):
+                if not isinstance(result, dict):
+                    continue
+                photos = result.get("photos")
+                if not isinstance(photos, list) or not photos:
+                    continue
+                primary = photos[0]
+                if not isinstance(primary, dict):
+                    continue
+                media_id = str(primary.get("id") or "").strip()
+                if not media_id:
+                    continue
+
+                taxon = result.get("taxon") if isinstance(result.get("taxon"), dict) else {}
+                scientific_name = str(
+                    taxon.get("name")
+                    or result.get("species_guess")
+                    or seed.get("accepted_scientific_name")
+                    or ""
+                ).strip()
+                source_taxon_id = str(taxon.get("id") or seed.get("source_taxon_id") or "").strip()
+
+                metadata = {
+                    "scientific_name": scientific_name,
+                    "canonical_taxon_id": canonical_taxon_id,
+                    "source_taxon_id": source_taxon_id,
+                    "source_observation_id": str(
+                        result.get("id")
+                        or media_by_id.get(media_id, {}).get("source_observation_id")
+                        or ""
+                    ).strip(),
+                    "image_url": media_by_id.get(media_id, {}).get("image_url", ""),
+                    "local_image_path": media_by_id.get(media_id, {}).get("local_image_path", ""),
+                    "common_name_en": preferred_common_name,
+                    "common_name_fr": "",
+                    "common_name_nl": "",
+                    "taxon_name": str(
+                        taxon.get("preferred_common_name") or preferred_common_name or ""
+                    ).strip(),
+                }
+                metadata_by_media_key[f"inaturalist::{media_id}"] = metadata
+
+    if not metadata_by_media_key:
+        return "not_available", {}
+    return "joined_from_manifest", metadata_by_media_key
+
+
+def _append_taxon_count(
+    container: dict[str, Counter[str]],
+    taxon_key: str,
+    item_key: str,
+) -> None:
+    container.setdefault(taxon_key, Counter())[item_key] += 1
+
+
+def _bounded_taxon_items(
+    counter: Counter[str],
+    *,
+    limit: int = TOP_TAXON_LIMIT,
+) -> list[dict[str, object]]:
+    return [{"taxon": taxon, "count": count} for taxon, count in counter.most_common(limit)]
 
 
 def _nested_key_count(payload: Any) -> int:
@@ -121,6 +271,7 @@ def audit_pmp_policy_snapshot(
     *,
     snapshot_id: str,
     snapshot_root: Path = DEFAULT_SNAPSHOT_ROOT,
+    manifest_path: Path | None = None,
     ai_outputs_path: Path | None = None,
 ) -> dict[str, object]:
     resolved_ai_outputs_path = (
@@ -196,6 +347,11 @@ def audit_pmp_policy_snapshot(
         return report
 
     outcomes = payload if isinstance(payload, dict) else {}
+    metadata_join_status, metadata_by_media_key = _load_snapshot_metadata(
+        snapshot_id=snapshot_id,
+        snapshot_root=snapshot_root,
+        manifest_path=manifest_path,
+    )
 
     policy_status_distribution: Counter[str] = Counter()
     evidence_type_distribution: Counter[str] = Counter()
@@ -210,6 +366,14 @@ def audit_pmp_policy_snapshot(
     pmp_profile_failed_count = 0
     pre_ai_rejected_count = 0
     runtime_or_feedback_pollution_count = 0
+    count_by_taxon: Counter[str] = Counter()
+    profile_valid_count_by_taxon: Counter[str] = Counter()
+    profile_failed_count_by_taxon: Counter[str] = Counter()
+    pre_ai_rejected_count_by_taxon: Counter[str] = Counter()
+    policy_status_distribution_by_taxon: dict[str, Counter[str]] = {}
+    eligible_database_uses_by_taxon: dict[str, Counter[str]] = {}
+    usage_eligibility_by_taxon: dict[str, dict[str, Counter[str]]] = {}
+    evidence_type_distribution_by_taxon: dict[str, Counter[str]] = {}
 
     rows: list[dict[str, object]] = []
 
@@ -223,16 +387,26 @@ def audit_pmp_policy_snapshot(
         decision = evaluate_pmp_outcome_policy(outcome)
         policy_status = str(decision.get("policy_status") or "unknown")
         evidence_type = str(decision.get("evidence_type") or "unknown")
+        metadata = metadata_by_media_key.get(media_key, {})
+        taxon_key = str(
+            metadata.get("canonical_taxon_id") or metadata.get("scientific_name") or "unknown_taxon"
+        )
 
         policy_status_distribution[policy_status] += 1
         evidence_type_distribution[evidence_type] += 1
+        count_by_taxon[taxon_key] += 1
+        _append_taxon_count(policy_status_distribution_by_taxon, taxon_key, policy_status)
+        _append_taxon_count(evidence_type_distribution_by_taxon, taxon_key, evidence_type)
 
         if policy_status == PMP_POLICY_STATUS_PROFILE_VALID:
             pmp_profile_valid_count += 1
+            profile_valid_count_by_taxon[taxon_key] += 1
         elif policy_status == PMP_POLICY_STATUS_PROFILE_FAILED:
             pmp_profile_failed_count += 1
+            profile_failed_count_by_taxon[taxon_key] += 1
         elif policy_status == PMP_POLICY_STATUS_PRE_AI_REJECTED:
             pre_ai_rejected_count += 1
+            pre_ai_rejected_count_by_taxon[taxon_key] += 1
 
         usage_statuses_raw = decision.get("usage_statuses")
         usage_statuses = usage_statuses_raw if isinstance(usage_statuses_raw, dict) else {}
@@ -245,6 +419,10 @@ def audit_pmp_policy_snapshot(
             usage_status = str(status_payload.get("status") or "not_applicable")
             usage_eligibility_counts[usage_name][usage_status] += 1
             evidence_usage_status_distribution[f"{evidence_type}|{usage_name}|{usage_status}"] += 1
+            usage_eligibility_by_taxon.setdefault(taxon_key, {}).setdefault(
+                usage_name,
+                Counter(),
+            )[usage_status] += 1
 
         eligible_database_uses = (
             decision.get("eligible_database_uses")
@@ -253,10 +431,16 @@ def audit_pmp_policy_snapshot(
         )
         for usage_name in eligible_database_uses:
             eligible_database_uses_distribution[str(usage_name)] += 1
+            _append_taxon_count(eligible_database_uses_by_taxon, taxon_key, str(usage_name))
 
         rows.append(
             {
                 "media_key": media_key,
+                "scientific_name": metadata.get("scientific_name") or None,
+                "canonical_taxon_id": metadata.get("canonical_taxon_id") or None,
+                "source_taxon_id": metadata.get("source_taxon_id") or None,
+                "source_observation_id": metadata.get("source_observation_id") or None,
+                "taxon_name": metadata.get("taxon_name") or None,
                 "source_status": outcome.get("status"),
                 "policy_status": policy_status,
                 "evidence_type": evidence_type,
@@ -273,27 +457,37 @@ def audit_pmp_policy_snapshot(
     examples = {
         "whole_organism_basic_identification_eligible": _extract_example(
             rows,
-            lambda row: row.get("evidence_type") == "whole_organism"
-            and ((row.get("usage_statuses") or {}).get("basic_identification") or {}).get("status")
-            == "eligible",
-        ),
-        "whole_organism_basic_not_eligible_field_observation_eligible": _extract_example(
-            rows,
-            lambda row: row.get("evidence_type") == "whole_organism"
-            and ((row.get("usage_statuses") or {}).get("basic_identification") or {}).get("status")
-            != "eligible"
-            and ((row.get("usage_statuses") or {}).get("field_observation") or {}).get("status")
-            == "eligible",
-        ),
-        "indirect_evidence_indirect_learning_eligible": _extract_example(
-            rows,
-            lambda row: row.get("evidence_type")
-            in {"feather", "nest", "habitat", "track", "scat", "burrow", "dead_organism", "egg"}
-            and (
-                ((row.get("usage_statuses") or {}).get("indirect_evidence_learning") or {}).get(
+            lambda row: (
+                row.get("evidence_type") == "whole_organism"
+                and ((row.get("usage_statuses") or {}).get("basic_identification") or {}).get(
                     "status"
                 )
                 == "eligible"
+            ),
+        ),
+        "whole_organism_basic_not_eligible_field_observation_eligible": _extract_example(
+            rows,
+            lambda row: (
+                row.get("evidence_type") == "whole_organism"
+                and ((row.get("usage_statuses") or {}).get("basic_identification") or {}).get(
+                    "status"
+                )
+                != "eligible"
+                and ((row.get("usage_statuses") or {}).get("field_observation") or {}).get("status")
+                == "eligible"
+            ),
+        ),
+        "indirect_evidence_indirect_learning_eligible": _extract_example(
+            rows,
+            lambda row: (
+                row.get("evidence_type")
+                in {"feather", "nest", "habitat", "track", "scat", "burrow", "dead_organism", "egg"}
+                and (
+                    ((row.get("usage_statuses") or {}).get("indirect_evidence_learning") or {}).get(
+                        "status"
+                    )
+                    == "eligible"
+                )
             ),
         ),
         "failed_profile": _extract_example(
@@ -337,10 +531,51 @@ def audit_pmp_policy_snapshot(
         for row in rows
     )
 
+    taxa_without_basic_identification_eligible = []
+    taxa_without_species_card_eligible = []
+    taxa_with_high_failure_rate = []
+    for taxon_key, media_count in count_by_taxon.items():
+        usage_counts = usage_eligibility_by_taxon.get(taxon_key, {})
+        basic_counts = usage_counts.get("basic_identification", Counter())
+        species_card_counts = usage_counts.get("species_card", Counter())
+        if basic_counts.get("eligible", 0) == 0:
+            taxa_without_basic_identification_eligible.append(
+                {"taxon": taxon_key, "media_count": media_count}
+            )
+        if species_card_counts.get("eligible", 0) == 0:
+            taxa_without_species_card_eligible.append(
+                {"taxon": taxon_key, "media_count": media_count}
+            )
+        failure_count = profile_failed_count_by_taxon.get(taxon_key, 0)
+        if media_count >= 2 and failure_count / media_count >= 0.4:
+            taxa_with_high_failure_rate.append(
+                {
+                    "taxon": taxon_key,
+                    "media_count": media_count,
+                    "failed_count": failure_count,
+                    "failure_rate": round(failure_count / media_count, 2),
+                }
+            )
+
+    taxa_without_basic_identification_eligible.sort(
+        key=lambda item: (-int(item["media_count"]), str(item["taxon"]))
+    )
+    taxa_without_species_card_eligible.sort(
+        key=lambda item: (-int(item["media_count"]), str(item["taxon"]))
+    )
+    taxa_with_high_failure_rate.sort(
+        key=lambda item: (
+            -float(item["failure_rate"]),
+            -int(item["media_count"]),
+            str(item["taxon"]),
+        )
+    )
+
     report = {
         "snapshot_id": snapshot_id,
         "ai_outputs_path": str(resolved_ai_outputs_path),
         "ai_outputs_broken": False,
+        "metadata_join_status": metadata_join_status,
         "generation_metrics": {
             "processed_media_count": processed_media_count,
             "pmp_profile_valid_count": pmp_profile_valid_count,
@@ -378,6 +613,40 @@ def audit_pmp_policy_snapshot(
         "indirect_evidence_checks": {
             "has_indirect_eligible": has_indirect_eligible,
         },
+        "taxon_policy_summary": {
+            "taxon_count": len(count_by_taxon),
+            "count_by_taxon": dict(sorted(count_by_taxon.items())),
+            "profile_valid_count_by_taxon": dict(sorted(profile_valid_count_by_taxon.items())),
+            "profile_failed_count_by_taxon": dict(sorted(profile_failed_count_by_taxon.items())),
+            "pre_ai_rejected_count_by_taxon": dict(sorted(pre_ai_rejected_count_by_taxon.items())),
+            "policy_status_distribution_by_taxon": {
+                taxon: dict(sorted(counter.items()))
+                for taxon, counter in sorted(policy_status_distribution_by_taxon.items())
+            },
+            "eligible_database_uses_by_taxon": {
+                taxon: dict(sorted(counter.items()))
+                for taxon, counter in sorted(eligible_database_uses_by_taxon.items())
+            },
+            "usage_eligibility_by_taxon": {
+                taxon: {
+                    usage_name: dict(sorted(counter.items()))
+                    for usage_name, counter in sorted(usage_counts.items())
+                }
+                for taxon, usage_counts in sorted(usage_eligibility_by_taxon.items())
+            },
+            "evidence_type_distribution_by_taxon": {
+                taxon: dict(sorted(counter.items()))
+                for taxon, counter in sorted(evidence_type_distribution_by_taxon.items())
+            },
+            "top_taxa_by_media_count": _bounded_taxon_items(count_by_taxon),
+            "taxa_without_basic_identification_eligible": (
+                taxa_without_basic_identification_eligible[:TOP_TAXON_LIMIT]
+            ),
+            "taxa_without_species_card_eligible": (
+                taxa_without_species_card_eligible[:TOP_TAXON_LIMIT]
+            ),
+            "taxa_with_high_failure_rate": taxa_with_high_failure_rate[:TOP_TAXON_LIMIT],
+        },
     }
     report["decision"] = _resolve_decision(report=report)
     return report
@@ -388,6 +657,7 @@ def main() -> None:
     report = audit_pmp_policy_snapshot(
         snapshot_id=args.snapshot_id,
         snapshot_root=args.snapshot_root,
+        manifest_path=args.manifest_path,
         ai_outputs_path=args.ai_outputs_path,
     )
 

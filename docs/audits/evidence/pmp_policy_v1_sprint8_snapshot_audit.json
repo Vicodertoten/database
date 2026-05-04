@@ -1,0 +1,1996 @@
+{
+  "ai_outputs_broken": false,
+  "ai_outputs_path": "data/raw/inaturalist/palier1-be-birds-50taxa-run003-v11-baseline-sprint6-controlled-120/ai_outputs.json",
+  "decision": "READY_FOR_BROADER_PROFILED_CORPUS_WITH_POLICY",
+  "doctrine_pollution_checks": {
+    "doctrine_pollution_detected": false,
+    "runtime_or_feedback_pollution_count": 0
+  },
+  "eligible_database_uses_distribution": {
+    "basic_identification": 52,
+    "confusion_learning": 41,
+    "field_observation": 78,
+    "indirect_evidence_learning": 7,
+    "morphology_learning": 46,
+    "species_card": 52
+  },
+  "examples": {
+    "failed_profile": {
+      "canonical_taxon_id": "taxon:birds:000022",
+      "eligible_database_uses": [],
+      "evidence_type": "unknown",
+      "global_quality_score": null,
+      "media_key": "inaturalist::108408470",
+      "policy_notes": [
+        "pmp_review_status_failed",
+        "outcome_status_pedagogical_media_profile_failed"
+      ],
+      "policy_status": "profile_failed",
+      "review_status": "failed",
+      "scientific_name": "Anser anser",
+      "source_observation_id": "67144057",
+      "source_status": "pedagogical_media_profile_failed",
+      "source_taxon_id": "7018",
+      "taxon_name": "Greylag Goose",
+      "usage_statuses": {
+        "basic_identification": {
+          "reason": "not_evaluated",
+          "score": null,
+          "status": "not_applicable"
+        },
+        "confusion_learning": {
+          "reason": "not_evaluated",
+          "score": null,
+          "status": "not_applicable"
+        },
+        "field_observation": {
+          "reason": "not_evaluated",
+          "score": null,
+          "status": "not_applicable"
+        },
+        "indirect_evidence_learning": {
+          "reason": "not_evaluated",
+          "score": null,
+          "status": "not_applicable"
+        },
+        "morphology_learning": {
+          "reason": "not_evaluated",
+          "score": null,
+          "status": "not_applicable"
+        },
+        "species_card": {
+          "reason": "not_evaluated",
+          "score": null,
+          "status": "not_applicable"
+        }
+      }
+    },
+    "indirect_evidence_indirect_learning_eligible": {
+      "canonical_taxon_id": "taxon:birds:000001",
+      "eligible_database_uses": [
+        "field_observation",
+        "morphology_learning",
+        "indirect_evidence_learning"
+      ],
+      "evidence_type": "feather",
+      "global_quality_score": 96.0,
+      "media_key": "inaturalist::100909260",
+      "policy_notes": [
+        "indirect_evidence_interpretation_applied",
+        "global_quality_is_broad_signal_not_selection"
+      ],
+      "policy_status": "profile_valid",
+      "review_status": "valid",
+      "scientific_name": "Columba palumbus",
+      "source_observation_id": "62926971",
+      "source_status": "ok",
+      "source_taxon_id": "3048",
+      "taxon_name": "Common Wood-Pigeon",
+      "usage_statuses": {
+        "basic_identification": {
+          "reason": "indirect_evidence_basic_identification_not_recommended",
+          "score": 24.0,
+          "status": "not_recommended"
+        },
+        "confusion_learning": {
+          "reason": "score_below_threshold",
+          "score": 39.0,
+          "status": "not_recommended"
+        },
+        "field_observation": {
+          "reason": "score_above_threshold",
+          "score": 76.0,
+          "status": "eligible"
+        },
+        "indirect_evidence_learning": {
+          "reason": "score_above_threshold",
+          "score": 92.0,
+          "status": "eligible"
+        },
+        "morphology_learning": {
+          "reason": "score_above_threshold",
+          "score": 78.0,
+          "status": "eligible"
+        },
+        "species_card": {
+          "reason": "score_below_threshold",
+          "score": 33.0,
+          "status": "not_recommended"
+        }
+      }
+    },
+    "pre_ai_rejected": {
+      "canonical_taxon_id": "taxon:birds:000022",
+      "eligible_database_uses": [],
+      "evidence_type": "unknown",
+      "global_quality_score": null,
+      "media_key": "inaturalist::11113098",
+      "policy_notes": [
+        "pre_ai_status:insufficient_resolution_pre_ai"
+      ],
+      "policy_status": "pre_ai_rejected",
+      "review_status": null,
+      "scientific_name": "Anser anser domesticus",
+      "source_observation_id": "8361046",
+      "source_status": "insufficient_resolution_pre_ai",
+      "source_taxon_id": "120479",
+      "taxon_name": "Domestic Greylag Goose",
+      "usage_statuses": {
+        "basic_identification": {
+          "reason": "not_evaluated",
+          "score": null,
+          "status": "not_applicable"
+        },
+        "confusion_learning": {
+          "reason": "not_evaluated",
+          "score": null,
+          "status": "not_applicable"
+        },
+        "field_observation": {
+          "reason": "not_evaluated",
+          "score": null,
+          "status": "not_applicable"
+        },
+        "indirect_evidence_learning": {
+          "reason": "not_evaluated",
+          "score": null,
+          "status": "not_applicable"
+        },
+        "morphology_learning": {
+          "reason": "not_evaluated",
+          "score": null,
+          "status": "not_applicable"
+        },
+        "species_card": {
+          "reason": "not_evaluated",
+          "score": null,
+          "status": "not_applicable"
+        }
+      }
+    },
+    "whole_organism_basic_identification_eligible": {
+      "canonical_taxon_id": "taxon:birds:000029",
+      "eligible_database_uses": [
+        "basic_identification",
+        "field_observation",
+        "confusion_learning"
+      ],
+      "evidence_type": "whole_organism",
+      "global_quality_score": 67.0,
+      "media_key": "inaturalist::100422597",
+      "policy_notes": [
+        "global_quality_is_broad_signal_not_selection"
+      ],
+      "policy_status": "profile_valid",
+      "review_status": "valid",
+      "scientific_name": "Ardea cinerea",
+      "source_observation_id": "62653741",
+      "source_status": "ok",
+      "source_taxon_id": "4954",
+      "taxon_name": "Grey Heron",
+      "usage_statuses": {
+        "basic_identification": {
+          "reason": "score_above_threshold",
+          "score": 70.0,
+          "status": "eligible"
+        },
+        "confusion_learning": {
+          "reason": "score_above_threshold",
+          "score": 73.0,
+          "status": "eligible"
+        },
+        "field_observation": {
+          "reason": "score_above_threshold",
+          "score": 74.0,
+          "status": "eligible"
+        },
+        "indirect_evidence_learning": {
+          "reason": "whole_organism_indirect_learning_not_primary",
+          "score": 0.0,
+          "status": "not_applicable"
+        },
+        "morphology_learning": {
+          "reason": "score_in_borderline_range",
+          "score": 63.0,
+          "status": "borderline"
+        },
+        "species_card": {
+          "reason": "score_in_borderline_range",
+          "score": 61.0,
+          "status": "borderline"
+        }
+      }
+    },
+    "whole_organism_basic_not_eligible_field_observation_eligible": {
+      "canonical_taxon_id": "taxon:birds:000048",
+      "eligible_database_uses": [
+        "field_observation"
+      ],
+      "evidence_type": "whole_organism",
+      "global_quality_score": 66.0,
+      "media_key": "inaturalist::106017436",
+      "policy_notes": [
+        "global_quality_is_broad_signal_not_selection"
+      ],
+      "policy_status": "profile_valid",
+      "review_status": "valid",
+      "scientific_name": "Coloeus monedula",
+      "source_observation_id": "65828674",
+      "source_status": "ok",
+      "source_taxon_id": "336399",
+      "taxon_name": "Eurasian Jackdaw",
+      "usage_statuses": {
+        "basic_identification": {
+          "reason": "score_in_borderline_range",
+          "score": 50.0,
+          "status": "borderline"
+        },
+        "confusion_learning": {
+          "reason": "score_in_borderline_range",
+          "score": 60.0,
+          "status": "borderline"
+        },
+        "field_observation": {
+          "reason": "score_above_threshold",
+          "score": 78.0,
+          "status": "eligible"
+        },
+        "indirect_evidence_learning": {
+          "reason": "whole_organism_indirect_learning_not_primary",
+          "score": 0.0,
+          "status": "not_applicable"
+        },
+        "morphology_learning": {
+          "reason": "score_in_borderline_range",
+          "score": 63.0,
+          "status": "borderline"
+        },
+        "species_card": {
+          "reason": "score_in_borderline_range",
+          "score": 61.0,
+          "status": "borderline"
+        }
+      }
+    }
+  },
+  "generation_metrics": {
+    "evidence_type_distribution": {
+      "dead_organism": 1,
+      "feather": 2,
+      "habitat": 1,
+      "multiple_organisms": 7,
+      "nest": 3,
+      "unknown": 14,
+      "whole_organism": 92
+    },
+    "pmp_profile_failed_count": 10,
+    "pmp_profile_valid_count": 106,
+    "policy_status_distribution": {
+      "pre_ai_rejected": 4,
+      "profile_failed": 10,
+      "profile_valid": 106
+    },
+    "pre_ai_rejected_count": 4,
+    "processed_media_count": 120
+  },
+  "indirect_evidence_checks": {
+    "has_indirect_eligible": true
+  },
+  "metadata_join_status": "joined_from_manifest",
+  "policy_summary": {
+    "global_quality_guardrail_ok": true,
+    "global_quality_guardrail_violation_count": 0,
+    "policy_output_shape": {
+      "contains_playable": false,
+      "contains_runtime_ready": false,
+      "contains_selectedOptionId": false,
+      "contains_selected_for_quiz": false
+    }
+  },
+  "snapshot_id": "palier1-be-birds-50taxa-run003-v11-baseline-sprint6-controlled-120",
+  "taxon_policy_summary": {
+    "count_by_taxon": {
+      "taxon:birds:000001": 3,
+      "taxon:birds:000002": 1,
+      "taxon:birds:000003": 2,
+      "taxon:birds:000004": 4,
+      "taxon:birds:000005": 3,
+      "taxon:birds:000006": 3,
+      "taxon:birds:000008": 7,
+      "taxon:birds:000009": 9,
+      "taxon:birds:000010": 2,
+      "taxon:birds:000011": 4,
+      "taxon:birds:000012": 2,
+      "taxon:birds:000013": 5,
+      "taxon:birds:000014": 5,
+      "taxon:birds:000015": 3,
+      "taxon:birds:000016": 4,
+      "taxon:birds:000017": 7,
+      "taxon:birds:000019": 1,
+      "taxon:birds:000020": 2,
+      "taxon:birds:000021": 2,
+      "taxon:birds:000022": 6,
+      "taxon:birds:000023": 3,
+      "taxon:birds:000024": 3,
+      "taxon:birds:000025": 2,
+      "taxon:birds:000026": 4,
+      "taxon:birds:000028": 2,
+      "taxon:birds:000029": 4,
+      "taxon:birds:000031": 2,
+      "taxon:birds:000032": 1,
+      "taxon:birds:000033": 6,
+      "taxon:birds:000034": 1,
+      "taxon:birds:000036": 2,
+      "taxon:birds:000039": 3,
+      "taxon:birds:000042": 1,
+      "taxon:birds:000043": 2,
+      "taxon:birds:000048": 3,
+      "taxon:birds:000079": 6
+    },
+    "eligible_database_uses_by_taxon": {
+      "taxon:birds:000001": {
+        "basic_identification": 1,
+        "confusion_learning": 1,
+        "field_observation": 3,
+        "indirect_evidence_learning": 2,
+        "morphology_learning": 3,
+        "species_card": 1
+      },
+      "taxon:birds:000002": {
+        "field_observation": 1
+      },
+      "taxon:birds:000003": {
+        "basic_identification": 1,
+        "confusion_learning": 1,
+        "field_observation": 2,
+        "morphology_learning": 2,
+        "species_card": 1
+      },
+      "taxon:birds:000004": {
+        "basic_identification": 2,
+        "confusion_learning": 2,
+        "field_observation": 2,
+        "morphology_learning": 2,
+        "species_card": 2
+      },
+      "taxon:birds:000005": {
+        "field_observation": 2,
+        "morphology_learning": 2,
+        "species_card": 1
+      },
+      "taxon:birds:000006": {
+        "basic_identification": 1,
+        "confusion_learning": 1,
+        "field_observation": 2,
+        "morphology_learning": 1,
+        "species_card": 1
+      },
+      "taxon:birds:000008": {
+        "basic_identification": 4,
+        "confusion_learning": 3,
+        "field_observation": 5,
+        "indirect_evidence_learning": 1,
+        "morphology_learning": 2,
+        "species_card": 4
+      },
+      "taxon:birds:000009": {
+        "basic_identification": 4,
+        "confusion_learning": 4,
+        "field_observation": 6,
+        "indirect_evidence_learning": 1,
+        "morphology_learning": 6,
+        "species_card": 5
+      },
+      "taxon:birds:000010": {
+        "basic_identification": 2,
+        "confusion_learning": 1,
+        "field_observation": 2,
+        "species_card": 1
+      },
+      "taxon:birds:000011": {
+        "indirect_evidence_learning": 1
+      },
+      "taxon:birds:000012": {
+        "basic_identification": 2,
+        "confusion_learning": 1,
+        "field_observation": 2,
+        "morphology_learning": 2,
+        "species_card": 2
+      },
+      "taxon:birds:000013": {
+        "field_observation": 2
+      },
+      "taxon:birds:000014": {
+        "basic_identification": 1,
+        "field_observation": 2,
+        "species_card": 1
+      },
+      "taxon:birds:000015": {
+        "basic_identification": 1,
+        "field_observation": 3,
+        "morphology_learning": 1,
+        "species_card": 2
+      },
+      "taxon:birds:000016": {
+        "basic_identification": 2,
+        "field_observation": 3,
+        "morphology_learning": 1,
+        "species_card": 1
+      },
+      "taxon:birds:000017": {
+        "basic_identification": 3,
+        "confusion_learning": 3,
+        "field_observation": 4,
+        "morphology_learning": 2,
+        "species_card": 4
+      },
+      "taxon:birds:000019": {
+        "basic_identification": 1,
+        "confusion_learning": 1,
+        "field_observation": 1,
+        "species_card": 1
+      },
+      "taxon:birds:000021": {
+        "basic_identification": 1,
+        "confusion_learning": 1,
+        "field_observation": 1,
+        "morphology_learning": 1,
+        "species_card": 1
+      },
+      "taxon:birds:000022": {
+        "basic_identification": 1,
+        "confusion_learning": 1,
+        "field_observation": 4,
+        "morphology_learning": 3,
+        "species_card": 1
+      },
+      "taxon:birds:000023": {
+        "basic_identification": 3,
+        "confusion_learning": 3,
+        "field_observation": 3,
+        "morphology_learning": 3,
+        "species_card": 3
+      },
+      "taxon:birds:000024": {
+        "basic_identification": 3,
+        "confusion_learning": 3,
+        "field_observation": 3,
+        "morphology_learning": 3,
+        "species_card": 3
+      },
+      "taxon:birds:000025": {
+        "basic_identification": 2,
+        "confusion_learning": 1,
+        "field_observation": 2,
+        "morphology_learning": 1,
+        "species_card": 2
+      },
+      "taxon:birds:000026": {
+        "basic_identification": 1,
+        "confusion_learning": 1,
+        "field_observation": 2,
+        "morphology_learning": 2,
+        "species_card": 1
+      },
+      "taxon:birds:000028": {
+        "basic_identification": 1,
+        "confusion_learning": 1,
+        "field_observation": 1
+      },
+      "taxon:birds:000029": {
+        "basic_identification": 3,
+        "confusion_learning": 1,
+        "field_observation": 3,
+        "morphology_learning": 1,
+        "species_card": 1
+      },
+      "taxon:birds:000031": {
+        "basic_identification": 1,
+        "confusion_learning": 1,
+        "field_observation": 1,
+        "morphology_learning": 1,
+        "species_card": 1
+      },
+      "taxon:birds:000032": {
+        "basic_identification": 1,
+        "confusion_learning": 1,
+        "field_observation": 1,
+        "species_card": 1
+      },
+      "taxon:birds:000033": {
+        "basic_identification": 2,
+        "confusion_learning": 2,
+        "field_observation": 3,
+        "morphology_learning": 2,
+        "species_card": 3
+      },
+      "taxon:birds:000034": {
+        "basic_identification": 1,
+        "confusion_learning": 1,
+        "field_observation": 1,
+        "morphology_learning": 1,
+        "species_card": 1
+      },
+      "taxon:birds:000036": {
+        "basic_identification": 2,
+        "confusion_learning": 2,
+        "field_observation": 2,
+        "species_card": 2
+      },
+      "taxon:birds:000039": {
+        "basic_identification": 1,
+        "confusion_learning": 1,
+        "field_observation": 2,
+        "morphology_learning": 1,
+        "species_card": 1
+      },
+      "taxon:birds:000042": {
+        "field_observation": 1,
+        "indirect_evidence_learning": 1
+      },
+      "taxon:birds:000048": {
+        "basic_identification": 1,
+        "confusion_learning": 1,
+        "field_observation": 2,
+        "morphology_learning": 1,
+        "species_card": 1
+      },
+      "taxon:birds:000079": {
+        "basic_identification": 3,
+        "confusion_learning": 2,
+        "field_observation": 4,
+        "indirect_evidence_learning": 1,
+        "morphology_learning": 2,
+        "species_card": 3
+      }
+    },
+    "evidence_type_distribution_by_taxon": {
+      "taxon:birds:000001": {
+        "feather": 2,
+        "whole_organism": 1
+      },
+      "taxon:birds:000002": {
+        "whole_organism": 1
+      },
+      "taxon:birds:000003": {
+        "multiple_organisms": 1,
+        "whole_organism": 1
+      },
+      "taxon:birds:000004": {
+        "unknown": 1,
+        "whole_organism": 3
+      },
+      "taxon:birds:000005": {
+        "whole_organism": 3
+      },
+      "taxon:birds:000006": {
+        "whole_organism": 3
+      },
+      "taxon:birds:000008": {
+        "nest": 1,
+        "unknown": 1,
+        "whole_organism": 5
+      },
+      "taxon:birds:000009": {
+        "dead_organism": 1,
+        "unknown": 3,
+        "whole_organism": 5
+      },
+      "taxon:birds:000010": {
+        "whole_organism": 2
+      },
+      "taxon:birds:000011": {
+        "habitat": 1,
+        "whole_organism": 3
+      },
+      "taxon:birds:000012": {
+        "whole_organism": 2
+      },
+      "taxon:birds:000013": {
+        "whole_organism": 5
+      },
+      "taxon:birds:000014": {
+        "whole_organism": 5
+      },
+      "taxon:birds:000015": {
+        "whole_organism": 3
+      },
+      "taxon:birds:000016": {
+        "multiple_organisms": 1,
+        "whole_organism": 3
+      },
+      "taxon:birds:000017": {
+        "whole_organism": 7
+      },
+      "taxon:birds:000019": {
+        "whole_organism": 1
+      },
+      "taxon:birds:000020": {
+        "unknown": 1,
+        "whole_organism": 1
+      },
+      "taxon:birds:000021": {
+        "unknown": 1,
+        "whole_organism": 1
+      },
+      "taxon:birds:000022": {
+        "multiple_organisms": 3,
+        "unknown": 2,
+        "whole_organism": 1
+      },
+      "taxon:birds:000023": {
+        "whole_organism": 3
+      },
+      "taxon:birds:000024": {
+        "whole_organism": 3
+      },
+      "taxon:birds:000025": {
+        "whole_organism": 2
+      },
+      "taxon:birds:000026": {
+        "multiple_organisms": 1,
+        "unknown": 2,
+        "whole_organism": 1
+      },
+      "taxon:birds:000028": {
+        "whole_organism": 2
+      },
+      "taxon:birds:000029": {
+        "unknown": 1,
+        "whole_organism": 3
+      },
+      "taxon:birds:000031": {
+        "whole_organism": 2
+      },
+      "taxon:birds:000032": {
+        "whole_organism": 1
+      },
+      "taxon:birds:000033": {
+        "whole_organism": 6
+      },
+      "taxon:birds:000034": {
+        "whole_organism": 1
+      },
+      "taxon:birds:000036": {
+        "whole_organism": 2
+      },
+      "taxon:birds:000039": {
+        "whole_organism": 3
+      },
+      "taxon:birds:000042": {
+        "nest": 1
+      },
+      "taxon:birds:000043": {
+        "unknown": 1,
+        "whole_organism": 1
+      },
+      "taxon:birds:000048": {
+        "multiple_organisms": 1,
+        "whole_organism": 2
+      },
+      "taxon:birds:000079": {
+        "nest": 1,
+        "unknown": 1,
+        "whole_organism": 4
+      }
+    },
+    "policy_status_distribution_by_taxon": {
+      "taxon:birds:000001": {
+        "profile_valid": 3
+      },
+      "taxon:birds:000002": {
+        "profile_valid": 1
+      },
+      "taxon:birds:000003": {
+        "profile_valid": 2
+      },
+      "taxon:birds:000004": {
+        "profile_failed": 1,
+        "profile_valid": 3
+      },
+      "taxon:birds:000005": {
+        "profile_valid": 3
+      },
+      "taxon:birds:000006": {
+        "profile_valid": 3
+      },
+      "taxon:birds:000008": {
+        "profile_failed": 1,
+        "profile_valid": 6
+      },
+      "taxon:birds:000009": {
+        "profile_failed": 3,
+        "profile_valid": 6
+      },
+      "taxon:birds:000010": {
+        "profile_valid": 2
+      },
+      "taxon:birds:000011": {
+        "profile_valid": 4
+      },
+      "taxon:birds:000012": {
+        "profile_valid": 2
+      },
+      "taxon:birds:000013": {
+        "profile_valid": 5
+      },
+      "taxon:birds:000014": {
+        "profile_valid": 5
+      },
+      "taxon:birds:000015": {
+        "profile_valid": 3
+      },
+      "taxon:birds:000016": {
+        "profile_valid": 4
+      },
+      "taxon:birds:000017": {
+        "profile_valid": 7
+      },
+      "taxon:birds:000019": {
+        "profile_valid": 1
+      },
+      "taxon:birds:000020": {
+        "profile_failed": 1,
+        "profile_valid": 1
+      },
+      "taxon:birds:000021": {
+        "profile_failed": 1,
+        "profile_valid": 1
+      },
+      "taxon:birds:000022": {
+        "pre_ai_rejected": 1,
+        "profile_failed": 1,
+        "profile_valid": 4
+      },
+      "taxon:birds:000023": {
+        "profile_valid": 3
+      },
+      "taxon:birds:000024": {
+        "profile_valid": 3
+      },
+      "taxon:birds:000025": {
+        "profile_valid": 2
+      },
+      "taxon:birds:000026": {
+        "profile_failed": 2,
+        "profile_valid": 2
+      },
+      "taxon:birds:000028": {
+        "profile_valid": 2
+      },
+      "taxon:birds:000029": {
+        "pre_ai_rejected": 1,
+        "profile_valid": 3
+      },
+      "taxon:birds:000031": {
+        "profile_valid": 2
+      },
+      "taxon:birds:000032": {
+        "profile_valid": 1
+      },
+      "taxon:birds:000033": {
+        "profile_valid": 6
+      },
+      "taxon:birds:000034": {
+        "profile_valid": 1
+      },
+      "taxon:birds:000036": {
+        "profile_valid": 2
+      },
+      "taxon:birds:000039": {
+        "profile_valid": 3
+      },
+      "taxon:birds:000042": {
+        "profile_valid": 1
+      },
+      "taxon:birds:000043": {
+        "pre_ai_rejected": 1,
+        "profile_valid": 1
+      },
+      "taxon:birds:000048": {
+        "profile_valid": 3
+      },
+      "taxon:birds:000079": {
+        "pre_ai_rejected": 1,
+        "profile_valid": 5
+      }
+    },
+    "pre_ai_rejected_count_by_taxon": {
+      "taxon:birds:000022": 1,
+      "taxon:birds:000029": 1,
+      "taxon:birds:000043": 1,
+      "taxon:birds:000079": 1
+    },
+    "profile_failed_count_by_taxon": {
+      "taxon:birds:000004": 1,
+      "taxon:birds:000008": 1,
+      "taxon:birds:000009": 3,
+      "taxon:birds:000020": 1,
+      "taxon:birds:000021": 1,
+      "taxon:birds:000022": 1,
+      "taxon:birds:000026": 2
+    },
+    "profile_valid_count_by_taxon": {
+      "taxon:birds:000001": 3,
+      "taxon:birds:000002": 1,
+      "taxon:birds:000003": 2,
+      "taxon:birds:000004": 3,
+      "taxon:birds:000005": 3,
+      "taxon:birds:000006": 3,
+      "taxon:birds:000008": 6,
+      "taxon:birds:000009": 6,
+      "taxon:birds:000010": 2,
+      "taxon:birds:000011": 4,
+      "taxon:birds:000012": 2,
+      "taxon:birds:000013": 5,
+      "taxon:birds:000014": 5,
+      "taxon:birds:000015": 3,
+      "taxon:birds:000016": 4,
+      "taxon:birds:000017": 7,
+      "taxon:birds:000019": 1,
+      "taxon:birds:000020": 1,
+      "taxon:birds:000021": 1,
+      "taxon:birds:000022": 4,
+      "taxon:birds:000023": 3,
+      "taxon:birds:000024": 3,
+      "taxon:birds:000025": 2,
+      "taxon:birds:000026": 2,
+      "taxon:birds:000028": 2,
+      "taxon:birds:000029": 3,
+      "taxon:birds:000031": 2,
+      "taxon:birds:000032": 1,
+      "taxon:birds:000033": 6,
+      "taxon:birds:000034": 1,
+      "taxon:birds:000036": 2,
+      "taxon:birds:000039": 3,
+      "taxon:birds:000042": 1,
+      "taxon:birds:000043": 1,
+      "taxon:birds:000048": 3,
+      "taxon:birds:000079": 5
+    },
+    "taxa_with_high_failure_rate": [
+      {
+        "failed_count": 2,
+        "failure_rate": 0.5,
+        "media_count": 4,
+        "taxon": "taxon:birds:000026"
+      },
+      {
+        "failed_count": 1,
+        "failure_rate": 0.5,
+        "media_count": 2,
+        "taxon": "taxon:birds:000020"
+      },
+      {
+        "failed_count": 1,
+        "failure_rate": 0.5,
+        "media_count": 2,
+        "taxon": "taxon:birds:000021"
+      }
+    ],
+    "taxa_without_basic_identification_eligible": [
+      {
+        "media_count": 5,
+        "taxon": "taxon:birds:000013"
+      },
+      {
+        "media_count": 4,
+        "taxon": "taxon:birds:000011"
+      },
+      {
+        "media_count": 3,
+        "taxon": "taxon:birds:000005"
+      },
+      {
+        "media_count": 2,
+        "taxon": "taxon:birds:000020"
+      },
+      {
+        "media_count": 2,
+        "taxon": "taxon:birds:000043"
+      },
+      {
+        "media_count": 1,
+        "taxon": "taxon:birds:000002"
+      },
+      {
+        "media_count": 1,
+        "taxon": "taxon:birds:000042"
+      }
+    ],
+    "taxa_without_species_card_eligible": [
+      {
+        "media_count": 5,
+        "taxon": "taxon:birds:000013"
+      },
+      {
+        "media_count": 4,
+        "taxon": "taxon:birds:000011"
+      },
+      {
+        "media_count": 2,
+        "taxon": "taxon:birds:000020"
+      },
+      {
+        "media_count": 2,
+        "taxon": "taxon:birds:000028"
+      },
+      {
+        "media_count": 2,
+        "taxon": "taxon:birds:000043"
+      },
+      {
+        "media_count": 1,
+        "taxon": "taxon:birds:000002"
+      },
+      {
+        "media_count": 1,
+        "taxon": "taxon:birds:000042"
+      }
+    ],
+    "taxon_count": 36,
+    "top_taxa_by_media_count": [
+      {
+        "count": 9,
+        "taxon": "taxon:birds:000009"
+      },
+      {
+        "count": 7,
+        "taxon": "taxon:birds:000008"
+      },
+      {
+        "count": 7,
+        "taxon": "taxon:birds:000017"
+      },
+      {
+        "count": 6,
+        "taxon": "taxon:birds:000033"
+      },
+      {
+        "count": 6,
+        "taxon": "taxon:birds:000022"
+      },
+      {
+        "count": 6,
+        "taxon": "taxon:birds:000079"
+      },
+      {
+        "count": 5,
+        "taxon": "taxon:birds:000013"
+      },
+      {
+        "count": 5,
+        "taxon": "taxon:birds:000014"
+      },
+      {
+        "count": 4,
+        "taxon": "taxon:birds:000029"
+      },
+      {
+        "count": 4,
+        "taxon": "taxon:birds:000004"
+      },
+      {
+        "count": 4,
+        "taxon": "taxon:birds:000016"
+      },
+      {
+        "count": 4,
+        "taxon": "taxon:birds:000011"
+      }
+    ],
+    "usage_eligibility_by_taxon": {
+      "taxon:birds:000001": {
+        "basic_identification": {
+          "eligible": 1,
+          "not_recommended": 2
+        },
+        "confusion_learning": {
+          "eligible": 1,
+          "not_recommended": 2
+        },
+        "field_observation": {
+          "eligible": 3
+        },
+        "indirect_evidence_learning": {
+          "eligible": 2,
+          "not_applicable": 1
+        },
+        "morphology_learning": {
+          "eligible": 3
+        },
+        "species_card": {
+          "eligible": 1,
+          "not_recommended": 2
+        }
+      },
+      "taxon:birds:000002": {
+        "basic_identification": {
+          "not_recommended": 1
+        },
+        "confusion_learning": {
+          "borderline": 1
+        },
+        "field_observation": {
+          "eligible": 1
+        },
+        "indirect_evidence_learning": {
+          "not_applicable": 1
+        },
+        "morphology_learning": {
+          "borderline": 1
+        },
+        "species_card": {
+          "borderline": 1
+        }
+      },
+      "taxon:birds:000003": {
+        "basic_identification": {
+          "borderline": 1,
+          "eligible": 1
+        },
+        "confusion_learning": {
+          "borderline": 1,
+          "eligible": 1
+        },
+        "field_observation": {
+          "eligible": 2
+        },
+        "indirect_evidence_learning": {
+          "borderline": 1,
+          "not_applicable": 1
+        },
+        "morphology_learning": {
+          "eligible": 2
+        },
+        "species_card": {
+          "eligible": 1,
+          "not_recommended": 1
+        }
+      },
+      "taxon:birds:000004": {
+        "basic_identification": {
+          "eligible": 2,
+          "not_applicable": 1,
+          "not_recommended": 1
+        },
+        "confusion_learning": {
+          "borderline": 1,
+          "eligible": 2,
+          "not_applicable": 1
+        },
+        "field_observation": {
+          "borderline": 1,
+          "eligible": 2,
+          "not_applicable": 1
+        },
+        "indirect_evidence_learning": {
+          "not_applicable": 4
+        },
+        "morphology_learning": {
+          "borderline": 1,
+          "eligible": 2,
+          "not_applicable": 1
+        },
+        "species_card": {
+          "eligible": 2,
+          "not_applicable": 1,
+          "not_recommended": 1
+        }
+      },
+      "taxon:birds:000005": {
+        "basic_identification": {
+          "borderline": 2,
+          "not_recommended": 1
+        },
+        "confusion_learning": {
+          "borderline": 2,
+          "not_recommended": 1
+        },
+        "field_observation": {
+          "borderline": 1,
+          "eligible": 2
+        },
+        "indirect_evidence_learning": {
+          "not_applicable": 3
+        },
+        "morphology_learning": {
+          "eligible": 2,
+          "not_recommended": 1
+        },
+        "species_card": {
+          "borderline": 1,
+          "eligible": 1,
+          "not_recommended": 1
+        }
+      },
+      "taxon:birds:000006": {
+        "basic_identification": {
+          "eligible": 1,
+          "not_recommended": 2
+        },
+        "confusion_learning": {
+          "borderline": 2,
+          "eligible": 1
+        },
+        "field_observation": {
+          "borderline": 1,
+          "eligible": 2
+        },
+        "indirect_evidence_learning": {
+          "not_applicable": 3
+        },
+        "morphology_learning": {
+          "borderline": 1,
+          "eligible": 1,
+          "not_recommended": 1
+        },
+        "species_card": {
+          "borderline": 1,
+          "eligible": 1,
+          "not_recommended": 1
+        }
+      },
+      "taxon:birds:000008": {
+        "basic_identification": {
+          "eligible": 4,
+          "not_applicable": 1,
+          "not_recommended": 2
+        },
+        "confusion_learning": {
+          "borderline": 2,
+          "eligible": 3,
+          "not_applicable": 1,
+          "not_recommended": 1
+        },
+        "field_observation": {
+          "borderline": 1,
+          "eligible": 5,
+          "not_applicable": 1
+        },
+        "indirect_evidence_learning": {
+          "eligible": 1,
+          "not_applicable": 6
+        },
+        "morphology_learning": {
+          "borderline": 3,
+          "eligible": 2,
+          "not_applicable": 1,
+          "not_recommended": 1
+        },
+        "species_card": {
+          "borderline": 1,
+          "eligible": 4,
+          "not_applicable": 1,
+          "not_recommended": 1
+        }
+      },
+      "taxon:birds:000009": {
+        "basic_identification": {
+          "borderline": 1,
+          "eligible": 4,
+          "not_applicable": 3,
+          "not_recommended": 1
+        },
+        "confusion_learning": {
+          "borderline": 1,
+          "eligible": 4,
+          "not_applicable": 3,
+          "not_recommended": 1
+        },
+        "field_observation": {
+          "eligible": 6,
+          "not_applicable": 3
+        },
+        "indirect_evidence_learning": {
+          "eligible": 1,
+          "not_applicable": 8
+        },
+        "morphology_learning": {
+          "eligible": 6,
+          "not_applicable": 3
+        },
+        "species_card": {
+          "eligible": 5,
+          "not_applicable": 3,
+          "not_recommended": 1
+        }
+      },
+      "taxon:birds:000010": {
+        "basic_identification": {
+          "eligible": 2
+        },
+        "confusion_learning": {
+          "borderline": 1,
+          "eligible": 1
+        },
+        "field_observation": {
+          "eligible": 2
+        },
+        "indirect_evidence_learning": {
+          "not_applicable": 2
+        },
+        "morphology_learning": {
+          "borderline": 2
+        },
+        "species_card": {
+          "borderline": 1,
+          "eligible": 1
+        }
+      },
+      "taxon:birds:000011": {
+        "basic_identification": {
+          "not_recommended": 4
+        },
+        "confusion_learning": {
+          "borderline": 3,
+          "not_recommended": 1
+        },
+        "field_observation": {
+          "borderline": 4
+        },
+        "indirect_evidence_learning": {
+          "eligible": 1,
+          "not_applicable": 3
+        },
+        "morphology_learning": {
+          "borderline": 1,
+          "not_recommended": 3
+        },
+        "species_card": {
+          "borderline": 2,
+          "not_recommended": 2
+        }
+      },
+      "taxon:birds:000012": {
+        "basic_identification": {
+          "eligible": 2
+        },
+        "confusion_learning": {
+          "borderline": 1,
+          "eligible": 1
+        },
+        "field_observation": {
+          "eligible": 2
+        },
+        "indirect_evidence_learning": {
+          "not_applicable": 2
+        },
+        "morphology_learning": {
+          "eligible": 2
+        },
+        "species_card": {
+          "eligible": 2
+        }
+      },
+      "taxon:birds:000013": {
+        "basic_identification": {
+          "borderline": 1,
+          "not_recommended": 4
+        },
+        "confusion_learning": {
+          "borderline": 4,
+          "not_recommended": 1
+        },
+        "field_observation": {
+          "borderline": 3,
+          "eligible": 2
+        },
+        "indirect_evidence_learning": {
+          "not_applicable": 5
+        },
+        "morphology_learning": {
+          "borderline": 2,
+          "not_recommended": 3
+        },
+        "species_card": {
+          "borderline": 2,
+          "not_recommended": 3
+        }
+      },
+      "taxon:birds:000014": {
+        "basic_identification": {
+          "eligible": 1,
+          "not_recommended": 4
+        },
+        "confusion_learning": {
+          "borderline": 4,
+          "not_recommended": 1
+        },
+        "field_observation": {
+          "borderline": 3,
+          "eligible": 2
+        },
+        "indirect_evidence_learning": {
+          "not_applicable": 5
+        },
+        "morphology_learning": {
+          "borderline": 3,
+          "not_recommended": 2
+        },
+        "species_card": {
+          "borderline": 1,
+          "eligible": 1,
+          "not_recommended": 3
+        }
+      },
+      "taxon:birds:000015": {
+        "basic_identification": {
+          "borderline": 2,
+          "eligible": 1
+        },
+        "confusion_learning": {
+          "borderline": 3
+        },
+        "field_observation": {
+          "eligible": 3
+        },
+        "indirect_evidence_learning": {
+          "not_applicable": 3
+        },
+        "morphology_learning": {
+          "borderline": 2,
+          "eligible": 1
+        },
+        "species_card": {
+          "borderline": 1,
+          "eligible": 2
+        }
+      },
+      "taxon:birds:000016": {
+        "basic_identification": {
+          "borderline": 1,
+          "eligible": 2,
+          "not_recommended": 1
+        },
+        "confusion_learning": {
+          "borderline": 3,
+          "not_recommended": 1
+        },
+        "field_observation": {
+          "borderline": 1,
+          "eligible": 3
+        },
+        "indirect_evidence_learning": {
+          "borderline": 1,
+          "not_applicable": 3
+        },
+        "morphology_learning": {
+          "borderline": 2,
+          "eligible": 1,
+          "not_recommended": 1
+        },
+        "species_card": {
+          "borderline": 1,
+          "eligible": 1,
+          "not_recommended": 2
+        }
+      },
+      "taxon:birds:000017": {
+        "basic_identification": {
+          "borderline": 1,
+          "eligible": 3,
+          "not_recommended": 3
+        },
+        "confusion_learning": {
+          "borderline": 4,
+          "eligible": 3
+        },
+        "field_observation": {
+          "borderline": 3,
+          "eligible": 4
+        },
+        "indirect_evidence_learning": {
+          "not_applicable": 7
+        },
+        "morphology_learning": {
+          "borderline": 2,
+          "eligible": 2,
+          "not_recommended": 3
+        },
+        "species_card": {
+          "eligible": 4,
+          "not_recommended": 3
+        }
+      },
+      "taxon:birds:000019": {
+        "basic_identification": {
+          "eligible": 1
+        },
+        "confusion_learning": {
+          "eligible": 1
+        },
+        "field_observation": {
+          "eligible": 1
+        },
+        "indirect_evidence_learning": {
+          "not_applicable": 1
+        },
+        "morphology_learning": {
+          "borderline": 1
+        },
+        "species_card": {
+          "eligible": 1
+        }
+      },
+      "taxon:birds:000020": {
+        "basic_identification": {
+          "not_applicable": 1,
+          "not_recommended": 1
+        },
+        "confusion_learning": {
+          "not_applicable": 1,
+          "not_recommended": 1
+        },
+        "field_observation": {
+          "borderline": 1,
+          "not_applicable": 1
+        },
+        "indirect_evidence_learning": {
+          "not_applicable": 2
+        },
+        "morphology_learning": {
+          "not_applicable": 1,
+          "not_recommended": 1
+        },
+        "species_card": {
+          "not_applicable": 1,
+          "not_recommended": 1
+        }
+      },
+      "taxon:birds:000021": {
+        "basic_identification": {
+          "eligible": 1,
+          "not_applicable": 1
+        },
+        "confusion_learning": {
+          "eligible": 1,
+          "not_applicable": 1
+        },
+        "field_observation": {
+          "eligible": 1,
+          "not_applicable": 1
+        },
+        "indirect_evidence_learning": {
+          "not_applicable": 2
+        },
+        "morphology_learning": {
+          "eligible": 1,
+          "not_applicable": 1
+        },
+        "species_card": {
+          "eligible": 1,
+          "not_applicable": 1
+        }
+      },
+      "taxon:birds:000022": {
+        "basic_identification": {
+          "borderline": 2,
+          "eligible": 1,
+          "not_applicable": 2,
+          "not_recommended": 1
+        },
+        "confusion_learning": {
+          "borderline": 3,
+          "eligible": 1,
+          "not_applicable": 2
+        },
+        "field_observation": {
+          "eligible": 4,
+          "not_applicable": 2
+        },
+        "indirect_evidence_learning": {
+          "borderline": 3,
+          "not_applicable": 3
+        },
+        "morphology_learning": {
+          "borderline": 1,
+          "eligible": 3,
+          "not_applicable": 2
+        },
+        "species_card": {
+          "eligible": 1,
+          "not_applicable": 2,
+          "not_recommended": 3
+        }
+      },
+      "taxon:birds:000023": {
+        "basic_identification": {
+          "eligible": 3
+        },
+        "confusion_learning": {
+          "eligible": 3
+        },
+        "field_observation": {
+          "eligible": 3
+        },
+        "indirect_evidence_learning": {
+          "not_applicable": 3
+        },
+        "morphology_learning": {
+          "eligible": 3
+        },
+        "species_card": {
+          "eligible": 3
+        }
+      },
+      "taxon:birds:000024": {
+        "basic_identification": {
+          "eligible": 3
+        },
+        "confusion_learning": {
+          "eligible": 3
+        },
+        "field_observation": {
+          "eligible": 3
+        },
+        "indirect_evidence_learning": {
+          "not_applicable": 3
+        },
+        "morphology_learning": {
+          "eligible": 3
+        },
+        "species_card": {
+          "eligible": 3
+        }
+      },
+      "taxon:birds:000025": {
+        "basic_identification": {
+          "eligible": 2
+        },
+        "confusion_learning": {
+          "borderline": 1,
+          "eligible": 1
+        },
+        "field_observation": {
+          "eligible": 2
+        },
+        "indirect_evidence_learning": {
+          "not_applicable": 2
+        },
+        "morphology_learning": {
+          "borderline": 1,
+          "eligible": 1
+        },
+        "species_card": {
+          "eligible": 2
+        }
+      },
+      "taxon:birds:000026": {
+        "basic_identification": {
+          "borderline": 1,
+          "eligible": 1,
+          "not_applicable": 2
+        },
+        "confusion_learning": {
+          "borderline": 1,
+          "eligible": 1,
+          "not_applicable": 2
+        },
+        "field_observation": {
+          "eligible": 2,
+          "not_applicable": 2
+        },
+        "indirect_evidence_learning": {
+          "borderline": 1,
+          "not_applicable": 3
+        },
+        "morphology_learning": {
+          "eligible": 2,
+          "not_applicable": 2
+        },
+        "species_card": {
+          "eligible": 1,
+          "not_applicable": 2,
+          "not_recommended": 1
+        }
+      },
+      "taxon:birds:000028": {
+        "basic_identification": {
+          "eligible": 1,
+          "not_recommended": 1
+        },
+        "confusion_learning": {
+          "eligible": 1,
+          "not_recommended": 1
+        },
+        "field_observation": {
+          "borderline": 1,
+          "eligible": 1
+        },
+        "indirect_evidence_learning": {
+          "not_applicable": 2
+        },
+        "morphology_learning": {
+          "borderline": 1,
+          "not_recommended": 1
+        },
+        "species_card": {
+          "borderline": 1,
+          "not_recommended": 1
+        }
+      },
+      "taxon:birds:000029": {
+        "basic_identification": {
+          "eligible": 3,
+          "not_applicable": 1
+        },
+        "confusion_learning": {
+          "borderline": 2,
+          "eligible": 1,
+          "not_applicable": 1
+        },
+        "field_observation": {
+          "eligible": 3,
+          "not_applicable": 1
+        },
+        "indirect_evidence_learning": {
+          "not_applicable": 4
+        },
+        "morphology_learning": {
+          "borderline": 2,
+          "eligible": 1,
+          "not_applicable": 1
+        },
+        "species_card": {
+          "borderline": 2,
+          "eligible": 1,
+          "not_applicable": 1
+        }
+      },
+      "taxon:birds:000031": {
+        "basic_identification": {
+          "eligible": 1,
+          "not_recommended": 1
+        },
+        "confusion_learning": {
+          "borderline": 1,
+          "eligible": 1
+        },
+        "field_observation": {
+          "borderline": 1,
+          "eligible": 1
+        },
+        "indirect_evidence_learning": {
+          "not_applicable": 2
+        },
+        "morphology_learning": {
+          "eligible": 1,
+          "not_recommended": 1
+        },
+        "species_card": {
+          "eligible": 1,
+          "not_recommended": 1
+        }
+      },
+      "taxon:birds:000032": {
+        "basic_identification": {
+          "eligible": 1
+        },
+        "confusion_learning": {
+          "eligible": 1
+        },
+        "field_observation": {
+          "eligible": 1
+        },
+        "indirect_evidence_learning": {
+          "not_applicable": 1
+        },
+        "morphology_learning": {
+          "borderline": 1
+        },
+        "species_card": {
+          "eligible": 1
+        }
+      },
+      "taxon:birds:000033": {
+        "basic_identification": {
+          "borderline": 1,
+          "eligible": 2,
+          "not_recommended": 3
+        },
+        "confusion_learning": {
+          "borderline": 4,
+          "eligible": 2
+        },
+        "field_observation": {
+          "borderline": 3,
+          "eligible": 3
+        },
+        "indirect_evidence_learning": {
+          "not_applicable": 6
+        },
+        "morphology_learning": {
+          "borderline": 1,
+          "eligible": 2,
+          "not_recommended": 3
+        },
+        "species_card": {
+          "eligible": 3,
+          "not_recommended": 3
+        }
+      },
+      "taxon:birds:000034": {
+        "basic_identification": {
+          "eligible": 1
+        },
+        "confusion_learning": {
+          "eligible": 1
+        },
+        "field_observation": {
+          "eligible": 1
+        },
+        "indirect_evidence_learning": {
+          "not_applicable": 1
+        },
+        "morphology_learning": {
+          "eligible": 1
+        },
+        "species_card": {
+          "eligible": 1
+        }
+      },
+      "taxon:birds:000036": {
+        "basic_identification": {
+          "eligible": 2
+        },
+        "confusion_learning": {
+          "eligible": 2
+        },
+        "field_observation": {
+          "eligible": 2
+        },
+        "indirect_evidence_learning": {
+          "not_applicable": 2
+        },
+        "morphology_learning": {
+          "borderline": 2
+        },
+        "species_card": {
+          "eligible": 2
+        }
+      },
+      "taxon:birds:000039": {
+        "basic_identification": {
+          "eligible": 1,
+          "not_recommended": 2
+        },
+        "confusion_learning": {
+          "borderline": 2,
+          "eligible": 1
+        },
+        "field_observation": {
+          "borderline": 1,
+          "eligible": 2
+        },
+        "indirect_evidence_learning": {
+          "not_applicable": 3
+        },
+        "morphology_learning": {
+          "borderline": 2,
+          "eligible": 1
+        },
+        "species_card": {
+          "borderline": 1,
+          "eligible": 1,
+          "not_recommended": 1
+        }
+      },
+      "taxon:birds:000042": {
+        "basic_identification": {
+          "not_recommended": 1
+        },
+        "confusion_learning": {
+          "not_recommended": 1
+        },
+        "field_observation": {
+          "eligible": 1
+        },
+        "indirect_evidence_learning": {
+          "eligible": 1
+        },
+        "morphology_learning": {
+          "not_recommended": 1
+        },
+        "species_card": {
+          "not_recommended": 1
+        }
+      },
+      "taxon:birds:000043": {
+        "basic_identification": {
+          "not_applicable": 1,
+          "not_recommended": 1
+        },
+        "confusion_learning": {
+          "borderline": 1,
+          "not_applicable": 1
+        },
+        "field_observation": {
+          "borderline": 1,
+          "not_applicable": 1
+        },
+        "indirect_evidence_learning": {
+          "not_applicable": 2
+        },
+        "morphology_learning": {
+          "borderline": 1,
+          "not_applicable": 1
+        },
+        "species_card": {
+          "not_applicable": 1,
+          "not_recommended": 1
+        }
+      },
+      "taxon:birds:000048": {
+        "basic_identification": {
+          "borderline": 1,
+          "eligible": 1,
+          "not_recommended": 1
+        },
+        "confusion_learning": {
+          "borderline": 1,
+          "eligible": 1,
+          "not_recommended": 1
+        },
+        "field_observation": {
+          "borderline": 1,
+          "eligible": 2
+        },
+        "indirect_evidence_learning": {
+          "borderline": 1,
+          "not_applicable": 2
+        },
+        "morphology_learning": {
+          "borderline": 1,
+          "eligible": 1,
+          "not_recommended": 1
+        },
+        "species_card": {
+          "borderline": 1,
+          "eligible": 1,
+          "not_recommended": 1
+        }
+      },
+      "taxon:birds:000079": {
+        "basic_identification": {
+          "eligible": 3,
+          "not_applicable": 1,
+          "not_recommended": 2
+        },
+        "confusion_learning": {
+          "borderline": 2,
+          "eligible": 2,
+          "not_applicable": 1,
+          "not_recommended": 1
+        },
+        "field_observation": {
+          "borderline": 1,
+          "eligible": 4,
+          "not_applicable": 1
+        },
+        "indirect_evidence_learning": {
+          "eligible": 1,
+          "not_applicable": 5
+        },
+        "morphology_learning": {
+          "borderline": 2,
+          "eligible": 2,
+          "not_applicable": 1,
+          "not_recommended": 1
+        },
+        "species_card": {
+          "borderline": 1,
+          "eligible": 3,
+          "not_applicable": 1,
+          "not_recommended": 1
+        }
+      }
+    }
+  },
+  "top_evidence_type_usage_status_combinations": [
+    {
+      "combination": "whole_organism|indirect_evidence_learning|not_applicable",
+      "count": 92
+    },
+    {
+      "combination": "whole_organism|field_observation|eligible",
+      "count": 68
+    },
+    {
+      "combination": "whole_organism|basic_identification|eligible",
+      "count": 52
+    },
+    {
+      "combination": "whole_organism|species_card|eligible",
+      "count": 52
+    },
+    {
+      "combination": "whole_organism|confusion_learning|borderline",
+      "count": 45
+    },
+    {
+      "combination": "whole_organism|confusion_learning|eligible",
+      "count": 41
+    },
+    {
+      "combination": "whole_organism|morphology_learning|eligible",
+      "count": 39
+    },
+    {
+      "combination": "whole_organism|morphology_learning|borderline",
+      "count": 34
+    },
+    {
+      "combination": "whole_organism|basic_identification|not_recommended",
+      "count": 31
+    },
+    {
+      "combination": "whole_organism|field_observation|borderline",
+      "count": 24
+    },
+    {
+      "combination": "whole_organism|species_card|not_recommended",
+      "count": 22
+    },
+    {
+      "combination": "whole_organism|morphology_learning|not_recommended",
+      "count": 19
+    }
+  ],
+  "usage_eligibility_counts": {
+    "basic_identification": {
+      "borderline": 14,
+      "eligible": 52,
+      "not_applicable": 14,
+      "not_recommended": 40
+    },
+    "confusion_learning": {
+      "borderline": 51,
+      "eligible": 41,
+      "not_applicable": 14,
+      "not_recommended": 14
+    },
+    "field_observation": {
+      "borderline": 28,
+      "eligible": 78,
+      "not_applicable": 14
+    },
+    "indirect_evidence_learning": {
+      "borderline": 7,
+      "eligible": 7,
+      "not_applicable": 106
+    },
+    "morphology_learning": {
+      "borderline": 36,
+      "eligible": 46,
+      "not_applicable": 14,
+      "not_recommended": 24
+    },
+    "species_card": {
+      "borderline": 18,
+      "eligible": 52,
+      "not_applicable": 14,
+      "not_recommended": 36
+    }
+  }
+}
