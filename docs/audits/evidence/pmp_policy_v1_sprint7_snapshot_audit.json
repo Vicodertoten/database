@@ -1,0 +1,371 @@
+{
+  "ai_outputs_broken": false,
+  "ai_outputs_path": "data/raw/inaturalist/palier1-be-birds-50taxa-run003-v11-baseline-sprint6-controlled-120/ai_outputs.json",
+  "decision": "READY_FOR_BROADER_PROFILED_CORPUS_WITH_POLICY",
+  "doctrine_pollution_checks": {
+    "doctrine_pollution_detected": false,
+    "runtime_or_feedback_pollution_count": 0
+  },
+  "eligible_database_uses_distribution": {
+    "basic_identification": 52,
+    "confusion_learning": 41,
+    "field_observation": 78,
+    "indirect_evidence_learning": 7,
+    "morphology_learning": 46,
+    "species_card": 52
+  },
+  "examples": {
+    "failed_profile": {
+      "eligible_database_uses": [],
+      "evidence_type": "unknown",
+      "global_quality_score": null,
+      "media_key": "inaturalist::108408470",
+      "policy_notes": [
+        "pmp_review_status_failed",
+        "outcome_status_pedagogical_media_profile_failed"
+      ],
+      "policy_status": "profile_failed",
+      "review_status": "failed",
+      "source_status": "pedagogical_media_profile_failed",
+      "usage_statuses": {
+        "basic_identification": {
+          "reason": "not_evaluated",
+          "score": null,
+          "status": "not_applicable"
+        },
+        "confusion_learning": {
+          "reason": "not_evaluated",
+          "score": null,
+          "status": "not_applicable"
+        },
+        "field_observation": {
+          "reason": "not_evaluated",
+          "score": null,
+          "status": "not_applicable"
+        },
+        "indirect_evidence_learning": {
+          "reason": "not_evaluated",
+          "score": null,
+          "status": "not_applicable"
+        },
+        "morphology_learning": {
+          "reason": "not_evaluated",
+          "score": null,
+          "status": "not_applicable"
+        },
+        "species_card": {
+          "reason": "not_evaluated",
+          "score": null,
+          "status": "not_applicable"
+        }
+      }
+    },
+    "indirect_evidence_indirect_learning_eligible": {
+      "eligible_database_uses": [
+        "field_observation",
+        "morphology_learning",
+        "indirect_evidence_learning"
+      ],
+      "evidence_type": "feather",
+      "global_quality_score": 96.0,
+      "media_key": "inaturalist::100909260",
+      "policy_notes": [
+        "indirect_evidence_interpretation_applied",
+        "global_quality_is_broad_signal_not_selection"
+      ],
+      "policy_status": "profile_valid",
+      "review_status": "valid",
+      "source_status": "ok",
+      "usage_statuses": {
+        "basic_identification": {
+          "reason": "indirect_evidence_basic_identification_not_recommended",
+          "score": 24.0,
+          "status": "not_recommended"
+        },
+        "confusion_learning": {
+          "reason": "score_below_threshold",
+          "score": 39.0,
+          "status": "not_recommended"
+        },
+        "field_observation": {
+          "reason": "score_above_threshold",
+          "score": 76.0,
+          "status": "eligible"
+        },
+        "indirect_evidence_learning": {
+          "reason": "score_above_threshold",
+          "score": 92.0,
+          "status": "eligible"
+        },
+        "morphology_learning": {
+          "reason": "score_above_threshold",
+          "score": 78.0,
+          "status": "eligible"
+        },
+        "species_card": {
+          "reason": "score_below_threshold",
+          "score": 33.0,
+          "status": "not_recommended"
+        }
+      }
+    },
+    "pre_ai_rejected": {
+      "eligible_database_uses": [],
+      "evidence_type": "unknown",
+      "global_quality_score": null,
+      "media_key": "inaturalist::11113098",
+      "policy_notes": [
+        "pre_ai_status:insufficient_resolution_pre_ai"
+      ],
+      "policy_status": "pre_ai_rejected",
+      "review_status": null,
+      "source_status": "insufficient_resolution_pre_ai",
+      "usage_statuses": {
+        "basic_identification": {
+          "reason": "not_evaluated",
+          "score": null,
+          "status": "not_applicable"
+        },
+        "confusion_learning": {
+          "reason": "not_evaluated",
+          "score": null,
+          "status": "not_applicable"
+        },
+        "field_observation": {
+          "reason": "not_evaluated",
+          "score": null,
+          "status": "not_applicable"
+        },
+        "indirect_evidence_learning": {
+          "reason": "not_evaluated",
+          "score": null,
+          "status": "not_applicable"
+        },
+        "morphology_learning": {
+          "reason": "not_evaluated",
+          "score": null,
+          "status": "not_applicable"
+        },
+        "species_card": {
+          "reason": "not_evaluated",
+          "score": null,
+          "status": "not_applicable"
+        }
+      }
+    },
+    "whole_organism_basic_identification_eligible": {
+      "eligible_database_uses": [
+        "basic_identification",
+        "field_observation",
+        "confusion_learning"
+      ],
+      "evidence_type": "whole_organism",
+      "global_quality_score": 67.0,
+      "media_key": "inaturalist::100422597",
+      "policy_notes": [
+        "global_quality_is_broad_signal_not_selection"
+      ],
+      "policy_status": "profile_valid",
+      "review_status": "valid",
+      "source_status": "ok",
+      "usage_statuses": {
+        "basic_identification": {
+          "reason": "score_above_threshold",
+          "score": 70.0,
+          "status": "eligible"
+        },
+        "confusion_learning": {
+          "reason": "score_above_threshold",
+          "score": 73.0,
+          "status": "eligible"
+        },
+        "field_observation": {
+          "reason": "score_above_threshold",
+          "score": 74.0,
+          "status": "eligible"
+        },
+        "indirect_evidence_learning": {
+          "reason": "whole_organism_indirect_learning_not_primary",
+          "score": 0.0,
+          "status": "not_applicable"
+        },
+        "morphology_learning": {
+          "reason": "score_in_borderline_range",
+          "score": 63.0,
+          "status": "borderline"
+        },
+        "species_card": {
+          "reason": "score_in_borderline_range",
+          "score": 61.0,
+          "status": "borderline"
+        }
+      }
+    },
+    "whole_organism_basic_not_eligible_field_observation_eligible": {
+      "eligible_database_uses": [
+        "field_observation"
+      ],
+      "evidence_type": "whole_organism",
+      "global_quality_score": 66.0,
+      "media_key": "inaturalist::106017436",
+      "policy_notes": [
+        "global_quality_is_broad_signal_not_selection"
+      ],
+      "policy_status": "profile_valid",
+      "review_status": "valid",
+      "source_status": "ok",
+      "usage_statuses": {
+        "basic_identification": {
+          "reason": "score_in_borderline_range",
+          "score": 50.0,
+          "status": "borderline"
+        },
+        "confusion_learning": {
+          "reason": "score_in_borderline_range",
+          "score": 60.0,
+          "status": "borderline"
+        },
+        "field_observation": {
+          "reason": "score_above_threshold",
+          "score": 78.0,
+          "status": "eligible"
+        },
+        "indirect_evidence_learning": {
+          "reason": "whole_organism_indirect_learning_not_primary",
+          "score": 0.0,
+          "status": "not_applicable"
+        },
+        "morphology_learning": {
+          "reason": "score_in_borderline_range",
+          "score": 63.0,
+          "status": "borderline"
+        },
+        "species_card": {
+          "reason": "score_in_borderline_range",
+          "score": 61.0,
+          "status": "borderline"
+        }
+      }
+    }
+  },
+  "generation_metrics": {
+    "evidence_type_distribution": {
+      "dead_organism": 1,
+      "feather": 2,
+      "habitat": 1,
+      "multiple_organisms": 7,
+      "nest": 3,
+      "unknown": 14,
+      "whole_organism": 92
+    },
+    "pmp_profile_failed_count": 10,
+    "pmp_profile_valid_count": 106,
+    "policy_status_distribution": {
+      "pre_ai_rejected": 4,
+      "profile_failed": 10,
+      "profile_valid": 106
+    },
+    "pre_ai_rejected_count": 4,
+    "processed_media_count": 120
+  },
+  "indirect_evidence_checks": {
+    "has_indirect_eligible": true
+  },
+  "policy_summary": {
+    "global_quality_guardrail_ok": true,
+    "global_quality_guardrail_violation_count": 0,
+    "policy_output_shape": {
+      "contains_playable": false,
+      "contains_runtime_ready": false,
+      "contains_selectedOptionId": false,
+      "contains_selected_for_quiz": false
+    }
+  },
+  "snapshot_id": "palier1-be-birds-50taxa-run003-v11-baseline-sprint6-controlled-120",
+  "top_evidence_type_usage_status_combinations": [
+    {
+      "combination": "whole_organism|indirect_evidence_learning|not_applicable",
+      "count": 92
+    },
+    {
+      "combination": "whole_organism|field_observation|eligible",
+      "count": 68
+    },
+    {
+      "combination": "whole_organism|basic_identification|eligible",
+      "count": 52
+    },
+    {
+      "combination": "whole_organism|species_card|eligible",
+      "count": 52
+    },
+    {
+      "combination": "whole_organism|confusion_learning|borderline",
+      "count": 45
+    },
+    {
+      "combination": "whole_organism|confusion_learning|eligible",
+      "count": 41
+    },
+    {
+      "combination": "whole_organism|morphology_learning|eligible",
+      "count": 39
+    },
+    {
+      "combination": "whole_organism|morphology_learning|borderline",
+      "count": 34
+    },
+    {
+      "combination": "whole_organism|basic_identification|not_recommended",
+      "count": 31
+    },
+    {
+      "combination": "whole_organism|field_observation|borderline",
+      "count": 24
+    },
+    {
+      "combination": "whole_organism|species_card|not_recommended",
+      "count": 22
+    },
+    {
+      "combination": "whole_organism|morphology_learning|not_recommended",
+      "count": 19
+    }
+  ],
+  "usage_eligibility_counts": {
+    "basic_identification": {
+      "borderline": 14,
+      "eligible": 52,
+      "not_applicable": 14,
+      "not_recommended": 40
+    },
+    "confusion_learning": {
+      "borderline": 51,
+      "eligible": 41,
+      "not_applicable": 14,
+      "not_recommended": 14
+    },
+    "field_observation": {
+      "borderline": 28,
+      "eligible": 78,
+      "not_applicable": 14
+    },
+    "indirect_evidence_learning": {
+      "borderline": 7,
+      "eligible": 7,
+      "not_applicable": 106
+    },
+    "morphology_learning": {
+      "borderline": 36,
+      "eligible": 46,
+      "not_applicable": 14,
+      "not_recommended": 24
+    },
+    "species_card": {
+      "borderline": 18,
+      "eligible": 52,
+      "not_applicable": 14,
+      "not_recommended": 36
+    }
+  }
+}
