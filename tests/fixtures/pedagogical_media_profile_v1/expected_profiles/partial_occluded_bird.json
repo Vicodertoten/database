@@ -1,0 +1,114 @@
+{
+  "schema_version": "pedagogical_media_profile.v1",
+  "review_status": "valid",
+  "review_confidence": 0.73,
+  "organism_group": "bird",
+  "evidence_type": "partial_organism",
+  "technical_profile": {
+    "technical_quality": "medium",
+    "sharpness": "medium",
+    "lighting": "medium",
+    "contrast": "medium",
+    "background_clutter": "high",
+    "framing": "acceptable",
+    "distance_to_subject": "medium"
+  },
+  "observation_profile": {
+    "subject_presence": "partial",
+    "subject_visibility": "medium",
+    "visible_parts": [
+      "head",
+      "beak",
+      "breast"
+    ],
+    "view_angle": "mixed",
+    "occlusion": "major",
+    "context_visible": [
+      "vegetation",
+      "tree"
+    ]
+  },
+  "biological_profile_visible": {
+    "sex": {
+      "value": "unknown",
+      "confidence": "low",
+      "visible_basis": null
+    },
+    "life_stage": {
+      "value": "unknown",
+      "confidence": "low",
+      "visible_basis": null
+    },
+    "plumage_state": {
+      "value": "unknown",
+      "confidence": "low",
+      "visible_basis": null
+    },
+    "seasonal_state": {
+      "value": "unknown",
+      "confidence": "low",
+      "visible_basis": null
+    }
+  },
+  "identification_profile": {
+    "visual_evidence_strength": "medium",
+    "diagnostic_feature_visibility": "medium",
+    "identification_confidence_from_image": "medium",
+    "ambiguity_level": "medium",
+    "visible_field_marks": [
+      {
+        "feature": "bill shape visible despite branches",
+        "body_part": "beak",
+        "visibility": "medium",
+        "importance": "high",
+        "confidence": 0.71
+      }
+    ],
+    "missing_key_features": [
+      "tail",
+      "legs"
+    ],
+    "identification_limitations": [
+      "heavy vegetation occlusion"
+    ]
+  },
+  "pedagogical_profile": {
+    "learning_value": "medium",
+    "difficulty": "hard",
+    "beginner_accessibility": "low",
+    "expert_interest": "medium",
+    "field_realism": "high",
+    "cognitive_load": "high",
+    "requires_prior_knowledge": "medium"
+  },
+  "group_specific_profile": {
+    "bird": {
+      "bird_visible_parts": [
+        "head",
+        "beak",
+        "breast"
+      ],
+      "posture": "foraging",
+      "behavior_visible": "foraging",
+      "plumage_pattern_visible": "medium",
+      "bill_shape_visible": "medium",
+      "wing_pattern_visible": "low",
+      "tail_shape_visible": "none"
+    }
+  },
+  "limitations": [
+    "tail not visible",
+    "bird partly hidden by branches"
+  ],
+  "scores": {
+    "global_quality_score": 71,
+    "usage_scores": {
+      "basic_identification": 50,
+      "field_observation": 74,
+      "confusion_learning": 58,
+      "morphology_learning": 55,
+      "species_card": 44,
+      "indirect_evidence_learning": 46
+    }
+  }
+}

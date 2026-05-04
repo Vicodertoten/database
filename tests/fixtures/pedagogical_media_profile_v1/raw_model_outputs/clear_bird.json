@@ -1,0 +1,72 @@
+{
+  "schema_version": "pedagogical_media_profile.v1",
+  "review_status": "valid",
+  "review_confidence": 0.91,
+  "organism_group": "bird",
+  "evidence_type": "whole_organism",
+  "technical_profile": {
+    "technical_quality": "high",
+    "sharpness": "high",
+    "lighting": "high",
+    "contrast": "high",
+    "background_clutter": "low",
+    "framing": "good",
+    "distance_to_subject": "close"
+  },
+  "observation_profile": {
+    "subject_presence": "clear",
+    "subject_visibility": "high",
+    "visible_parts": ["head", "beak", "breast", "wing", "tail"],
+    "view_angle": "lateral",
+    "occlusion": "none",
+    "context_visible": ["vegetation"]
+  },
+  "biological_profile_visible": {
+    "sex": {"value": "unknown", "confidence": "low", "visible_basis": null},
+    "life_stage": {
+      "value": "adult",
+      "confidence": "medium",
+      "visible_basis": "adult-like plumage and body size"
+    },
+    "plumage_state": {"value": "unknown", "confidence": "low", "visible_basis": null},
+    "seasonal_state": {"value": "unknown", "confidence": "low", "visible_basis": null}
+  },
+  "identification_profile": {
+    "visual_evidence_strength": "high",
+    "diagnostic_feature_visibility": "high",
+    "identification_confidence_from_image": "high",
+    "ambiguity_level": "low",
+    "visible_field_marks": [
+      {
+        "feature": "orange breast",
+        "body_part": "breast",
+        "visibility": "high",
+        "importance": "high",
+        "confidence": 0.93
+      }
+    ],
+    "missing_key_features": [],
+    "identification_limitations": []
+  },
+  "pedagogical_profile": {
+    "learning_value": "high",
+    "difficulty": "easy",
+    "beginner_accessibility": "high",
+    "expert_interest": "medium",
+    "field_realism": "medium",
+    "cognitive_load": "low",
+    "requires_prior_knowledge": "low"
+  },
+  "group_specific_profile": {
+    "bird": {
+      "bird_visible_parts": ["head", "beak", "breast", "wing", "tail"],
+      "posture": "perched",
+      "behavior_visible": "perched",
+      "plumage_pattern_visible": "high",
+      "bill_shape_visible": "high",
+      "wing_pattern_visible": "medium",
+      "tail_shape_visible": "medium"
+    }
+  },
+  "limitations": []
+}

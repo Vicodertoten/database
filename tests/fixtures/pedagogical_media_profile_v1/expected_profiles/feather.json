@@ -1,0 +1,110 @@
+{
+  "schema_version": "pedagogical_media_profile.v1",
+  "review_status": "valid",
+  "review_confidence": 0.82,
+  "organism_group": "bird",
+  "evidence_type": "feather",
+  "technical_profile": {
+    "technical_quality": "high",
+    "sharpness": "high",
+    "lighting": "high",
+    "contrast": "medium",
+    "background_clutter": "low",
+    "framing": "good",
+    "distance_to_subject": "close"
+  },
+  "observation_profile": {
+    "subject_presence": "indirect",
+    "subject_visibility": "none",
+    "visible_parts": [
+      "feather"
+    ],
+    "view_angle": "dorsal",
+    "occlusion": "none",
+    "context_visible": [
+      "ground"
+    ]
+  },
+  "biological_profile_visible": {
+    "sex": {
+      "value": "not_applicable",
+      "confidence": "low",
+      "visible_basis": null
+    },
+    "life_stage": {
+      "value": "unknown",
+      "confidence": "low",
+      "visible_basis": null
+    },
+    "plumage_state": {
+      "value": "unknown",
+      "confidence": "low",
+      "visible_basis": null
+    },
+    "seasonal_state": {
+      "value": "unknown",
+      "confidence": "low",
+      "visible_basis": null
+    }
+  },
+  "identification_profile": {
+    "visual_evidence_strength": "low",
+    "diagnostic_feature_visibility": "medium",
+    "identification_confidence_from_image": "low",
+    "ambiguity_level": "high",
+    "visible_field_marks": [
+      {
+        "feature": "feather pattern",
+        "body_part": "feather",
+        "visibility": "medium",
+        "importance": "medium",
+        "confidence": 0.65
+      }
+    ],
+    "missing_key_features": [
+      "whole_body",
+      "head",
+      "beak"
+    ],
+    "identification_limitations": [
+      "media shows a feather rather than the whole organism"
+    ]
+  },
+  "pedagogical_profile": {
+    "learning_value": "medium",
+    "difficulty": "hard",
+    "beginner_accessibility": "low",
+    "expert_interest": "medium",
+    "field_realism": "high",
+    "cognitive_load": "high",
+    "requires_prior_knowledge": "high"
+  },
+  "group_specific_profile": {
+    "bird": {
+      "bird_visible_parts": [
+        "unknown"
+      ],
+      "posture": "unknown",
+      "behavior_visible": "unknown",
+      "plumage_pattern_visible": "medium",
+      "bill_shape_visible": "none",
+      "wing_pattern_visible": "unknown",
+      "tail_shape_visible": "unknown"
+    }
+  },
+  "limitations": [
+    "whole organism is not visible",
+    "species-level identification from the media alone is limited"
+  ],
+  "scores": {
+    "global_quality_score": 57,
+    "usage_scores": {
+      "basic_identification": 13,
+      "field_observation": 52,
+      "confusion_learning": 30,
+      "morphology_learning": 51,
+      "species_card": 20,
+      "indirect_evidence_learning": 89
+    }
+  }
+}

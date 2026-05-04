@@ -1,0 +1,15 @@
+{
+  "schema_version": "pedagogical_media_profile.v1",
+  "review_status": "failed",
+  "failure_reason": "media_uninspectable",
+  "diagnostics": {
+    "parsed_json_available": true,
+    "schema_error_count": 0,
+    "schema_errors": [],
+    "schema_failure_cause": "unknown_schema_failure",
+    "raw_model_output_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "raw_model_output_excerpt": "media bytes unreadable",
+    "schema_version": "pedagogical_media_profile.v1",
+    "media_id": "media_fixture_uninspectable"
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "schema_version": "pedagogical_media_profile.v1",
+  "review_status": "valid",
+  "review_confidence": 0.76,
+  "organism_group": "bird",
+  "evidence_type": "habitat",
+  "technical_profile": {
+    "technical_quality": "high",
+    "sharpness": "high",
+    "lighting": "high",
+    "contrast": "high",
+    "background_clutter": "low",
+    "framing": "good",
+    "distance_to_subject": "far"
+  },
+  "observation_profile": {
+    "subject_presence": "indirect",
+    "subject_visibility": "none",
+    "visible_parts": [
+      "habitat"
+    ],
+    "view_angle": "mixed",
+    "occlusion": "none",
+    "context_visible": [
+      "water",
+      "vegetation",
+      "reedbed",
+      "sky",
+      "human_structure"
+    ]
+  },
+  "biological_profile_visible": {
+    "sex": {
+      "value": "not_applicable",
+      "confidence": "low",
+      "visible_basis": null
+    },
+    "life_stage": {
+      "value": "not_applicable",
+      "confidence": "low",
+      "visible_basis": null
+    },
+    "plumage_state": {
+      "value": "not_applicable",
+      "confidence": "low",
+      "visible_basis": null
+    },
+    "seasonal_state": {
+      "value": "unknown",
+      "confidence": "low",
+      "visible_basis": null
+    }
+  },
+  "identification_profile": {
+    "visual_evidence_strength": "none",
+    "diagnostic_feature_visibility": "none",
+    "identification_confidence_from_image": "none",
+    "ambiguity_level": "high",
+    "visible_field_marks": [],
+    "missing_key_features": [
+      "whole_body",
+      "head",
+      "tail"
+    ],
+    "identification_limitations": [
+      "organism not directly visible"
+    ]
+  },
+  "pedagogical_profile": {
+    "learning_value": "medium",
+    "difficulty": "medium",
+    "beginner_accessibility": "medium",
+    "expert_interest": "high",
+    "field_realism": "high",
+    "cognitive_load": "medium",
+    "requires_prior_knowledge": "medium"
+  },
+  "group_specific_profile": {
+    "bird": {
+      "bird_visible_parts": [
+        "unknown"
+      ],
+      "posture": "unknown",
+      "behavior_visible": "unknown",
+      "plumage_pattern_visible": "none",
+      "bill_shape_visible": "none",
+      "wing_pattern_visible": "none",
+      "tail_shape_visible": "none"
+    }
+  },
+  "limitations": [
+    "subject is not directly visible"
+  ],
+  "scores": {
+    "global_quality_score": 40,
+    "usage_scores": {
+      "basic_identification": 1,
+      "field_observation": 61,
+      "confusion_learning": 4,
+      "morphology_learning": 16,
+      "species_card": 9,
+      "indirect_evidence_learning": 82
+    }
+  }
+}

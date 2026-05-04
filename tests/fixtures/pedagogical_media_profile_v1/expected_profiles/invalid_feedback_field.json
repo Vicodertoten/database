@@ -1,0 +1,23 @@
+{
+  "schema_version": "pedagogical_media_profile.v1",
+  "review_status": "failed",
+  "failure_reason": "schema_validation_failed",
+  "diagnostics": {
+    "parsed_json_available": true,
+    "schema_error_count": 1,
+    "schema_errors": [
+      {
+        "path": "<root>",
+        "message": "Additional properties are not allowed ('post_answer_feedback' was unexpected)",
+        "validator": "additionalProperties",
+        "cause": "additional_property",
+        "expected": "no additional properties",
+        "actual": "<object keys=['biological_profile_visible', 'evidence_type', 'group_specific_profile', 'identification_profile', 'limitations', 'observation_profile', 'organism_group', 'pedagogical_profile', 'post_answer_feedback', 'review_confidence']>"
+      }
+    ],
+    "schema_failure_cause": "additional_property",
+    "raw_model_output_sha256": "b0e5672924ac64999c62e87a79b5b640fe1ce9953555ed5241edd26ed84eba52",
+    "raw_model_output_excerpt": "{ \"schema_version\": \"pedagogical_media_profile.v1\", \"review_status\": \"valid\", \"review_confidence\": 0.9, \"organism_group\": \"bird\", \"evidence_type\": \"whole_organism\", \"technical_profile\": { \"technical_quality\": \"high\", \"sharpness\": \"high\", \"lighting\": \"high\", \"contrast\": \"high\", \"background_clutter\": \"low\", \"framing\": \"good\", \"distance_to_subject\": \"close\" }, \"observation_profile\": { \"subject_presence\": \"clear\", \"subject_visibility\": \"high\", \"visible_parts\": [\"head\", \"beak\", \"breast\", \"wing\", \"tail\"], \"view_angle\": \"lateral\", \"occlusion\": \"none\", \"context_visible\": [\"vegetation\"] }, \"biological_profile_visible\": { \"sex\": {\"value\": \"unknown\", \"confidence\": \"low\", \"visible_basis\": null}, \"life_stage\": { \"value\": \"adult\", \"confidence\": \"medium\", \"visible_basis\": \"adult-like plumage and body size\" }, \"plumage_state\": {\"value\": \"unknown\", \"confidence\": \"low\", \"visible_basis\": null}, \"seasonal_state\": {\"value\": \"unknown\", \"confidence\": \"low\", \"visible_basis\": null} }, \"identification_profile\": { \"visual_evidence_strength\": \"high\", \"diagnostic_feature_visibility\": \"high\", \"identification_confidence_from_image\": \"high\", \"ambiguity_level\": \"low\", \"visible_field_marks\": [], \"missing_key_featur",
+    "schema_version": "pedagogical_media_profile.v1"
+  }
+}

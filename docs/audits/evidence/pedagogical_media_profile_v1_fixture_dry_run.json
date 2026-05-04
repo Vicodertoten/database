@@ -1,0 +1,62 @@
+{
+  "average_global_quality_score": 63.29,
+  "average_usage_scores": {
+    "basic_identification": 35.14,
+    "confusion_learning": 40.43,
+    "field_observation": 69.14,
+    "indirect_evidence_learning": 52.71,
+    "morphology_learning": 48.86,
+    "species_card": 36.86
+  },
+  "biological_basis_rejection_count": 1,
+  "decision": "READY_FOR_LIVE_MINI_RUN",
+  "evidence_type_distribution": {
+    "feather": 1,
+    "habitat": 1,
+    "multiple_organisms": 1,
+    "nest": 1,
+    "partial_organism": 1,
+    "whole_organism": 2
+  },
+  "execution_status": "ok",
+  "failed_count": 3,
+  "failure_reason_distribution": {
+    "media_uninspectable": 1,
+    "schema_validation_failed": 2
+  },
+  "feedback_rejection_count": 1,
+  "fixture_count": 10,
+  "high_indirect_evidence_valid_count": 3,
+  "low_basic_identification_valid_count": 5,
+  "model_output_invalid_count": 0,
+  "organism_group_distribution": {
+    "bird": 7
+  },
+  "qualitative_examples": {
+    "failed_fixture_reasons": {
+      "failed_media_uninspectable.json": "media_uninspectable",
+      "invalid_biological_basis.json": "schema_validation_failed",
+      "invalid_feedback_field.json": "schema_validation_failed"
+    },
+    "high_indirect_evidence_valid_fixtures": [
+      "feather.json",
+      "habitat.json",
+      "nest.json"
+    ],
+    "low_basic_identification_valid_fixtures": [
+      "distant_bird.json",
+      "feather.json",
+      "habitat.json",
+      "multiple_organisms.json",
+      "nest.json"
+    ]
+  },
+  "schema_failure_cause_distribution": {
+    "additional_property": 1,
+    "invalid_biological_basis": 1,
+    "unknown_schema_failure": 1
+  },
+  "schema_validation_failed_count": 2,
+  "schema_version": "pedagogical_media_profile_fixture_dry_run.v1",
+  "valid_count": 7
+}

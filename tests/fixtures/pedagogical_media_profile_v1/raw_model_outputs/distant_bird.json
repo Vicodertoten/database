@@ -1,0 +1,60 @@
+{
+  "schema_version": "pedagogical_media_profile.v1",
+  "review_status": "valid",
+  "review_confidence": 0.68,
+  "organism_group": "bird",
+  "evidence_type": "whole_organism",
+  "technical_profile": {
+    "technical_quality": "low",
+    "sharpness": "low",
+    "lighting": "medium",
+    "contrast": "low",
+    "background_clutter": "medium",
+    "framing": "poor",
+    "distance_to_subject": "very_far"
+  },
+  "observation_profile": {
+    "subject_presence": "clear",
+    "subject_visibility": "low",
+    "visible_parts": ["whole_body"],
+    "view_angle": "mixed",
+    "occlusion": "minor",
+    "context_visible": ["sky", "tree"]
+  },
+  "biological_profile_visible": {
+    "sex": {"value": "unknown", "confidence": "low", "visible_basis": null},
+    "life_stage": {"value": "unknown", "confidence": "low", "visible_basis": null},
+    "plumage_state": {"value": "unknown", "confidence": "low", "visible_basis": null},
+    "seasonal_state": {"value": "unknown", "confidence": "low", "visible_basis": null}
+  },
+  "identification_profile": {
+    "visual_evidence_strength": "low",
+    "diagnostic_feature_visibility": "low",
+    "identification_confidence_from_image": "low",
+    "ambiguity_level": "high",
+    "visible_field_marks": [],
+    "missing_key_features": ["head detail", "tail pattern", "bill detail"],
+    "identification_limitations": ["subject too distant for reliable species-level marks"]
+  },
+  "pedagogical_profile": {
+    "learning_value": "medium",
+    "difficulty": "hard",
+    "beginner_accessibility": "low",
+    "expert_interest": "medium",
+    "field_realism": "high",
+    "cognitive_load": "high",
+    "requires_prior_knowledge": "high"
+  },
+  "group_specific_profile": {
+    "bird": {
+      "bird_visible_parts": ["whole_body"],
+      "posture": "flying",
+      "behavior_visible": "flying",
+      "plumage_pattern_visible": "none",
+      "bill_shape_visible": "none",
+      "wing_pattern_visible": "low",
+      "tail_shape_visible": "low"
+    }
+  },
+  "limitations": ["very far subject", "diagnostic features barely visible"]
+}

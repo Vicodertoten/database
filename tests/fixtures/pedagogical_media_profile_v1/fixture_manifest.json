@@ -1,0 +1,28 @@
+{
+  "fixture_set": "pedagogical_media_profile_v1",
+  "description": "Offline fixtures for prompt/parse/validate/score dry-runs without live model access.",
+  "raw_model_outputs": [
+    "clear_bird.json",
+    "distant_bird.json",
+    "failed_media_uninspectable.json",
+    "feather.json",
+    "habitat.json",
+    "invalid_biological_basis.json",
+    "invalid_feedback_field.json",
+    "multiple_organisms.json",
+    "nest.json",
+    "partial_occluded_bird.json"
+  ],
+  "expected_profiles": [
+    "clear_bird.json",
+    "distant_bird.json",
+    "failed_media_uninspectable.json",
+    "feather.json",
+    "habitat.json",
+    "invalid_biological_basis.json",
+    "invalid_feedback_field.json",
+    "multiple_organisms.json",
+    "nest.json",
+    "partial_occluded_bird.json"
+  ]
+}

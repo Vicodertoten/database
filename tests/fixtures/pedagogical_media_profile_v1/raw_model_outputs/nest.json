@@ -1,0 +1,60 @@
+{
+  "schema_version": "pedagogical_media_profile.v1",
+  "review_status": "valid",
+  "review_confidence": 0.8,
+  "organism_group": "bird",
+  "evidence_type": "nest",
+  "technical_profile": {
+    "technical_quality": "high",
+    "sharpness": "high",
+    "lighting": "medium",
+    "contrast": "medium",
+    "background_clutter": "medium",
+    "framing": "good",
+    "distance_to_subject": "medium"
+  },
+  "observation_profile": {
+    "subject_presence": "indirect",
+    "subject_visibility": "none",
+    "visible_parts": ["nest"],
+    "view_angle": "mixed",
+    "occlusion": "minor",
+    "context_visible": ["tree", "vegetation"]
+  },
+  "biological_profile_visible": {
+    "sex": {"value": "not_applicable", "confidence": "low", "visible_basis": null},
+    "life_stage": {"value": "unknown", "confidence": "low", "visible_basis": null},
+    "plumage_state": {"value": "not_applicable", "confidence": "low", "visible_basis": null},
+    "seasonal_state": {"value": "unknown", "confidence": "low", "visible_basis": null}
+  },
+  "identification_profile": {
+    "visual_evidence_strength": "low",
+    "diagnostic_feature_visibility": "low",
+    "identification_confidence_from_image": "low",
+    "ambiguity_level": "high",
+    "visible_field_marks": [],
+    "missing_key_features": ["whole_body", "head", "beak"],
+    "identification_limitations": ["nest structure alone rarely confirms species"]
+  },
+  "pedagogical_profile": {
+    "learning_value": "high",
+    "difficulty": "medium",
+    "beginner_accessibility": "medium",
+    "expert_interest": "high",
+    "field_realism": "high",
+    "cognitive_load": "medium",
+    "requires_prior_knowledge": "medium"
+  },
+  "group_specific_profile": {
+    "bird": {
+      "bird_visible_parts": ["unknown"],
+      "posture": "unknown",
+      "behavior_visible": "unknown",
+      "plumage_pattern_visible": "none",
+      "bill_shape_visible": "none",
+      "wing_pattern_visible": "none",
+      "tail_shape_visible": "none"
+    }
+  },
+  "limitations": ["organism not visible", "species-level diagnosis is weak"]
+}
