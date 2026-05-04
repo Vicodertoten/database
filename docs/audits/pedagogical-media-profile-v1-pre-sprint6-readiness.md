@@ -115,6 +115,8 @@ Defines:
 
 ## Validation
 
+Validated on 2026-05-04 against commit `db50a13`.
+
 ### Tests
 
 ```bash
@@ -128,7 +130,7 @@ Defines:
   -q
 ```
 
-Expected: all pass (23 tests in `test_sprint5_pmp_pipeline.py`).
+Result: **127 passed** (23 tests in `test_sprint5_pmp_pipeline.py`).
 
 ### Ruff
 
@@ -144,7 +146,7 @@ Expected: all pass (23 tests in `test_sprint5_pmp_pipeline.py`).
   tests/test_sprint5_pmp_pipeline.py
 ```
 
-Expected: no errors.
+Result: **no errors**.
 
 ### Docs hygiene and coherence
 
@@ -153,7 +155,15 @@ Expected: no errors.
 ./.venv/bin/python scripts/check_doc_code_coherence.py
 ```
 
-Expected: all pass.
+Result: **both passed**.
+
+### verify_repo
+
+```bash
+./.venv/bin/python scripts/verify_repo.py
+```
+
+Result: **"Repository verification complete" — all checks passed**.
 
 ---
 

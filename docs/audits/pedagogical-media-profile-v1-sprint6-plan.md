@@ -112,8 +112,8 @@ Notes:
 
 Select 5–10 sample profiles for manual inspection:
 - At least 2 high-quality valid profiles
-- At least 1 failed profile
-- At least 1 partial-organism or indirect-evidence profile
+- At least 1 failed profile, if available
+- At least 1 partial-organism or indirect-evidence profile, if available
 
 ---
 
@@ -127,6 +127,29 @@ Sprint 6 must distinguish:
 
 `qualification=None` is an intentional Sprint 5 design choice. It is **not** a
 failure of PMP generation. Do not treat it as such in the audit.
+
+---
+
+## Audit step (required — do not skip)
+
+Sprint 6 does **not** end after producing `ai_outputs.json`. The run must be
+followed by a full audit pass:
+
+1. Read `ai_outputs.json` (or the equivalent output artifact).
+2. Aggregate the following metrics:
+   - PMP validity rate (`pmp_valid_rate`)
+   - Score distributions across `overall_score` and sub-scores
+   - Evidence type distribution (`evidence_types`)
+   - Failure reason breakdown (grouped by `failure_reason`)
+   - `qualification_none_count` (profiles where `qualification=None` was returned
+     as the intended Sprint 5 behavior)
+3. Select a manual review sample (see section above).
+4. Write an **evidence JSON** capturing the aggregated metrics and sample pointers.
+5. Write a **closure doc** recording the Sprint 6 findings, the decision label
+   applied, and next steps.
+
+The closure doc is the official hand-off artifact. Sprint 6 is not complete until
+both the evidence JSON and the closure doc exist.
 
 ---
 
