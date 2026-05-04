@@ -27,6 +27,34 @@ REQUIRED_USAGE_SCORE_KEYS = (
     "indirect_evidence_learning",
 )
 
+INDIRECT_EVIDENCE_TYPES = {
+    "feather",
+    "egg",
+    "nest",
+    "track",
+    "scat",
+    "burrow",
+    "habitat",
+    "dead_organism",
+}
+
+PARTIAL_OR_COMPLEX_EVIDENCE_TYPES = {
+    "partial_organism",
+    "multiple_organisms",
+}
+
+PRE_AI_STATUSES = {
+    "missing_cached_image",
+    "insufficient_resolution",
+    "insufficient_resolution_pre_ai",
+    "decode_error_pre_ai",
+    "blur_pre_ai",
+    "duplicate_pre_ai",
+}
+
+ERROR_CAUSE_KEYS = ("cause", "type", "validator", "schema_failure_cause", "error_type")
+ERROR_PATH_KEYS = ("path", "loc", "instance_path", "json_path")
+
 RUNTIME_POLLUTION_KEYS = {
     "feedback",
     "feedback_short",
@@ -47,6 +75,11 @@ def _parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--snapshot-id", required=True)
     parser.add_argument("--snapshot-root", type=Path, default=DEFAULT_SNAPSHOT_ROOT)
+    parser.add_argument(
+        "--manifest-path",
+        type=Path,
+        help="Optional explicit manifest.json path for metadata joins.",
+    )
     parser.add_argument(
         "--ai-outputs-path",
         type=Path,
@@ -75,13 +108,36 @@ def _min_max(values: list[float]) -> dict[str, float] | None:
     return {"min": round(min(values), 2), "max": round(max(values), 2)}
 
 
+def _normalize_scalar(value: object, *, limit: int = 240) -> object:
+    if value is None:
+        return None
+    if isinstance(value, (bool, int, float)):
+        return value
+    if isinstance(value, str):
+        return value[:limit]
+    if isinstance(value, list):
+        return f"<array len={len(value)}>"
+    if isinstance(value, dict):
+        return f"<object keys={sorted(value.keys())[:8]}>"
+    return str(value)[:limit]
+
+
+def _normalize_path(value: object) -> str:
+    if value is None:
+        return "<unknown>"
+    if isinstance(value, (list, tuple)):
+        parts = [str(item).strip() for item in value if str(item).strip()]
+        return ".".join(parts) if parts else "<unknown>"
+    text = str(value).strip()
+    return text or "<unknown>"
+
+
 def _nested_key_count(payload: Any, *, needle: str) -> int:
     lowered = needle.lower()
     if isinstance(payload, dict):
         count = 0
         for key, value in payload.items():
-            key_lower = str(key).lower()
-            if lowered in key_lower:
+            if lowered in str(key).lower():
                 count += 1
             count += _nested_key_count(value, needle=needle)
         return count
@@ -91,11 +147,12 @@ def _nested_key_count(payload: Any, *, needle: str) -> int:
 
 
 def _runtime_pollution_count(payload: Any) -> int:
+    normalized_runtime_keys = {item.replace("_", "") for item in RUNTIME_POLLUTION_KEYS}
     if isinstance(payload, dict):
         count = 0
         for key, value in payload.items():
             key_norm = str(key).strip().lower().replace("_", "")
-            if key_norm in {item.replace("_", "") for item in RUNTIME_POLLUTION_KEYS}:
+            if key_norm in normalized_runtime_keys:
                 count += 1
             count += _runtime_pollution_count(value)
         return count
@@ -104,63 +161,236 @@ def _runtime_pollution_count(payload: Any) -> int:
     return 0
 
 
-def _build_manual_review_sample(items: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    valid_items = [item for item in items if item["pmp_review_status"] == "valid"]
-    failed_items = [item for item in items if item["pmp_review_status"] == "failed"]
+def _load_snapshot_metadata(
+    *,
+    snapshot_id: str,
+    snapshot_root: Path,
+    manifest_path: Path | None,
+) -> tuple[str, dict[str, dict[str, str]]]:
+    resolved_manifest = (
+        manifest_path
+        if manifest_path is not None
+        else snapshot_root / snapshot_id / "manifest.json"
+    )
+    if not resolved_manifest.exists():
+        return "not_available", {}
 
-    high_quality_valid = [
-        item for item in valid_items if (item.get("global_quality_score") or -1) >= 80
-    ]
-    partial_or_indirect = [
+    try:
+        manifest = json.loads(resolved_manifest.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return "invalid_manifest", {}
+
+    snapshot_dir = resolved_manifest.parent
+    media_to_observation: dict[str, str] = {}
+    for item in manifest.get("media_downloads", []):
+        if not isinstance(item, dict):
+            continue
+        media_id = str(item.get("source_media_id") or "").strip()
+        obs_id = str(item.get("source_observation_id") or "").strip()
+        if media_id:
+            media_to_observation[media_id] = obs_id
+
+    metadata_by_media_key: dict[str, dict[str, str]] = {}
+    for seed in manifest.get("taxon_seeds", []):
+        if not isinstance(seed, dict):
+            continue
+        response_path_raw = seed.get("response_path")
+        if not isinstance(response_path_raw, str) or not response_path_raw.strip():
+            continue
+        response_path = snapshot_dir / response_path_raw
+        if not response_path.exists():
+            continue
+
+        try:
+            payload = json.loads(response_path.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, OSError):
+            continue
+
+        for result in payload.get("results", []):
+            if not isinstance(result, dict):
+                continue
+            photos = result.get("photos")
+            if not isinstance(photos, list) or not photos:
+                continue
+            primary = photos[0]
+            if not isinstance(primary, dict):
+                continue
+            media_id = str(primary.get("id") or "").strip()
+            if not media_id:
+                continue
+
+            taxon = result.get("taxon") if isinstance(result.get("taxon"), dict) else {}
+            scientific_name = str(
+                taxon.get("name")
+                or result.get("species_guess")
+                or seed.get("accepted_scientific_name")
+                or ""
+            ).strip()
+            source_taxon_id = str(taxon.get("id") or seed.get("source_taxon_id") or "").strip()
+            canonical_taxon_id = str(seed.get("canonical_taxon_id") or "").strip()
+            source_observation_id = str(
+                result.get("id") or media_to_observation.get(media_id) or ""
+            ).strip()
+
+            metadata_by_media_key[f"inaturalist::{media_id}"] = {
+                "scientific_name": scientific_name,
+                "canonical_taxon_id": canonical_taxon_id,
+                "source_taxon_id": source_taxon_id,
+                "source_observation_id": source_observation_id,
+            }
+
+    if not metadata_by_media_key:
+        return "not_available", {}
+    return "joined_from_manifest", metadata_by_media_key
+
+
+def _extract_schema_errors(diagnostics: dict[str, object]) -> list[dict[str, object]]:
+    raw_errors = diagnostics.get("schema_errors")
+    if not isinstance(raw_errors, list):
+        return []
+    return [item for item in raw_errors if isinstance(item, dict)]
+
+
+def _extract_error_path(error: dict[str, object]) -> str:
+    for key in ERROR_PATH_KEYS:
+        if key in error:
+            return _normalize_path(error.get(key))
+    return "<unknown>"
+
+
+def _extract_error_cause(error: dict[str, object], diagnostics: dict[str, object]) -> str:
+    for key in ERROR_CAUSE_KEYS:
+        value = error.get(key)
+        if isinstance(value, str) and value.strip():
+            normalized = value.strip()
+            if normalized != "unknown_schema_failure":
+                return normalized
+    fallback = diagnostics.get("schema_failure_cause")
+    if isinstance(fallback, str) and fallback.strip():
+        normalized_fallback = fallback.strip()
+        if normalized_fallback:
+            return normalized_fallback
+    return "unknown_schema_failure"
+
+
+def _extract_error_validator(error: dict[str, object]) -> str | None:
+    value = error.get("validator")
+    if isinstance(value, str) and value.strip():
+        return value.strip()
+    value = error.get("type")
+    if isinstance(value, str) and value.strip():
+        return value.strip()
+    return None
+
+
+def _extract_error_example(
+    *,
+    media_key: str,
+    error: dict[str, object],
+    diagnostics: dict[str, object],
+) -> dict[str, object]:
+    return {
+        "media_key": media_key,
+        "path": _extract_error_path(error),
+        "cause": _extract_error_cause(error, diagnostics),
+        "validator": _extract_error_validator(error),
+        "message": str(error.get("message") or "")[:240],
+        "expected": _normalize_scalar(error.get("expected")),
+        "actual": _normalize_scalar(error.get("actual")),
+    }
+
+
+def _append_bounded(
+    target: dict[str, list[dict[str, object]]],
+    key: str,
+    item: dict[str, object],
+    *,
+    limit: int = 3,
+) -> None:
+    current = target.setdefault(key, [])
+    if len(current) < limit:
+        current.append(item)
+
+
+def _build_manual_review_sample(
+    items: list[dict[str, Any]],
+) -> tuple[list[dict[str, Any]], dict[str, bool]]:
+    valid_items = [item for item in items if item.get("pmp_review_status") == "valid"]
+    failed_items = [item for item in items if item.get("pmp_review_status") == "failed"]
+
+    high_quality_whole = [
         item
         for item in valid_items
-        if item.get("evidence_type") in {"partial_organism", "indirect_evidence"}
+        if item.get("evidence_type") == "whole_organism"
+        and (item.get("global_quality_score") or -1) >= 80
+    ]
+    indirect_items = [
+        item for item in valid_items if item.get("evidence_type") in INDIRECT_EVIDENCE_TYPES
+    ]
+    partial_or_complex_items = [
+        item
+        for item in valid_items
+        if item.get("evidence_type") in PARTIAL_OR_COMPLEX_EVIDENCE_TYPES
     ]
     low_basic_valid = [
         item
         for item in valid_items
         if item.get("usage_scores", {}).get("basic_identification") is not None
-        and item["usage_scores"]["basic_identification"] < 50
+        and float(item["usage_scores"]["basic_identification"]) < 50
+    ]
+    low_global_valid = [
+        item
+        for item in valid_items
+        if item.get("global_quality_score") is not None
+        and float(item["global_quality_score"]) < 50
     ]
 
     selected_keys: list[str] = []
 
-    def take_first(candidates: list[dict[str, Any]], n: int = 1) -> None:
+    def select_from(candidates: list[dict[str, Any]], *, count: int = 1) -> None:
         added = 0
-        for candidate in candidates:
-            key = str(candidate["media_key"])
-            if key in selected_keys:
+        for candidate in sorted(candidates, key=lambda item: str(item["media_key"])):
+            media_key = str(candidate["media_key"])
+            if media_key in selected_keys:
                 continue
-            selected_keys.append(key)
+            selected_keys.append(media_key)
             added += 1
-            if added >= n:
+            if added >= count:
                 break
 
-    for candidate in high_quality_valid[:2]:
-        take_first([candidate])
-    if failed_items:
-        take_first([failed_items[0]])
-    if partial_or_indirect:
-        take_first([partial_or_indirect[0]])
-    if low_basic_valid:
-        take_first([low_basic_valid[0]])
+    select_from(high_quality_whole, count=2)
+    select_from(failed_items)
+    select_from(indirect_items)
+    select_from(partial_or_complex_items)
+    select_from(low_basic_valid)
+    select_from(low_global_valid)
 
     remaining = sorted(items, key=lambda item: str(item["media_key"]))
     for item in remaining:
-        if len(selected_keys) >= 5:
+        if len(selected_keys) >= 10:
             break
-        key = str(item["media_key"])
-        if key not in selected_keys:
-            selected_keys.append(key)
+        media_key = str(item["media_key"])
+        if media_key not in selected_keys:
+            selected_keys.append(media_key)
 
-    sample_by_key = {str(item["media_key"]): item for item in items}
+    if len(selected_keys) < 5:
+        for item in remaining:
+            media_key = str(item["media_key"])
+            if media_key not in selected_keys:
+                selected_keys.append(media_key)
+            if len(selected_keys) >= 5:
+                break
+
+    by_key = {str(item["media_key"]): item for item in items}
     sample: list[dict[str, Any]] = []
-    for key in selected_keys[:10]:
-        item = sample_by_key[key]
+    for media_key in selected_keys[:10]:
+        item = by_key[media_key]
         sample.append(
             {
                 "media_key": item["media_key"],
                 "scientific_name": item.get("scientific_name"),
+                "canonical_taxon_id": item.get("canonical_taxon_id"),
+                "source_taxon_id": item.get("source_taxon_id"),
                 "status": item["status"],
                 "pmp_review_status": item["pmp_review_status"],
                 "evidence_type": item.get("evidence_type"),
@@ -172,7 +402,15 @@ def _build_manual_review_sample(items: list[dict[str, Any]]) -> list[dict[str, A
                 "payload_excerpt": item.get("payload_excerpt"),
             }
         )
-    return sample
+
+    coverage = {
+        "has_high_quality_valid": bool(high_quality_whole),
+        "has_failed": bool(failed_items),
+        "has_indirect_evidence": bool(indirect_items),
+        "has_partial_or_multiple": bool(partial_or_complex_items),
+        "has_low_basic_identification": bool(low_basic_valid),
+    }
+    return sample, coverage
 
 
 def _decide_label(metrics: dict[str, Any]) -> str:
@@ -205,6 +443,7 @@ def audit_snapshot_outputs(
     *,
     snapshot_id: str,
     snapshot_root: Path = DEFAULT_SNAPSHOT_ROOT,
+    manifest_path: Path | None = None,
     ai_outputs_path: Path | None = None,
 ) -> dict[str, Any]:
     resolved_ai_outputs_path = (
@@ -221,26 +460,32 @@ def audit_snapshot_outputs(
     }
 
     if not resolved_ai_outputs_path.exists():
-        result = {
+        return {
             **base_result,
             "run_executed": False,
             "ai_outputs_broken": True,
             "error": "ai_outputs.json missing",
+            "metadata_join_status": "not_available",
             "decision": DECISION_BLOCKED_RUN,
         }
-        return result
 
     try:
         payload = json.loads(resolved_ai_outputs_path.read_text(encoding="utf-8"))
     except json.JSONDecodeError as exc:
-        result = {
+        return {
             **base_result,
             "run_executed": False,
             "ai_outputs_broken": True,
             "error": f"ai_outputs.json invalid JSON: {exc}",
+            "metadata_join_status": "not_available",
             "decision": DECISION_BLOCKED_RUN,
         }
-        return result
+
+    metadata_join_status, metadata_by_media_key = _load_snapshot_metadata(
+        snapshot_id=snapshot_id,
+        snapshot_root=snapshot_root,
+        manifest_path=manifest_path,
+    )
 
     rows: list[dict[str, Any]] = []
     status_distribution = Counter()
@@ -264,6 +509,11 @@ def audit_snapshot_outputs(
     selection_field_count = 0
     bird_image_pollution_count = 0
     unexpected_runtime_field_count = 0
+
+    schema_error_path_distribution = Counter()
+    examples_by_failure_cause: dict[str, list[dict[str, object]]] = {}
+    examples_by_schema_error_path: dict[str, list[dict[str, object]]] = {}
+    failed_items_summary: list[dict[str, object]] = []
 
     for media_key, outcome in sorted(payload.items(), key=lambda item: item[0]):
         if not isinstance(outcome, dict):
@@ -299,11 +549,30 @@ def audit_snapshot_outputs(
         if failure_reason:
             failure_reason_distribution[str(failure_reason)] += 1
 
-        diagnostics = pmp.get("diagnostics")
-        if isinstance(diagnostics, dict):
-            for err in diagnostics.get("schema_errors") or []:
-                if isinstance(err, dict) and err.get("type"):
-                    schema_failure_cause_distribution[str(err["type"])] += 1
+        diagnostics = pmp.get("diagnostics") if isinstance(pmp.get("diagnostics"), dict) else {}
+        schema_errors = _extract_schema_errors(diagnostics)
+        schema_failure_cause = str(
+            diagnostics.get("schema_failure_cause")
+            or (schema_errors[0].get("cause") if schema_errors else "")
+            or "unknown_schema_failure"
+        )
+        had_schema_errors = False
+        for schema_error in schema_errors:
+            had_schema_errors = True
+            error_path = _extract_error_path(schema_error)
+            error_cause = _extract_error_cause(schema_error, diagnostics)
+            schema_error_path_distribution[error_path] += 1
+            schema_failure_cause_distribution[error_cause] += 1
+            example = _extract_error_example(
+                media_key=media_key,
+                error=schema_error,
+                diagnostics=diagnostics,
+            )
+            _append_bounded(examples_by_failure_cause, error_cause, example)
+            _append_bounded(examples_by_schema_error_path, error_path, example)
+
+        if pmp_review_status == "failed" and not had_schema_errors:
+            schema_failure_cause_distribution[schema_failure_cause] += 1
 
         evidence_type = pmp.get("evidence_type")
         if evidence_type:
@@ -350,39 +619,76 @@ def audit_snapshot_outputs(
         limitations = pmp.get("limitations") if isinstance(pmp.get("limitations"), list) else []
         payload_excerpt = json.dumps(pmp, ensure_ascii=True)[:350] if pmp else None
 
-        rows.append(
-            {
-                "media_key": media_key,
-                "status": status,
-                "pmp_review_status": pmp_review_status,
-                "failure_reason": str(failure_reason) if failure_reason else None,
-                "evidence_type": str(evidence_type) if evidence_type else None,
-                "organism_group": str(organism_group) if organism_group else None,
-                "global_quality_score": global_quality,
-                "usage_scores": normalized_usage,
-                "visible_field_marks": visible_field_marks,
-                "limitations": limitations,
-                "scientific_name": None,
-                "payload_excerpt": payload_excerpt,
-            }
-        )
+        row = {
+            "media_key": media_key,
+            "status": status,
+            "pmp_review_status": pmp_review_status,
+            "failure_reason": str(failure_reason) if failure_reason else None,
+            "evidence_type": str(evidence_type) if evidence_type else None,
+            "organism_group": str(organism_group) if organism_group else None,
+            "global_quality_score": global_quality,
+            "usage_scores": normalized_usage,
+            "visible_field_marks": visible_field_marks,
+            "limitations": limitations,
+            "payload_excerpt": payload_excerpt,
+            "scientific_name": None,
+            "canonical_taxon_id": None,
+            "source_taxon_id": None,
+        }
+
+        metadata = metadata_by_media_key.get(media_key, {})
+        if metadata:
+            row["scientific_name"] = metadata.get("scientific_name") or None
+            row["canonical_taxon_id"] = metadata.get("canonical_taxon_id") or None
+            row["source_taxon_id"] = metadata.get("source_taxon_id") or None
+        if row["scientific_name"] is None:
+            diag_name = diagnostics.get("scientific_name")
+            if isinstance(diag_name, str) and diag_name.strip():
+                row["scientific_name"] = diag_name.strip()
+        if row["canonical_taxon_id"] is None:
+            diag_canon = diagnostics.get("canonical_taxon_id")
+            if isinstance(diag_canon, str) and diag_canon.strip():
+                row["canonical_taxon_id"] = diag_canon.strip()
+
+        rows.append(row)
+
+        if pmp_review_status == "failed":
+            failed_items_summary.append(
+                {
+                    "media_key": media_key,
+                    "model_name": outcome.get("model_name"),
+                    "prompt_version": outcome.get("prompt_version"),
+                    "review_contract_version": outcome.get("review_contract_version"),
+                    "failure_reason": failure_reason,
+                    "schema_failure_cause": schema_failure_cause,
+                    "schema_error_count": diagnostics.get("schema_error_count"),
+                    "schema_errors": [
+                        _extract_error_example(
+                            media_key=media_key,
+                            error=error,
+                            diagnostics=diagnostics,
+                        )
+                        for error in schema_errors[:8]
+                    ],
+                    "raw_model_output_excerpt": (
+                        str(diagnostics.get("raw_model_output_excerpt") or "")[:350] or None
+                    ),
+                    "scientific_name": row.get("scientific_name"),
+                    "canonical_taxon_id": row.get("canonical_taxon_id"),
+                }
+            )
 
     processed_media_count = len(rows)
     images_sent_to_gemini_count = sum(
         count
-        for label, count in status_distribution.items()
-        if label
-        not in {
-            "missing_cached_image",
-            "insufficient_resolution",
-            "insufficient_resolution_pre_ai",
-            "decode_error_pre_ai",
-            "blur_pre_ai",
-            "duplicate_pre_ai",
-        }
+        for status_label, count in status_distribution.items()
+        if status_label not in PRE_AI_STATUSES
     )
-    denominator = images_sent_to_gemini_count if images_sent_to_gemini_count > 0 else 0
-    pmp_valid_rate = round(pmp_valid_count / denominator, 4) if denominator else None
+    pmp_valid_rate = (
+        round(pmp_valid_count / images_sent_to_gemini_count, 4)
+        if images_sent_to_gemini_count > 0
+        else None
+    )
 
     average_usage_scores = {
         key: _avg(values)
@@ -404,12 +710,81 @@ def audit_snapshot_outputs(
         and len(average_usage_scores) >= 3
     )
 
-    manual_review_sample = _build_manual_review_sample(rows)
+    score_metrics_by_evidence_type: dict[str, dict[str, object]] = {}
+    rows_by_evidence: dict[str, list[dict[str, Any]]] = {}
+    for row in rows:
+        evidence_label = str(row.get("evidence_type") or "unknown_or_missing")
+        rows_by_evidence.setdefault(evidence_label, []).append(row)
+
+    for evidence_label, subset in sorted(rows_by_evidence.items()):
+        valid_subset = [item for item in subset if item.get("pmp_review_status") == "valid"]
+        failed_subset = [item for item in subset if item.get("pmp_review_status") == "failed"]
+        valid_count = len(valid_subset)
+        failed_count = len(failed_subset)
+        denominator = valid_count + failed_count
+
+        subset_global_scores = [
+            float(item["global_quality_score"])
+            for item in valid_subset
+            if item.get("global_quality_score") is not None
+        ]
+
+        subset_usage_values: dict[str, list[float]] = {key: [] for key in REQUIRED_USAGE_SCORE_KEYS}
+        for item in valid_subset:
+            usage = item.get("usage_scores", {})
+            if not isinstance(usage, dict):
+                continue
+            for key in REQUIRED_USAGE_SCORE_KEYS:
+                value = _safe_float(usage.get(key))
+                if value is not None:
+                    subset_usage_values[key].append(value)
+
+        low_basic_subset = sum(
+            1
+            for item in valid_subset
+            if isinstance(item.get("usage_scores"), dict)
+            and _safe_float(item["usage_scores"].get("basic_identification")) is not None
+            and float(item["usage_scores"]["basic_identification"]) < 50
+        )
+        high_indirect_subset = sum(
+            1
+            for item in valid_subset
+            if isinstance(item.get("usage_scores"), dict)
+            and _safe_float(item["usage_scores"].get("indirect_evidence_learning")) is not None
+            and float(item["usage_scores"]["indirect_evidence_learning"]) >= 70
+        )
+
+        score_metrics_by_evidence_type[evidence_label] = {
+            "count": len(subset),
+            "valid_count": valid_count,
+            "failed_count": failed_count,
+            "valid_rate": round(valid_count / denominator, 4) if denominator > 0 else None,
+            "average_global_quality_score": _avg(subset_global_scores),
+            "average_usage_scores": {
+                key: _avg(values)
+                for key, values in subset_usage_values.items()
+                if values
+            },
+            "score_min_max": _min_max(subset_global_scores),
+            "low_basic_identification_valid_count": low_basic_subset,
+            "high_indirect_evidence_valid_count": high_indirect_subset,
+        }
+
+    manual_review_sample, manual_review_coverage = _build_manual_review_sample(rows)
+
+    top_schema_error_paths = [
+        {"path": path, "count": count}
+        for path, count in sorted(
+            schema_error_path_distribution.items(),
+            key=lambda item: (-item[1], item[0]),
+        )
+    ]
 
     metrics: dict[str, Any] = {
         **base_result,
         "run_executed": True,
         "ai_outputs_broken": False,
+        "metadata_join_status": metadata_join_status,
         "generation_metrics": {
             "processed_media_count": processed_media_count,
             "images_sent_to_gemini_count": images_sent_to_gemini_count,
@@ -421,8 +796,23 @@ def audit_snapshot_outputs(
             "schema_failure_cause_distribution": dict(
                 sorted(schema_failure_cause_distribution.items())
             ),
+            "top_schema_error_paths": top_schema_error_paths,
             "evidence_type_distribution": dict(sorted(evidence_type_distribution.items())),
             "organism_group_distribution": dict(sorted(organism_group_distribution.items())),
+        },
+        "failure_diagnostics": {
+            "failed_count": pmp_failed_count,
+            "schema_failure_cause_distribution": dict(
+                sorted(schema_failure_cause_distribution.items())
+            ),
+            "top_schema_error_paths": top_schema_error_paths,
+            "examples_by_failure_cause": {
+                key: value for key, value in sorted(examples_by_failure_cause.items())
+            },
+            "examples_by_schema_error_path": {
+                key: value for key, value in sorted(examples_by_schema_error_path.items())
+            },
+            "failed_items_summary": failed_items_summary,
         },
         "score_metrics": {
             "average_global_quality_score": _avg(global_scores),
@@ -430,6 +820,7 @@ def audit_snapshot_outputs(
             "score_min_max": _min_max(global_scores),
             "low_basic_identification_valid_count": low_basic_identification_valid_count,
             "high_indirect_evidence_valid_count": high_indirect_evidence_valid_count,
+            "score_metrics_by_evidence_type": score_metrics_by_evidence_type,
         },
         "policy_legacy_metrics": {
             "qualification_none_count": qualification_none_count,
@@ -449,6 +840,7 @@ def audit_snapshot_outputs(
         "operational_metrics": {
             "latency_estimate": None,
             "cost_estimate": None,
+            "measurement_status": "not_measured_in_sprint6_controlled_run",
             "model_name_distribution": dict(sorted(model_name_distribution.items())),
             "prompt_version_distribution": dict(sorted(prompt_version_distribution.items())),
             "review_contract_version_distribution": dict(
@@ -456,6 +848,7 @@ def audit_snapshot_outputs(
             ),
         },
         "manual_review_sample": manual_review_sample,
+        "manual_review_sample_coverage": manual_review_coverage,
         "plausible_distributions": plausible_distributions,
     }
 
@@ -476,6 +869,7 @@ def main() -> int:
     result = audit_snapshot_outputs(
         snapshot_id=args.snapshot_id,
         snapshot_root=args.snapshot_root,
+        manifest_path=args.manifest_path,
         ai_outputs_path=args.ai_outputs_path,
     )
     args.output_path.parent.mkdir(parents=True, exist_ok=True)

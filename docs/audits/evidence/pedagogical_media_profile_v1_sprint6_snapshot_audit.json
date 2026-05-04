@@ -9,6 +9,417 @@
     "selection_field_count": 0,
     "unexpected_runtime_field_count": 0
   },
+  "failure_diagnostics": {
+    "examples_by_failure_cause": {
+      "enum_mismatch": [
+        {
+          "actual": "brick wall",
+          "cause": "enum_mismatch",
+          "expected": "<array len=12>",
+          "media_key": "inaturalist::11889145",
+          "message": "'brick wall' is not one of ['water', 'vegetation', 'tree', 'reedbed', 'ground', 'sky', 'urban', 'snow', 'rock', 'dead_wood', 'human_structure', 'unknown']",
+          "path": "observation_profile.context_visible.1",
+          "validator": "enum"
+        },
+        {
+          "actual": "bathing",
+          "cause": "enum_mismatch",
+          "expected": "<array len=8>",
+          "media_key": "inaturalist::12273607",
+          "message": "'bathing' is not one of ['foraging', 'swimming', 'flying', 'perched', 'singing', 'feeding_young', 'resting', 'unknown']",
+          "path": "group_specific_profile.bird.behavior_visible",
+          "validator": "enum"
+        }
+      ],
+      "invalid_biological_basis": [
+        {
+          "actual": null,
+          "cause": "invalid_biological_basis",
+          "expected": "non-empty string",
+          "media_key": "inaturalist::129884123",
+          "message": "visible_basis must be non-empty when value is neither unknown nor not_applicable",
+          "path": "biological_profile_visible.seasonal_state.visible_basis",
+          "validator": "biological_rule"
+        }
+      ],
+      "invalid_confidence_range": [
+        {
+          "actual": "high",
+          "cause": "invalid_confidence_range",
+          "expected": "<array len=2>",
+          "media_key": "inaturalist::122963324",
+          "message": "confidence must be low or medium when value is unknown or not_applicable",
+          "path": "biological_profile_visible.sex.confidence",
+          "validator": "biological_rule"
+        }
+      ],
+      "maxItems": [
+        {
+          "actual": "<array len=11>",
+          "cause": "maxItems",
+          "expected": 8,
+          "media_key": "inaturalist::108408470",
+          "message": "['head', 'beak', 'eye', 'neck', 'breast', 'belly', 'back', 'wing', 'tail', 'legs', 'feet'] is too long",
+          "path": "group_specific_profile.bird.bird_visible_parts",
+          "validator": "maxItems"
+        },
+        {
+          "actual": "<array len=9>",
+          "cause": "maxItems",
+          "expected": 8,
+          "media_key": "inaturalist::114333218",
+          "message": "['head', 'beak', 'eye', 'neck', 'breast', 'back', 'wing', 'tail', 'legs'] is too long",
+          "path": "group_specific_profile.bird.bird_visible_parts",
+          "validator": "maxItems"
+        },
+        {
+          "actual": "<array len=9>",
+          "cause": "maxItems",
+          "expected": 8,
+          "media_key": "inaturalist::127180953",
+          "message": "['head', 'beak', 'eye', 'neck', 'breast', 'belly', 'back', 'wing', 'tail'] is too long",
+          "path": "group_specific_profile.bird.bird_visible_parts",
+          "validator": "maxItems"
+        }
+      ]
+    },
+    "examples_by_schema_error_path": {
+      "biological_profile_visible.seasonal_state.visible_basis": [
+        {
+          "actual": null,
+          "cause": "invalid_biological_basis",
+          "expected": "non-empty string",
+          "media_key": "inaturalist::129884123",
+          "message": "visible_basis must be non-empty when value is neither unknown nor not_applicable",
+          "path": "biological_profile_visible.seasonal_state.visible_basis",
+          "validator": "biological_rule"
+        }
+      ],
+      "biological_profile_visible.sex.confidence": [
+        {
+          "actual": "high",
+          "cause": "invalid_confidence_range",
+          "expected": "<array len=2>",
+          "media_key": "inaturalist::122963324",
+          "message": "confidence must be low or medium when value is unknown or not_applicable",
+          "path": "biological_profile_visible.sex.confidence",
+          "validator": "biological_rule"
+        }
+      ],
+      "group_specific_profile.bird.behavior_visible": [
+        {
+          "actual": "bathing",
+          "cause": "enum_mismatch",
+          "expected": "<array len=8>",
+          "media_key": "inaturalist::12273607",
+          "message": "'bathing' is not one of ['foraging', 'swimming', 'flying', 'perched', 'singing', 'feeding_young', 'resting', 'unknown']",
+          "path": "group_specific_profile.bird.behavior_visible",
+          "validator": "enum"
+        }
+      ],
+      "group_specific_profile.bird.bird_visible_parts": [
+        {
+          "actual": "<array len=11>",
+          "cause": "maxItems",
+          "expected": 8,
+          "media_key": "inaturalist::108408470",
+          "message": "['head', 'beak', 'eye', 'neck', 'breast', 'belly', 'back', 'wing', 'tail', 'legs', 'feet'] is too long",
+          "path": "group_specific_profile.bird.bird_visible_parts",
+          "validator": "maxItems"
+        },
+        {
+          "actual": "<array len=9>",
+          "cause": "maxItems",
+          "expected": 8,
+          "media_key": "inaturalist::114333218",
+          "message": "['head', 'beak', 'eye', 'neck', 'breast', 'back', 'wing', 'tail', 'legs'] is too long",
+          "path": "group_specific_profile.bird.bird_visible_parts",
+          "validator": "maxItems"
+        },
+        {
+          "actual": "<array len=9>",
+          "cause": "maxItems",
+          "expected": 8,
+          "media_key": "inaturalist::127180953",
+          "message": "['head', 'beak', 'eye', 'neck', 'breast', 'belly', 'back', 'wing', 'tail'] is too long",
+          "path": "group_specific_profile.bird.bird_visible_parts",
+          "validator": "maxItems"
+        }
+      ],
+      "observation_profile.context_visible.1": [
+        {
+          "actual": "brick wall",
+          "cause": "enum_mismatch",
+          "expected": "<array len=12>",
+          "media_key": "inaturalist::11889145",
+          "message": "'brick wall' is not one of ['water', 'vegetation', 'tree', 'reedbed', 'ground', 'sky', 'urban', 'snow', 'rock', 'dead_wood', 'human_structure', 'unknown']",
+          "path": "observation_profile.context_visible.1",
+          "validator": "enum"
+        }
+      ]
+    },
+    "failed_count": 10,
+    "failed_items_summary": [
+      {
+        "canonical_taxon_id": "taxon:birds:000022",
+        "failure_reason": "schema_validation_failed",
+        "media_key": "inaturalist::108408470",
+        "model_name": "gemini-3.1-flash-lite-preview",
+        "prompt_version": "pedagogical_media_profile_prompt.v1",
+        "raw_model_output_excerpt": "{ \"schema_version\": \"pedagogical_media_profile.v1\", \"prompt_version\": \"pedagogical_media_profile_prompt.v1\", \"review_status\": \"valid\", \"review_confidence\": 1.0, \"organism_group\": \"bird\", \"evidence_type\": \"whole_organism\", \"technical_profile\": { \"technical_quality\": \"high\", \"sharpness\": \"high\", \"lighting\": \"high\", \"contrast\": \"high\", \"background_clu",
+        "review_contract_version": "pedagogical_media_profile_v1",
+        "schema_error_count": 1,
+        "schema_errors": [
+          {
+            "actual": "<array len=11>",
+            "cause": "maxItems",
+            "expected": 8,
+            "media_key": "inaturalist::108408470",
+            "message": "['head', 'beak', 'eye', 'neck', 'breast', 'belly', 'back', 'wing', 'tail', 'legs', 'feet'] is too long",
+            "path": "group_specific_profile.bird.bird_visible_parts",
+            "validator": "maxItems"
+          }
+        ],
+        "schema_failure_cause": "unknown_schema_failure",
+        "scientific_name": "Anser anser"
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000004",
+        "failure_reason": "schema_validation_failed",
+        "media_key": "inaturalist::114333218",
+        "model_name": "gemini-3.1-flash-lite-preview",
+        "prompt_version": "pedagogical_media_profile_prompt.v1",
+        "raw_model_output_excerpt": "{ \"schema_version\": \"pedagogical_media_profile.v1\", \"prompt_version\": \"pedagogical_media_profile_prompt.v1\", \"review_status\": \"valid\", \"review_confidence\": 1.0, \"organism_group\": \"bird\", \"evidence_type\": \"whole_organism\", \"technical_profile\": { \"technical_quality\": \"medium\", \"sharpness\": \"medium\", \"lighting\": \"medium\", \"contrast\": \"medium\", \"backgr",
+        "review_contract_version": "pedagogical_media_profile_v1",
+        "schema_error_count": 1,
+        "schema_errors": [
+          {
+            "actual": "<array len=9>",
+            "cause": "maxItems",
+            "expected": 8,
+            "media_key": "inaturalist::114333218",
+            "message": "['head', 'beak', 'eye', 'neck', 'breast', 'back', 'wing', 'tail', 'legs'] is too long",
+            "path": "group_specific_profile.bird.bird_visible_parts",
+            "validator": "maxItems"
+          }
+        ],
+        "schema_failure_cause": "unknown_schema_failure",
+        "scientific_name": "Erithacus rubecula"
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000008",
+        "failure_reason": "schema_validation_failed",
+        "media_key": "inaturalist::11889145",
+        "model_name": "gemini-3.1-flash-lite-preview",
+        "prompt_version": "pedagogical_media_profile_prompt.v1",
+        "raw_model_output_excerpt": "{ \"schema_version\": \"pedagogical_media_profile.v1\", \"prompt_version\": \"pedagogical_media_profile_prompt.v1\", \"review_status\": \"valid\", \"review_confidence\": 0.9, \"organism_group\": \"bird\", \"evidence_type\": \"whole_organism\", \"technical_profile\": { \"technical_quality\": \"medium\", \"sharpness\": \"medium\", \"lighting\": \"medium\", \"contrast\": \"medium\", \"backgr",
+        "review_contract_version": "pedagogical_media_profile_v1",
+        "schema_error_count": 1,
+        "schema_errors": [
+          {
+            "actual": "brick wall",
+            "cause": "enum_mismatch",
+            "expected": "<array len=12>",
+            "media_key": "inaturalist::11889145",
+            "message": "'brick wall' is not one of ['water', 'vegetation', 'tree', 'reedbed', 'ground', 'sky', 'urban', 'snow', 'rock', 'dead_wood', 'human_structure', 'unknown']",
+            "path": "observation_profile.context_visible.1",
+            "validator": "enum"
+          }
+        ],
+        "schema_failure_cause": "enum_mismatch",
+        "scientific_name": "Parus major"
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000009",
+        "failure_reason": "schema_validation_failed",
+        "media_key": "inaturalist::12273607",
+        "model_name": "gemini-3.1-flash-lite-preview",
+        "prompt_version": "pedagogical_media_profile_prompt.v1",
+        "raw_model_output_excerpt": "{ \"schema_version\": \"pedagogical_media_profile.v1\", \"prompt_version\": \"pedagogical_media_profile_prompt.v1\", \"review_status\": \"valid\", \"review_confidence\": 0.9, \"organism_group\": \"bird\", \"evidence_type\": \"whole_organism\", \"technical_profile\": { \"technical_quality\": \"medium\", \"sharpness\": \"medium\", \"lighting\": \"medium\", \"contrast\": \"medium\", \"backgr",
+        "review_contract_version": "pedagogical_media_profile_v1",
+        "schema_error_count": 1,
+        "schema_errors": [
+          {
+            "actual": "bathing",
+            "cause": "enum_mismatch",
+            "expected": "<array len=8>",
+            "media_key": "inaturalist::12273607",
+            "message": "'bathing' is not one of ['foraging', 'swimming', 'flying', 'perched', 'singing', 'feeding_young', 'resting', 'unknown']",
+            "path": "group_specific_profile.bird.behavior_visible",
+            "validator": "enum"
+          }
+        ],
+        "schema_failure_cause": "enum_mismatch",
+        "scientific_name": "Passer domesticus"
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000021",
+        "failure_reason": "schema_validation_failed",
+        "media_key": "inaturalist::122963324",
+        "model_name": "gemini-3.1-flash-lite-preview",
+        "prompt_version": "pedagogical_media_profile_prompt.v1",
+        "raw_model_output_excerpt": "{ \"schema_version\": \"pedagogical_media_profile.v1\", \"prompt_version\": \"pedagogical_media_profile_prompt.v1\", \"review_status\": \"valid\", \"review_confidence\": 1.0, \"organism_group\": \"bird\", \"evidence_type\": \"multiple_organisms\", \"technical_profile\": { \"technical_quality\": \"high\", \"sharpness\": \"high\", \"lighting\": \"high\", \"contrast\": \"high\", \"background",
+        "review_contract_version": "pedagogical_media_profile_v1",
+        "schema_error_count": 1,
+        "schema_errors": [
+          {
+            "actual": "high",
+            "cause": "invalid_confidence_range",
+            "expected": "<array len=2>",
+            "media_key": "inaturalist::122963324",
+            "message": "confidence must be low or medium when value is unknown or not_applicable",
+            "path": "biological_profile_visible.sex.confidence",
+            "validator": "biological_rule"
+          }
+        ],
+        "schema_failure_cause": "invalid_confidence_range",
+        "scientific_name": "Anas platyrhynchos"
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000026",
+        "failure_reason": "schema_validation_failed",
+        "media_key": "inaturalist::127180953",
+        "model_name": "gemini-3.1-flash-lite-preview",
+        "prompt_version": "pedagogical_media_profile_prompt.v1",
+        "raw_model_output_excerpt": "{ \"schema_version\": \"pedagogical_media_profile.v1\", \"prompt_version\": \"pedagogical_media_profile_prompt.v1\", \"review_status\": \"valid\", \"review_confidence\": 1.0, \"organism_group\": \"bird\", \"evidence_type\": \"whole_organism\", \"technical_profile\": { \"technical_quality\": \"high\", \"sharpness\": \"high\", \"lighting\": \"high\", \"contrast\": \"high\", \"background_clu",
+        "review_contract_version": "pedagogical_media_profile_v1",
+        "schema_error_count": 1,
+        "schema_errors": [
+          {
+            "actual": "<array len=9>",
+            "cause": "maxItems",
+            "expected": 8,
+            "media_key": "inaturalist::127180953",
+            "message": "['head', 'beak', 'eye', 'neck', 'breast', 'belly', 'back', 'wing', 'tail'] is too long",
+            "path": "group_specific_profile.bird.bird_visible_parts",
+            "validator": "maxItems"
+          }
+        ],
+        "schema_failure_cause": "unknown_schema_failure",
+        "scientific_name": "Larus michahellis"
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000026",
+        "failure_reason": "schema_validation_failed",
+        "media_key": "inaturalist::12831",
+        "model_name": "gemini-3.1-flash-lite-preview",
+        "prompt_version": "pedagogical_media_profile_prompt.v1",
+        "raw_model_output_excerpt": "{ \"schema_version\": \"pedagogical_media_profile.v1\", \"prompt_version\": \"pedagogical_media_profile_prompt.v1\", \"review_status\": \"valid\", \"review_confidence\": 1.0, \"organism_group\": \"bird\", \"evidence_type\": \"whole_organism\", \"technical_profile\": { \"technical_quality\": \"high\", \"sharpness\": \"high\", \"lighting\": \"high\", \"contrast\": \"high\", \"background_clu",
+        "review_contract_version": "pedagogical_media_profile_v1",
+        "schema_error_count": 1,
+        "schema_errors": [
+          {
+            "actual": "<array len=10>",
+            "cause": "maxItems",
+            "expected": 8,
+            "media_key": "inaturalist::12831",
+            "message": "['head', 'beak', 'eye', 'neck', 'breast', 'back', 'wing', 'tail', 'legs', 'feet'] is too long",
+            "path": "group_specific_profile.bird.bird_visible_parts",
+            "validator": "maxItems"
+          }
+        ],
+        "schema_failure_cause": "unknown_schema_failure",
+        "scientific_name": "Larus michahellis"
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000020",
+        "failure_reason": "schema_validation_failed",
+        "media_key": "inaturalist::128706889",
+        "model_name": "gemini-3.1-flash-lite-preview",
+        "prompt_version": "pedagogical_media_profile_prompt.v1",
+        "raw_model_output_excerpt": "{ \"schema_version\": \"pedagogical_media_profile.v1\", \"prompt_version\": \"pedagogical_media_profile_prompt.v1\", \"review_status\": \"valid\", \"review_confidence\": 1.0, \"organism_group\": \"bird\", \"evidence_type\": \"whole_organism\", \"technical_profile\": { \"technical_quality\": \"high\", \"sharpness\": \"high\", \"lighting\": \"high\", \"contrast\": \"high\", \"background_clu",
+        "review_contract_version": "pedagogical_media_profile_v1",
+        "schema_error_count": 1,
+        "schema_errors": [
+          {
+            "actual": "<array len=11>",
+            "cause": "maxItems",
+            "expected": 8,
+            "media_key": "inaturalist::128706889",
+            "message": "['head', 'beak', 'eye', 'neck', 'breast', 'belly', 'back', 'wing', 'tail', 'legs', 'feet'] is too long",
+            "path": "group_specific_profile.bird.bird_visible_parts",
+            "validator": "maxItems"
+          }
+        ],
+        "schema_failure_cause": "unknown_schema_failure",
+        "scientific_name": "Phoenicurus ochruros"
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000009",
+        "failure_reason": "schema_validation_failed",
+        "media_key": "inaturalist::128796357",
+        "model_name": "gemini-3.1-flash-lite-preview",
+        "prompt_version": "pedagogical_media_profile_prompt.v1",
+        "raw_model_output_excerpt": "{ \"schema_version\": \"pedagogical_media_profile.v1\", \"prompt_version\": \"pedagogical_media_profile_prompt.v1\", \"review_status\": \"valid\", \"review_confidence\": 1.0, \"organism_group\": \"bird\", \"evidence_type\": \"whole_organism\", \"technical_profile\": { \"technical_quality\": \"high\", \"sharpness\": \"high\", \"lighting\": \"high\", \"contrast\": \"high\", \"background_clu",
+        "review_contract_version": "pedagogical_media_profile_v1",
+        "schema_error_count": 1,
+        "schema_errors": [
+          {
+            "actual": "<array len=10>",
+            "cause": "maxItems",
+            "expected": 8,
+            "media_key": "inaturalist::128796357",
+            "message": "['head', 'beak', 'eye', 'neck', 'breast', 'back', 'wing', 'tail', 'legs', 'feet'] is too long",
+            "path": "group_specific_profile.bird.bird_visible_parts",
+            "validator": "maxItems"
+          }
+        ],
+        "schema_failure_cause": "unknown_schema_failure",
+        "scientific_name": "Passer domesticus"
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000009",
+        "failure_reason": "schema_validation_failed",
+        "media_key": "inaturalist::129884123",
+        "model_name": "gemini-3.1-flash-lite-preview",
+        "prompt_version": "pedagogical_media_profile_prompt.v1",
+        "raw_model_output_excerpt": "{ \"schema_version\": \"pedagogical_media_profile.v1\", \"prompt_version\": \"pedagogical_media_profile_prompt.v1\", \"review_status\": \"valid\", \"review_confidence\": 0.95, \"organism_group\": \"bird\", \"evidence_type\": \"whole_organism\", \"technical_profile\": { \"technical_quality\": \"medium\", \"sharpness\": \"medium\", \"lighting\": \"high\", \"contrast\": \"high\", \"backgroun",
+        "review_contract_version": "pedagogical_media_profile_v1",
+        "schema_error_count": 1,
+        "schema_errors": [
+          {
+            "actual": null,
+            "cause": "invalid_biological_basis",
+            "expected": "non-empty string",
+            "media_key": "inaturalist::129884123",
+            "message": "visible_basis must be non-empty when value is neither unknown nor not_applicable",
+            "path": "biological_profile_visible.seasonal_state.visible_basis",
+            "validator": "biological_rule"
+          }
+        ],
+        "schema_failure_cause": "invalid_biological_basis",
+        "scientific_name": "Passer domesticus"
+      }
+    ],
+    "schema_failure_cause_distribution": {
+      "enum_mismatch": 2,
+      "invalid_biological_basis": 1,
+      "invalid_confidence_range": 1,
+      "maxItems": 6
+    },
+    "top_schema_error_paths": [
+      {
+        "count": 6,
+        "path": "group_specific_profile.bird.bird_visible_parts"
+      },
+      {
+        "count": 1,
+        "path": "biological_profile_visible.seasonal_state.visible_basis"
+      },
+      {
+        "count": 1,
+        "path": "biological_profile_visible.sex.confidence"
+      },
+      {
+        "count": 1,
+        "path": "group_specific_profile.bird.behavior_visible"
+      },
+      {
+        "count": 1,
+        "path": "observation_profile.context_visible.1"
+      }
+    ]
+  },
   "generation_metrics": {
     "evidence_type_distribution": {
       "dead_organism": 1,
@@ -29,15 +440,43 @@
     "pmp_valid_count": 106,
     "pmp_valid_rate": 0.9138,
     "processed_media_count": 120,
-    "schema_failure_cause_distribution": {},
+    "schema_failure_cause_distribution": {
+      "enum_mismatch": 2,
+      "invalid_biological_basis": 1,
+      "invalid_confidence_range": 1,
+      "maxItems": 6
+    },
     "status_distribution": {
       "insufficient_resolution_pre_ai": 4,
       "ok": 106,
       "pedagogical_media_profile_failed": 10
-    }
+    },
+    "top_schema_error_paths": [
+      {
+        "count": 6,
+        "path": "group_specific_profile.bird.bird_visible_parts"
+      },
+      {
+        "count": 1,
+        "path": "biological_profile_visible.seasonal_state.visible_basis"
+      },
+      {
+        "count": 1,
+        "path": "biological_profile_visible.sex.confidence"
+      },
+      {
+        "count": 1,
+        "path": "group_specific_profile.bird.behavior_visible"
+      },
+      {
+        "count": 1,
+        "path": "observation_profile.context_visible.1"
+      }
+    ]
   },
   "manual_review_sample": [
     {
+      "canonical_taxon_id": "taxon:birds:000024",
       "evidence_type": "whole_organism",
       "failure_reason": null,
       "global_quality_score": 90.0,
@@ -47,7 +486,8 @@
       "media_key": "inaturalist::100906257",
       "payload_excerpt": "{\"biological_profile_visible\": {\"life_stage\": {\"confidence\": \"medium\", \"value\": \"adult\", \"visible_basis\": \"solid dark plumage and white frontal shield\"}, \"plumage_state\": {\"confidence\": \"low\", \"value\": \"unknown\", \"visible_basis\": null}, \"seasonal_state\": {\"confidence\": \"low\", \"value\": \"unknown\", \"visible_basis\": null}, \"sex\": {\"confidence\": \"low\", ",
       "pmp_review_status": "valid",
-      "scientific_name": null,
+      "scientific_name": "Fulica atra",
+      "source_taxon_id": "482",
       "status": "ok",
       "usage_scores": {
         "basic_identification": 95.0,
@@ -75,6 +515,61 @@
       ]
     },
     {
+      "canonical_taxon_id": "taxon:birds:000023",
+      "evidence_type": "whole_organism",
+      "failure_reason": null,
+      "global_quality_score": 91.0,
+      "limitations": [
+        "Subject is partially obscured by resting posture"
+      ],
+      "media_key": "inaturalist::108344756",
+      "payload_excerpt": "{\"biological_profile_visible\": {\"life_stage\": {\"confidence\": \"medium\", \"value\": \"adult\", \"visible_basis\": \"white plumage\"}, \"plumage_state\": {\"confidence\": \"low\", \"value\": \"unknown\", \"visible_basis\": null}, \"seasonal_state\": {\"confidence\": \"low\", \"value\": \"unknown\", \"visible_basis\": null}, \"sex\": {\"confidence\": \"low\", \"value\": \"unknown\", \"visible_b",
+      "pmp_review_status": "valid",
+      "scientific_name": "Cygnus olor",
+      "source_taxon_id": "6921",
+      "status": "ok",
+      "usage_scores": {
+        "basic_identification": 91.0,
+        "confusion_learning": 74.0,
+        "field_observation": 91.0,
+        "indirect_evidence_learning": 0.0,
+        "morphology_learning": 77.0,
+        "species_card": 96.0
+      },
+      "visible_field_marks": [
+        {
+          "body_part": "beak",
+          "confidence": 0.9,
+          "feature": "orange bill with black base",
+          "importance": "high",
+          "visibility": "high"
+        },
+        {
+          "body_part": "back",
+          "confidence": 0.8,
+          "feature": "all white plumage",
+          "importance": "medium",
+          "visibility": "high"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000022",
+      "evidence_type": null,
+      "failure_reason": "schema_validation_failed",
+      "global_quality_score": null,
+      "limitations": [],
+      "media_key": "inaturalist::108408470",
+      "payload_excerpt": "{\"diagnostics\": {\"canonical_taxon_id\": \"taxon:birds:000022\", \"gemini_model\": \"gemini-3.1-flash-lite-preview\", \"media_id\": \"media:inaturalist:108408470\", \"parsed_json_available\": true, \"raw_model_output_excerpt\": \"{ \\\"schema_version\\\": \\\"pedagogical_media_profile.v1\\\", \\\"prompt_version\\\": \\\"pedagogical_media_profile_prompt.v1\\\", \\\"review_status\\\": \\",
+      "pmp_review_status": "failed",
+      "scientific_name": "Anser anser",
+      "source_taxon_id": "7018",
+      "status": "pedagogical_media_profile_failed",
+      "usage_scores": {},
+      "visible_field_marks": []
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000001",
       "evidence_type": "feather",
       "failure_reason": null,
       "global_quality_score": 96.0,
@@ -84,7 +579,8 @@
       "media_key": "inaturalist::100909260",
       "payload_excerpt": "{\"biological_profile_visible\": {\"life_stage\": {\"confidence\": \"low\", \"value\": \"unknown\", \"visible_basis\": null}, \"plumage_state\": {\"confidence\": \"low\", \"value\": \"unknown\", \"visible_basis\": null}, \"seasonal_state\": {\"confidence\": \"low\", \"value\": \"unknown\", \"visible_basis\": null}, \"sex\": {\"confidence\": \"low\", \"value\": \"unknown\", \"visible_basis\": null}",
       "pmp_review_status": "valid",
-      "scientific_name": null,
+      "scientific_name": "Columba palumbus",
+      "source_taxon_id": "3048",
       "status": "ok",
       "usage_scores": {
         "basic_identification": 24.0,
@@ -105,19 +601,112 @@
       ]
     },
     {
-      "evidence_type": null,
-      "failure_reason": "schema_validation_failed",
-      "global_quality_score": null,
-      "limitations": [],
-      "media_key": "inaturalist::108408470",
-      "payload_excerpt": "{\"diagnostics\": {\"canonical_taxon_id\": \"taxon:birds:000022\", \"gemini_model\": \"gemini-3.1-flash-lite-preview\", \"media_id\": \"media:inaturalist:108408470\", \"parsed_json_available\": true, \"raw_model_output_excerpt\": \"{ \\\"schema_version\\\": \\\"pedagogical_media_profile.v1\\\", \\\"prompt_version\\\": \\\"pedagogical_media_profile_prompt.v1\\\", \\\"review_status\\\": \\",
-      "pmp_review_status": "failed",
-      "scientific_name": null,
-      "status": "pedagogical_media_profile_failed",
-      "usage_scores": {},
-      "visible_field_marks": []
+      "canonical_taxon_id": "taxon:birds:000022",
+      "evidence_type": "multiple_organisms",
+      "failure_reason": null,
+      "global_quality_score": 93.0,
+      "limitations": [
+        "presence of multiple distinct species"
+      ],
+      "media_key": "inaturalist::106553706",
+      "payload_excerpt": "{\"biological_profile_visible\": {\"life_stage\": {\"confidence\": \"medium\", \"value\": \"adult\", \"visible_basis\": \"adult plumage and size\"}, \"plumage_state\": {\"confidence\": \"low\", \"value\": \"unknown\", \"visible_basis\": null}, \"seasonal_state\": {\"confidence\": \"low\", \"value\": \"unknown\", \"visible_basis\": null}, \"sex\": {\"confidence\": \"low\", \"value\": \"unknown\", \"",
+      "pmp_review_status": "valid",
+      "scientific_name": "Anser anser domesticus",
+      "source_taxon_id": "120479",
+      "status": "ok",
+      "usage_scores": {
+        "basic_identification": 58.0,
+        "confusion_learning": 63.0,
+        "field_observation": 84.0,
+        "indirect_evidence_learning": 58.0,
+        "morphology_learning": 70.0,
+        "species_card": 45.0
+      },
+      "visible_field_marks": [
+        {
+          "body_part": "beak",
+          "confidence": 0.95,
+          "feature": "orange bill and greyish brown plumage",
+          "importance": "high",
+          "visibility": "high"
+        },
+        {
+          "body_part": "head",
+          "confidence": 0.9,
+          "feature": "black head and neck pattern on geese",
+          "importance": "high",
+          "visibility": "high"
+        }
+      ]
     },
     {
+      "canonical_taxon_id": "taxon:birds:000005",
+      "evidence_type": "whole_organism",
+      "failure_reason": null,
+      "global_quality_score": 44.0,
+      "limitations": [
+        "subject is silhouetted and heavily obscured, making reliable identification challenging"
+      ],
+      "media_key": "inaturalist::101911464",
+      "payload_excerpt": "{\"biological_profile_visible\": {\"life_stage\": {\"confidence\": \"low\", \"value\": \"unknown\", \"visible_basis\": null}, \"plumage_state\": {\"confidence\": \"low\", \"value\": \"unknown\", \"visible_basis\": null}, \"seasonal_state\": {\"confidence\": \"low\", \"value\": \"unknown\", \"visible_basis\": null}, \"sex\": {\"confidence\": \"low\", \"value\": \"unknown\", \"visible_basis\": null}",
+      "pmp_review_status": "valid",
+      "scientific_name": "Fringilla coelebs",
+      "source_taxon_id": "10070",
+      "status": "ok",
+      "usage_scores": {
+        "basic_identification": 37.0,
+        "confusion_learning": 48.0,
+        "field_observation": 61.0,
+        "indirect_evidence_learning": 0.0,
+        "morphology_learning": 37.0,
+        "species_card": 40.0
+      },
+      "visible_field_marks": [
+        {
+          "body_part": "whole_body",
+          "confidence": 0.3,
+          "feature": "general silhouette",
+          "importance": "low",
+          "visibility": "low"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000013",
+      "evidence_type": "whole_organism",
+      "failure_reason": null,
+      "global_quality_score": 33.0,
+      "limitations": [
+        "Subject is nearly entirely silhouetted against dark foliage",
+        "Extremely low lighting conditions",
+        "Subject is very distant and small in frame"
+      ],
+      "media_key": "inaturalist::101912004",
+      "payload_excerpt": "{\"biological_profile_visible\": {\"life_stage\": {\"confidence\": \"low\", \"value\": \"unknown\", \"visible_basis\": null}, \"plumage_state\": {\"confidence\": \"low\", \"value\": \"unknown\", \"visible_basis\": null}, \"seasonal_state\": {\"confidence\": \"low\", \"value\": \"unknown\", \"visible_basis\": null}, \"sex\": {\"confidence\": \"low\", \"value\": \"unknown\", \"visible_basis\": null}",
+      "pmp_review_status": "valid",
+      "scientific_name": "Troglodytes troglodytes",
+      "source_taxon_id": "145363",
+      "status": "ok",
+      "usage_scores": {
+        "basic_identification": 27.0,
+        "confusion_learning": 38.0,
+        "field_observation": 52.0,
+        "indirect_evidence_learning": 0.0,
+        "morphology_learning": 31.0,
+        "species_card": 24.0
+      },
+      "visible_field_marks": [
+        {
+          "body_part": "whole_body",
+          "confidence": 0.2,
+          "feature": "silhouette",
+          "importance": "low",
+          "visibility": "low"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000029",
       "evidence_type": "whole_organism",
       "failure_reason": null,
       "global_quality_score": 67.0,
@@ -127,7 +716,8 @@
       "media_key": "inaturalist::100422597",
       "payload_excerpt": "{\"biological_profile_visible\": {\"life_stage\": {\"confidence\": \"medium\", \"value\": \"adult\", \"visible_basis\": \"size and general plumage\"}, \"plumage_state\": {\"confidence\": \"low\", \"value\": \"unknown\", \"visible_basis\": null}, \"seasonal_state\": {\"confidence\": \"low\", \"value\": \"unknown\", \"visible_basis\": null}, \"sex\": {\"confidence\": \"low\", \"value\": \"unknown\",",
       "pmp_review_status": "valid",
-      "scientific_name": null,
+      "scientific_name": "Ardea cinerea",
+      "source_taxon_id": "4954",
       "status": "ok",
       "usage_scores": {
         "basic_identification": 70.0,
@@ -148,39 +738,84 @@
       ]
     },
     {
+      "canonical_taxon_id": "taxon:birds:000032",
       "evidence_type": "whole_organism",
       "failure_reason": null,
-      "global_quality_score": 44.0,
+      "global_quality_score": 75.0,
       "limitations": [
-        "subject is silhouetted and heavily obscured, making reliable identification challenging"
+        "Soft focus/low resolution limits detail observation"
       ],
-      "media_key": "inaturalist::101911464",
-      "payload_excerpt": "{\"biological_profile_visible\": {\"life_stage\": {\"confidence\": \"low\", \"value\": \"unknown\", \"visible_basis\": null}, \"plumage_state\": {\"confidence\": \"low\", \"value\": \"unknown\", \"visible_basis\": null}, \"seasonal_state\": {\"confidence\": \"low\", \"value\": \"unknown\", \"visible_basis\": null}, \"sex\": {\"confidence\": \"low\", \"value\": \"unknown\", \"visible_basis\": null}",
+      "media_key": "inaturalist::10333212",
+      "payload_excerpt": "{\"biological_profile_visible\": {\"life_stage\": {\"confidence\": \"medium\", \"value\": \"adult\", \"visible_basis\": \"proportions and plumage\"}, \"plumage_state\": {\"confidence\": \"low\", \"value\": \"unknown\", \"visible_basis\": null}, \"seasonal_state\": {\"confidence\": \"low\", \"value\": \"unknown\", \"visible_basis\": null}, \"sex\": {\"confidence\": \"low\", \"value\": \"unknown\", ",
       "pmp_review_status": "valid",
-      "scientific_name": null,
+      "scientific_name": "Accipiter nisus",
+      "source_taxon_id": "5106",
       "status": "ok",
       "usage_scores": {
-        "basic_identification": 37.0,
-        "confusion_learning": 48.0,
-        "field_observation": 61.0,
+        "basic_identification": 73.0,
+        "confusion_learning": 73.0,
+        "field_observation": 82.0,
         "indirect_evidence_learning": 0.0,
-        "morphology_learning": 37.0,
-        "species_card": 40.0
+        "morphology_learning": 63.0,
+        "species_card": 74.0
       },
       "visible_field_marks": [
         {
           "body_part": "whole_body",
-          "confidence": 0.3,
-          "feature": "general silhouette",
-          "importance": "low",
+          "confidence": 0.8,
+          "feature": "accipiter silhouette",
+          "importance": "high",
+          "visibility": "medium"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000033",
+      "evidence_type": "whole_organism",
+      "failure_reason": null,
+      "global_quality_score": 51.0,
+      "limitations": [
+        "Extremely distant shot",
+        "Silhouette only",
+        "Lack of diagnostic detail"
+      ],
+      "media_key": "inaturalist::103441671",
+      "payload_excerpt": "{\"biological_profile_visible\": {\"life_stage\": {\"confidence\": \"low\", \"value\": \"unknown\", \"visible_basis\": null}, \"plumage_state\": {\"confidence\": \"low\", \"value\": \"unknown\", \"visible_basis\": null}, \"seasonal_state\": {\"confidence\": \"low\", \"value\": \"unknown\", \"visible_basis\": null}, \"sex\": {\"confidence\": \"low\", \"value\": \"unknown\", \"visible_basis\": null}",
+      "pmp_review_status": "valid",
+      "scientific_name": "Falco tinnunculus",
+      "source_taxon_id": "472766",
+      "status": "ok",
+      "usage_scores": {
+        "basic_identification": 40.0,
+        "confusion_learning": 52.0,
+        "field_observation": 64.0,
+        "indirect_evidence_learning": 0.0,
+        "morphology_learning": 48.0,
+        "species_card": 42.0
+      },
+      "visible_field_marks": [
+        {
+          "body_part": "whole_body",
+          "confidence": 0.5,
+          "feature": "silhouette",
+          "importance": "medium",
           "visibility": "low"
         }
       ]
     }
   ],
+  "manual_review_sample_coverage": {
+    "has_failed": true,
+    "has_high_quality_valid": true,
+    "has_indirect_evidence": true,
+    "has_low_basic_identification": true,
+    "has_partial_or_multiple": true
+  },
+  "metadata_join_status": "joined_from_manifest",
   "operational_metrics": {
     "cost_estimate": null,
     "latency_estimate": null,
+    "measurement_status": "not_measured_in_sprint6_controlled_run",
     "model_name_distribution": {
       "gemini-3.1-flash-lite-preview": 116,
       "none": 4
@@ -212,6 +847,145 @@
     },
     "high_indirect_evidence_valid_count": 7,
     "low_basic_identification_valid_count": 39,
+    "score_metrics_by_evidence_type": {
+      "dead_organism": {
+        "average_global_quality_score": 99.0,
+        "average_usage_scores": {
+          "basic_identification": 60.0,
+          "confusion_learning": 45.0,
+          "field_observation": 80.0,
+          "indirect_evidence_learning": 78.0,
+          "morphology_learning": 75.0,
+          "species_card": 48.0
+        },
+        "count": 1,
+        "failed_count": 0,
+        "high_indirect_evidence_valid_count": 1,
+        "low_basic_identification_valid_count": 0,
+        "score_min_max": {
+          "max": 99.0,
+          "min": 99.0
+        },
+        "valid_count": 1,
+        "valid_rate": 1.0
+      },
+      "feather": {
+        "average_global_quality_score": 89.5,
+        "average_usage_scores": {
+          "basic_identification": 22.0,
+          "confusion_learning": 37.0,
+          "field_observation": 73.0,
+          "indirect_evidence_learning": 90.5,
+          "morphology_learning": 74.0,
+          "species_card": 31.0
+        },
+        "count": 2,
+        "failed_count": 0,
+        "high_indirect_evidence_valid_count": 2,
+        "low_basic_identification_valid_count": 2,
+        "score_min_max": {
+          "max": 96.0,
+          "min": 83.0
+        },
+        "valid_count": 2,
+        "valid_rate": 1.0
+      },
+      "habitat": {
+        "average_global_quality_score": 32.0,
+        "average_usage_scores": {
+          "basic_identification": 1.0,
+          "confusion_learning": 4.0,
+          "field_observation": 50.0,
+          "indirect_evidence_learning": 78.0,
+          "morphology_learning": 12.0,
+          "species_card": 6.0
+        },
+        "count": 1,
+        "failed_count": 0,
+        "high_indirect_evidence_valid_count": 1,
+        "low_basic_identification_valid_count": 1,
+        "score_min_max": {
+          "max": 32.0,
+          "min": 32.0
+        },
+        "valid_count": 1,
+        "valid_rate": 1.0
+      },
+      "multiple_organisms": {
+        "average_global_quality_score": 88.43,
+        "average_usage_scores": {
+          "basic_identification": 52.43,
+          "confusion_learning": 58.14,
+          "field_observation": 82.0,
+          "indirect_evidence_learning": 59.43,
+          "morphology_learning": 63.57,
+          "species_card": 43.43
+        },
+        "count": 7,
+        "failed_count": 0,
+        "high_indirect_evidence_valid_count": 0,
+        "low_basic_identification_valid_count": 2,
+        "score_min_max": {
+          "max": 100.0,
+          "min": 61.0
+        },
+        "valid_count": 7,
+        "valid_rate": 1.0
+      },
+      "nest": {
+        "average_global_quality_score": 68.67,
+        "average_usage_scores": {
+          "basic_identification": 12.33,
+          "confusion_learning": 20.67,
+          "field_observation": 70.33,
+          "indirect_evidence_learning": 85.0,
+          "morphology_learning": 36.0,
+          "species_card": 16.33
+        },
+        "count": 3,
+        "failed_count": 0,
+        "high_indirect_evidence_valid_count": 3,
+        "low_basic_identification_valid_count": 3,
+        "score_min_max": {
+          "max": 92.0,
+          "min": 57.0
+        },
+        "valid_count": 3,
+        "valid_rate": 1.0
+      },
+      "unknown_or_missing": {
+        "average_global_quality_score": null,
+        "average_usage_scores": {},
+        "count": 14,
+        "failed_count": 10,
+        "high_indirect_evidence_valid_count": 0,
+        "low_basic_identification_valid_count": 0,
+        "score_min_max": null,
+        "valid_count": 0,
+        "valid_rate": 0.0
+      },
+      "whole_organism": {
+        "average_global_quality_score": 71.34,
+        "average_usage_scores": {
+          "basic_identification": 67.82,
+          "confusion_learning": 66.49,
+          "field_observation": 79.46,
+          "indirect_evidence_learning": 0.0,
+          "morphology_learning": 65.83,
+          "species_card": 68.22
+        },
+        "count": 92,
+        "failed_count": 0,
+        "high_indirect_evidence_valid_count": 0,
+        "low_basic_identification_valid_count": 31,
+        "score_min_max": {
+          "max": 100.0,
+          "min": 33.0
+        },
+        "valid_count": 92,
+        "valid_rate": 1.0
+      }
+    },
     "score_min_max": {
       "max": 100.0,
       "min": 32.0

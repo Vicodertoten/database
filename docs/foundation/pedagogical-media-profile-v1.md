@@ -265,6 +265,26 @@ The system computes final numeric scores:
 
 The model must not be treated as the final scoring authority.
 
+### 5.6 global_quality_score interpretation guardrail
+
+`global_quality_score` is a broad multi-use signal, not a final selection
+decision score.
+
+Rules:
+
+- Do not use `global_quality_score` alone to select media for packs or quizzes.
+- Use `usage_scores` as the primary basis for use-specific selection logic.
+- Keep evidence type context explicit when interpreting score patterns.
+
+Implication:
+
+A feather profile may have high `global_quality_score` because it is excellent
+for indirect evidence learning, while still having low
+`basic_identification`.
+
+Future PMP-specific qualification policy must define use-specific thresholds and
+must not collapse all downstream selection into a single global-score cutoff.
+
 ## 6. Top-level structure
 
 Canonical conceptual shape:
