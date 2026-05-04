@@ -295,6 +295,36 @@ def normalize_pedagogical_media_profile_v1(
         "technical_quality",
         {"high", "medium", "low", "unusable", "unknown"},
     )
+    _normalize_known_enum_field(
+        technical_profile,
+        "sharpness",
+        {"high", "medium", "low", "unknown"},
+    )
+    _normalize_known_enum_field(
+        technical_profile,
+        "lighting",
+        {"high", "medium", "low", "unknown"},
+    )
+    _normalize_known_enum_field(
+        technical_profile,
+        "contrast",
+        {"high", "medium", "low", "unknown"},
+    )
+    _normalize_known_enum_field(
+        technical_profile,
+        "background_clutter",
+        {"low", "medium", "high", "unknown"},
+    )
+    _normalize_known_enum_field(
+        technical_profile,
+        "framing",
+        {"good", "acceptable", "poor", "unknown"},
+    )
+    _normalize_known_enum_field(
+        technical_profile,
+        "distance_to_subject",
+        {"close", "medium", "far", "very_far", "unknown"},
+    )
 
     observation_profile = _mapping(normalized.get("observation_profile"))
     _normalize_known_enum_field(
@@ -306,6 +336,22 @@ def normalize_pedagogical_media_profile_v1(
         observation_profile,
         "subject_visibility",
         {"high", "medium", "low", "none", "unknown"},
+    )
+    _normalize_known_enum_field(
+        observation_profile,
+        "view_angle",
+        {"lateral", "frontal", "rear", "dorsal", "ventral", "mixed", "unknown"},
+    )
+    _normalize_known_enum_field(
+        observation_profile,
+        "occlusion",
+        {"none", "minor", "major", "unknown"},
+    )
+    _normalize_string_enum_list(
+        observation_profile,
+        "context_visible",
+        {"water", "vegetation", "tree", "reedbed", "ground", "sky",
+         "urban", "snow", "rock", "dead_wood", "human_structure", "unknown"},
     )
 
     identification_profile = _mapping(normalized.get("identification_profile"))
@@ -323,6 +369,11 @@ def normalize_pedagogical_media_profile_v1(
         identification_profile,
         "identification_confidence_from_image",
         {"high", "medium", "low", "none", "unknown"},
+    )
+    _normalize_known_enum_field(
+        identification_profile,
+        "ambiguity_level",
+        {"low", "medium", "high", "unknown"},
     )
 
     pedagogical_profile = _mapping(normalized.get("pedagogical_profile"))
@@ -346,6 +397,79 @@ def normalize_pedagogical_media_profile_v1(
         "requires_prior_knowledge",
         {"high", "medium", "low", "none", "unknown"},
     )
+    _normalize_known_enum_field(
+        pedagogical_profile,
+        "difficulty",
+        {"easy", "medium", "hard", "unknown"},
+    )
+    _normalize_known_enum_field(
+        pedagogical_profile,
+        "expert_interest",
+        {"high", "medium", "low", "none", "unknown"},
+    )
+    _normalize_known_enum_field(
+        pedagogical_profile,
+        "cognitive_load",
+        {"high", "medium", "low", "none", "unknown"},
+    )
+
+    biological_profile_visible = _mapping(normalized.get("biological_profile_visible"))
+    _normalize_biological_attribute(
+        biological_profile_visible,
+        "sex",
+        {"male", "female", "unknown", "not_applicable"},
+    )
+    _normalize_biological_attribute(
+        biological_profile_visible,
+        "life_stage",
+        {"egg", "juvenile", "adult", "unknown", "not_applicable"},
+    )
+    _normalize_biological_attribute(
+        biological_profile_visible,
+        "plumage_state",
+        {
+            "breeding_plumage", "non_breeding_plumage", "eclipse_plumage",
+            "juvenile_plumage", "unknown", "not_applicable",
+        },
+    )
+    _normalize_biological_attribute(
+        biological_profile_visible,
+        "seasonal_state",
+        {
+            "breeding_season", "non_breeding_season", "migration_period",
+            "wintering", "unknown", "not_applicable",
+        },
+    )
+
+    group_specific_profile = _mapping(normalized.get("group_specific_profile"))
+    bird_profile = _mapping(group_specific_profile.get("bird"))
+    if bird_profile:
+        _normalize_known_enum_field(
+            bird_profile,
+            "posture",
+            {"perched", "standing", "swimming", "flying", "foraging", "resting", "unknown"},
+        )
+        _normalize_known_enum_field(
+            bird_profile,
+            "behavior_visible",
+            {"foraging", "swimming", "flying", "perched",
+             "singing", "feeding_young", "resting", "unknown"},
+        )
+        _normalize_string_enum_list(
+            bird_profile,
+            "bird_visible_parts",
+            {"head", "beak", "eye", "neck", "breast", "belly", "back",
+             "wing", "tail", "legs", "feet", "whole_body", "unknown"},
+        )
+        for _bird_visibility_field in (
+            "plumage_pattern_visible", "bill_shape_visible",
+            "wing_pattern_visible", "tail_shape_visible",
+        ):
+            _normalize_known_enum_field(
+                bird_profile,
+                _bird_visibility_field,
+                {"high", "medium", "low", "none", "unknown"},
+            )
 
     visible_field_marks = identification_profile.get("visible_field_marks")
     if isinstance(visible_field_marks, Sequence) and not isinstance(
@@ -355,6 +479,26 @@ def normalize_pedagogical_media_profile_v1(
         for item in visible_field_marks:
             if isinstance(item, Mapping):
                 _normalize_number_field(item, "confidence")
+                _normalize_known_enum_field(
+                    item,  # type: ignore[arg-type]
+                    "visibility",
+                    {"high", "medium", "low", "unknown"},
+                )
+                _normalize_known_enum_field(
+                    item,  # type: ignore[arg-type]
+                    "importance",
+                    {"high", "medium", "low", "unknown"},
+                )
+                _normalize_known_enum_field(
+                    item,  # type: ignore[arg-type]
+                    "body_part",
+                    {
+                        "head", "beak", "eye", "breast", "belly", "back", "wing", "tail",
+                        "legs", "feet", "whole_body", "feather", "egg", "nest", "track",
+                        "scat", "habitat", "leaf", "flower", "stem", "cap", "gills",
+                        "stipe", "unknown",
+                    },
+                )
 
     return normalized
 
@@ -975,6 +1119,39 @@ def _normalize_string_list(value: object) -> list[str]:
     else:
         items = [str(value).strip()]
     return [item for item in items if item]
+
+
+def _normalize_string_enum_list(
+    mapping: Mapping[str, object],
+    key: str,
+    allowed: set[str],
+) -> None:
+    raw = mapping.get(key)
+    if not isinstance(raw, Sequence) or isinstance(raw, (str, bytes)):
+        return
+    normalized: list[str] = []
+    for item in raw:
+        if not isinstance(item, str):
+            normalized.append(item)  # type: ignore[arg-type]
+            continue
+        lowered = _normalize_text(item)
+        normalized.append(lowered if lowered in allowed else item.strip())
+    try:
+        mapping[key] = normalized  # type: ignore[index]
+    except TypeError:
+        pass
+
+
+def _normalize_biological_attribute(
+    biological_profile: Mapping[str, object],
+    field_name: str,
+    allowed_values: set[str],
+) -> None:
+    field = _mapping(biological_profile.get(field_name))
+    if not field:
+        return
+    _normalize_known_enum_field(field, "value", allowed_values)
+    _normalize_known_enum_field(field, "confidence", {"high", "medium", "low", "unknown"})
 
 
 def _mapping(value: object) -> Mapping[str, object]:

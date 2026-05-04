@@ -22,6 +22,8 @@ DEFAULT_OUTPUT_PATH = Path(
     "docs/audits/evidence/pedagogical_media_profile_v1_live_mini_run.json"
 )
 DEFAULT_GEMINI_MODEL = "gemini-2.5-flash-lite"
+# Sprint 4 preferred model: gemini-2.5-flash-lite (gemini-3.1-flash-lite not yet available
+# in the Gemini API as of Sprint 4 execution; use --gemini-model to override when available).
 DEFAULT_SAMPLE_SIZE = 5
 MIN_SAMPLE_SIZE = 5
 MAX_SAMPLE_SIZE = 10
@@ -499,6 +501,7 @@ def _run_single_item(
             if diagnostics
             else 0
         ),
+        "schema_errors": schema_errors,
         "feedback_rejection": feedback_rejection,
         "selection_field_rejection": selection_field_rejection,
         "biological_basis_rejection": biological_basis_rejection,
@@ -529,6 +532,87 @@ def _item_error_summary(item: dict[str, Any], *, error: str) -> dict[str, Any]:
         "image_sha256": None,
         "error": error,
     }
+
+
+def _compute_top_schema_error_paths(
+    per_item_results: list[dict[str, Any]],
+    *,
+    max_paths: int = 10,
+) -> list[dict[str, Any]]:
+    """Aggregate schema error paths across all failed items, ranked by frequency."""
+    path_counts: Counter[str] = Counter()
+    path_causes: dict[str, Counter[str]] = {}
+    for result in per_item_results:
+        for error in result.get("schema_errors") or []:
+            if not isinstance(error, dict):
+                continue
+            path = str(error.get("path") or "<unknown>")
+            cause = str(error.get("cause") or "unknown")
+            path_counts[path] += 1
+            if path not in path_causes:
+                path_causes[path] = Counter()
+            path_causes[path][cause] += 1
+    top = []
+    for path, count in path_counts.most_common(max_paths):
+        causes = dict(path_causes[path].most_common())
+        top.append({"path": path, "count": count, "causes": causes})
+    return top
+
+
+def _compute_examples_by_schema_error_path(
+    per_item_results: list[dict[str, Any]],
+    *,
+    max_per_path: int = 2,
+) -> dict[str, Any]:
+    """For each unique error path, collect up to max_per_path example details."""
+    path_examples: dict[str, list[dict[str, Any]]] = {}
+    for result in per_item_results:
+        for error in result.get("schema_errors") or []:
+            if not isinstance(error, dict):
+                continue
+            path = str(error.get("path") or "<unknown>")
+            if path not in path_examples:
+                path_examples[path] = []
+            if len(path_examples[path]) < max_per_path:
+                path_examples[path].append(
+                    {
+                        "media_id": result.get("media_id"),
+                        "path": path,
+                        "message": error.get("message"),
+                        "validator": error.get("validator"),
+                        "expected": error.get("expected"),
+                        "actual": error.get("actual"),
+                        "cause": error.get("cause"),
+                    }
+                )
+    return {path: examples for path, examples in sorted(path_examples.items())}
+
+
+def _compute_examples_by_failure_cause(
+    per_item_results: list[dict[str, Any]],
+    *,
+    max_per_cause: int = 3,
+) -> dict[str, Any]:
+    """For each failure cause, collect up to max_per_cause example schema errors."""
+    cause_examples: dict[str, list[dict[str, Any]]] = {}
+    for result in per_item_results:
+        for error in result.get("schema_errors") or []:
+            if not isinstance(error, dict):
+                continue
+            cause = str(error.get("cause") or "unknown")
+            if cause not in cause_examples:
+                cause_examples[cause] = []
+            if len(cause_examples[cause]) < max_per_cause:
+                cause_examples[cause].append(
+                    {
+                        "media_id": result.get("media_id"),
+                        "path": error.get("path"),
+                        "message": error.get("message"),
+                        "expected": error.get("expected"),
+                        "actual": error.get("actual"),
+                    }
+                )
+    return {cause: examples for cause, examples in sorted(cause_examples.items())}
 
 
 # ---------------------------------------------------------------------------
@@ -641,6 +725,17 @@ def _compute_summary(
         ],
     }
 
+    # Deeper schema error diagnostics
+    top_schema_error_paths: list[dict[str, Any]] = _compute_top_schema_error_paths(
+        per_item_results
+    )
+    examples_by_schema_error_path: dict[str, Any] = _compute_examples_by_schema_error_path(
+        per_item_results
+    )
+    examples_by_failure_cause: dict[str, Any] = _compute_examples_by_failure_cause(
+        per_item_results
+    )
+
     return {
         "sample_size": sample_size,
         "model": model,
@@ -659,6 +754,9 @@ def _compute_summary(
         "feedback_rejection_count": feedback_rejection_count,
         "selection_field_rejection_count": selection_field_rejection_count,
         "biological_basis_rejection_count": biological_basis_rejection_count,
+        "top_schema_error_paths": top_schema_error_paths,
+        "examples_by_schema_error_path": examples_by_schema_error_path,
+        "examples_by_failure_cause": examples_by_failure_cause,
         "qualitative_examples": qualitative_examples,
     }
 
@@ -740,6 +838,9 @@ def _skipped_report(
         "feedback_rejection_count": 0,
         "selection_field_rejection_count": 0,
         "biological_basis_rejection_count": 0,
+        "top_schema_error_paths": [],
+        "examples_by_schema_error_path": {},
+        "examples_by_failure_cause": {},
         "qualitative_examples": {"valid_items": [], "failed_items": []},
         "skip_reason": "missing_live_credentials",
     }

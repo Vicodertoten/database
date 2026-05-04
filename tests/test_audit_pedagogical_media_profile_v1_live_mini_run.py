@@ -30,6 +30,7 @@ def _make_valid_result(media_id: str = "m1") -> dict:
         },
         "schema_failure_cause": None,
         "schema_error_count": 0,
+        "schema_errors": [],
         "feedback_rejection": False,
         "selection_field_rejection": False,
         "biological_basis_rejection": False,
@@ -42,6 +43,7 @@ def _make_valid_result(media_id: str = "m1") -> dict:
 def _make_failed_result(
     media_id: str = "m1",
     failure_reason: str = "schema_validation_failed",
+    schema_errors: list | None = None,
 ) -> dict:
     return {
         "media_id": media_id,
@@ -55,6 +57,16 @@ def _make_failed_result(
         "usage_scores": None,
         "schema_failure_cause": "enum_mismatch",
         "schema_error_count": 1,
+        "schema_errors": schema_errors or [
+            {
+                "path": "technical_profile.framing",
+                "message": "'excellent' is not one of ['good', 'acceptable', 'poor', 'unknown']",
+                "validator": "enum",
+                "expected": ["good", "acceptable", "poor", "unknown"],
+                "actual": "excellent",
+                "cause": "enum_mismatch",
+            }
+        ],
         "feedback_rejection": False,
         "selection_field_rejection": False,
         "biological_basis_rejection": False,
@@ -735,3 +747,204 @@ def test_doctrine_selection_field_rejection_blocks_ready_decision(tmp_path: Path
 
     assert report["summary"]["selection_field_rejection_count"] == 5
     assert report["decision"] != module.DECISION_READY
+
+
+# ---------------------------------------------------------------------------
+# Sprint 4: Deeper diagnostics tests
+# ---------------------------------------------------------------------------
+
+
+def test_per_item_schema_errors_includes_enum_mismatch_details() -> None:
+    enum_error = {
+        "path": "technical_profile.framing",
+        "message": "'excellent' is not one of ['good', 'acceptable', 'poor', 'unknown']",
+        "validator": "enum",
+        "expected": ["good", "acceptable", "poor", "unknown"],
+        "actual": "excellent",
+        "cause": "enum_mismatch",
+    }
+    result = _make_failed_result("m1", schema_errors=[enum_error])
+
+    errors = result.get("schema_errors") or []
+    assert len(errors) == 1
+    assert errors[0]["path"] == "technical_profile.framing"
+    assert errors[0]["actual"] == "excellent"
+    assert "expected" in errors[0]
+    assert "good" in errors[0]["expected"]
+    assert errors[0]["cause"] == "enum_mismatch"
+
+
+def test_per_item_schema_errors_includes_missing_required_field() -> None:
+    missing_field_error = {
+        "path": "group_specific_profile.bird",
+        "message": "group_specific_profile.bird is required when organism_group is bird",
+        "validator": "consistency_rule",
+        "expected": "object",
+        "actual": None,
+        "cause": "missing_required_field",
+    }
+    result = _make_failed_result("m2", schema_errors=[missing_field_error])
+
+    errors = result.get("schema_errors") or []
+    assert len(errors) == 1
+    assert errors[0]["path"] == "group_specific_profile.bird"
+    assert errors[0]["cause"] == "missing_required_field"
+    assert "message" in errors[0]
+
+
+def test_compute_top_schema_error_paths_aggregates_correctly() -> None:
+    module = _load_script_module()
+
+    results = [
+        _make_failed_result("m1", schema_errors=[
+            {"path": "technical_profile.framing", "cause": "enum_mismatch",
+             "message": "bad framing", "validator": "enum", "expected": [], "actual": "x"},
+            {"path": "observation_profile.view_angle", "cause": "enum_mismatch",
+             "message": "bad view", "validator": "enum", "expected": [], "actual": "y"},
+        ]),
+        _make_failed_result("m2", schema_errors=[
+            {"path": "technical_profile.framing", "cause": "enum_mismatch",
+             "message": "bad framing", "validator": "enum", "expected": [], "actual": "z"},
+        ]),
+        _make_valid_result("m3"),
+    ]
+
+    top_paths = module._compute_top_schema_error_paths(results)
+
+    assert isinstance(top_paths, list)
+    assert len(top_paths) >= 1
+    # technical_profile.framing appears 2x, should be first
+    assert top_paths[0]["path"] == "technical_profile.framing"
+    assert top_paths[0]["count"] == 2
+    # view_angle appears 1x
+    view_angle_entry = next(
+        (e for e in top_paths if e["path"] == "observation_profile.view_angle"), None
+    )
+    assert view_angle_entry is not None
+    assert view_angle_entry["count"] == 1
+
+
+def test_compute_top_schema_error_paths_empty_when_no_errors() -> None:
+    module = _load_script_module()
+
+    results = [_make_valid_result(f"m{i}") for i in range(3)]
+    top_paths = module._compute_top_schema_error_paths(results)
+
+    assert top_paths == []
+
+
+def test_compute_examples_by_schema_error_path_groups_by_path() -> None:
+    module = _load_script_module()
+
+    results = [
+        _make_failed_result("m1", schema_errors=[
+            {"path": "technical_profile.framing", "cause": "enum_mismatch",
+             "message": "bad", "validator": "enum",
+             "expected": ["good", "acceptable"], "actual": "excellent"},
+        ]),
+        _make_failed_result("m2", schema_errors=[
+            {"path": "technical_profile.framing", "cause": "enum_mismatch",
+             "message": "bad", "validator": "enum",
+             "expected": ["good", "acceptable"], "actual": "well_composed"},
+        ]),
+    ]
+
+    examples = module._compute_examples_by_schema_error_path(results)
+
+    assert "technical_profile.framing" in examples
+    framing_examples = examples["technical_profile.framing"]
+    assert len(framing_examples) <= 2
+    assert all("actual" in ex for ex in framing_examples)
+    assert all("expected" in ex for ex in framing_examples)
+
+
+def test_compute_examples_by_failure_cause_groups_by_cause() -> None:
+    module = _load_script_module()
+
+    results = [
+        _make_failed_result("m1", schema_errors=[
+            {"path": "technical_profile.framing", "cause": "enum_mismatch",
+             "message": "bad", "validator": "enum",
+             "expected": ["good"], "actual": "excellent"},
+        ]),
+        _make_failed_result("m2", schema_errors=[
+            {"path": "group_specific_profile.bird", "cause": "missing_required_field",
+             "message": "required", "validator": "required",
+             "expected": ["bird"], "actual": None},
+        ]),
+    ]
+
+    examples = module._compute_examples_by_failure_cause(results)
+
+    assert "enum_mismatch" in examples
+    assert "missing_required_field" in examples
+    assert all("path" in ex for ex in examples["enum_mismatch"])
+    assert all("path" in ex for ex in examples["missing_required_field"])
+
+
+def test_summary_includes_top_schema_error_paths() -> None:
+    module = _load_script_module()
+
+    results = [
+        _make_failed_result("m1"),
+        _make_failed_result("m2"),
+        _make_valid_result("m3"),
+    ]
+
+    summary = module._compute_summary(
+        results,
+        sample_size=3,
+        model="gemini-2.5-flash-lite",
+        gemini_api_key_env="GEMINI_API_KEY",
+        gemini_concurrency=1,
+    )
+
+    assert "top_schema_error_paths" in summary
+    assert "examples_by_schema_error_path" in summary
+    assert "examples_by_failure_cause" in summary
+    assert isinstance(summary["top_schema_error_paths"], list)
+    assert isinstance(summary["examples_by_schema_error_path"], dict)
+    assert isinstance(summary["examples_by_failure_cause"], dict)
+
+
+def test_top_schema_error_paths_is_deterministic() -> None:
+    module = _load_script_module()
+
+    results = [
+        _make_failed_result("m1", schema_errors=[
+            {"path": "technical_profile.framing", "cause": "enum_mismatch",
+             "message": "bad", "validator": "enum", "expected": [], "actual": "x"},
+            {"path": "observation_profile.view_angle", "cause": "enum_mismatch",
+             "message": "bad", "validator": "enum", "expected": [], "actual": "y"},
+        ]),
+    ]
+
+    top1 = module._compute_top_schema_error_paths(results)
+    top2 = module._compute_top_schema_error_paths(results)
+
+    assert top1 == top2
+
+
+def test_skipped_summary_includes_diagnostic_fields(tmp_path: Path) -> None:
+    module = _load_script_module()
+
+    report = module.run_live_mini_audit(
+        snapshot_id=None,
+        snapshot_root=tmp_path,
+        snapshot_manifest_path=None,
+        sample_file=None,
+        sample_size=5,
+        gemini_api_key=None,
+        gemini_api_key_env="GEMINI_API_KEY",
+        gemini_model="gemini-2.5-flash-lite",
+        gemini_concurrency=1,
+        output_path=tmp_path / "report.json",
+    )
+
+    summary = report["summary"]
+    assert "top_schema_error_paths" in summary
+    assert summary["top_schema_error_paths"] == []
+    assert "examples_by_schema_error_path" in summary
+    assert summary["examples_by_schema_error_path"] == {}
+    assert "examples_by_failure_cause" in summary
+    assert summary["examples_by_failure_cause"] == {}
