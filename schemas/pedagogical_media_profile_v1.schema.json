@@ -1,0 +1,406 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "pedagogical_media_profile_v1",
+  "description": "Modular naturalist media qualification contract. database qualifies now; downstream systems select later.",
+  "type": "object",
+  "oneOf": [
+    { "$ref": "#/$defs/valid_payload" },
+    { "$ref": "#/$defs/failed_payload" }
+  ],
+  "$defs": {
+    "signal_level": {
+      "type": "string",
+      "enum": ["high", "medium", "low", "unknown"]
+    },
+    "signal_level_with_none": {
+      "type": "string",
+      "enum": ["high", "medium", "low", "none", "unknown"]
+    },
+    "failure_reason": {
+      "type": "string",
+      "enum": [
+        "model_output_invalid",
+        "schema_validation_failed",
+        "media_not_accessible",
+        "unsafe_or_invalid_content",
+        "empty_model_output",
+        "media_uninspectable",
+        "unknown_failure"
+      ]
+    },
+    "diagnostics": {
+      "type": "object",
+      "required": ["parsed_json_available", "schema_error_count", "schema_errors"],
+      "additionalProperties": false,
+      "properties": {
+        "parsed_json_available": { "type": "boolean" },
+        "schema_error_count": { "type": "integer", "minimum": 0 },
+        "schema_errors": {
+          "type": "array",
+          "items": { "type": "object" }
+        }
+      }
+    },
+    "biological_attribute": {
+      "type": "object",
+      "required": ["value", "confidence", "visible_basis"],
+      "additionalProperties": false,
+      "properties": {
+        "value": { "type": "string" },
+        "confidence": { "$ref": "#/$defs/signal_level" },
+        "visible_basis": { "type": ["string", "null"] }
+      }
+    },
+    "field_mark": {
+      "type": "object",
+      "required": ["feature", "body_part", "visibility", "importance", "confidence"],
+      "additionalProperties": false,
+      "properties": {
+        "feature": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "body_part": {
+          "type": "string",
+          "enum": [
+            "head", "beak", "eye", "breast", "belly", "back", "wing", "tail",
+            "legs", "feet", "whole_body", "feather", "egg", "nest", "track",
+            "scat", "habitat", "leaf", "flower", "stem", "cap", "gills", "stipe", "unknown"
+          ]
+        },
+        "visibility": { "$ref": "#/$defs/signal_level" },
+        "importance": { "$ref": "#/$defs/signal_level" },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "technical_profile": {
+      "type": "object",
+      "required": [
+        "technical_quality", "sharpness", "lighting", "contrast",
+        "background_clutter", "framing", "distance_to_subject"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "technical_quality": {
+          "type": "string",
+          "enum": ["high", "medium", "low", "unusable", "unknown"]
+        },
+        "sharpness": { "$ref": "#/$defs/signal_level" },
+        "lighting": { "$ref": "#/$defs/signal_level" },
+        "contrast": { "$ref": "#/$defs/signal_level" },
+        "background_clutter": {
+          "type": "string",
+          "enum": ["low", "medium", "high", "unknown"]
+        },
+        "framing": {
+          "type": "string",
+          "enum": ["good", "acceptable", "poor", "unknown"]
+        },
+        "distance_to_subject": {
+          "type": "string",
+          "enum": ["close", "medium", "far", "very_far", "unknown"]
+        }
+      }
+    },
+    "observation_profile": {
+      "type": "object",
+      "required": [
+        "subject_presence", "subject_visibility", "visible_parts",
+        "view_angle", "occlusion", "context_visible"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "subject_presence": {
+          "type": "string",
+          "enum": ["clear", "partial", "indirect", "absent", "unknown"]
+        },
+        "subject_visibility": { "$ref": "#/$defs/signal_level_with_none" },
+        "visible_parts": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "view_angle": {
+          "type": "string",
+          "enum": ["lateral", "frontal", "rear", "dorsal", "ventral", "mixed", "unknown"]
+        },
+        "occlusion": {
+          "type": "string",
+          "enum": ["none", "minor", "major", "unknown"]
+        },
+        "context_visible": {
+          "type": "array",
+          "maxItems": 5,
+          "items": {
+            "type": "string",
+            "enum": [
+              "water", "vegetation", "tree", "reedbed", "ground", "sky",
+              "urban", "snow", "rock", "dead_wood", "human_structure", "unknown"
+            ]
+          }
+        }
+      }
+    },
+    "biological_profile_visible": {
+      "type": "object",
+      "required": ["sex", "life_stage", "plumage_state", "seasonal_state"],
+      "additionalProperties": false,
+      "properties": {
+        "sex": {
+          "allOf": [
+            { "$ref": "#/$defs/biological_attribute" },
+            {
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "enum": ["male", "female", "unknown", "not_applicable"]
+                }
+              }
+            }
+          ]
+        },
+        "life_stage": {
+          "allOf": [
+            { "$ref": "#/$defs/biological_attribute" },
+            {
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "enum": ["egg", "juvenile", "adult", "unknown", "not_applicable"]
+                }
+              }
+            }
+          ]
+        },
+        "plumage_state": {
+          "allOf": [
+            { "$ref": "#/$defs/biological_attribute" },
+            {
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "enum": [
+                    "breeding_plumage", "non_breeding_plumage",
+                    "eclipse_plumage", "juvenile_plumage",
+                    "unknown", "not_applicable"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "seasonal_state": {
+          "allOf": [
+            { "$ref": "#/$defs/biological_attribute" },
+            {
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "enum": [
+                    "breeding_season", "non_breeding_season",
+                    "migration_period", "wintering",
+                    "unknown", "not_applicable"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "identification_profile": {
+      "type": "object",
+      "required": [
+        "visual_evidence_strength", "diagnostic_feature_visibility",
+        "identification_confidence_from_image", "ambiguity_level",
+        "visible_field_marks", "missing_key_features", "identification_limitations"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "visual_evidence_strength": { "$ref": "#/$defs/signal_level_with_none" },
+        "diagnostic_feature_visibility": { "$ref": "#/$defs/signal_level_with_none" },
+        "identification_confidence_from_image": { "$ref": "#/$defs/signal_level_with_none" },
+        "ambiguity_level": {
+          "type": "string",
+          "enum": ["low", "medium", "high", "unknown"]
+        },
+        "visible_field_marks": {
+          "type": "array",
+          "maxItems": 5,
+          "items": { "$ref": "#/$defs/field_mark" }
+        },
+        "missing_key_features": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "identification_limitations": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "pedagogical_profile": {
+      "type": "object",
+      "required": [
+        "learning_value", "difficulty", "beginner_accessibility",
+        "expert_interest", "field_realism", "cognitive_load", "requires_prior_knowledge"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "learning_value": { "$ref": "#/$defs/signal_level_with_none" },
+        "difficulty": {
+          "type": "string",
+          "enum": ["easy", "medium", "hard", "unknown"]
+        },
+        "beginner_accessibility": { "$ref": "#/$defs/signal_level_with_none" },
+        "expert_interest": { "$ref": "#/$defs/signal_level_with_none" },
+        "field_realism": { "$ref": "#/$defs/signal_level_with_none" },
+        "cognitive_load": { "$ref": "#/$defs/signal_level_with_none" },
+        "requires_prior_knowledge": { "$ref": "#/$defs/signal_level_with_none" }
+      }
+    },
+    "bird_profile": {
+      "type": "object",
+      "required": [
+        "bird_visible_parts", "posture", "behavior_visible",
+        "plumage_pattern_visible", "bill_shape_visible",
+        "wing_pattern_visible", "tail_shape_visible"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "bird_visible_parts": {
+          "type": "array",
+          "maxItems": 8,
+          "items": {
+            "type": "string",
+            "enum": [
+              "head", "beak", "eye", "breast", "belly", "back",
+              "wing", "tail", "legs", "feet", "whole_body", "unknown"
+            ]
+          }
+        },
+        "posture": {
+          "type": "string",
+          "enum": ["perched", "standing", "swimming", "flying", "foraging", "resting", "unknown"]
+        },
+        "behavior_visible": {
+          "type": "string",
+          "enum": [
+            "foraging", "swimming", "flying", "perched",
+            "singing", "feeding_young", "resting", "unknown"
+          ]
+        },
+        "plumage_pattern_visible": { "$ref": "#/$defs/signal_level_with_none" },
+        "bill_shape_visible": { "$ref": "#/$defs/signal_level_with_none" },
+        "wing_pattern_visible": { "$ref": "#/$defs/signal_level_with_none" },
+        "tail_shape_visible": { "$ref": "#/$defs/signal_level_with_none" }
+      }
+    },
+    "group_specific_profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "bird": { "$ref": "#/$defs/bird_profile" }
+      }
+    },
+    "usage_scores": {
+      "type": "object",
+      "required": [
+        "basic_identification", "field_observation", "confusion_learning",
+        "morphology_learning", "species_card", "indirect_evidence_learning"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "basic_identification":        { "type": "integer", "minimum": 0, "maximum": 100 },
+        "field_observation":           { "type": "integer", "minimum": 0, "maximum": 100 },
+        "confusion_learning":          { "type": "integer", "minimum": 0, "maximum": 100 },
+        "morphology_learning":         { "type": "integer", "minimum": 0, "maximum": 100 },
+        "species_card":                { "type": "integer", "minimum": 0, "maximum": 100 },
+        "indirect_evidence_learning":  { "type": "integer", "minimum": 0, "maximum": 100 }
+      }
+    },
+    "scores": {
+      "type": "object",
+      "required": ["global_quality_score", "usage_scores"],
+      "additionalProperties": false,
+      "properties": {
+        "global_quality_score": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "usage_scores": { "$ref": "#/$defs/usage_scores" }
+      }
+    },
+    "valid_payload": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "review_status",
+        "review_confidence",
+        "organism_group",
+        "evidence_type",
+        "technical_profile",
+        "observation_profile",
+        "biological_profile_visible",
+        "identification_profile",
+        "pedagogical_profile",
+        "group_specific_profile",
+        "scores",
+        "limitations"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "type": "string",
+          "const": "pedagogical_media_profile.v1"
+        },
+        "review_status": {
+          "type": "string",
+          "const": "valid"
+        },
+        "review_confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "organism_group": {
+          "type": "string",
+          "enum": [
+            "bird", "mammal", "reptile", "amphibian", "fish",
+            "insect", "arachnid", "mollusk", "plant", "fungus", "lichen", "unknown"
+          ]
+        },
+        "evidence_type": {
+          "type": "string",
+          "enum": [
+            "whole_organism", "partial_organism", "feather", "egg", "nest",
+            "track", "scat", "burrow", "habitat", "plant_part",
+            "fungus_fruiting_body", "dead_organism", "multiple_organisms", "unknown"
+          ]
+        },
+        "technical_profile":          { "$ref": "#/$defs/technical_profile" },
+        "observation_profile":         { "$ref": "#/$defs/observation_profile" },
+        "biological_profile_visible":  { "$ref": "#/$defs/biological_profile_visible" },
+        "identification_profile":      { "$ref": "#/$defs/identification_profile" },
+        "pedagogical_profile":         { "$ref": "#/$defs/pedagogical_profile" },
+        "group_specific_profile":      { "$ref": "#/$defs/group_specific_profile" },
+        "scores":                      { "$ref": "#/$defs/scores" },
+        "limitations": {
+          "type": "array",
+          "maxItems": 5,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "failed_payload": {
+      "type": "object",
+      "required": ["schema_version", "review_status", "failure_reason"],
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "type": "string",
+          "const": "pedagogical_media_profile.v1"
+        },
+        "review_status": {
+          "type": "string",
+          "const": "failed"
+        },
+        "failure_reason": { "$ref": "#/$defs/failure_reason" },
+        "diagnostics": { "$ref": "#/$defs/diagnostics" }
+      }
+    }
+  }
+}
