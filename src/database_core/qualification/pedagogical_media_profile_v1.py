@@ -493,7 +493,7 @@ def normalize_pedagogical_media_profile_v1(
                     item,  # type: ignore[arg-type]
                     "body_part",
                     {
-                        "head", "beak", "eye", "breast", "belly", "back", "wing", "tail",
+                        "head", "beak", "eye", "neck", "breast", "belly", "back", "wing", "tail",
                         "legs", "feet", "whole_body", "feather", "egg", "nest", "track",
                         "scat", "habitat", "leaf", "flower", "stem", "cap", "gills",
                         "stipe", "unknown",

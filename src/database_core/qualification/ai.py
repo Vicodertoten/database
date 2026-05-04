@@ -26,6 +26,13 @@ from database_core.qualification.bird_image_review_v12 import (
     compute_bird_image_pedagogical_score_v12,
     parse_bird_image_pedagogical_review_v12,
 )
+from database_core.qualification.pedagogical_media_profile_prompt_v1 import (
+    PEDAGOGICAL_MEDIA_PROFILE_PROMPT_VERSION,
+    build_pedagogical_media_profile_prompt_v1,
+)
+from database_core.qualification.pedagogical_media_profile_v1 import (
+    parse_pedagogical_media_profile_v1,
+)
 
 DEFAULT_GEMINI_MODEL = "gemini-3.1-flash-lite-preview"
 MIN_AI_IMAGE_WIDTH = 512
@@ -34,9 +41,11 @@ SOURCE_KEY_SEPARATOR = "::"
 AI_REVIEW_CONTRACT_VERSION_ENV = "AI_REVIEW_CONTRACT_VERSION"
 AI_REVIEW_CONTRACT_V1_1 = "v1_1"
 AI_REVIEW_CONTRACT_V1_2 = "v1_2"
+AI_REVIEW_CONTRACT_PMP_V1 = "pedagogical_media_profile_v1"
 SUPPORTED_AI_REVIEW_CONTRACT_VERSIONS = (
     AI_REVIEW_CONTRACT_V1_1,
     AI_REVIEW_CONTRACT_V1_2,
+    AI_REVIEW_CONTRACT_PMP_V1,
 )
 DEFAULT_AI_REVIEW_CONTRACT_VERSION = AI_REVIEW_CONTRACT_V1_1
 BIRD_IMAGE_REVIEW_FAILED_STATUS = "bird_image_review_failed"
@@ -233,6 +242,13 @@ def resolve_ai_review_contract_version(review_contract_version: str | None = Non
         return AI_REVIEW_CONTRACT_V1_1
     if normalized in {"v1_2", "v12", "1_2", "1.2"}:
         return AI_REVIEW_CONTRACT_V1_2
+    if normalized in {
+        "pedagogical_media_profile_v1",
+        "pedagogical_media_profile_1",
+        "pmp_v1",
+        "pmp1",
+    }:
+        return AI_REVIEW_CONTRACT_PMP_V1
     raise ValueError(
         "Unsupported AI review contract version: "
         f"{raw!r}. Expected one of {SUPPORTED_AI_REVIEW_CONTRACT_VERSIONS}."
@@ -243,6 +259,11 @@ def default_prompt_version_for_review_contract(review_contract_version: str) -> 
     resolved = resolve_ai_review_contract_version(review_contract_version)
     if resolved == AI_REVIEW_CONTRACT_V1_2:
         return BIRD_IMAGE_REVIEW_PROMPT_VERSION
+    if resolved == AI_REVIEW_CONTRACT_PMP_V1:
+        from database_core.qualification.pedagogical_media_profile_prompt_v1 import (
+            PEDAGOGICAL_MEDIA_PROFILE_PROMPT_VERSION,
+        )
+        return PEDAGOGICAL_MEDIA_PROFILE_PROMPT_VERSION
     return DEFAULT_GEMINI_PROMPT_VERSION
 
 
@@ -342,6 +363,8 @@ class AIQualificationOutcome:
     review_contract_version: str | None = None
     bird_image_pedagogical_review: dict[str, object] | None = None
     bird_image_pedagogical_score: dict[str, object] | None = None
+    pedagogical_media_profile: dict[str, object] | None = None
+    pedagogical_media_profile_score: dict[str, object] | None = None
     qualified_at: datetime | None = None
     image_width: int | None = None
     image_height: int | None = None
@@ -361,6 +384,8 @@ class AIQualificationOutcome:
             "review_contract_version": self.review_contract_version,
             "bird_image_pedagogical_review": self.bird_image_pedagogical_review,
             "bird_image_pedagogical_score": self.bird_image_pedagogical_score,
+            "pedagogical_media_profile": self.pedagogical_media_profile,
+            "pedagogical_media_profile_score": self.pedagogical_media_profile_score,
             "qualified_at": self.qualified_at.isoformat().replace("+00:00", "Z")
             if self.qualified_at
             else None,
@@ -413,6 +438,8 @@ class AIQualificationOutcome:
             )
         )
         bird_image_score_payload = _mapping(payload.get("bird_image_pedagogical_score"))
+        pmp_payload = _mapping(payload.get("pedagogical_media_profile"))
+        pmp_score_payload = _mapping(payload.get("pedagogical_media_profile_score"))
         return cls(
             status=str(payload.get("status") or "ok"),
             qualification=qualification,
@@ -436,6 +463,12 @@ class AIQualificationOutcome:
             ),
             bird_image_pedagogical_score=(
                 dict(bird_image_score_payload) if bird_image_score_payload else None
+            ),
+            pedagogical_media_profile=(
+                dict(pmp_payload) if pmp_payload else None
+            ),
+            pedagogical_media_profile_score=(
+                dict(pmp_score_payload) if pmp_score_payload else None
             ),
             qualified_at=qualified_at,
             image_width=int(payload["image_width"])
@@ -487,6 +520,13 @@ class GeminiVisionQualifier:
 
         if self.review_contract_version == AI_REVIEW_CONTRACT_V1_2:
             return self._qualify_v12(
+                media_asset=media_asset,
+                image_bytes=image_bytes,
+                bird_image_review_input=bird_image_review_input,
+            )
+
+        if self.review_contract_version == AI_REVIEW_CONTRACT_PMP_V1:
+            return self._qualify_pedagogical_media_profile_v1(
                 media_asset=media_asset,
                 image_bytes=image_bytes,
                 bird_image_review_input=bird_image_review_input,
@@ -629,6 +669,88 @@ class GeminiVisionQualifier:
             review_contract_version=AI_REVIEW_CONTRACT_V1_2,
             bird_image_pedagogical_review=dict(review_payload),
             bird_image_pedagogical_score=review_score,
+        )
+
+    def _qualify_pedagogical_media_profile_v1(
+        self,
+        *,
+        media_asset: MediaAsset,
+        image_bytes: bytes,
+        bird_image_review_input: BirdImageReviewInput | None,
+    ) -> AIQualificationOutcome:
+        review_input = bird_image_review_input or BirdImageReviewInput(
+            scientific_name=(media_asset.canonical_taxon_id or "unknown"),
+            common_names={},
+            image_url=media_asset.source_url,
+        )
+        prompt_text = build_pedagogical_media_profile_prompt_v1(
+            expected_scientific_name=review_input.scientific_name,
+            common_names=review_input.common_names,
+            organism_group="bird",
+            media_reference=review_input.image_url or media_asset.source_url or "",
+        )
+        request_payload: dict[str, object] = {
+            "contents": [
+                {
+                    "parts": [
+                        {"text": prompt_text},
+                        {
+                            "inline_data": {
+                                "mime_type": media_asset.mime_type,
+                                "data": base64.b64encode(image_bytes).decode("ascii"),
+                            }
+                        },
+                    ]
+                }
+            ],
+            "generationConfig": {
+                "responseMimeType": "application/json",
+                "mediaResolution": "MEDIA_RESOLUTION_HIGH",
+            },
+        }
+        response_payload = _send_gemini_request(
+            api_key=self.api_key,
+            model_name=self.model_name,
+            payload=request_payload,
+        )
+        text = response_payload["candidates"][0]["content"]["parts"][0]["text"]
+        profile = parse_pedagogical_media_profile_v1(
+            text,
+            gemini_model=self.model_name,
+            media_id=media_asset.media_id,
+            canonical_taxon_id=media_asset.canonical_taxon_id,
+            scientific_name=review_input.scientific_name,
+        )
+        review_status = str(profile.get("review_status") or "failed")
+        scores = _mapping(profile.get("scores"))
+
+        if review_status != "valid":
+            failure_reason = str(profile.get("failure_reason") or "unknown_failure")
+            return AIQualificationOutcome(
+                status="pedagogical_media_profile_failed",
+                qualification=None,
+                flags=(
+                    "pedagogical_media_profile_failed",
+                    f"pedagogical_media_profile_failed_{failure_reason}",
+                ),
+                note=f"pedagogical_media_profile_v1 failed: {failure_reason}",
+                model_name=self.model_name,
+                prompt_version=PEDAGOGICAL_MEDIA_PROFILE_PROMPT_VERSION,
+                review_contract_version=AI_REVIEW_CONTRACT_PMP_V1,
+                pedagogical_media_profile=dict(profile),
+                pedagogical_media_profile_score=dict(scores) if scores else None,
+            )
+
+        return AIQualificationOutcome(
+            status="ok",
+            qualification=None,
+            flags=(),
+            note=None,
+            model_name=self.model_name,
+            prompt_version=PEDAGOGICAL_MEDIA_PROFILE_PROMPT_VERSION,
+            review_contract_version=AI_REVIEW_CONTRACT_PMP_V1,
+            pedagogical_media_profile=dict(profile),
+            pedagogical_media_profile_score=dict(scores) if scores else None,
         )
 
 
@@ -825,6 +947,8 @@ def _validate_cached_outcome(
         review_contract_version=outcome.review_contract_version,
         bird_image_pedagogical_review=outcome.bird_image_pedagogical_review,
         bird_image_pedagogical_score=outcome.bird_image_pedagogical_score,
+        pedagogical_media_profile=outcome.pedagogical_media_profile,
+        pedagogical_media_profile_score=outcome.pedagogical_media_profile_score,
         qualified_at=outcome.qualified_at,
         image_width=outcome.image_width,
         image_height=outcome.image_height,
@@ -1045,6 +1169,16 @@ def _normalize_qualification_outcome_from_qualifier(
             if isinstance(outcome.bird_image_pedagogical_score, Mapping)
             else outcome.bird_image_pedagogical_score
         ),
+        pedagogical_media_profile=(
+            dict(outcome.pedagogical_media_profile)
+            if isinstance(outcome.pedagogical_media_profile, Mapping)
+            else outcome.pedagogical_media_profile
+        ),
+        pedagogical_media_profile_score=(
+            dict(outcome.pedagogical_media_profile_score)
+            if isinstance(outcome.pedagogical_media_profile_score, Mapping)
+            else outcome.pedagogical_media_profile_score
+        ),
         qualified_at=outcome.qualified_at or qualified_at,
         image_width=image_width,
         image_height=image_height,
@@ -1054,6 +1188,8 @@ def _normalize_qualification_outcome_from_qualifier(
 def _infer_review_contract_version(prompt_version: str | None) -> str | None:
     if prompt_version == BIRD_IMAGE_REVIEW_PROMPT_VERSION:
         return AI_REVIEW_CONTRACT_V1_2
+    if prompt_version == PEDAGOGICAL_MEDIA_PROFILE_PROMPT_VERSION:
+        return AI_REVIEW_CONTRACT_PMP_V1
     if prompt_version:
         return AI_REVIEW_CONTRACT_V1_1
     return None

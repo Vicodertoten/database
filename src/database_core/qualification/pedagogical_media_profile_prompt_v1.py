@@ -68,7 +68,7 @@ _BIO_CONFIDENCE_ENUM = "high|medium|low|unknown"
 
 _AMBIGUITY_ENUM = "low|medium|high|unknown"
 _FIELD_MARK_BODY_PART_ENUM = (
-    "head|beak|eye|breast|belly|back|wing|tail|legs|feet|whole_body"
+    "head|beak|eye|neck|breast|belly|back|wing|tail|legs|feet|whole_body"
     "|feather|egg|nest|track|scat|habitat|leaf|flower|stem|cap|gills|stipe|unknown"
 )
 
@@ -142,7 +142,7 @@ _OUTPUT_SKELETON: dict[str, object] = {
             {
                 "feature": "<string>",
                 "body_part": (
-                    "head|beak|eye|breast|belly|back|wing|tail|legs|feet"
+                    "head|beak|eye|neck|breast|belly|back|wing|tail|legs|feet"
                     "|whole_body|feather|egg|nest|track|scat|habitat"
                     "|leaf|flower|stem|cap|gills|stipe|unknown"
                 ),

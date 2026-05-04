@@ -77,7 +77,7 @@
         "body_part": {
           "type": "string",
           "enum": [
-            "head", "beak", "eye", "breast", "belly", "back", "wing", "tail",
+            "head", "beak", "eye", "neck", "breast", "belly", "back", "wing", "tail",
             "legs", "feet", "whole_body", "feather", "egg", "nest", "track",
             "scat", "habitat", "leaf", "flower", "stem", "cap", "gills", "stipe", "unknown"
           ]

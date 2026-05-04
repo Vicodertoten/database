@@ -103,7 +103,7 @@ def main() -> None:
     pipeline_parser.add_argument("--gemini-model", default=DEFAULT_GEMINI_MODEL)
     pipeline_parser.add_argument(
         "--ai-review-contract-version",
-        choices=["v1_1", "v1_2"],
+        choices=["v1_1", "v1_2", "pedagogical_media_profile_v1"],
         default=None,
         help=(
             "AI image review contract version selector. "
@@ -164,7 +164,7 @@ def main() -> None:
     qualify_parser.add_argument("--gemini-model", default=DEFAULT_GEMINI_MODEL)
     qualify_parser.add_argument(
         "--ai-review-contract-version",
-        choices=["v1_1", "v1_2"],
+        choices=["v1_1", "v1_2", "pedagogical_media_profile_v1"],
         default=None,
     )
     qualify_parser.add_argument(
