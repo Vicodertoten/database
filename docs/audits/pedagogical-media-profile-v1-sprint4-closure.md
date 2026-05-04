@@ -323,9 +323,10 @@ Error paths: `biological_profile_visible.sex.confidence`,
 `biological_profile_visible.plumage_state.confidence`,
 `biological_profile_visible.seasonal_state.confidence`.
 
-**Cause:** The model set `confidence: "high"` for biological attributes with `value:
+**Cause:** The model set `confidence: "unknown"` for biological attributes with `value:
 "unknown"`. The biological consistency rule requires `confidence in {low, medium}` when
-value is `unknown` or `not_applicable`.
+value is `unknown` or `not_applicable`. ("unknown" is not an accepted confidence value
+for these fields under that rule, even though the confidence enum otherwise allows it.)
 
 **Interpretation:** The prompt now explicitly states "confidence must be low or medium
 when value is unknown or not_applicable". The model still violated this for 1 out of 5

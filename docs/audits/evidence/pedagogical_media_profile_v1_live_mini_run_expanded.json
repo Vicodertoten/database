@@ -1,0 +1,483 @@
+{
+  "credential_env_name": "GEMINI_API_KEY",
+  "decision": "READY_FOR_OPT_IN_PIPELINE_INTEGRATION",
+  "decision_thresholds": {
+    "ADJUST_PROMPT_OR_SCHEMA": {
+      "dominant_schema_failures": true,
+      "valid_rate_gte": 0.4,
+      "valid_rate_lt": 0.8
+    },
+    "INVESTIGATE_LIVE_FAILURES": {
+      "or": [
+        "frequent_model_output_invalid",
+        "model_output_invalid_count_gt_0"
+      ],
+      "valid_rate_lt": 0.4
+    },
+    "READY_FOR_OPT_IN_PIPELINE_INTEGRATION": {
+      "failed_rate_lte": 0.2,
+      "feedback_rejection_count_eq": 0,
+      "model_output_invalid_count_eq": 0,
+      "sample_size_gte": 5,
+      "selection_field_rejection_count_eq": 0,
+      "valid_rate_gte": 0.8
+    }
+  },
+  "execution_status": "completed",
+  "generated_at": "2026-05-04T09:45:19.632705Z",
+  "model": "gemini-3.1-flash-lite-preview",
+  "per_item_results": [
+    {
+      "biological_basis_rejection": false,
+      "evidence_type": null,
+      "expected_scientific_name": "Ardea cinerea",
+      "failure_reason": "schema_validation_failed",
+      "feedback_rejection": false,
+      "global_quality_score": null,
+      "image_sha256": "503d5033d26308057fe41211ff590354885b555c921bb209825ccfbfb8d23a3e",
+      "media_id": "media:inaturalist:100422597",
+      "organism_group_input": "birds",
+      "organism_group_output": null,
+      "raw_model_output_excerpt": "{\n  \"schema_version\": \"pedagogical_media_profile.v1\",\n  \"prompt_version\": \"pedagogical_media_profile_prompt.v1\",\n  \"review_status\": \"valid\",\n  \"review_confidence\": 0.8,\n  \"organism_group\": \"bird\",\n  \"evidence_type\": \"whole_organism\",\n  \"technical_profile\": {\n    \"technical_quality\": \"low\",\n    \"shar",
+      "raw_model_output_sha256": "fa2a634f7ebe2d9ee0ead5bdc973f7add5a4b1f36d99159e2bd19f0ec1696ae8",
+      "review_status": "failed",
+      "schema_error_count": 1,
+      "schema_errors": [
+        {
+          "actual": "neck",
+          "cause": "enum_mismatch",
+          "expected": [
+            "head",
+            "beak",
+            "eye",
+            "breast",
+            "belly",
+            "back",
+            "wing",
+            "tail",
+            "legs",
+            "feet",
+            "whole_body",
+            "feather",
+            "egg",
+            "nest",
+            "track",
+            "scat",
+            "habitat",
+            "leaf",
+            "flower",
+            "stem",
+            "cap",
+            "gills",
+            "stipe",
+            "unknown"
+          ],
+          "message": "'neck' is not one of ['head', 'beak', 'eye', 'breast', 'belly', 'back', 'wing', 'tail', 'legs', 'feet', 'whole_body', 'feather', 'egg', 'nest', 'track', 'scat', 'habitat', 'leaf', 'flower', 'stem', 'cap', 'gills', 'stipe', 'unknown']",
+          "path": "identification_profile.visible_field_marks.0.body_part",
+          "validator": "enum"
+        }
+      ],
+      "schema_failure_cause": "enum_mismatch",
+      "selection_field_rejection": false,
+      "usage_scores": null
+    },
+    {
+      "biological_basis_rejection": false,
+      "evidence_type": "whole_organism",
+      "expected_scientific_name": "Fulica atra",
+      "failure_reason": null,
+      "feedback_rejection": false,
+      "global_quality_score": 89,
+      "image_sha256": "8bb859470d2818de9fae60adacab7fd82f6721dac47f9e9411823be956800a70",
+      "media_id": "media:inaturalist:100906257",
+      "organism_group_input": "birds",
+      "organism_group_output": "bird",
+      "raw_model_output_excerpt": "{\n  \"schema_version\": \"pedagogical_media_profile.v1\",\n  \"prompt_version\": \"pedagogical_media_profile_prompt.v1\",\n  \"review_status\": \"valid\",\n  \"review_confidence\": 0.95,\n  \"organism_group\": \"bird\",\n  \"evidence_type\": \"whole_organism\",\n  \"technical_profile\": {\n    \"technical_quality\": \"medium\",\n    \"",
+      "raw_model_output_sha256": "75ce1f52ef33b11e8e8e49daacd72056e1227f9de6e586c02ab38e0d776defe1",
+      "review_status": "valid",
+      "schema_error_count": 0,
+      "schema_errors": [],
+      "schema_failure_cause": null,
+      "selection_field_rejection": false,
+      "usage_scores": {
+        "basic_identification": 94,
+        "confusion_learning": 83,
+        "field_observation": 88,
+        "indirect_evidence_learning": 0,
+        "morphology_learning": 78,
+        "species_card": 85
+      }
+    },
+    {
+      "biological_basis_rejection": false,
+      "evidence_type": "feather",
+      "expected_scientific_name": "Columba palumbus",
+      "failure_reason": null,
+      "feedback_rejection": false,
+      "global_quality_score": 96,
+      "image_sha256": "94c3679a57ccead61e175afe3e6f1f59a01516943dcc8bdcaa9bde82e28d82b8",
+      "media_id": "media:inaturalist:100909260",
+      "organism_group_input": "birds",
+      "organism_group_output": "bird",
+      "raw_model_output_excerpt": "{\n  \"schema_version\": \"pedagogical_media_profile.v1\",\n  \"prompt_version\": \"pedagogical_media_profile_prompt.v1\",\n  \"review_status\": \"valid\",\n  \"review_confidence\": 0.95,\n  \"organism_group\": \"bird\",\n  \"evidence_type\": \"feather\",\n  \"technical_profile\": {\n    \"technical_quality\": \"high\",\n    \"sharpness",
+      "raw_model_output_sha256": "727879daa608f0af4738b4cada9d51cbddf43931642cee9a523b0e4d8f0d6213",
+      "review_status": "valid",
+      "schema_error_count": 0,
+      "schema_errors": [],
+      "schema_failure_cause": null,
+      "selection_field_rejection": false,
+      "usage_scores": {
+        "basic_identification": 25,
+        "confusion_learning": 40,
+        "field_observation": 76,
+        "indirect_evidence_learning": 94,
+        "morphology_learning": 78,
+        "species_card": 33
+      }
+    },
+    {
+      "biological_basis_rejection": false,
+      "evidence_type": "whole_organism",
+      "expected_scientific_name": "Fringilla coelebs",
+      "failure_reason": null,
+      "feedback_rejection": false,
+      "global_quality_score": 44,
+      "image_sha256": "4d64d4cf54ed8e032ebcd63ebca8a948b5cb8f869e9bb44074d009a5f5d431fd",
+      "media_id": "media:inaturalist:101911464",
+      "organism_group_input": "birds",
+      "organism_group_output": "bird",
+      "raw_model_output_excerpt": "{\n  \"schema_version\": \"pedagogical_media_profile.v1\",\n  \"prompt_version\": \"pedagogical_media_profile_prompt.v1\",\n  \"review_status\": \"valid\",\n  \"review_confidence\": 0.9,\n  \"organism_group\": \"bird\",\n  \"evidence_type\": \"whole_organism\",\n  \"technical_profile\": {\n    \"technical_quality\": \"low\",\n    \"shar",
+      "raw_model_output_sha256": "e83d84365210120a69a50b2a59df0ae2e44d4225f0398d562a305f6a9fa9704a",
+      "review_status": "valid",
+      "schema_error_count": 0,
+      "schema_errors": [],
+      "schema_failure_cause": null,
+      "selection_field_rejection": false,
+      "usage_scores": {
+        "basic_identification": 37,
+        "confusion_learning": 48,
+        "field_observation": 61,
+        "indirect_evidence_learning": 0,
+        "morphology_learning": 37,
+        "species_card": 40
+      }
+    },
+    {
+      "biological_basis_rejection": false,
+      "evidence_type": "whole_organism",
+      "expected_scientific_name": "Troglodytes troglodytes",
+      "failure_reason": null,
+      "feedback_rejection": false,
+      "global_quality_score": 44,
+      "image_sha256": "ff2edea114e4c661bc80ee09b5783dc58ccc4727f181e96605693ace27b54b2a",
+      "media_id": "media:inaturalist:101912004",
+      "organism_group_input": "birds",
+      "organism_group_output": "bird",
+      "raw_model_output_excerpt": "{\n  \"schema_version\": \"pedagogical_media_profile.v1\",\n  \"prompt_version\": \"pedagogical_media_profile_prompt.v1\",\n  \"review_status\": \"valid\",\n  \"review_confidence\": 0.9,\n  \"organism_group\": \"bird\",\n  \"evidence_type\": \"whole_organism\",\n  \"technical_profile\": {\n    \"technical_quality\": \"low\",\n    \"shar",
+      "raw_model_output_sha256": "df097dc6cee2edff2f672de15ea1baacd8b2782f4d2d92862523a68638556797",
+      "review_status": "valid",
+      "schema_error_count": 0,
+      "schema_errors": [],
+      "schema_failure_cause": null,
+      "selection_field_rejection": false,
+      "usage_scores": {
+        "basic_identification": 37,
+        "confusion_learning": 48,
+        "field_observation": 61,
+        "indirect_evidence_learning": 0,
+        "morphology_learning": 37,
+        "species_card": 40
+      }
+    },
+    {
+      "biological_basis_rejection": false,
+      "evidence_type": "whole_organism",
+      "expected_scientific_name": "Accipiter nisus",
+      "failure_reason": null,
+      "feedback_rejection": false,
+      "global_quality_score": 75,
+      "image_sha256": "03d0e844bbe04aa0cad73d918b0a2c5c7e15e2e62e42bce9c27979de68c67d6f",
+      "media_id": "media:inaturalist:10333212",
+      "organism_group_input": "birds",
+      "organism_group_output": "bird",
+      "raw_model_output_excerpt": "{\n  \"schema_version\": \"pedagogical_media_profile.v1\",\n  \"prompt_version\": \"pedagogical_media_profile_prompt.v1\",\n  \"review_status\": \"valid\",\n  \"review_confidence\": 0.9,\n  \"organism_group\": \"bird\",\n  \"evidence_type\": \"whole_organism\",\n  \"technical_profile\": {\n    \"technical_quality\": \"medium\",\n    \"s",
+      "raw_model_output_sha256": "573c4c38cd9a8b8dfe1cc32cda9bbefd7c15b2d34fc1afbb60629e61fff0ecc0",
+      "review_status": "valid",
+      "schema_error_count": 0,
+      "schema_errors": [],
+      "schema_failure_cause": null,
+      "selection_field_rejection": false,
+      "usage_scores": {
+        "basic_identification": 73,
+        "confusion_learning": 73,
+        "field_observation": 82,
+        "indirect_evidence_learning": 0,
+        "morphology_learning": 78,
+        "species_card": 74
+      }
+    },
+    {
+      "biological_basis_rejection": false,
+      "evidence_type": "whole_organism",
+      "expected_scientific_name": "Falco tinnunculus",
+      "failure_reason": null,
+      "feedback_rejection": false,
+      "global_quality_score": 45,
+      "image_sha256": "49d72c8517baabbb0a3ff7d8cbe17d6e756c5c6c37e2ae8396a485d494a945a0",
+      "media_id": "media:inaturalist:103441671",
+      "organism_group_input": "birds",
+      "organism_group_output": "bird",
+      "raw_model_output_excerpt": "{\n  \"schema_version\": \"pedagogical_media_profile.v1\",\n  \"prompt_version\": \"pedagogical_media_profile_prompt.v1\",\n  \"review_status\": \"valid\",\n  \"review_confidence\": 0.9,\n  \"organism_group\": \"bird\",\n  \"evidence_type\": \"whole_organism\",\n  \"technical_profile\": {\n    \"technical_quality\": \"low\",\n    \"shar",
+      "raw_model_output_sha256": "d6347eaba5529af559414e585393e7be831ed7f7d690f14d8db11d049ab72713",
+      "review_status": "valid",
+      "schema_error_count": 0,
+      "schema_errors": [],
+      "schema_failure_cause": null,
+      "selection_field_rejection": false,
+      "usage_scores": {
+        "basic_identification": 40,
+        "confusion_learning": 52,
+        "field_observation": 61,
+        "indirect_evidence_learning": 0,
+        "morphology_learning": 39,
+        "species_card": 42
+      }
+    },
+    {
+      "biological_basis_rejection": false,
+      "evidence_type": "whole_organism",
+      "expected_scientific_name": "Ardea cinerea",
+      "failure_reason": null,
+      "feedback_rejection": false,
+      "global_quality_score": 59,
+      "image_sha256": "2d27b41076291d483a5c34276cb894ab70b51599946167ccce3699adeb66d2d8",
+      "media_id": "media:inaturalist:103442341",
+      "organism_group_input": "birds",
+      "organism_group_output": "bird",
+      "raw_model_output_excerpt": "{\n  \"schema_version\": \"pedagogical_media_profile.v1\",\n  \"prompt_version\": \"pedagogical_media_profile_prompt.v1\",\n  \"review_status\": \"valid\",\n  \"review_confidence\": 0.9,\n  \"organism_group\": \"bird\",\n  \"evidence_type\": \"whole_organism\",\n  \"technical_profile\": {\n    \"technical_quality\": \"medium\",\n    \"s",
+      "raw_model_output_sha256": "e726dad2b58681f2be9600c6e74ce2995d82cf13148baa7c1bde05b0e5e1932c",
+      "review_status": "valid",
+      "schema_error_count": 0,
+      "schema_errors": [],
+      "schema_failure_cause": null,
+      "selection_field_rejection": false,
+      "usage_scores": {
+        "basic_identification": 46,
+        "confusion_learning": 53,
+        "field_observation": 72,
+        "indirect_evidence_learning": 0,
+        "morphology_learning": 55,
+        "species_card": 55
+      }
+    },
+    {
+      "biological_basis_rejection": false,
+      "evidence_type": "feather",
+      "expected_scientific_name": "Columba palumbus",
+      "failure_reason": null,
+      "feedback_rejection": false,
+      "global_quality_score": 82,
+      "image_sha256": "4e67e13a451cb949840b762d683bdbf05bc11def460ce82ea0325403ebad679a",
+      "media_id": "media:inaturalist:105269037",
+      "organism_group_input": "birds",
+      "organism_group_output": "bird",
+      "raw_model_output_excerpt": "{\n  \"schema_version\": \"pedagogical_media_profile.v1\",\n  \"prompt_version\": \"pedagogical_media_profile_prompt.v1\",\n  \"review_status\": \"valid\",\n  \"review_confidence\": 0.9,\n  \"organism_group\": \"bird\",\n  \"evidence_type\": \"feather\",\n  \"technical_profile\": {\n    \"technical_quality\": \"high\",\n    \"sharpness\"",
+      "raw_model_output_sha256": "e3f68a247e2e7dd7e7128aa7f799f48471c5521dae1d936e14869aca71c5a4f0",
+      "review_status": "valid",
+      "schema_error_count": 0,
+      "schema_errors": [],
+      "schema_failure_cause": null,
+      "selection_field_rejection": false,
+      "usage_scores": {
+        "basic_identification": 20,
+        "confusion_learning": 35,
+        "field_observation": 70,
+        "indirect_evidence_learning": 89,
+        "morphology_learning": 70,
+        "species_card": 29
+      }
+    },
+    {
+      "biological_basis_rejection": false,
+      "evidence_type": "whole_organism",
+      "expected_scientific_name": "Coloeus monedula",
+      "failure_reason": null,
+      "feedback_rejection": false,
+      "global_quality_score": 53,
+      "image_sha256": "7e586c8bb86c7241ee4359728c2996cf20ce0732356164219a8472cc30a3c87c",
+      "media_id": "media:inaturalist:106017436",
+      "organism_group_input": "birds",
+      "organism_group_output": "bird",
+      "raw_model_output_excerpt": "{\n  \"schema_version\": \"pedagogical_media_profile.v1\",\n  \"prompt_version\": \"pedagogical_media_profile_prompt.v1\",\n  \"review_status\": \"valid\",\n  \"review_confidence\": 0.95,\n  \"organism_group\": \"bird\",\n  \"evidence_type\": \"whole_organism\",\n  \"technical_profile\": {\n    \"technical_quality\": \"medium\",\n    \"",
+      "raw_model_output_sha256": "be527fa5684cc4c22628a4caca6374ad95806e790cbbf128d426a8f1c74eeec1",
+      "review_status": "valid",
+      "schema_error_count": 0,
+      "schema_errors": [],
+      "schema_failure_cause": null,
+      "selection_field_rejection": false,
+      "usage_scores": {
+        "basic_identification": 36,
+        "confusion_learning": 40,
+        "field_observation": 68,
+        "indirect_evidence_learning": 0,
+        "morphology_learning": 44,
+        "species_card": 54
+      }
+    }
+  ],
+  "requested_sample_size": 10,
+  "run_id": "audit:pedagogical-media-profile-v1-live-mini:ad34a2aa",
+  "sample_size": 10,
+  "schema_version": "pedagogical_media_profile_live_mini_run.v1",
+  "summary": {
+    "average_global_quality_score": 65.22,
+    "average_usage_scores": {
+      "basic_identification": 45.33,
+      "confusion_learning": 52.44,
+      "field_observation": 71.0,
+      "indirect_evidence_learning": 20.33,
+      "morphology_learning": 57.33,
+      "species_card": 50.22
+    },
+    "biological_basis_rejection_count": 0,
+    "concurrency": 1,
+    "credential_env_name": "GEMINI_API_KEY",
+    "evidence_type_distribution": {
+      "feather": 2,
+      "whole_organism": 7
+    },
+    "examples_by_failure_cause": {
+      "enum_mismatch": [
+        {
+          "actual": "neck",
+          "expected": [
+            "head",
+            "beak",
+            "eye",
+            "breast",
+            "belly",
+            "back",
+            "wing",
+            "tail",
+            "legs",
+            "feet",
+            "whole_body",
+            "feather",
+            "egg",
+            "nest",
+            "track",
+            "scat",
+            "habitat",
+            "leaf",
+            "flower",
+            "stem",
+            "cap",
+            "gills",
+            "stipe",
+            "unknown"
+          ],
+          "media_id": "media:inaturalist:100422597",
+          "message": "'neck' is not one of ['head', 'beak', 'eye', 'breast', 'belly', 'back', 'wing', 'tail', 'legs', 'feet', 'whole_body', 'feather', 'egg', 'nest', 'track', 'scat', 'habitat', 'leaf', 'flower', 'stem', 'cap', 'gills', 'stipe', 'unknown']",
+          "path": "identification_profile.visible_field_marks.0.body_part"
+        }
+      ]
+    },
+    "examples_by_schema_error_path": {
+      "identification_profile.visible_field_marks.0.body_part": [
+        {
+          "actual": "neck",
+          "cause": "enum_mismatch",
+          "expected": [
+            "head",
+            "beak",
+            "eye",
+            "breast",
+            "belly",
+            "back",
+            "wing",
+            "tail",
+            "legs",
+            "feet",
+            "whole_body",
+            "feather",
+            "egg",
+            "nest",
+            "track",
+            "scat",
+            "habitat",
+            "leaf",
+            "flower",
+            "stem",
+            "cap",
+            "gills",
+            "stipe",
+            "unknown"
+          ],
+          "media_id": "media:inaturalist:100422597",
+          "message": "'neck' is not one of ['head', 'beak', 'eye', 'breast', 'belly', 'back', 'wing', 'tail', 'legs', 'feet', 'whole_body', 'feather', 'egg', 'nest', 'track', 'scat', 'habitat', 'leaf', 'flower', 'stem', 'cap', 'gills', 'stipe', 'unknown']",
+          "path": "identification_profile.visible_field_marks.0.body_part",
+          "validator": "enum"
+        }
+      ]
+    },
+    "failed_count": 1,
+    "failure_reason_distribution": {
+      "schema_validation_failed": 1
+    },
+    "feedback_rejection_count": 0,
+    "high_indirect_evidence_valid_count": 2,
+    "low_basic_identification_valid_count": 7,
+    "model": "gemini-3.1-flash-lite-preview",
+    "organism_group_distribution": {
+      "bird": 9
+    },
+    "qualitative_examples": {
+      "failed_items": [
+        {
+          "failure_reason": "schema_validation_failed",
+          "media_id": "media:inaturalist:100422597",
+          "raw_model_output_excerpt": "{\n  \"schema_version\": \"pedagogical_media_profile.v1\",\n  \"prompt_version\": \"pedagogical_media_profile_prompt.v1\",\n  \"review_status\": \"valid\",\n  \"review_confidence\": 0.8,\n  \"organism_group\": \"bird\",\n  \"evidence_type\": \"whole_organism\",\n  \"technical_profile\": {\n    \"technical_quality\": \"low\",\n    \"shar",
+          "schema_failure_cause": "enum_mismatch"
+        }
+      ],
+      "valid_items": [
+        {
+          "evidence_type": "whole_organism",
+          "global_quality_score": 89,
+          "media_id": "media:inaturalist:100906257",
+          "organism_group": "bird",
+          "raw_model_output_excerpt": "{\n  \"schema_version\": \"pedagogical_media_profile.v1\",\n  \"prompt_version\": \"pedagogical_media_profile_prompt.v1\",\n  \"review_status\": \"valid\",\n  \"review_confidence\": 0.95,\n  \"organism_group\": \"bird\",\n  \"evidence_type\": \"whole_organism\",\n  \"technical_profile\": {\n    \"technical_quality\": \"medium\",\n    \""
+        },
+        {
+          "evidence_type": "feather",
+          "global_quality_score": 96,
+          "media_id": "media:inaturalist:100909260",
+          "organism_group": "bird",
+          "raw_model_output_excerpt": "{\n  \"schema_version\": \"pedagogical_media_profile.v1\",\n  \"prompt_version\": \"pedagogical_media_profile_prompt.v1\",\n  \"review_status\": \"valid\",\n  \"review_confidence\": 0.95,\n  \"organism_group\": \"bird\",\n  \"evidence_type\": \"feather\",\n  \"technical_profile\": {\n    \"technical_quality\": \"high\",\n    \"sharpness"
+        },
+        {
+          "evidence_type": "whole_organism",
+          "global_quality_score": 44,
+          "media_id": "media:inaturalist:101911464",
+          "organism_group": "bird",
+          "raw_model_output_excerpt": "{\n  \"schema_version\": \"pedagogical_media_profile.v1\",\n  \"prompt_version\": \"pedagogical_media_profile_prompt.v1\",\n  \"review_status\": \"valid\",\n  \"review_confidence\": 0.9,\n  \"organism_group\": \"bird\",\n  \"evidence_type\": \"whole_organism\",\n  \"technical_profile\": {\n    \"technical_quality\": \"low\",\n    \"shar"
+        }
+      ]
+    },
+    "sample_size": 10,
+    "schema_failure_cause_distribution": {
+      "enum_mismatch": 1
+    },
+    "selection_field_rejection_count": 0,
+    "top_schema_error_paths": [
+      {
+        "causes": {
+          "enum_mismatch": 1
+        },
+        "count": 1,
+        "path": "identification_profile.visible_field_marks.0.body_part"
+      }
+    ],
+    "valid_count": 9
+  }
+}

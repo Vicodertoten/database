@@ -143,3 +143,45 @@ def test_prompt_includes_bird_group_specific_rule() -> None:
     assert "if organism_group is bird" in prompt
     assert "group_specific_profile.bird is required" in prompt
 
+
+# --- Pre-Sprint-5 biological confidence hardening tests ---
+
+
+def test_prompt_says_do_not_use_confidence_unknown_for_biological_attributes() -> None:
+    prompt = _build_prompt().lower()
+
+    assert "do not use confidence='unknown' for biological attributes" in prompt
+
+
+def test_prompt_says_prefer_confidence_low_for_unknown_biological_value() -> None:
+    prompt = _build_prompt().lower()
+
+    assert "prefer confidence='low'" in prompt
+
+
+def test_prompt_says_do_not_use_confidence_high_when_value_unknown() -> None:
+    prompt = _build_prompt().lower()
+
+    assert "do not use confidence='high' when value is unknown or not_applicable" in prompt
+
+
+def test_prompt_still_forbids_feedback_fields() -> None:
+    prompt = _build_prompt().lower()
+
+    assert "post_answer_feedback" in prompt
+    assert "forbidden" in prompt
+
+
+def test_prompt_still_forbids_selection_fields() -> None:
+    prompt = _build_prompt().lower()
+
+    assert "selected_for_quiz" in prompt
+    assert "palier_1_core_eligible" in prompt
+    assert "recommended_use" in prompt
+
+
+def test_prompt_still_says_system_computes_scores() -> None:
+    prompt = _build_prompt().lower()
+
+    assert "system computes" in prompt
+

@@ -1152,6 +1152,19 @@ def _normalize_biological_attribute(
         return
     _normalize_known_enum_field(field, "value", allowed_values)
     _normalize_known_enum_field(field, "confidence", {"high", "medium", "low", "unknown"})
+    # Micro-patch: value=unknown/not_applicable + confidence=unknown → normalize to "low".
+    # The model conservatively sets value="unknown" but then mirrors that with
+    # confidence="unknown", which fails the biological consistency rule
+    # (confidence must be low or medium when value is unknown/not_applicable).
+    # Mapping confidence="unknown" → "low" is safe: it makes the assertion weaker,
+    # not stronger, and does not imply a concrete biological claim.
+    value_raw = _normalize_text(field.get("value"))
+    confidence_raw = _normalize_text(field.get("confidence"))
+    if value_raw in {"unknown", "not_applicable"} and confidence_raw == "unknown":
+        try:
+            field["confidence"] = "low"
+        except TypeError:
+            pass
 
 
 def _mapping(value: object) -> Mapping[str, object]:

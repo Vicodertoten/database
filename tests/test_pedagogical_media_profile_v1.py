@@ -10,6 +10,7 @@ from database_core.qualification.pedagogical_media_profile_v1 import (
     build_failed_pedagogical_media_profile_v1,
     collect_schema_validation_errors_pmp_v1,
     compute_pedagogical_media_scores_v1,
+    normalize_pedagogical_media_profile_v1,
     parse_pedagogical_media_profile_v1,
     validate_pedagogical_media_profile_v1,
 )
@@ -538,6 +539,95 @@ def test_unknown_biological_value_with_unknown_confidence_fails() -> None:
 
     with pytest.raises(ValueError, match="confidence"):
         validate_pedagogical_media_profile_v1(payload)
+
+
+def test_normalize_unknown_value_unknown_confidence_normalizes_to_low() -> None:
+    # Micro-patch: value=unknown + confidence=unknown → normalize confidence to "low".
+    # After normalization the payload must pass validation.
+    payload = _clear_bird_profile_payload()
+    payload["biological_profile_visible"]["sex"] = {
+        "value": "unknown",
+        "confidence": "unknown",
+        "visible_basis": None,
+    }
+    normalized = normalize_pedagogical_media_profile_v1(payload)
+    bio = normalized["biological_profile_visible"]
+    assert bio["sex"]["confidence"] == "low"
+    assert bio["sex"]["value"] == "unknown"
+    # After score injection, the payload is fully valid.
+    with_scores = dict(normalized)
+    with_scores["scores"] = compute_pedagogical_media_scores_v1(normalized)
+    validate_pedagogical_media_profile_v1(with_scores)
+
+
+def test_normalize_not_applicable_value_unknown_confidence_normalizes_to_low() -> None:
+    payload = _clear_bird_profile_payload()
+    payload["biological_profile_visible"]["life_stage"] = {
+        "value": "not_applicable",
+        "confidence": "unknown",
+        "visible_basis": None,
+    }
+    normalized = normalize_pedagogical_media_profile_v1(payload)
+    bio = normalized["biological_profile_visible"]
+    assert bio["life_stage"]["confidence"] == "low"
+
+
+def test_normalize_unknown_value_high_confidence_is_not_changed() -> None:
+    # Normalization must NOT silently fix value=unknown + confidence=high.
+    # That combination still fails validation (invalid_confidence_range).
+    payload = _with_scores(_clear_bird_profile_payload())
+    payload["biological_profile_visible"]["plumage_state"] = {
+        "value": "unknown",
+        "confidence": "high",
+        "visible_basis": None,
+    }
+    # Normalization should leave confidence=high as-is.
+    normalized = normalize_pedagogical_media_profile_v1(payload)
+    bio = normalized["biological_profile_visible"]
+    assert bio["plumage_state"]["confidence"] == "high"
+    # And validation must still fail.
+    with_scores = dict(normalized)
+    with_scores["scores"] = compute_pedagogical_media_scores_v1(normalized)
+    with pytest.raises(ValueError, match="confidence"):
+        validate_pedagogical_media_profile_v1(with_scores)
+
+
+def test_normalize_concrete_value_unknown_confidence_is_not_changed() -> None:
+    # Concrete biological value with confidence=unknown is not touched by micro-patch.
+    # Validation must still fail (missing visible_basis / wrong confidence rule).
+    payload = _with_scores(_clear_bird_profile_payload())
+    payload["biological_profile_visible"]["life_stage"] = {
+        "value": "adult",
+        "confidence": "unknown",
+        "visible_basis": None,
+    }
+    normalized = normalize_pedagogical_media_profile_v1(payload)
+    bio = normalized["biological_profile_visible"]
+    # Confidence is left unchanged (adult is not unknown/not_applicable).
+    assert bio["life_stage"]["confidence"] == "unknown"
+    # Validation fails because visible_basis is None for a concrete value.
+    with_scores = dict(normalized)
+    with_scores["scores"] = compute_pedagogical_media_scores_v1(normalized)
+    with pytest.raises(ValueError):
+        validate_pedagogical_media_profile_v1(with_scores)
+
+
+def test_normalization_does_not_affect_feedback_rejection() -> None:
+    payload = _with_scores(_clear_bird_profile_payload())
+    payload["post_answer_feedback"] = {"text": "correct!"}
+    # Add unknown confidence bio field to confirm normalization still runs.
+    payload["biological_profile_visible"]["sex"] = {
+        "value": "unknown",
+        "confidence": "unknown",
+        "visible_basis": None,
+    }
+    normalized = normalize_pedagogical_media_profile_v1(payload)
+    # Confidence is normalized to low.
+    assert normalized["biological_profile_visible"]["sex"]["confidence"] == "low"
+    # But the feedback field is still present and must be rejected by validation.
+    errors = collect_schema_validation_errors_pmp_v1(normalized)
+    causes = [e["cause"] for e in errors]
+    assert "additional_property" in causes
 
 
 def test_not_applicable_biological_value_allows_null_visible_basis() -> None:

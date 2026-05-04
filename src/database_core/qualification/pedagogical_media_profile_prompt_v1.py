@@ -406,7 +406,11 @@ def build_pedagogical_media_profile_prompt_v1(
         # --- Biological attribute rules ---
         "If biological attributes are uncertain, use unknown. "
         "For biological_profile_visible fields, if value is unknown or not_applicable then "
-        "visible_basis may be null and confidence must be low or medium. "
+        "visible_basis may be null and confidence must be 'low' or 'medium' — "
+        "do NOT use confidence='unknown' for biological attributes. "
+        "When value is unknown or not_applicable, prefer confidence='low'. "
+        "Do NOT use confidence='high' when value is unknown or not_applicable. "
+        "If unsure, set value='unknown', confidence='low', visible_basis=null. "
         "If value is neither unknown nor not_applicable, visible_basis must be non-empty. "
         # --- Indirect evidence rule ---
         "For indirect evidence types feather, egg, nest, track, scat, burrow, set "
@@ -440,7 +444,8 @@ def build_pedagogical_media_profile_prompt_v1(
         f"biological_profile_visible.life_stage.value: [{_LIFE_STAGE_VALUE_ENUM}]. "
         f"biological_profile_visible.plumage_state.value: [{_PLUMAGE_STATE_VALUE_ENUM}]. "
         f"biological_profile_visible.seasonal_state.value: [{_SEASONAL_STATE_VALUE_ENUM}]. "
-        f"biological_profile_visible.*.confidence: [{_BIO_CONFIDENCE_ENUM}]. "
+        f"biological_profile_visible.*.confidence: [{_BIO_CONFIDENCE_ENUM}] — "
+        f"use 'low' (not 'unknown') when value is unknown or not_applicable. "
         f"identification_profile.ambiguity_level: [{_AMBIGUITY_ENUM}]. "
         f"identification_profile.visible_field_marks[].visibility: [{_SIGNAL_LEVEL}]. "
         f"identification_profile.visible_field_marks[].importance: [{_SIGNAL_LEVEL}]. "
