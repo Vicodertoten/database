@@ -41,6 +41,147 @@ _EVIDENCE_TYPE_ENUM = [
     "unknown",
 ]
 
+# Output skeleton — all raw AI signal blocks; scores block is excluded (system-injected).
+_OUTPUT_SKELETON: dict[str, object] = {
+    "schema_version": "pedagogical_media_profile.v1",
+    "prompt_version": "pedagogical_media_profile_prompt.v1",
+    "review_status": "<valid|failed>",
+    "review_confidence": "<float 0.0-1.0>",
+    "organism_group": "<see allowed values>",
+    "evidence_type": "<see allowed values>",
+    "technical_profile": {
+        "technical_quality": "...",
+        "sharpness": "...",
+        "lighting": "...",
+        "contrast": "...",
+        "background_clutter": "...",
+        "framing": "...",
+        "distance_to_subject": "...",
+    },
+    "observation_profile": {
+        "subject_presence": "...",
+        "subject_visibility": "...",
+        "visible_parts": ["..."],
+        "view_angle": "...",
+        "occlusion": "...",
+        "context_visible": ["..."],
+    },
+    "biological_profile_visible": {
+        "sex": {"value": "...", "confidence": "...", "visible_basis": "..."},
+        "life_stage": {"value": "...", "confidence": "...", "visible_basis": "..."},
+        "plumage_state": {"value": "...", "confidence": "...", "visible_basis": "..."},
+        "seasonal_state": {"value": "...", "confidence": "...", "visible_basis": "..."},
+    },
+    "identification_profile": {
+        "visual_evidence_strength": "...",
+        "diagnostic_feature_visibility": "...",
+        "identification_confidence_from_image": "...",
+        "ambiguity_level": "...",
+        "visible_field_marks": ["..."],
+        "missing_key_features": ["..."],
+        "identification_limitations": ["..."],
+    },
+    "pedagogical_profile": {
+        "learning_value": "...",
+        "difficulty": "...",
+        "beginner_accessibility": "...",
+        "expert_interest": "...",
+        "field_realism": "...",
+        "cognitive_load": "...",
+        "requires_prior_knowledge": "...",
+    },
+    "group_specific_profile": {"<organism_group_key>": {"...": "..."}},
+    "limitations": ["..."],
+}
+
+# Compact valid raw output example — bird, no scores, conservative unknowns for uncertain
+# biological attributes, group_specific_profile.bird included.
+_VALID_RAW_EXAMPLE: dict[str, object] = {
+    "schema_version": "pedagogical_media_profile.v1",
+    "prompt_version": "pedagogical_media_profile_prompt.v1",
+    "review_status": "valid",
+    "review_confidence": 0.85,
+    "organism_group": "bird",
+    "evidence_type": "whole_organism",
+    "technical_profile": {
+        "technical_quality": "high",
+        "sharpness": "high",
+        "lighting": "high",
+        "contrast": "high",
+        "background_clutter": "low",
+        "framing": "good",
+        "distance_to_subject": "close",
+    },
+    "observation_profile": {
+        "subject_presence": "clear",
+        "subject_visibility": "high",
+        "visible_parts": ["head", "beak", "breast", "wing"],
+        "view_angle": "lateral",
+        "occlusion": "none",
+        "context_visible": ["vegetation"],
+    },
+    "biological_profile_visible": {
+        "sex": {"value": "unknown", "confidence": "low", "visible_basis": None},
+        "life_stage": {
+            "value": "adult",
+            "confidence": "medium",
+            "visible_basis": "adult plumage and body size",
+        },
+        "plumage_state": {"value": "unknown", "confidence": "low", "visible_basis": None},
+        "seasonal_state": {"value": "unknown", "confidence": "low", "visible_basis": None},
+    },
+    "identification_profile": {
+        "visual_evidence_strength": "high",
+        "diagnostic_feature_visibility": "high",
+        "identification_confidence_from_image": "high",
+        "ambiguity_level": "low",
+        "visible_field_marks": [
+            {
+                "feature": "distinctive breast pattern",
+                "body_part": "breast",
+                "visibility": "high",
+                "importance": "high",
+                "confidence": 0.90,
+            }
+        ],
+        "missing_key_features": [],
+        "identification_limitations": [],
+    },
+    "pedagogical_profile": {
+        "learning_value": "high",
+        "difficulty": "easy",
+        "beginner_accessibility": "high",
+        "expert_interest": "medium",
+        "field_realism": "medium",
+        "cognitive_load": "low",
+        "requires_prior_knowledge": "low",
+    },
+    "group_specific_profile": {
+        "bird": {
+            "bird_visible_parts": ["head", "beak", "breast", "wing"],
+            "posture": "perched",
+            "behavior_visible": "perched",
+            "plumage_pattern_visible": "high",
+            "bill_shape_visible": "high",
+            "wing_pattern_visible": "medium",
+            "tail_shape_visible": "none",
+        }
+    },
+    "limitations": [],
+}
+
+# Compact failed raw output example — media uninspectable, no assessment blocks.
+_FAILED_RAW_EXAMPLE: dict[str, object] = {
+    "schema_version": "pedagogical_media_profile.v1",
+    "prompt_version": "pedagogical_media_profile_prompt.v1",
+    "review_status": "failed",
+    "failure_reason": "media_uninspectable",
+}
+
+_SERIALIZED_OUTPUT_SKELETON = json.dumps(_OUTPUT_SKELETON, ensure_ascii=True)
+_SERIALIZED_VALID_RAW_EXAMPLE = json.dumps(_VALID_RAW_EXAMPLE, ensure_ascii=True)
+_SERIALIZED_FAILED_RAW_EXAMPLE = json.dumps(_FAILED_RAW_EXAMPLE, ensure_ascii=True)
+
 
 def build_pedagogical_media_profile_prompt_v1(
     *,
@@ -78,29 +219,51 @@ def build_pedagogical_media_profile_prompt_v1(
         "Do not output markdown, comments, or explanatory prose. "
         "Use schema_version=pedagogical_media_profile.v1 and "
         "prompt_version=pedagogical_media_profile_prompt.v1. "
+        # --- Core doctrine ---
         "Database qualifies now; downstream systems select later. "
         "Review validity is separate from media usefulness. "
         "A feather, nest, track, habitat, distant organism, partial organism, or weak "
         "identification evidence can still be valid. "
         "Use review_status=failed only when media cannot be inspected or output cannot "
         "be structured. "
+        # --- Raw vs persisted distinction ---
+        "Raw AI output may omit scores. "
+        "The system parses, normalizes, and injects scores after validation. "
+        "Persisted normalized profile must satisfy schema validation including scores. "
+        "Do not output a scores block. "
+        # --- Forbidden fields (explicit) ---
+        "Forbidden fields — do not include any of: "
+        "scores, feedback, post_answer_feedback, identification_tips, "
+        "selected_for_quiz, palier_1_core_eligible, recommended_use, "
+        "runtime_ready, playable. "
         "Do not compute final numeric scores. The system computes global_quality_score "
         "and usage_scores after parsing and validation. "
         "Do not generate feedback, post-answer hints, quiz or pack or runtime selection, "
         "or final usage recommendations. "
-        "Forbidden fields and concepts include: feedback, identification tips, selected "
-        "for quiz, palier core eligibility, recommended use, runtime readiness, playable. "
+        # --- Taxonomic boundary ---
         "Do not rename, override, or correct the provided taxon. "
+        # --- Biological attribute rules ---
         "If biological attributes are uncertain, use unknown. "
         "For biological_profile_visible fields, if value is unknown or not_applicable then "
         "visible_basis may be null and confidence must be low or medium. "
         "If value is neither unknown nor not_applicable, visible_basis must be non-empty. "
+        # --- Indirect evidence rule ---
         "For indirect evidence types feather, egg, nest, track, scat, burrow, set "
         "observation_profile.subject_presence=indirect. "
+        # --- Bird group-specific rule ---
+        "If organism_group is bird, group_specific_profile.bird is required. "
+        # --- Enumerations ---
         f"Allowed organism_group values: [{organism_group_enum}]. "
         f"Allowed evidence_type values: [{evidence_type_enum}]. "
-        "Produce the raw AI signal structure for pedagogical_media_profile.v1. "
-        "Raw AI output may omit scores; persisted normalized profile must include scores "
-        "computed by the system. "
+        # --- Output skeleton ---
+        "Output skeleton (all raw AI signal blocks; omit scores block): "
+        f"{_SERIALIZED_OUTPUT_SKELETON} "
+        # --- Valid raw example ---
+        "Valid raw output example (no scores, no feedback, no selection fields): "
+        f"{_SERIALIZED_VALID_RAW_EXAMPLE} "
+        # --- Failed raw example ---
+        "Failed raw output example (review_status=failed, no assessment blocks): "
+        f"{_SERIALIZED_FAILED_RAW_EXAMPLE} "
+        # --- Input context ---
         f"Input context JSON: {serialized_input}"
     )
