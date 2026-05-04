@@ -1,0 +1,97 @@
+{
+  "ai_enabled": true,
+  "calibration_priority_distribution": {
+    "high": 4,
+    "low": 32,
+    "medium": 4
+  },
+  "dry_run": false,
+  "habitat_too_permissive_items": [
+    "pmp-policy-review-0072"
+  ],
+  "high_priority_items": [
+    "pmp-policy-review-0037",
+    "pmp-policy-review-0072",
+    "pmp-policy-review-0097",
+    "pmp-policy-review-0104"
+  ],
+  "input_csv": "docs/audits/human_review/pmp_policy_v1_human_review_ai_labeled.csv",
+  "input_rows": 40,
+  "issue_category_distribution": {
+    "accept": 21,
+    "field_observation_too_permissive": 1,
+    "global_score_uncertainty": 2,
+    "habitat_too_permissive": 1,
+    "needs_second_review": 1,
+    "pre_ai_false_negative": 1,
+    "schema_false_negative": 1,
+    "species_card_too_permissive": 2,
+    "target_taxon_mismatch": 1,
+    "too_permissive": 1,
+    "too_strict": 4
+  },
+  "needs_second_review_items": [
+    "pmp-policy-review-0003"
+  ],
+  "output_csv": "docs/audits/human_review/pmp_policy_v1_human_review_ai_labeled.csv",
+  "output_jsonl": "docs/audits/human_review/pmp_policy_v1_human_review_ai_labeled.jsonl",
+  "overall_judgment_distribution": {
+    "accept": 34,
+    "reject": 1,
+    "too_permissive": 1,
+    "too_strict": 4
+  },
+  "per_usage_judgment_distributions": {
+    "human_basic_identification_judgment_inferred": {
+      "agree": 12,
+      "blank": 26,
+      "not_sure": 1,
+      "too_permissive": 1
+    },
+    "human_confusion_learning_judgment_inferred": {
+      "agree": 11,
+      "blank": 27,
+      "not_sure": 2
+    },
+    "human_field_observation_judgment_inferred": {
+      "agree": 13,
+      "blank": 26,
+      "too_permissive": 1
+    },
+    "human_indirect_evidence_learning_judgment_inferred": {
+      "agree": 2,
+      "blank": 36,
+      "not_sure": 2
+    },
+    "human_morphology_learning_judgment_inferred": {
+      "agree": 12,
+      "blank": 27,
+      "not_sure": 1
+    },
+    "human_species_card_judgment_inferred": {
+      "agree": 11,
+      "blank": 27,
+      "too_permissive": 2
+    }
+  },
+  "pre_ai_false_negative_items": [
+    "pmp-policy-review-0037"
+  ],
+  "rows_ai_labeled": 17,
+  "rows_rule_labeled": 23,
+  "rows_unlabeled": 0,
+  "rows_with_human_notes": 37,
+  "rows_without_human_notes": 3,
+  "schema_false_negative_items": [
+    "pmp-policy-review-0104"
+  ],
+  "second_pass_applied": true,
+  "second_pass_ids": [
+    "pmp-policy-review-0002",
+    "pmp-policy-review-0005",
+    "pmp-policy-review-0048"
+  ],
+  "target_taxon_mismatch_items": [
+    "pmp-policy-review-0097"
+  ]
+}
