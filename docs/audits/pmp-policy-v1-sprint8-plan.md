@@ -32,13 +32,12 @@ Observed in workspace:
 ## Sprint 8 execution mode
 
 Chosen mode:
-- **C. prepare run scripts but defer live broader PMP run**
+- **C. prepare run scripts and make the broader PMP run directly actionable**
 
 Reason:
-- broader live Gemini execution was not explicitly approved in this step,
-- no broader PMP snapshot already exists locally,
-- Sprint 8 can still deliver higher-quality audit and human review preparation on
-  the real Sprint 6 outputs.
+- broader live Gemini execution is now supported by repository tooling,
+- no broader PMP snapshot exists locally yet, but the subset builder is ready,
+- Sprint 8 can still deliver the audit preparation and then execute the broader run.
 
 ## Broader corpus target (prepared)
 
@@ -54,6 +53,7 @@ Recommended broader controlled target:
 
 Use:
 - `scripts/build_controlled_inat_snapshot_subset.py`
+- `scripts/prepare_pmp_policy_broader_run.py` to build the subset and print the live qualification command
 
 Suggested command:
 
@@ -71,7 +71,11 @@ This builder:
 - produces a deterministic subset snapshot,
 - preserves source snapshot unchanged.
 
-## Broader run command (prepared, not executed here)
+## Broader run command (prepared and actionable)
+
+Use the helper script or the CLI directly after building the subset.
+
+See `docs/audits/pmp-policy-v1-broader-run-plan.md` for the broader run implementation plan.
 
 ```bash
 ./.venv/bin/python -m database_core.cli qualify-inat-snapshot \
