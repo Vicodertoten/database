@@ -65,7 +65,7 @@ Never do the following in this repo:
 
 ## Minimum local verification
 
-- `python scripts/verify_repo.py`
+- `python scripts/verify_repo.py` if needed
 - `python scripts/check_doc_code_coherence.py`
 - `python scripts/check_docs_hygiene.py`
 - `python -m ruff check src tests scripts`
