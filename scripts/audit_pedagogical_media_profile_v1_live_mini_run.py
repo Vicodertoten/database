@@ -21,7 +21,7 @@ LIVE_MINI_RUN_SCHEMA_VERSION = "pedagogical_media_profile_live_mini_run.v1"
 DEFAULT_OUTPUT_PATH = Path(
     "docs/audits/evidence/pedagogical_media_profile_v1_live_mini_run.json"
 )
-DEFAULT_GEMINI_MODEL = "gemini-2.0-flash-lite"
+DEFAULT_GEMINI_MODEL = "gemini-2.5-flash-lite"
 DEFAULT_SAMPLE_SIZE = 5
 MIN_SAMPLE_SIZE = 5
 MAX_SAMPLE_SIZE = 10
@@ -345,7 +345,9 @@ def _load_sample_from_snapshot(
         source_key: SourceExternalKey = (SourceName.INATURALIST, media.source_media_id)
         cached_path = source_key_for.get(source_key)
         media_url = (
-            str(cached_path.as_uri()) if cached_path and cached_path.exists() else media.source_url
+            str(cached_path.resolve().as_uri())
+            if cached_path and cached_path.exists()
+            else media.source_url
         )
 
         items.append(
