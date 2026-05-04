@@ -436,3 +436,162 @@ def test_v1_1_default_unaffected_by_pmp_addition() -> None:
     assert outcomes[media_key].status == "ok"
     assert outcomes[media_key].review_contract_version == AI_REVIEW_CONTRACT_V1_1
     assert outcomes[media_key].pedagogical_media_profile is None
+
+
+# ---------------------------------------------------------------------------
+# Pre-Sprint-6 strengthened tests
+# ---------------------------------------------------------------------------
+
+_FULL_VALID_PMP_WITH_NECK = {
+    "schema_version": "pedagogical_media_profile.v1",
+    "review_status": "valid",
+    "review_confidence": 0.88,
+    "organism_group": "bird",
+    "evidence_type": "whole_organism",
+    "technical_profile": {
+        "technical_quality": "high",
+        "sharpness": "high",
+        "lighting": "high",
+        "contrast": "high",
+        "background_clutter": "low",
+        "framing": "good",
+        "distance_to_subject": "medium",
+    },
+    "observation_profile": {
+        "subject_presence": "clear",
+        "subject_visibility": "high",
+        "visible_parts": ["head", "neck", "breast", "wing", "tail"],
+        "view_angle": "lateral",
+        "occlusion": "none",
+        "context_visible": [],
+    },
+    "biological_profile_visible": {
+        "sex": {"value": "unknown", "confidence": "low", "visible_basis": None},
+        "life_stage": {"value": "adult", "confidence": "medium", "visible_basis": "plumage"},
+        "plumage_state": {"value": "unknown", "confidence": "low", "visible_basis": None},
+        "seasonal_state": {"value": "unknown", "confidence": "low", "visible_basis": None},
+    },
+    "identification_profile": {
+        "visual_evidence_strength": "high",
+        "diagnostic_feature_visibility": "high",
+        "identification_confidence_from_image": "high",
+        "ambiguity_level": "low",
+        "visible_field_marks": [
+            {
+                "feature": "long grey neck",
+                "body_part": "neck",
+                "visibility": "high",
+                "importance": "high",
+                "confidence": 0.92,
+            }
+        ],
+        "missing_key_features": [],
+        "identification_limitations": [],
+    },
+    "pedagogical_profile": {
+        "learning_value": "high",
+        "difficulty": "easy",
+        "beginner_accessibility": "high",
+        "expert_interest": "medium",
+        "field_realism": "medium",
+        "cognitive_load": "low",
+        "requires_prior_knowledge": "low",
+    },
+    "group_specific_profile": {
+        "bird": {
+            "bird_visible_parts": ["head", "neck", "breast", "wing", "tail"],
+            "posture": "perched",
+            "behavior_visible": "perched",
+            "plumage_pattern_visible": "high",
+            "bill_shape_visible": "medium",
+            "wing_pattern_visible": "medium",
+            "tail_shape_visible": "medium",
+        }
+    },
+    "scores": {
+        "global_quality_score": 83,
+        "usage_scores": {
+            "basic_identification": 88,
+            "advanced_identification": 75,
+            "behavioral_observation": 40,
+            "morphology_learning": 70,
+            "species_card": 80,
+            "indirect_evidence_learning": 20,
+        },
+    },
+    "limitations": [],
+}
+
+
+def test_full_valid_pmp_profile_with_neck_field_mark_passes_validation() -> None:
+    """Full schema-level test: a complete valid PMP payload with neck body_part passes."""
+    import json
+
+    from database_core.qualification.pedagogical_media_profile_v1 import (
+        parse_pedagogical_media_profile_v1,
+    )
+
+    parsed = parse_pedagogical_media_profile_v1(
+        json.dumps(_FULL_VALID_PMP_WITH_NECK),
+        gemini_model="gemini-test",
+        media_id="media:test:neck-1",
+        canonical_taxon_id="taxon:birds:000001",
+        scientific_name="Ardea cinerea",
+    )
+    assert parsed["review_status"] == "valid", (
+        f"Expected review_status=valid, got {parsed.get('review_status')}; "
+        f"failure_reason={parsed.get('failure_reason')}"
+    )
+    marks = parsed.get("identification_profile", {}).get("visible_field_marks", [])
+    assert any(m.get("body_part") == "neck" for m in marks), (
+        "Expected a field mark with body_part='neck' in parsed output"
+    )
+
+
+def test_pmp_valid_gemini_outcome_has_qualification_none(monkeypatch) -> None:
+    """PMP valid Gemini outcome must have qualification=None (doctrine preservation)."""
+    mock_resp = _make_gemini_http_response(_VALID_GEMINI_PMP_RESPONSE)
+    monkeypatch.setattr(urllib.request, "urlopen", lambda req, timeout=None: mock_resp)
+
+    qualifier = GeminiVisionQualifier(
+        api_key="test-key",
+        model_name="gemini-test",
+        review_contract_version=AI_REVIEW_CONTRACT_PMP_V1,
+    )
+    result = qualifier.qualify(
+        _FIXTURE_MEDIA_ASSET,
+        image_bytes=b"\xff\xd8\xff\xe0" + b"\x00" * 16,
+    )
+    assert result is not None
+    assert result.qualification is None, (
+        "PMP must not create a legacy AIQualification object"
+    )
+    assert result.pedagogical_media_profile is not None
+    assert result.bird_image_pedagogical_review is None
+    assert result.bird_image_pedagogical_score is None
+
+
+def test_cli_qualify_inat_snapshot_accepts_pmp_selector() -> None:
+    """CLI parser must accept pedagogical_media_profile_v1 as a valid choice."""
+    from database_core.cli import _build_argument_parser
+
+    parser = _build_argument_parser()
+    args = parser.parse_args([
+        "qualify-inat-snapshot",
+        "--snapshot-id", "test-snapshot",
+        "--ai-review-contract-version", "pedagogical_media_profile_v1",
+    ])
+    assert args.ai_review_contract_version == "pedagogical_media_profile_v1"
+
+
+def test_cli_run_pipeline_accepts_pmp_selector() -> None:
+    """run-pipeline CLI parser must accept pedagogical_media_profile_v1 as a valid choice."""
+    from database_core.cli import _build_argument_parser
+
+    parser = _build_argument_parser()
+    args = parser.parse_args([
+        "run-pipeline",
+        "--snapshot-id", "test-snapshot",
+        "--ai-review-contract-version", "pedagogical_media_profile_v1",
+    ])
+    assert args.ai_review_contract_version == "pedagogical_media_profile_v1"

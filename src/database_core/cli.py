@@ -63,8 +63,7 @@ def default_snapshot_id(*, prefix: str = "inaturalist-birds") -> str:
     return f"{prefix}-{datetime.now(UTC).strftime('%Y%m%dT%H%M%SZ')}"
 
 
-def main() -> None:
-    load_dotenv(dotenv_path=Path(".env"))
+def _build_argument_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="database-core")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
@@ -486,7 +485,12 @@ def main() -> None:
         type=str,
         default=os.environ.get("DATABASE_URL", DEFAULT_DATABASE_URL),
     )
+    return parser
 
+
+def main() -> None:
+    load_dotenv(dotenv_path=Path(".env"))
+    parser = _build_argument_parser()
     args = parser.parse_args()
     if args.command == "run-pipeline":
         _validate_gemini_concurrency(args.gemini_concurrency)

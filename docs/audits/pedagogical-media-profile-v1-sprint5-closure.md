@@ -1,7 +1,7 @@
 ---
 owner: database
 status: stable
-last_reviewed: 2025-07-01
+last_reviewed: 2026-05-04
 source_of_truth: docs/audits/pedagogical-media-profile-v1-sprint5-closure.md
 scope: audit
 ---
@@ -10,7 +10,7 @@ scope: audit
 
 **Sprint:** 5  
 **Status:** closed  
-**Date:** 2025-07  
+**Date:** 2026-05  
 
 ---
 

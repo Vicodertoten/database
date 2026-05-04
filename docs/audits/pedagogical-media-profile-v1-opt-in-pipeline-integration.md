@@ -1,7 +1,7 @@
 ---
 owner: database
 status: stable
-last_reviewed: 2025-07-01
+last_reviewed: 2026-05-04
 source_of_truth: docs/audits/pedagogical-media-profile-v1-opt-in-pipeline-integration.md
 scope: audit
 ---
@@ -10,7 +10,7 @@ scope: audit
 
 **Status:** active  
 **Sprint:** 5  
-**Date:** 2025-07  
+**Date:** 2026-05  
 
 ---
 
@@ -46,6 +46,13 @@ GeminiVisionQualifier.qualify()
             ├─ call Gemini (JSON mode, MEDIA_RESOLUTION_HIGH)
             └─ parse via parse_pedagogical_media_profile_v1()
 ```
+
+**Bird-first scope:** `_qualify_pedagogical_media_profile_v1` currently builds
+the prompt with `organism_group="bird"` hardcoded. The PMP contract is designed
+to be multi-taxon generic, but the pipeline integration is bird-only until
+Sprint 6 validates this path at scale. Sprint 6 must use a bird-only controlled
+snapshot. Multi-taxon routing is explicitly out of scope until after that
+validation.
 
 The method returns an `AIQualificationOutcome` with:
 
