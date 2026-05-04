@@ -38,7 +38,24 @@
         "schema_errors": {
           "type": "array",
           "items": { "type": "object" }
-        }
+        },
+        "schema_failure_cause": { "type": "string", "minLength": 1 },
+        "raw_model_output_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "raw_model_output_excerpt": {
+          "type": "string",
+          "maxLength": 1200
+        },
+        "schema_version": {
+          "type": "string",
+          "const": "pedagogical_media_profile.v1"
+        },
+        "gemini_model": { "type": "string", "minLength": 1 },
+        "media_id": { "type": "string", "minLength": 1 },
+        "canonical_taxon_id": { "type": "string", "minLength": 1 },
+        "scientific_name": { "type": "string", "minLength": 1 }
       }
     },
     "biological_attribute": {

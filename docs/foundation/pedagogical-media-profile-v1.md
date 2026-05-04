@@ -66,7 +66,7 @@ That direction was useful experimentally, but it mixed several concerns:
 - pedagogical quality
 - playability
 - post-answer feedback
-final usage readiness.
+- final usage readiness.
 
 pedagogical_media_profile.v1 deliberately separates those concerns.
 
@@ -91,7 +91,7 @@ A media item may be:
 - useful for indirect evidence learning
 - useful for morphology
 - weak as a species-card illustration
-valid as a profile even if not selected for any current pack.
+- valid as a profile even if not selected for any current pack.
 ## 3. Relationship with biodiversity metadata
 
 pedagogical_media_profile.v1 does not replace taxonomic, occurrence, observation or media-source metadata.
@@ -109,7 +109,7 @@ This means:
 - canonical taxonomy remains outside this contract
 - the source observation remains outside this contract
 - source media IDs remain outside this contract
-this contract qualifies what is visible and pedagogically useful in the media.
+- this contract qualifies what is visible and pedagogically useful in the media.
 
 The AI must not override or rename the provided taxon.
 
@@ -117,11 +117,13 @@ The profile may describe the visual evidence strength of the media, but this mus
 
 Example:
 
+```json
 {
   "provided_taxon": "Columba palumbus",
   "evidence_type": "feather",
   "visual_evidence_strength": "low"
 }
+```
 
 This means:
 
@@ -164,11 +166,13 @@ The profile must not encode final product decisions.
 
 Do not add central fields such as:
 
+```json
 {
   "selected_for_quiz": true,
   "palier_1_core_eligible": false,
   "recommended_use": "field_training"
 }
+```
 
 Future systems may derive those decisions from scores and signals.
 
@@ -179,7 +183,7 @@ The profile itself stores:
 - identification signals
 - pedagogical signals
 - deterministic scores
-limitations.
+- limitations.
 ### 5.2 Review validity is separate from media usefulness
 
 review_status describes whether the profile output is structurally valid.
@@ -190,12 +194,14 @@ A valid profile may have low usage scores.
 
 A media item can be valid with:
 
+```json
 {
   "usage_scores": {
     "basic_identification": 0,
     "indirect_evidence_learning": 80
   }
 }
+```
 ### 5.3 Weak usefulness is not failure
 
 failed must never mean:
@@ -210,7 +216,7 @@ failed must never mean:
 - weak basic identification potential
 - no feedback
 - low visual evidence strength
-low global score.
+- low global score.
 
 failed is reserved for invalid or impossible reviews.
 
@@ -223,7 +229,7 @@ It does not include:
 - post_answer_feedback
 - feedback_profile
 - feedback_possible
-identification_tips.
+- identification_tips.
 
 A future contract may be introduced later:
 
@@ -235,6 +241,7 @@ That future contract should use the structured media profile as input.
 
 The AI may produce normalized qualitative signals such as:
 
+```json
 {
   "technical_quality": "medium",
   "subject_visibility": "high",
@@ -242,9 +249,11 @@ The AI may produce normalized qualitative signals such as:
   "visual_evidence_strength": "medium",
   "learning_value": "high"
 }
+```
 
 The system computes final numeric scores:
 
+```json
 {
   "global_quality_score": 74,
   "usage_scores": {
@@ -252,6 +261,7 @@ The system computes final numeric scores:
     "field_observation": 82
   }
 }
+```
 
 The model must not be treated as the final scoring authority.
 
@@ -259,6 +269,7 @@ The model must not be treated as the final scoring authority.
 
 Canonical conceptual shape:
 
+```json
 {
   "schema_version": "pedagogical_media_profile.v1",
   "review_status": "valid",
@@ -276,6 +287,7 @@ Canonical conceptual shape:
   "scores": {},
   "limitations": []
 }
+```
 
 Top-level blocks:
 
@@ -313,7 +325,8 @@ A valid profile may still describe the media as:
 - indirect evidence
 - visually ambiguous
 - poor for some uses
-strong for other uses.
+- strong for other uses.
+
 failed
 
 Use failed only for cases where a structured profile cannot be trusted or produced.
@@ -327,7 +340,7 @@ Examples:
 - media inaccessible
 - unsafe media
 - media impossible to inspect
-technical failure.
+- technical failure.
 Non-failure examples
 
 The following are not failures by themselves:
@@ -345,7 +358,7 @@ The following are not failures by themselves:
 - partial organism
 - low basic_identification
 - low visual_evidence_strength
-low global_quality_score.
+- low global_quality_score.
 ## 8. organism_group
 Purpose
 
@@ -382,7 +395,7 @@ Future versions may define additional group-specific profiles for:
 - insects
 - fish
 - lichens
-other groups.
+- other groups.
 
 The exact future granularity is not fixed.
 
@@ -424,33 +437,43 @@ They may be represented in context_visible.
 
 Example:
 
+```json
 {
   "evidence_type": "habitat",
   "observation_profile": {
     "context_visible": ["human_structure", "vegetation"]
   }
 }
+```
 Evidence examples
 Whole organism
+```json
 {
   "organism_group": "bird",
   "evidence_type": "whole_organism"
 }
+```
 Feather
+```json
 {
   "organism_group": "bird",
   "evidence_type": "feather"
 }
+```
 Multiple organisms
+```json
 {
   "organism_group": "bird",
   "evidence_type": "multiple_organisms"
 }
+```
 Habitat
+```json
 {
   "organism_group": "bird",
   "evidence_type": "habitat"
 }
+```
 Interpretation rule
 
 A non-whole-organism media item is not invalid.
@@ -465,6 +488,7 @@ Describes the technical quality of the media.
 This is part of the objective media description.
 
 Structure
+```json
 {
   "technical_quality": "medium",
   "sharpness": "medium",
@@ -474,6 +498,7 @@ Structure
   "framing": "good",
   "distance_to_subject": "medium"
 }
+```
 Enums
 technical_quality
 high
@@ -527,6 +552,7 @@ Purpose
 Describes what is visible in the media.
 
 Structure
+```json
 {
   "subject_presence": "clear",
   "subject_visibility": "high",
@@ -535,6 +561,7 @@ Structure
   "occlusion": "minor",
   "context_visible": ["water", "vegetation"]
 }
+```
 Enums
 subject_presence
 clear
@@ -592,9 +619,11 @@ burrow
 
 use:
 
+```json
 {
   "subject_presence": "indirect"
 }
+```
 
 For a feather image, the whole organism is not visible. This does not make the profile invalid.
 
@@ -607,7 +636,7 @@ For birds, it may overlap with group_specific_profile.bird.bird_visible_parts.
 This temporary redundancy is accepted in v1 because:
 
 - core visible_parts supports cross-group inspection
-bird-specific parts support better bird-focused normalization.
+- bird-specific parts support better bird-focused normalization.
 ## 12. biological_profile_visible
 Purpose
 
@@ -618,6 +647,7 @@ This block must be conservative.
 The model must not invent biological attributes.
 
 Structure
+```json
 {
   "sex": {
     "value": "unknown",
@@ -640,6 +670,7 @@ Structure
     "visible_basis": null
   }
 }
+```
 Core fields
 sex
 life_stage
@@ -664,7 +695,7 @@ value = unknown or not_applicable
 then:
 
 visible_basis may be null
-confidence must be low or medium
+- confidence must be low or medium
 
 If:
 
@@ -672,7 +703,7 @@ value != unknown and value != not_applicable
 
 then:
 
-visible_basis is required and must be non-empty
+- visible_basis is required and must be non-empty
 Recommended confidence behavior
 
 Prefer unknown over fragile inference.
@@ -723,6 +754,7 @@ This is not a taxonomic override.
 The AI must not rename the taxon, challenge the canonical taxon, or propose another species.
 
 Structure
+```json
 {
   "visual_evidence_strength": "high",
   "diagnostic_feature_visibility": "high",
@@ -742,6 +774,7 @@ Structure
     "body partly hidden by vegetation"
   ]
 }
+```
 Enums
 visual_evidence_strength
 high
@@ -784,6 +817,7 @@ Max 5 items.
 
 Structure:
 
+```json
 {
   "feature": "white frontal shield",
   "body_part": "head",
@@ -791,6 +825,7 @@ Structure:
   "importance": "high",
   "confidence": 0.91
 }
+```
 
 Rules:
 
@@ -854,6 +889,7 @@ Purpose
 Describes the media’s learning value and difficulty without selecting a final use.
 
 Structure
+```json
 {
   "learning_value": "high",
   "difficulty": "medium",
@@ -863,6 +899,7 @@ Structure
   "cognitive_load": "medium",
   "requires_prior_knowledge": "low"
 }
+```
 Enums
 
 For most fields:
@@ -885,12 +922,14 @@ A media item can be both hard and valuable.
 
 Example:
 
+```json
 {
   "difficulty": "hard",
   "learning_value": "high",
   "beginner_accessibility": "low",
   "expert_interest": "high"
 }
+```
 
 This is a valid profile, not a failure.
 
@@ -933,6 +972,7 @@ For v1, only bird is required.
 Other groups may be added later.
 
 Bird profile structure
+```json
 {
   "bird": {
     "bird_visible_parts": ["head", "beak", "breast", "wing"],
@@ -944,6 +984,7 @@ Bird profile structure
     "tail_shape_visible": "low"
   }
 }
+```
 bird_visible_parts
 
 Max 8 items.
@@ -1028,6 +1069,7 @@ The AI provides qualitative signals.
 The system computes numeric scores.
 
 Structure
+```json
 {
   "global_quality_score": 78,
   "usage_scores": {
@@ -1039,6 +1081,7 @@ Structure
     "indirect_evidence_learning": 0
   }
 }
+```
 
 All scores are integers from 0 to 100.
 
@@ -1049,7 +1092,7 @@ A general-purpose quality score used for:
 - simple sorting
 - audit
 - pack generation without advanced filtering
-quick comparison between media items.
+- quick comparison between media items.
 
 It is not a final usage decision.
 
@@ -1092,10 +1135,12 @@ Important scoring rule
 
 A media item can have:
 
+```json
 {
   "basic_identification": 0,
   "indirect_evidence_learning": 80
 }
+```
 
 and still be valid.
 
@@ -1127,6 +1172,7 @@ They do not automatically reject the media.
 Diagnostics are only required for failed reviews.
 
 Failed payload example
+```json
 {
   "schema_version": "pedagogical_media_profile.v1",
   "review_status": "failed",
@@ -1137,6 +1183,7 @@ Failed payload example
     "schema_errors": []
   }
 }
+```
 Failure reasons
 
 Initial enum:
@@ -1168,7 +1215,7 @@ Rationale:
 - easier normalization
 - easier testing
 - simpler multilingual support later
-consistency with field-mark and biological terminology.
+- consistency with field-mark and biological terminology.
 
 Future user-facing translations belong to UI or localization layers, not this profile contract.
 
@@ -1182,7 +1229,7 @@ The contract must not include:
 - feedback_profile
 - feedback_possible
 - identification_tips
-pre-answer hints.
+- pre-answer hints.
 
 Future feedback can be built later from this structured profile.
 
@@ -1200,7 +1247,7 @@ It should produce:
 - field marks
 - limitations
 - confidence values
-conservative biological attributes.
+- conservative biological attributes.
 
 It should not produce:
 
@@ -1209,7 +1256,7 @@ It should not produce:
 - pack selection decisions
 - runtime decisions
 - feedback
-taxonomic corrections.
+- taxonomic corrections.
 AI rules
 
 The AI must:
@@ -1220,7 +1267,7 @@ The AI must:
 - prefer unknown over weak inference
 - not invent invisible traits
 - not rename the provided taxon
-not challenge canonical taxonomy.
+- not challenge canonical taxonomy.
 ## 22. Structured output and model strategy
 
 pedagogical_media_profile.v1 should remain simple enough for structured-output generation.
@@ -1233,7 +1280,7 @@ Design constraints:
 - use clear enums
 - limit arrays
 - keep free text short
-validate outputs in application code.
+- validate outputs in application code.
 
 The model choice is not fixed in this foundation.
 
@@ -1246,12 +1293,13 @@ A future benchmark should compare candidate models on:
 - latency
 - cost
 - consistency across difficult media
-usefulness of generated limitations.
+- usefulness of generated limitations.
 
 Testing must not depend on live model access.
 
 ## 23. Examples
 ### 23.1 Clear bird image
+```json
 {
   "schema_version": "pedagogical_media_profile.v1",
   "review_status": "valid",
@@ -1347,7 +1395,9 @@ Testing must not depend on live model access.
   },
   "limitations": []
 }
+```
 ### 23.2 Feather media
+```json
 {
   "schema_version": "pedagogical_media_profile.v1",
   "review_status": "valid",
@@ -1448,6 +1498,7 @@ Testing must not depend on live model access.
     "species-level identification from the media alone is limited"
   ]
 }
+```
 ## 24. Compatibility with existing layers
 
 This contract is additive.
@@ -1458,7 +1509,7 @@ It does not replace:
 - PedagogicalImageProfile
 - bird_image_review.v1.2
 - playable corpus contracts
-runtime consumption contracts.
+- runtime consumption contracts.
 
 It introduces a broader media qualification layer.
 
@@ -1496,7 +1547,7 @@ Include:
 - enum validation
 - confidence validation
 - array length validation
-diagnostics for failed payloads.
+- diagnostics for failed payloads.
 Phase 2 — Deterministic scoring
 
 Add deterministic score computation.
@@ -1506,7 +1557,7 @@ The AI provides qualitative signals.
 The system computes:
 
 - global_quality_score
-usage_scores.
+- usage_scores.
 Phase 3 — Prompt and fixture-based dry run
 
 Add prompt builder and fixture-based dry-run.
@@ -1535,7 +1586,7 @@ Run on a small sample and audit:
 - biological profile prudence
 - schema failures
 - model latency
-model cost.
+- model cost.
 Phase 6 — Model benchmark
 
 Compare candidate model/configurations.

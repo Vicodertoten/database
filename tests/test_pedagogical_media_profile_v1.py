@@ -398,6 +398,13 @@ def test_invalid_json_fails_closed() -> None:
     assert parsed["failure_reason"] == "model_output_invalid"
 
 
+def test_parse_invalid_json_returns_schema_valid_failed_payload() -> None:
+    parsed = parse_pedagogical_media_profile_v1("{not-valid-json")
+
+    assert parsed["review_status"] == "failed"
+    validate_pedagogical_media_profile_v1(parsed)
+
+
 def test_non_object_json_fails_closed() -> None:
     parsed = parse_pedagogical_media_profile_v1(json.dumps(["not", "an", "object"]))
 
@@ -413,6 +420,16 @@ def test_missing_required_field_fails_closed() -> None:
 
     assert parsed["review_status"] == "failed"
     assert parsed["failure_reason"] == "schema_validation_failed"
+
+
+def test_parse_schema_error_returns_schema_valid_failed_payload() -> None:
+    payload = _clear_bird_profile_payload()
+    del payload["technical_profile"]
+
+    parsed = parse_pedagogical_media_profile_v1(json.dumps(payload))
+
+    assert parsed["review_status"] == "failed"
+    validate_pedagogical_media_profile_v1(parsed)
 
 
 def test_wrong_enum_value_fails_validation() -> None:
@@ -481,11 +498,46 @@ def test_unknown_biological_value_allows_null_visible_basis() -> None:
     payload = _with_scores(_clear_bird_profile_payload())
     payload["biological_profile_visible"]["life_stage"] = {
         "value": "unknown",
+        "confidence": "low",
+        "visible_basis": None,
+    }
+
+    validate_pedagogical_media_profile_v1(payload)
+
+
+def test_unknown_biological_value_with_medium_confidence_allows_null_visible_basis() -> None:
+    payload = _with_scores(_clear_bird_profile_payload())
+    payload["biological_profile_visible"]["life_stage"] = {
+        "value": "unknown",
         "confidence": "medium",
         "visible_basis": None,
     }
 
     validate_pedagogical_media_profile_v1(payload)
+
+
+def test_unknown_biological_value_with_high_confidence_fails() -> None:
+    payload = _with_scores(_clear_bird_profile_payload())
+    payload["biological_profile_visible"]["life_stage"] = {
+        "value": "unknown",
+        "confidence": "high",
+        "visible_basis": None,
+    }
+
+    with pytest.raises(ValueError, match="confidence"):
+        validate_pedagogical_media_profile_v1(payload)
+
+
+def test_unknown_biological_value_with_unknown_confidence_fails() -> None:
+    payload = _with_scores(_clear_bird_profile_payload())
+    payload["biological_profile_visible"]["life_stage"] = {
+        "value": "unknown",
+        "confidence": "unknown",
+        "visible_basis": None,
+    }
+
+    with pytest.raises(ValueError, match="confidence"):
+        validate_pedagogical_media_profile_v1(payload)
 
 
 def test_not_applicable_biological_value_allows_null_visible_basis() -> None:
@@ -508,6 +560,22 @@ def test_non_unknown_biological_value_without_visible_basis_fails_validation() -
     }
 
     with pytest.raises(ValueError, match="visible_basis"):
+        validate_pedagogical_media_profile_v1(payload)
+
+
+def test_bird_group_requires_bird_group_specific_profile() -> None:
+    payload = _with_scores(_clear_bird_profile_payload())
+    payload["group_specific_profile"] = {}
+
+    with pytest.raises(ValueError, match="group_specific_profile.bird"):
+        validate_pedagogical_media_profile_v1(payload)
+
+
+def test_indirect_evidence_types_require_indirect_subject_presence() -> None:
+    payload = _with_scores(_feather_profile_payload())
+    payload["observation_profile"]["subject_presence"] = "clear"
+
+    with pytest.raises(ValueError, match="subject_presence"):
         validate_pedagogical_media_profile_v1(payload)
 
 

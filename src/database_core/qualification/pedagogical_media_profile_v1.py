@@ -173,6 +173,15 @@ _BIOLOGICAL_PROFILE_FIELDS = (
     "seasonal_state",
 )
 
+_INDIRECT_EVIDENCE_TYPES = {
+    "feather",
+    "egg",
+    "nest",
+    "track",
+    "scat",
+    "burrow",
+}
+
 _MAX_RAW_EXCERPT_CHARS = 1200
 
 
@@ -386,10 +395,13 @@ def collect_schema_validation_errors_pmp_v1(
     )
     formatted_errors = [_format_schema_error_details(item) for item in ordered_errors]
     formatted_errors.extend(_collect_biological_consistency_errors(payload))
+    formatted_errors.extend(_collect_cross_field_consistency_errors(payload))
     return tuple(formatted_errors)
 
 
 def compute_pedagogical_media_scores_v1(payload: Mapping[str, object]) -> dict[str, object]:
+    # v1 scoring is intentionally heuristic and should be calibrated after fixture audits
+    # and controlled live mini-runs.
     if _normalize_text(payload.get("review_status")) != "valid":
         return {
             "global_quality_score": 0,
@@ -697,7 +709,7 @@ def _collect_biological_consistency_errors(
         visible_basis = field_payload.get("visible_basis")
 
         if value in {"unknown", "not_applicable"}:
-            if confidence == "high":
+            if confidence not in {"low", "medium"}:
                 errors.append(
                     {
                         "path": f"biological_profile_visible.{field_name}.confidence",
@@ -728,6 +740,50 @@ def _collect_biological_consistency_errors(
                         "cause": "invalid_biological_basis",
                     }
                 )
+
+    return tuple(errors)
+
+
+def _collect_cross_field_consistency_errors(
+    payload: Mapping[str, object],
+) -> tuple[dict[str, object], ...]:
+    if _normalize_text(payload.get("review_status")) != "valid":
+        return ()
+
+    errors: list[dict[str, object]] = []
+
+    organism_group = _normalize_text(payload.get("organism_group"))
+    evidence_type = _normalize_text(payload.get("evidence_type"))
+    observation_profile = _mapping(payload.get("observation_profile"))
+    subject_presence = _normalize_text(observation_profile.get("subject_presence"))
+    group_specific_profile = _mapping(payload.get("group_specific_profile"))
+
+    if organism_group == "bird" and not isinstance(group_specific_profile.get("bird"), Mapping):
+        errors.append(
+            {
+                "path": "group_specific_profile.bird",
+                "message": "group_specific_profile.bird is required when organism_group is bird",
+                "validator": "consistency_rule",
+                "expected": "object",
+                "actual": _safe_actual_value(group_specific_profile.get("bird")),
+                "cause": "missing_required_field",
+            }
+        )
+
+    if evidence_type in _INDIRECT_EVIDENCE_TYPES and subject_presence != "indirect":
+        errors.append(
+            {
+                "path": "observation_profile.subject_presence",
+                "message": (
+                    "subject_presence must be indirect for indirect evidence types "
+                    "(feather, egg, nest, track, scat, burrow)"
+                ),
+                "validator": "consistency_rule",
+                "expected": "indirect",
+                "actual": subject_presence,
+                "cause": "enum_mismatch",
+            }
+        )
 
     return tuple(errors)
 
