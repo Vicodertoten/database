@@ -196,6 +196,32 @@ def test_schema_error_diagnostics_support_type_cause_validator_and_paths(tmp_pat
     )
 
 
+def test_failed_items_summary_falls_back_from_unknown_schema_failure_cause(tmp_path: Path) -> None:
+    snapshot_root = tmp_path / "data/raw/inaturalist"
+    ai_outputs_path = snapshot_root / "s1b" / "ai_outputs.json"
+
+    payload = {
+        "inaturalist::1": _failed_outcome(
+            media_id="1",
+            error={
+                "validator": "maxItems",
+                "path": "group_specific_profile.bird.bird_visible_parts",
+                "message": "too long",
+                "expected": 12,
+                "actual": "<array len=13>",
+            },
+            schema_failure_cause="unknown_schema_failure",
+        )
+    }
+    _write_json(ai_outputs_path, payload)
+
+    report = audit_snapshot_outputs(snapshot_id="s1b", snapshot_root=snapshot_root)
+
+    failed = report["failure_diagnostics"]["failed_items_summary"]
+    assert len(failed) == 1
+    assert failed[0]["schema_failure_cause"] == "maxItems"
+
+
 def test_manual_review_sample_recognizes_indirect_and_multiple_types(tmp_path: Path) -> None:
     snapshot_root = tmp_path / "data/raw/inaturalist"
     ai_outputs_path = snapshot_root / "s2" / "ai_outputs.json"

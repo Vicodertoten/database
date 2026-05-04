@@ -144,6 +144,23 @@ def test_prompt_includes_bird_group_specific_rule() -> None:
     assert "group_specific_profile.bird is required" in prompt
 
 
+def test_prompt_includes_bathing_behavior_enum_value() -> None:
+    prompt = _build_prompt().lower()
+
+    assert "behavior_visible" in prompt
+    assert "bathing" in prompt
+
+
+def test_prompt_includes_context_synonym_normalization_guidance() -> None:
+    prompt = _build_prompt().lower()
+
+    assert "brick wall" in prompt
+    assert "wall" in prompt
+    assert "building" in prompt
+    assert "fence" in prompt
+    assert "human_structure" in prompt
+
+
 # --- Pre-Sprint-5 biological confidence hardening tests ---
 
 

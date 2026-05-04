@@ -76,7 +76,7 @@ _DIFFICULTY_ENUM = "easy|medium|hard|unknown"
 
 _BIRD_POSTURE_ENUM = "perched|standing|swimming|flying|foraging|resting|unknown"
 _BIRD_BEHAVIOR_ENUM = (
-    "foraging|swimming|flying|perched|singing|feeding_young|resting|unknown"
+    "foraging|swimming|flying|perched|singing|feeding_young|resting|bathing|unknown"
 )
 _BIRD_VISIBLE_PARTS_ENUM = (
     "head|beak|eye|neck|breast|belly|back|wing|tail|legs|feet|whole_body|unknown"
@@ -170,7 +170,7 @@ _OUTPUT_SKELETON: dict[str, object] = {
             ],
             "posture": "perched|standing|swimming|flying|foraging|resting|unknown",
             "behavior_visible": (
-                "foraging|swimming|flying|perched|singing|feeding_young|resting|unknown"
+                "foraging|swimming|flying|perched|singing|feeding_young|resting|bathing|unknown"
             ),
             "plumage_pattern_visible": "high|medium|low|none|unknown",
             "bill_shape_visible": "high|medium|low|none|unknown",
@@ -421,6 +421,10 @@ def build_pedagogical_media_profile_prompt_v1(
         "For indirect evidence, use unknown for posture, behavior_visible, and "
         "bird_visible_parts=[unknown]; fill remaining bird profile fields using "
         "whatever can be inferred from the indirect evidence. "
+        "bird_visible_parts can list up to 12 visible parts when clearly visible. "
+        "Keep visible_field_marks selective (max 5) and focused on key marks. "
+        "Normalize context synonyms to allowed enums: brick wall, wall, building, "
+        "fence -> human_structure. "
         # --- Enumerations ---
         f"Allowed organism_group values: [{organism_group_enum}]. "
         f"Allowed evidence_type values: [{evidence_type_enum}]. "

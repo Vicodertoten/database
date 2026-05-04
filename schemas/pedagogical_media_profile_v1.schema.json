@@ -283,7 +283,7 @@
       "properties": {
         "bird_visible_parts": {
           "type": "array",
-          "maxItems": 8,
+          "maxItems": 12,
           "items": {
             "type": "string",
             "enum": [
@@ -300,7 +300,7 @@
           "type": "string",
           "enum": [
             "foraging", "swimming", "flying", "perched",
-            "singing", "feeding_young", "resting", "unknown"
+            "singing", "feeding_young", "resting", "bathing", "unknown"
           ]
         },
         "plumage_pattern_visible": { "$ref": "#/$defs/signal_level_with_none" },

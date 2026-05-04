@@ -480,6 +480,62 @@ def test_context_visible_max_5_enforced() -> None:
         validate_pedagogical_media_profile_v1(payload)
 
 
+def test_bird_visible_parts_up_to_12_allows_11_items() -> None:
+    payload = _with_scores(_clear_bird_profile_payload())
+    payload["group_specific_profile"]["bird"]["bird_visible_parts"] = [
+        "head",
+        "beak",
+        "eye",
+        "neck",
+        "breast",
+        "belly",
+        "back",
+        "wing",
+        "tail",
+        "legs",
+        "feet",
+    ]
+
+    validate_pedagogical_media_profile_v1(payload)
+
+
+def test_bird_visible_parts_over_12_fails_with_13_items() -> None:
+    payload = _with_scores(_clear_bird_profile_payload())
+    payload["group_specific_profile"]["bird"]["bird_visible_parts"] = [
+        "head",
+        "beak",
+        "eye",
+        "neck",
+        "breast",
+        "belly",
+        "back",
+        "wing",
+        "tail",
+        "legs",
+        "feet",
+        "whole_body",
+        "unknown",
+    ]
+
+    with pytest.raises(ValueError):
+        validate_pedagogical_media_profile_v1(payload)
+
+
+def test_bathing_behavior_is_allowed() -> None:
+    payload = _with_scores(_clear_bird_profile_payload())
+    payload["group_specific_profile"]["bird"]["behavior_visible"] = "bathing"
+
+    validate_pedagogical_media_profile_v1(payload)
+
+
+def test_invented_behavior_still_fails_validation() -> None:
+    payload = _with_scores(_clear_bird_profile_payload())
+    payload["group_specific_profile"]["bird"]["behavior_visible"] = "courtship_dance"
+
+    with pytest.raises(ValueError):
+        validate_pedagogical_media_profile_v1(payload)
+
+
 def test_limitations_max_5_enforced() -> None:
     payload = _with_scores(_clear_bird_profile_payload())
     payload["limitations"] = [
@@ -651,6 +707,35 @@ def test_non_unknown_biological_value_without_visible_basis_fails_validation() -
 
     with pytest.raises(ValueError, match="visible_basis"):
         validate_pedagogical_media_profile_v1(payload)
+
+
+def test_context_visible_synonyms_normalize_to_human_structure() -> None:
+    payload = _clear_bird_profile_payload()
+    payload["observation_profile"]["context_visible"] = [
+        "brick wall",
+        "wall",
+        "building",
+        "fence",
+    ]
+
+    normalized = normalize_pedagogical_media_profile_v1(payload)
+
+    assert normalized["observation_profile"]["context_visible"] == [
+        "human_structure",
+        "human_structure",
+        "human_structure",
+        "human_structure",
+    ]
+
+
+def test_context_visible_unmapped_value_still_fails_validation() -> None:
+    payload = _with_scores(_clear_bird_profile_payload())
+    payload["observation_profile"]["context_visible"] = ["kitchen"]
+
+    normalized = normalize_pedagogical_media_profile_v1(payload)
+
+    with pytest.raises(ValueError):
+        validate_pedagogical_media_profile_v1(normalized)
 
 
 def test_bird_group_requires_bird_group_specific_profile() -> None:

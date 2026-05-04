@@ -347,6 +347,7 @@ def normalize_pedagogical_media_profile_v1(
         "occlusion",
         {"none", "minor", "major", "unknown"},
     )
+    _normalize_context_visible_aliases(observation_profile)
     _normalize_string_enum_list(
         observation_profile,
         "context_visible",
@@ -453,7 +454,7 @@ def normalize_pedagogical_media_profile_v1(
             bird_profile,
             "behavior_visible",
             {"foraging", "swimming", "flying", "perched",
-             "singing", "feeding_young", "resting", "unknown"},
+               "singing", "feeding_young", "resting", "bathing", "unknown"},
         )
         _normalize_string_enum_list(
             bird_profile,
@@ -1138,6 +1139,29 @@ def _normalize_string_enum_list(
         normalized.append(lowered if lowered in allowed else item.strip())
     try:
         mapping[key] = normalized  # type: ignore[index]
+    except TypeError:
+        pass
+
+
+def _normalize_context_visible_aliases(observation_profile: Mapping[str, object]) -> None:
+    raw = observation_profile.get("context_visible")
+    if not isinstance(raw, Sequence) or isinstance(raw, (str, bytes)):
+        return
+    aliases = {
+        "brick_wall": "human_structure",
+        "wall": "human_structure",
+        "building": "human_structure",
+        "fence": "human_structure",
+    }
+    normalized: list[object] = []
+    for item in raw:
+        if not isinstance(item, str):
+            normalized.append(item)
+            continue
+        token = _normalize_text(item)
+        normalized.append(aliases.get(token, item))
+    try:
+        observation_profile["context_visible"] = normalized  # type: ignore[index]
     except TypeError:
         pass
 

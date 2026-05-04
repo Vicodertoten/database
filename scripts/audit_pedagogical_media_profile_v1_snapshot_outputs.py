@@ -551,11 +551,19 @@ def audit_snapshot_outputs(
 
         diagnostics = pmp.get("diagnostics") if isinstance(pmp.get("diagnostics"), dict) else {}
         schema_errors = _extract_schema_errors(diagnostics)
-        schema_failure_cause = str(
-            diagnostics.get("schema_failure_cause")
-            or (schema_errors[0].get("cause") if schema_errors else "")
-            or "unknown_schema_failure"
+        raw_schema_failure_cause = str(diagnostics.get("schema_failure_cause") or "").strip()
+        first_extracted_cause = (
+            _extract_error_cause(schema_errors[0], diagnostics)
+            if schema_errors
+            else "unknown_schema_failure"
         )
+        if (
+            not raw_schema_failure_cause
+            or raw_schema_failure_cause == "unknown_schema_failure"
+        ):
+            schema_failure_cause = first_extracted_cause
+        else:
+            schema_failure_cause = raw_schema_failure_cause
         had_schema_errors = False
         for schema_error in schema_errors:
             had_schema_errors = True

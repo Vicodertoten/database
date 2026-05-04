@@ -180,7 +180,7 @@
             "validator": "maxItems"
           }
         ],
-        "schema_failure_cause": "unknown_schema_failure",
+        "schema_failure_cause": "maxItems",
         "scientific_name": "Anser anser"
       },
       {
@@ -203,7 +203,7 @@
             "validator": "maxItems"
           }
         ],
-        "schema_failure_cause": "unknown_schema_failure",
+        "schema_failure_cause": "maxItems",
         "scientific_name": "Erithacus rubecula"
       },
       {
@@ -295,7 +295,7 @@
             "validator": "maxItems"
           }
         ],
-        "schema_failure_cause": "unknown_schema_failure",
+        "schema_failure_cause": "maxItems",
         "scientific_name": "Larus michahellis"
       },
       {
@@ -318,7 +318,7 @@
             "validator": "maxItems"
           }
         ],
-        "schema_failure_cause": "unknown_schema_failure",
+        "schema_failure_cause": "maxItems",
         "scientific_name": "Larus michahellis"
       },
       {
@@ -341,7 +341,7 @@
             "validator": "maxItems"
           }
         ],
-        "schema_failure_cause": "unknown_schema_failure",
+        "schema_failure_cause": "maxItems",
         "scientific_name": "Phoenicurus ochruros"
       },
       {
@@ -364,7 +364,7 @@
             "validator": "maxItems"
           }
         ],
-        "schema_failure_cause": "unknown_schema_failure",
+        "schema_failure_cause": "maxItems",
         "scientific_name": "Passer domesticus"
       },
       {
