@@ -1,0 +1,222 @@
+{
+  "ai_outputs_broken": false,
+  "ai_outputs_path": "data/raw/inaturalist/palier1-be-birds-50taxa-run003-v11-baseline-sprint6-controlled-120/ai_outputs.json",
+  "decision": "READY_FOR_CONTROLLED_PROFILED_CORPUS_RUN",
+  "doctrine_pollution_checks": {
+    "bird_image_pollution_count": 0,
+    "doctrine_pollution_detected": false,
+    "feedback_field_count": 0,
+    "selection_field_count": 0,
+    "unexpected_runtime_field_count": 0
+  },
+  "generation_metrics": {
+    "evidence_type_distribution": {
+      "dead_organism": 1,
+      "feather": 2,
+      "habitat": 1,
+      "multiple_organisms": 7,
+      "nest": 3,
+      "whole_organism": 92
+    },
+    "failure_reason_distribution": {
+      "schema_validation_failed": 10
+    },
+    "images_sent_to_gemini_count": 116,
+    "organism_group_distribution": {
+      "bird": 106
+    },
+    "pmp_failed_count": 10,
+    "pmp_valid_count": 106,
+    "pmp_valid_rate": 0.9138,
+    "processed_media_count": 120,
+    "schema_failure_cause_distribution": {},
+    "status_distribution": {
+      "insufficient_resolution_pre_ai": 4,
+      "ok": 106,
+      "pedagogical_media_profile_failed": 10
+    }
+  },
+  "manual_review_sample": [
+    {
+      "evidence_type": "whole_organism",
+      "failure_reason": null,
+      "global_quality_score": 90.0,
+      "limitations": [
+        "significant occlusion due to foliage"
+      ],
+      "media_key": "inaturalist::100906257",
+      "payload_excerpt": "{\"biological_profile_visible\": {\"life_stage\": {\"confidence\": \"medium\", \"value\": \"adult\", \"visible_basis\": \"solid dark plumage and white frontal shield\"}, \"plumage_state\": {\"confidence\": \"low\", \"value\": \"unknown\", \"visible_basis\": null}, \"seasonal_state\": {\"confidence\": \"low\", \"value\": \"unknown\", \"visible_basis\": null}, \"sex\": {\"confidence\": \"low\", ",
+      "pmp_review_status": "valid",
+      "scientific_name": null,
+      "status": "ok",
+      "usage_scores": {
+        "basic_identification": 95.0,
+        "confusion_learning": 84.0,
+        "field_observation": 88.0,
+        "indirect_evidence_learning": 0.0,
+        "morphology_learning": 81.0,
+        "species_card": 86.0
+      },
+      "visible_field_marks": [
+        {
+          "body_part": "head",
+          "confidence": 0.95,
+          "feature": "white frontal shield",
+          "importance": "high",
+          "visibility": "high"
+        },
+        {
+          "body_part": "whole_body",
+          "confidence": 0.95,
+          "feature": "solid dark plumage",
+          "importance": "high",
+          "visibility": "high"
+        }
+      ]
+    },
+    {
+      "evidence_type": "feather",
+      "failure_reason": null,
+      "global_quality_score": 96.0,
+      "limitations": [
+        "identification based on feather morphology only"
+      ],
+      "media_key": "inaturalist::100909260",
+      "payload_excerpt": "{\"biological_profile_visible\": {\"life_stage\": {\"confidence\": \"low\", \"value\": \"unknown\", \"visible_basis\": null}, \"plumage_state\": {\"confidence\": \"low\", \"value\": \"unknown\", \"visible_basis\": null}, \"seasonal_state\": {\"confidence\": \"low\", \"value\": \"unknown\", \"visible_basis\": null}, \"sex\": {\"confidence\": \"low\", \"value\": \"unknown\", \"visible_basis\": null}",
+      "pmp_review_status": "valid",
+      "scientific_name": null,
+      "status": "ok",
+      "usage_scores": {
+        "basic_identification": 24.0,
+        "confusion_learning": 39.0,
+        "field_observation": 76.0,
+        "indirect_evidence_learning": 92.0,
+        "morphology_learning": 78.0,
+        "species_card": 33.0
+      },
+      "visible_field_marks": [
+        {
+          "body_part": "feather",
+          "confidence": 0.9,
+          "feature": "distinctive white and black patterning of the primary/secondary feather",
+          "importance": "high",
+          "visibility": "high"
+        }
+      ]
+    },
+    {
+      "evidence_type": null,
+      "failure_reason": "schema_validation_failed",
+      "global_quality_score": null,
+      "limitations": [],
+      "media_key": "inaturalist::108408470",
+      "payload_excerpt": "{\"diagnostics\": {\"canonical_taxon_id\": \"taxon:birds:000022\", \"gemini_model\": \"gemini-3.1-flash-lite-preview\", \"media_id\": \"media:inaturalist:108408470\", \"parsed_json_available\": true, \"raw_model_output_excerpt\": \"{ \\\"schema_version\\\": \\\"pedagogical_media_profile.v1\\\", \\\"prompt_version\\\": \\\"pedagogical_media_profile_prompt.v1\\\", \\\"review_status\\\": \\",
+      "pmp_review_status": "failed",
+      "scientific_name": null,
+      "status": "pedagogical_media_profile_failed",
+      "usage_scores": {},
+      "visible_field_marks": []
+    },
+    {
+      "evidence_type": "whole_organism",
+      "failure_reason": null,
+      "global_quality_score": 67.0,
+      "limitations": [
+        "significant blur due to photography through window glass"
+      ],
+      "media_key": "inaturalist::100422597",
+      "payload_excerpt": "{\"biological_profile_visible\": {\"life_stage\": {\"confidence\": \"medium\", \"value\": \"adult\", \"visible_basis\": \"size and general plumage\"}, \"plumage_state\": {\"confidence\": \"low\", \"value\": \"unknown\", \"visible_basis\": null}, \"seasonal_state\": {\"confidence\": \"low\", \"value\": \"unknown\", \"visible_basis\": null}, \"sex\": {\"confidence\": \"low\", \"value\": \"unknown\",",
+      "pmp_review_status": "valid",
+      "scientific_name": null,
+      "status": "ok",
+      "usage_scores": {
+        "basic_identification": 70.0,
+        "confusion_learning": 73.0,
+        "field_observation": 74.0,
+        "indirect_evidence_learning": 0.0,
+        "morphology_learning": 63.0,
+        "species_card": 61.0
+      },
+      "visible_field_marks": [
+        {
+          "body_part": "neck",
+          "confidence": 0.8,
+          "feature": "long neck and heron shape",
+          "importance": "high",
+          "visibility": "medium"
+        }
+      ]
+    },
+    {
+      "evidence_type": "whole_organism",
+      "failure_reason": null,
+      "global_quality_score": 44.0,
+      "limitations": [
+        "subject is silhouetted and heavily obscured, making reliable identification challenging"
+      ],
+      "media_key": "inaturalist::101911464",
+      "payload_excerpt": "{\"biological_profile_visible\": {\"life_stage\": {\"confidence\": \"low\", \"value\": \"unknown\", \"visible_basis\": null}, \"plumage_state\": {\"confidence\": \"low\", \"value\": \"unknown\", \"visible_basis\": null}, \"seasonal_state\": {\"confidence\": \"low\", \"value\": \"unknown\", \"visible_basis\": null}, \"sex\": {\"confidence\": \"low\", \"value\": \"unknown\", \"visible_basis\": null}",
+      "pmp_review_status": "valid",
+      "scientific_name": null,
+      "status": "ok",
+      "usage_scores": {
+        "basic_identification": 37.0,
+        "confusion_learning": 48.0,
+        "field_observation": 61.0,
+        "indirect_evidence_learning": 0.0,
+        "morphology_learning": 37.0,
+        "species_card": 40.0
+      },
+      "visible_field_marks": [
+        {
+          "body_part": "whole_body",
+          "confidence": 0.3,
+          "feature": "general silhouette",
+          "importance": "low",
+          "visibility": "low"
+        }
+      ]
+    }
+  ],
+  "operational_metrics": {
+    "cost_estimate": null,
+    "latency_estimate": null,
+    "model_name_distribution": {
+      "gemini-3.1-flash-lite-preview": 116,
+      "none": 4
+    },
+    "prompt_version_distribution": {
+      "pedagogical_media_profile_prompt.v1": 120
+    },
+    "review_contract_version_distribution": {
+      "pedagogical_media_profile_v1": 120
+    }
+  },
+  "plausible_distributions": true,
+  "policy_legacy_metrics": {
+    "legacy_policy_rejection_count": null,
+    "qualification_none_count": 120,
+    "qualification_none_note": "qualification=None is expected for PMP outcomes after Sprint 5 and is not a PMP generation failure."
+  },
+  "run_executed": true,
+  "schema_version": "pedagogical_media_profile_v1_sprint6_snapshot_audit.v1",
+  "score_metrics": {
+    "average_global_quality_score": 72.62,
+    "average_usage_scores": {
+      "basic_identification": 63.66,
+      "confusion_learning": 63.29,
+      "field_observation": 78.97,
+      "indirect_evidence_learning": 9.51,
+      "morphology_learning": 64.57,
+      "species_card": 63.63
+    },
+    "high_indirect_evidence_valid_count": 7,
+    "low_basic_identification_valid_count": 39,
+    "score_min_max": {
+      "max": 100.0,
+      "min": 32.0
+    }
+  },
+  "snapshot_id": "palier1-be-birds-50taxa-run003-v11-baseline-sprint6-controlled-120",
+  "snapshot_root": "data/raw/inaturalist"
+}
