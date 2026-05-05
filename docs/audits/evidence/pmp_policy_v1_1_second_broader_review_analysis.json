@@ -1,0 +1,79 @@
+{
+  "analysis_version": "pmp_policy_v1_1_second_review_analysis.v1",
+  "run_date": "2026-05-05",
+  "decision": "READY_FOR_FIRST_PROFILED_CORPUS_CANDIDATE",
+  "total_rows": 80,
+  "reviewed_rows": 79,
+  "fill_rate": 0.988,
+  "summary": {
+    "total_rows": 80,
+    "reviewed_rows": 79,
+    "fill_rate": 0.988,
+    "accept_count": 74,
+    "too_strict_count": 4,
+    "too_permissive_count": 1,
+    "reject_count": 0,
+    "unclear_count": 0,
+    "fixed_count": 1,
+    "still_too_strict_count": 0,
+    "still_too_permissive_count": 0,
+    "regression_count": 0,
+    "accept_rate": 0.937,
+    "issue_distribution": {
+      "fixed": 1
+    }
+  },
+  "category_outcomes": {
+    "species_card_downgraded": {
+      "accept": 8,
+      "too_permissive": 1
+    },
+    "field_observation_borderline": {
+      "accept": 8
+    },
+    "species_card_eligible": {
+      "accept": 21
+    },
+    "stable_accepted_control": {
+      "accept": 36
+    },
+    "multiple_species_target_unclear": {
+      "accept": 4
+    },
+    "habitat_generic": {
+      "accept": 2
+    },
+    "same_species_multiple_individuals_ok": {
+      "accept": 5
+    },
+    "schema_false_negative": {
+      "too_strict": 4
+    },
+    "profile_failed_current": {
+      "too_strict": 4
+    },
+    "habitat_species_relevant": {
+      "accept": 1
+    },
+    "text_or_screenshot": {
+      "too_permissive": 1
+    }
+  },
+  "habitat_outcomes": {
+    "accept": 3
+  },
+  "species_card_outcomes": {
+    "accept": 29,
+    "too_permissive": 1
+  },
+  "target_taxon_outcomes": {
+    "accept": 4
+  },
+  "schema_outcomes": {
+    "too_strict": 4
+  },
+  "control_stability": {
+    "accept": 36
+  },
+  "decision_rationale": "Calibration patches validated; acceptable distribution of accept/edge cases."
+}

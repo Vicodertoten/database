@@ -1,0 +1,2515 @@
+{
+  "audit_version": "pmp_policy_v1_1_delta_audit.v1",
+  "run_date": "2026-05-05",
+  "decision": "READY_FOR_SECOND_REVIEW_SHEET",
+  "total_rows": 60,
+  "limitations": [],
+  "summary": {
+    "total_rows": 60,
+    "comparable_rows": 60,
+    "not_comparable_rows": 0,
+    "fully_stable_rows": 49,
+    "regression_rows": 0,
+    "calibration_downgrade_rows": 10,
+    "improvement_rows": 0,
+    "changed_neutral_rows": 1,
+    "schema_false_negative_fixed": 0,
+    "species_card_downgraded": 9,
+    "habitat_indirect_downgraded": 2,
+    "human_accept_still_valid": 50,
+    "human_too_permissive_now_downgraded": 1,
+    "human_too_strict_now_improved": 0
+  },
+  "row_results": [
+    {
+      "review_item_id": "pmp-policy-review-0138",
+      "media_key": "inaturalist::14306882",
+      "scientific_name": "Podiceps cristatus",
+      "evidence_type": "",
+      "human_judgment": "too_strict",
+      "human_issue_category": "schema_false_negative",
+      "before_policy_status": "profile_failed",
+      "before_recommended_uses": [],
+      "before_borderline_uses": [],
+      "after_policy_status": "profile_failed",
+      "after_recommended_uses": null,
+      "after_borderline_uses": null,
+      "status_change": "unchanged",
+      "species_card_change": "unchanged",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0283",
+      "media_key": "inaturalist::264553506",
+      "scientific_name": "Podiceps cristatus",
+      "evidence_type": "",
+      "human_judgment": "too_strict",
+      "human_issue_category": "schema_false_negative",
+      "before_policy_status": "profile_failed",
+      "before_recommended_uses": [],
+      "before_borderline_uses": [],
+      "after_policy_status": "profile_failed",
+      "after_recommended_uses": null,
+      "after_borderline_uses": null,
+      "status_change": "unchanged",
+      "species_card_change": "unchanged",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0284",
+      "media_key": "inaturalist::264553526",
+      "scientific_name": "Larus argentatus",
+      "evidence_type": "",
+      "human_judgment": "too_strict",
+      "human_issue_category": "schema_false_negative",
+      "before_policy_status": "profile_failed",
+      "before_recommended_uses": [],
+      "before_borderline_uses": [],
+      "after_policy_status": "profile_failed",
+      "after_recommended_uses": null,
+      "after_borderline_uses": null,
+      "status_change": "unchanged",
+      "species_card_change": "unchanged",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0213",
+      "media_key": "inaturalist::197128124",
+      "scientific_name": "Coccothraustes coccothraustes",
+      "evidence_type": "",
+      "human_judgment": "blank",
+      "human_issue_category": "schema_false_negative",
+      "before_policy_status": "profile_failed",
+      "before_recommended_uses": [],
+      "before_borderline_uses": [],
+      "after_policy_status": "profile_failed",
+      "after_recommended_uses": null,
+      "after_borderline_uses": null,
+      "status_change": "unchanged",
+      "species_card_change": "unchanged",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0335",
+      "media_key": "inaturalist::30487921",
+      "scientific_name": "Phoenicurus ochruros",
+      "evidence_type": "",
+      "human_judgment": "blank",
+      "human_issue_category": "pre_ai_borderline",
+      "before_policy_status": "pre_ai_rejected",
+      "before_recommended_uses": [],
+      "before_borderline_uses": [],
+      "after_policy_status": "pre_ai_rejected",
+      "after_recommended_uses": null,
+      "after_borderline_uses": null,
+      "status_change": "unchanged",
+      "species_card_change": "unchanged",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0157",
+      "media_key": "inaturalist::155810806",
+      "scientific_name": "Falco peregrinus",
+      "evidence_type": "multiple_organisms",
+      "human_judgment": "too_strict",
+      "human_issue_category": "same_species_multiple_individuals_ok",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "field_observation"
+      ],
+      "before_borderline_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "indirect_evidence_learning",
+        "morphology_learning"
+      ],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": [
+        "field_observation"
+      ],
+      "after_borderline_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "indirect_evidence_learning",
+        "morphology_learning"
+      ],
+      "status_change": "unchanged",
+      "species_card_change": "unchanged",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0148",
+      "media_key": "inaturalist::150308702",
+      "scientific_name": "Cygnus olor",
+      "evidence_type": "multiple_organisms",
+      "human_judgment": "accept",
+      "human_issue_category": "multiple_species_target_unclear",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "field_observation",
+        "morphology_learning"
+      ],
+      "before_borderline_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "indirect_evidence_learning"
+      ],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": [
+        "field_observation",
+        "morphology_learning"
+      ],
+      "after_borderline_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "indirect_evidence_learning"
+      ],
+      "status_change": "unchanged",
+      "species_card_change": "unchanged",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0044",
+      "media_key": "inaturalist::112697174",
+      "scientific_name": "Anser anser",
+      "evidence_type": "multiple_organisms",
+      "human_judgment": "accept",
+      "human_issue_category": "multiple_species_target_unclear",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "field_observation"
+      ],
+      "before_borderline_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "indirect_evidence_learning",
+        "morphology_learning"
+      ],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": [
+        "field_observation"
+      ],
+      "after_borderline_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "indirect_evidence_learning",
+        "morphology_learning"
+      ],
+      "status_change": "unchanged",
+      "species_card_change": "unchanged",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0209",
+      "media_key": "inaturalist::194623316",
+      "scientific_name": "Turdus philomelos",
+      "evidence_type": "dead_organism",
+      "human_judgment": "accept",
+      "human_issue_category": "policy_accept",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "field_observation",
+        "indirect_evidence_learning",
+        "morphology_learning"
+      ],
+      "before_borderline_uses": [
+        "confusion_learning"
+      ],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": [
+        "field_observation",
+        "indirect_evidence_learning",
+        "morphology_learning"
+      ],
+      "after_borderline_uses": [
+        "confusion_learning"
+      ],
+      "status_change": "unchanged",
+      "species_card_change": "unchanged",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0229",
+      "media_key": "inaturalist::227858760",
+      "scientific_name": "Hirundo rustica rustica",
+      "evidence_type": "dead_organism",
+      "human_judgment": "accept",
+      "human_issue_category": "policy_accept",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "field_observation",
+        "indirect_evidence_learning",
+        "morphology_learning"
+      ],
+      "before_borderline_uses": [],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": [
+        "field_observation",
+        "indirect_evidence_learning",
+        "morphology_learning"
+      ],
+      "after_borderline_uses": null,
+      "status_change": "unchanged",
+      "species_card_change": "unchanged",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0208",
+      "media_key": "inaturalist::192799652",
+      "scientific_name": "Cygnus olor",
+      "evidence_type": "whole_organism",
+      "human_judgment": "accept",
+      "human_issue_category": "policy_accept",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "field_observation",
+        "morphology_learning",
+        "species_card"
+      ],
+      "before_borderline_uses": [],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "field_observation",
+        "morphology_learning",
+        "species_card"
+      ],
+      "after_borderline_uses": null,
+      "status_change": "unchanged",
+      "species_card_change": "unchanged",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0280",
+      "media_key": "inaturalist::26274394",
+      "scientific_name": "Fulica atra",
+      "evidence_type": "whole_organism",
+      "human_judgment": "accept",
+      "human_issue_category": "policy_accept",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "field_observation",
+        "morphology_learning",
+        "species_card"
+      ],
+      "before_borderline_uses": [],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "field_observation",
+        "morphology_learning",
+        "species_card"
+      ],
+      "after_borderline_uses": null,
+      "status_change": "unchanged",
+      "species_card_change": "unchanged",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0015",
+      "media_key": "inaturalist::108344756",
+      "scientific_name": "Cygnus olor",
+      "evidence_type": "whole_organism",
+      "human_judgment": "accept",
+      "human_issue_category": "policy_accept",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "field_observation",
+        "morphology_learning",
+        "species_card"
+      ],
+      "before_borderline_uses": [],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "field_observation",
+        "morphology_learning",
+        "species_card"
+      ],
+      "after_borderline_uses": null,
+      "status_change": "unchanged",
+      "species_card_change": "unchanged",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0345",
+      "media_key": "inaturalist::32181678",
+      "scientific_name": "Phalacrocorax carbo",
+      "evidence_type": "whole_organism",
+      "human_judgment": "accept",
+      "human_issue_category": "policy_accept",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "field_observation",
+        "morphology_learning",
+        "species_card"
+      ],
+      "before_borderline_uses": [],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "field_observation",
+        "morphology_learning",
+        "species_card"
+      ],
+      "after_borderline_uses": null,
+      "status_change": "unchanged",
+      "species_card_change": "unchanged",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0149",
+      "media_key": "inaturalist::150309125",
+      "scientific_name": "Anas platyrhynchos",
+      "evidence_type": "whole_organism",
+      "human_judgment": "accept",
+      "human_issue_category": "policy_accept",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "field_observation",
+        "morphology_learning",
+        "species_card"
+      ],
+      "before_borderline_uses": [],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "field_observation",
+        "morphology_learning",
+        "species_card"
+      ],
+      "after_borderline_uses": null,
+      "status_change": "unchanged",
+      "species_card_change": "unchanged",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0326",
+      "media_key": "inaturalist::29903211",
+      "scientific_name": "Larus argentatus",
+      "evidence_type": "whole_organism",
+      "human_judgment": "accept",
+      "human_issue_category": "policy_accept",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "field_observation",
+        "species_card"
+      ],
+      "before_borderline_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "morphology_learning"
+      ],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": [
+        "field_observation"
+      ],
+      "after_borderline_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "morphology_learning"
+      ],
+      "status_change": "unchanged",
+      "species_card_change": "downgraded",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [
+          "species_card"
+        ],
+        "intentional_lost_uses": [
+          "species_card"
+        ],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": true,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0332",
+      "media_key": "inaturalist::30207516",
+      "scientific_name": "Fulica atra",
+      "evidence_type": "whole_organism",
+      "human_judgment": "accept",
+      "human_issue_category": "policy_accept",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [],
+      "before_borderline_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "field_observation",
+        "morphology_learning"
+      ],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": null,
+      "after_borderline_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "field_observation",
+        "morphology_learning"
+      ],
+      "status_change": "unchanged",
+      "species_card_change": "unchanged",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0008",
+      "media_key": "inaturalist::103442341",
+      "scientific_name": "Ardea cinerea",
+      "evidence_type": "whole_organism",
+      "human_judgment": "accept",
+      "human_issue_category": "policy_accept",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "field_observation"
+      ],
+      "before_borderline_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "morphology_learning",
+        "species_card"
+      ],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": [
+        "field_observation"
+      ],
+      "after_borderline_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "morphology_learning"
+      ],
+      "status_change": "unchanged",
+      "species_card_change": "borderline_removed",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [
+          "species_card"
+        ],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0123",
+      "media_key": "inaturalist::134613679",
+      "scientific_name": "Anas platyrhynchos",
+      "evidence_type": "multiple_organisms",
+      "human_judgment": "accept",
+      "human_issue_category": "same_species_multiple_individuals_ok",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "field_observation",
+        "morphology_learning"
+      ],
+      "before_borderline_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "indirect_evidence_learning"
+      ],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": [
+        "field_observation",
+        "morphology_learning"
+      ],
+      "after_borderline_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "indirect_evidence_learning"
+      ],
+      "status_change": "unchanged",
+      "species_card_change": "unchanged",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0299",
+      "media_key": "inaturalist::276197985",
+      "scientific_name": "Motacilla alba",
+      "evidence_type": "whole_organism",
+      "human_judgment": "accept",
+      "human_issue_category": "policy_accept",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "confusion_learning"
+      ],
+      "before_borderline_uses": [
+        "basic_identification",
+        "field_observation",
+        "morphology_learning",
+        "species_card"
+      ],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": [
+        "confusion_learning"
+      ],
+      "after_borderline_uses": [
+        "basic_identification",
+        "field_observation",
+        "morphology_learning"
+      ],
+      "status_change": "unchanged",
+      "species_card_change": "borderline_removed",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [
+          "species_card"
+        ],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0176",
+      "media_key": "inaturalist::168655956",
+      "scientific_name": "Cygnus olor",
+      "evidence_type": "multiple_organisms",
+      "human_judgment": "accept",
+      "human_issue_category": "multiple_species_target_unclear",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "field_observation"
+      ],
+      "before_borderline_uses": [
+        "confusion_learning",
+        "indirect_evidence_learning",
+        "morphology_learning"
+      ],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": [
+        "field_observation"
+      ],
+      "after_borderline_uses": [
+        "confusion_learning",
+        "indirect_evidence_learning",
+        "morphology_learning"
+      ],
+      "status_change": "unchanged",
+      "species_card_change": "unchanged",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0219",
+      "media_key": "inaturalist::204513050",
+      "scientific_name": "Hirundo rustica",
+      "evidence_type": "nest",
+      "human_judgment": "accept",
+      "human_issue_category": "policy_accept",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "field_observation",
+        "indirect_evidence_learning"
+      ],
+      "before_borderline_uses": [],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": [
+        "field_observation",
+        "indirect_evidence_learning"
+      ],
+      "after_borderline_uses": null,
+      "status_change": "unchanged",
+      "species_card_change": "unchanged",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0188",
+      "media_key": "inaturalist::178993834",
+      "scientific_name": "Phalacrocorax carbo",
+      "evidence_type": "whole_organism",
+      "human_judgment": "too_strict",
+      "human_issue_category": "field_observation_too_permissive",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "field_observation"
+      ],
+      "before_borderline_uses": [
+        "confusion_learning",
+        "morphology_learning",
+        "species_card"
+      ],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": [
+        "field_observation"
+      ],
+      "after_borderline_uses": [
+        "confusion_learning",
+        "morphology_learning"
+      ],
+      "status_change": "unchanged",
+      "species_card_change": "borderline_removed",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [
+          "species_card"
+        ],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0106",
+      "media_key": "inaturalist::129884140",
+      "scientific_name": "Sturnus vulgaris",
+      "evidence_type": "whole_organism",
+      "human_judgment": "accept",
+      "human_issue_category": "policy_accept",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "field_observation"
+      ],
+      "before_borderline_uses": [
+        "confusion_learning",
+        "morphology_learning",
+        "species_card"
+      ],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": [
+        "field_observation"
+      ],
+      "after_borderline_uses": [
+        "confusion_learning",
+        "morphology_learning"
+      ],
+      "status_change": "unchanged",
+      "species_card_change": "borderline_removed",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [
+          "species_card"
+        ],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0097",
+      "media_key": "inaturalist::12710696",
+      "scientific_name": "Cyanistes caeruleus",
+      "evidence_type": "multiple_organisms",
+      "human_judgment": "unclear",
+      "human_issue_category": "multiple_species_target_unclear",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "field_observation",
+        "morphology_learning"
+      ],
+      "before_borderline_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "indirect_evidence_learning"
+      ],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": [
+        "field_observation",
+        "morphology_learning"
+      ],
+      "after_borderline_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "indirect_evidence_learning"
+      ],
+      "status_change": "unchanged",
+      "species_card_change": "unchanged",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0398",
+      "media_key": "inaturalist::402891504",
+      "scientific_name": "Strix aluco",
+      "evidence_type": "whole_organism",
+      "human_judgment": "too_permissive",
+      "human_issue_category": "text_overlay_or_answer_visible",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "field_observation",
+        "morphology_learning",
+        "species_card"
+      ],
+      "before_borderline_uses": [],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": null,
+      "after_borderline_uses": null,
+      "status_change": "unchanged",
+      "species_card_change": "downgraded",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [
+          "basic_identification",
+          "confusion_learning",
+          "field_observation",
+          "morphology_learning",
+          "species_card"
+        ],
+        "intentional_lost_uses": [
+          "species_card"
+        ],
+        "truly_lost_uses": [
+          "basic_identification",
+          "confusion_learning",
+          "field_observation",
+          "morphology_learning"
+        ],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0394",
+      "media_key": "inaturalist::396591721",
+      "scientific_name": "Egretta garzetta",
+      "evidence_type": "whole_organism",
+      "human_judgment": "accept",
+      "human_issue_category": "policy_accept",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "field_observation",
+        "species_card"
+      ],
+      "before_borderline_uses": [
+        "morphology_learning"
+      ],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "field_observation"
+      ],
+      "after_borderline_uses": [
+        "morphology_learning",
+        "species_card"
+      ],
+      "status_change": "unchanged",
+      "species_card_change": "downgraded",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [
+          "species_card"
+        ],
+        "intentional_lost_uses": [
+          "species_card"
+        ],
+        "truly_lost_uses": [],
+        "gained_borderline": [
+          "species_card"
+        ],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": true,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0235",
+      "media_key": "inaturalist::235724727",
+      "scientific_name": "Motacilla alba",
+      "evidence_type": "whole_organism",
+      "human_judgment": "accept",
+      "human_issue_category": "policy_accept",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "field_observation",
+        "morphology_learning",
+        "species_card"
+      ],
+      "before_borderline_uses": [],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "field_observation",
+        "morphology_learning",
+        "species_card"
+      ],
+      "after_borderline_uses": null,
+      "status_change": "unchanged",
+      "species_card_change": "unchanged",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0194",
+      "media_key": "inaturalist::181534756",
+      "scientific_name": "Ardea cinerea",
+      "evidence_type": "whole_organism",
+      "human_judgment": "accept",
+      "human_issue_category": "policy_accept",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "field_observation",
+        "morphology_learning",
+        "species_card"
+      ],
+      "before_borderline_uses": [],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "field_observation",
+        "morphology_learning",
+        "species_card"
+      ],
+      "after_borderline_uses": null,
+      "status_change": "unchanged",
+      "species_card_change": "unchanged",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0376",
+      "media_key": "inaturalist::368841977",
+      "scientific_name": "Riparia riparia",
+      "evidence_type": "multiple_organisms",
+      "human_judgment": "accept",
+      "human_issue_category": "same_species_multiple_individuals_ok",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "field_observation",
+        "morphology_learning"
+      ],
+      "before_borderline_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "indirect_evidence_learning"
+      ],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": [
+        "field_observation",
+        "morphology_learning"
+      ],
+      "after_borderline_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "indirect_evidence_learning"
+      ],
+      "status_change": "unchanged",
+      "species_card_change": "unchanged",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0029",
+      "media_key": "inaturalist::109294501",
+      "scientific_name": "Turdus merula",
+      "evidence_type": "whole_organism",
+      "human_judgment": "accept",
+      "human_issue_category": "policy_accept",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [],
+      "before_borderline_uses": [
+        "confusion_learning",
+        "field_observation",
+        "morphology_learning"
+      ],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": null,
+      "after_borderline_uses": [
+        "confusion_learning",
+        "field_observation",
+        "morphology_learning"
+      ],
+      "status_change": "unchanged",
+      "species_card_change": "unchanged",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0251",
+      "media_key": "inaturalist::250224759",
+      "scientific_name": "Fringilla coelebs",
+      "evidence_type": "whole_organism",
+      "human_judgment": "accept",
+      "human_issue_category": "policy_accept",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [],
+      "before_borderline_uses": [
+        "confusion_learning",
+        "field_observation",
+        "morphology_learning"
+      ],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": null,
+      "after_borderline_uses": [
+        "confusion_learning",
+        "field_observation",
+        "morphology_learning"
+      ],
+      "status_change": "unchanged",
+      "species_card_change": "unchanged",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0242",
+      "media_key": "inaturalist::237495251",
+      "scientific_name": "Sturnus vulgaris",
+      "evidence_type": "multiple_organisms",
+      "human_judgment": "accept",
+      "human_issue_category": "same_species_multiple_individuals_ok",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "field_observation"
+      ],
+      "before_borderline_uses": [
+        "confusion_learning",
+        "indirect_evidence_learning",
+        "morphology_learning"
+      ],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": [
+        "field_observation"
+      ],
+      "after_borderline_uses": [
+        "confusion_learning",
+        "indirect_evidence_learning",
+        "morphology_learning"
+      ],
+      "status_change": "unchanged",
+      "species_card_change": "unchanged",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0052",
+      "media_key": "inaturalist::113198384",
+      "scientific_name": "Passer domesticus",
+      "evidence_type": "whole_organism",
+      "human_judgment": "accept",
+      "human_issue_category": "policy_accept",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "field_observation",
+        "morphology_learning",
+        "species_card"
+      ],
+      "before_borderline_uses": [],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "field_observation",
+        "morphology_learning",
+        "species_card"
+      ],
+      "after_borderline_uses": null,
+      "status_change": "unchanged",
+      "species_card_change": "unchanged",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0302",
+      "media_key": "inaturalist::27766970",
+      "scientific_name": "Picus viridis",
+      "evidence_type": "whole_organism",
+      "human_judgment": "accept",
+      "human_issue_category": "policy_accept",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "field_observation",
+        "morphology_learning",
+        "species_card"
+      ],
+      "before_borderline_uses": [],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "field_observation",
+        "morphology_learning",
+        "species_card"
+      ],
+      "after_borderline_uses": null,
+      "status_change": "unchanged",
+      "species_card_change": "unchanged",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0378",
+      "media_key": "inaturalist::371543431",
+      "scientific_name": "Cyanistes caeruleus",
+      "evidence_type": "whole_organism",
+      "human_judgment": "accept",
+      "human_issue_category": "policy_accept",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "field_observation",
+        "morphology_learning",
+        "species_card"
+      ],
+      "before_borderline_uses": [],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "field_observation",
+        "morphology_learning",
+        "species_card"
+      ],
+      "after_borderline_uses": null,
+      "status_change": "unchanged",
+      "species_card_change": "unchanged",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0099",
+      "media_key": "inaturalist::127180953",
+      "scientific_name": "Larus michahellis",
+      "evidence_type": "whole_organism",
+      "human_judgment": "accept",
+      "human_issue_category": "policy_accept",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "field_observation",
+        "morphology_learning",
+        "species_card"
+      ],
+      "before_borderline_uses": [],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "field_observation",
+        "morphology_learning",
+        "species_card"
+      ],
+      "after_borderline_uses": null,
+      "status_change": "unchanged",
+      "species_card_change": "unchanged",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0207",
+      "media_key": "inaturalist::191535445",
+      "scientific_name": "Columba palumbus",
+      "evidence_type": "feather",
+      "human_judgment": "accept",
+      "human_issue_category": "policy_accept",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "field_observation",
+        "indirect_evidence_learning",
+        "morphology_learning"
+      ],
+      "before_borderline_uses": [],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": [
+        "field_observation",
+        "indirect_evidence_learning",
+        "morphology_learning"
+      ],
+      "after_borderline_uses": null,
+      "status_change": "unchanged",
+      "species_card_change": "unchanged",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0153",
+      "media_key": "inaturalist::152039289",
+      "scientific_name": "Passer domesticus",
+      "evidence_type": "dead_organism",
+      "human_judgment": "accept",
+      "human_issue_category": "policy_accept",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "field_observation",
+        "indirect_evidence_learning"
+      ],
+      "before_borderline_uses": [
+        "confusion_learning",
+        "morphology_learning"
+      ],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": [
+        "field_observation",
+        "indirect_evidence_learning"
+      ],
+      "after_borderline_uses": [
+        "confusion_learning",
+        "morphology_learning"
+      ],
+      "status_change": "unchanged",
+      "species_card_change": "unchanged",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0351",
+      "media_key": "inaturalist::34441531",
+      "scientific_name": "Hirundo rustica",
+      "evidence_type": "nest",
+      "human_judgment": "accept",
+      "human_issue_category": "policy_accept",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "field_observation",
+        "indirect_evidence_learning"
+      ],
+      "before_borderline_uses": [],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": [
+        "field_observation",
+        "indirect_evidence_learning"
+      ],
+      "after_borderline_uses": null,
+      "status_change": "unchanged",
+      "species_card_change": "unchanged",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0395",
+      "media_key": "inaturalist::398949252",
+      "scientific_name": "Sylvia atricapilla",
+      "evidence_type": "dead_organism",
+      "human_judgment": "accept",
+      "human_issue_category": "policy_accept",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "field_observation",
+        "indirect_evidence_learning",
+        "morphology_learning"
+      ],
+      "before_borderline_uses": [
+        "confusion_learning"
+      ],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": [
+        "field_observation",
+        "indirect_evidence_learning",
+        "morphology_learning"
+      ],
+      "after_borderline_uses": [
+        "confusion_learning"
+      ],
+      "status_change": "unchanged",
+      "species_card_change": "unchanged",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0220",
+      "media_key": "inaturalist::205550561",
+      "scientific_name": "Turdus philomelos",
+      "evidence_type": "dead_organism",
+      "human_judgment": "accept",
+      "human_issue_category": "policy_accept",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "field_observation",
+        "indirect_evidence_learning",
+        "morphology_learning"
+      ],
+      "before_borderline_uses": [
+        "confusion_learning"
+      ],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": [
+        "field_observation",
+        "indirect_evidence_learning",
+        "morphology_learning"
+      ],
+      "after_borderline_uses": [
+        "confusion_learning"
+      ],
+      "status_change": "unchanged",
+      "species_card_change": "unchanged",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0164",
+      "media_key": "inaturalist::158837433",
+      "scientific_name": "Columba palumbus",
+      "evidence_type": "feather",
+      "human_judgment": "accept",
+      "human_issue_category": "policy_accept",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "field_observation",
+        "indirect_evidence_learning"
+      ],
+      "before_borderline_uses": [
+        "morphology_learning"
+      ],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": [
+        "field_observation",
+        "indirect_evidence_learning"
+      ],
+      "after_borderline_uses": [
+        "morphology_learning"
+      ],
+      "status_change": "unchanged",
+      "species_card_change": "unchanged",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0252",
+      "media_key": "inaturalist::252411697",
+      "scientific_name": "Dryocopus martius",
+      "evidence_type": "habitat",
+      "human_judgment": "accept",
+      "human_issue_category": "policy_accept",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "field_observation",
+        "indirect_evidence_learning"
+      ],
+      "before_borderline_uses": [],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": [
+        "field_observation"
+      ],
+      "after_borderline_uses": [
+        "indirect_evidence_learning"
+      ],
+      "status_change": "unchanged",
+      "species_card_change": "unchanged",
+      "habitat_change": "indirect_evidence_downgraded",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [
+          "indirect_evidence_learning"
+        ],
+        "intentional_lost_uses": [
+          "indirect_evidence_learning"
+        ],
+        "truly_lost_uses": [],
+        "gained_borderline": [
+          "indirect_evidence_learning"
+        ],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": true,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0195",
+      "media_key": "inaturalist::18272669",
+      "scientific_name": "Larus michahellis",
+      "evidence_type": "multiple_organisms",
+      "human_judgment": "accept",
+      "human_issue_category": "same_species_multiple_individuals_ok",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "field_observation",
+        "morphology_learning"
+      ],
+      "before_borderline_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "indirect_evidence_learning"
+      ],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": [
+        "field_observation",
+        "morphology_learning"
+      ],
+      "after_borderline_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "indirect_evidence_learning"
+      ],
+      "status_change": "unchanged",
+      "species_card_change": "unchanged",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0021",
+      "media_key": "inaturalist::108990786",
+      "scientific_name": "Parus major",
+      "evidence_type": "nest",
+      "human_judgment": "accept",
+      "human_issue_category": "policy_accept",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "indirect_evidence_learning"
+      ],
+      "before_borderline_uses": [
+        "field_observation"
+      ],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": [
+        "indirect_evidence_learning"
+      ],
+      "after_borderline_uses": [
+        "field_observation"
+      ],
+      "status_change": "unchanged",
+      "species_card_change": "unchanged",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0126",
+      "media_key": "inaturalist::13785358",
+      "scientific_name": "Turdus philomelos",
+      "evidence_type": "partial_organism",
+      "human_judgment": "accept",
+      "human_issue_category": "policy_accept",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "field_observation"
+      ],
+      "before_borderline_uses": [
+        "confusion_learning",
+        "indirect_evidence_learning",
+        "morphology_learning"
+      ],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": [
+        "field_observation"
+      ],
+      "after_borderline_uses": [
+        "confusion_learning",
+        "indirect_evidence_learning",
+        "morphology_learning"
+      ],
+      "status_change": "unchanged",
+      "species_card_change": "unchanged",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0253",
+      "media_key": "inaturalist::254172262",
+      "scientific_name": "Falco peregrinus",
+      "evidence_type": "unknown",
+      "human_judgment": "unclear",
+      "human_issue_category": "rare_model_subject_miss",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [],
+      "before_borderline_uses": [],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": null,
+      "after_borderline_uses": null,
+      "status_change": "unchanged",
+      "species_card_change": "unchanged",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0340",
+      "media_key": "inaturalist::31534282",
+      "scientific_name": "Coloeus monedula",
+      "evidence_type": "whole_organism",
+      "human_judgment": "accept",
+      "human_issue_category": "species_card_too_permissive",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "field_observation",
+        "species_card"
+      ],
+      "before_borderline_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "morphology_learning"
+      ],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": [
+        "field_observation"
+      ],
+      "after_borderline_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "morphology_learning"
+      ],
+      "status_change": "unchanged",
+      "species_card_change": "downgraded",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [
+          "species_card"
+        ],
+        "intentional_lost_uses": [
+          "species_card"
+        ],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": true,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0181",
+      "media_key": "inaturalist::174094536",
+      "scientific_name": "Pica pica",
+      "evidence_type": "whole_organism",
+      "human_judgment": "accept",
+      "human_issue_category": "policy_accept",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "field_observation",
+        "morphology_learning",
+        "species_card"
+      ],
+      "before_borderline_uses": [],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "field_observation",
+        "morphology_learning",
+        "species_card"
+      ],
+      "after_borderline_uses": null,
+      "status_change": "unchanged",
+      "species_card_change": "unchanged",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0092",
+      "media_key": "inaturalist::12496624",
+      "scientific_name": "Columba palumbus",
+      "evidence_type": "whole_organism",
+      "human_judgment": "accept",
+      "human_issue_category": "policy_accept",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "field_observation",
+        "morphology_learning",
+        "species_card"
+      ],
+      "before_borderline_uses": [],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "field_observation",
+        "morphology_learning",
+        "species_card"
+      ],
+      "after_borderline_uses": null,
+      "status_change": "unchanged",
+      "species_card_change": "unchanged",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0136",
+      "media_key": "inaturalist::141142367",
+      "scientific_name": "Dendrocopos major",
+      "evidence_type": "whole_organism",
+      "human_judgment": "accept",
+      "human_issue_category": "policy_accept",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "confusion_learning",
+        "field_observation"
+      ],
+      "before_borderline_uses": [
+        "basic_identification",
+        "morphology_learning",
+        "species_card"
+      ],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": [
+        "confusion_learning",
+        "field_observation"
+      ],
+      "after_borderline_uses": [
+        "basic_identification",
+        "morphology_learning"
+      ],
+      "status_change": "unchanged",
+      "species_card_change": "borderline_removed",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [
+          "species_card"
+        ],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0006",
+      "media_key": "inaturalist::10333212",
+      "scientific_name": "Accipiter nisus",
+      "evidence_type": "whole_organism",
+      "human_judgment": "accept",
+      "human_issue_category": "policy_accept",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "basic_identification",
+        "field_observation",
+        "morphology_learning",
+        "species_card"
+      ],
+      "before_borderline_uses": [
+        "confusion_learning"
+      ],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": [
+        "basic_identification",
+        "field_observation",
+        "morphology_learning"
+      ],
+      "after_borderline_uses": [
+        "confusion_learning",
+        "species_card"
+      ],
+      "status_change": "unchanged",
+      "species_card_change": "downgraded",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [
+          "species_card"
+        ],
+        "intentional_lost_uses": [
+          "species_card"
+        ],
+        "truly_lost_uses": [],
+        "gained_borderline": [
+          "species_card"
+        ],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": true,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0120",
+      "media_key": "inaturalist::134612467",
+      "scientific_name": "Turdus philomelos",
+      "evidence_type": "whole_organism",
+      "human_judgment": "accept",
+      "human_issue_category": "policy_accept",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "field_observation",
+        "species_card"
+      ],
+      "before_borderline_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "morphology_learning"
+      ],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": [
+        "field_observation"
+      ],
+      "after_borderline_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "morphology_learning"
+      ],
+      "status_change": "unchanged",
+      "species_card_change": "downgraded",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [
+          "species_card"
+        ],
+        "intentional_lost_uses": [
+          "species_card"
+        ],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": true,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0224",
+      "media_key": "inaturalist::217458596",
+      "scientific_name": "Turdus philomelos",
+      "evidence_type": "dead_organism",
+      "human_judgment": "accept",
+      "human_issue_category": "policy_accept",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "field_observation",
+        "indirect_evidence_learning",
+        "morphology_learning"
+      ],
+      "before_borderline_uses": [
+        "confusion_learning"
+      ],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": [
+        "field_observation",
+        "indirect_evidence_learning",
+        "morphology_learning"
+      ],
+      "after_borderline_uses": [
+        "confusion_learning"
+      ],
+      "status_change": "unchanged",
+      "species_card_change": "unchanged",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0156",
+      "media_key": "inaturalist::153104665",
+      "scientific_name": "Athene noctua",
+      "evidence_type": "whole_organism",
+      "human_judgment": "accept",
+      "human_issue_category": "policy_accept",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "basic_identification",
+        "field_observation",
+        "morphology_learning",
+        "species_card"
+      ],
+      "before_borderline_uses": [
+        "confusion_learning"
+      ],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": [
+        "basic_identification",
+        "field_observation",
+        "morphology_learning"
+      ],
+      "after_borderline_uses": [
+        "confusion_learning",
+        "species_card"
+      ],
+      "status_change": "unchanged",
+      "species_card_change": "downgraded",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [
+          "species_card"
+        ],
+        "intentional_lost_uses": [
+          "species_card"
+        ],
+        "truly_lost_uses": [],
+        "gained_borderline": [
+          "species_card"
+        ],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": true,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0072",
+      "media_key": "inaturalist::12159188",
+      "scientific_name": "Sturnus vulgaris",
+      "evidence_type": "habitat",
+      "human_judgment": "accept",
+      "human_issue_category": "habitat_too_permissive",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "indirect_evidence_learning"
+      ],
+      "before_borderline_uses": [],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": null,
+      "after_borderline_uses": null,
+      "status_change": "unchanged",
+      "species_card_change": "unchanged",
+      "habitat_change": "indirect_evidence_downgraded",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [
+          "indirect_evidence_learning"
+        ],
+        "intentional_lost_uses": [
+          "indirect_evidence_learning"
+        ],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": true,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0386",
+      "media_key": "inaturalist::382696152",
+      "scientific_name": "Apus apus",
+      "evidence_type": "whole_organism",
+      "human_judgment": "accept",
+      "human_issue_category": "policy_accept",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "field_observation",
+        "species_card"
+      ],
+      "before_borderline_uses": [
+        "morphology_learning"
+      ],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "field_observation"
+      ],
+      "after_borderline_uses": [
+        "morphology_learning",
+        "species_card"
+      ],
+      "status_change": "unchanged",
+      "species_card_change": "downgraded",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [
+          "species_card"
+        ],
+        "intentional_lost_uses": [
+          "species_card"
+        ],
+        "truly_lost_uses": [],
+        "gained_borderline": [
+          "species_card"
+        ],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": true,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0070",
+      "media_key": "inaturalist::120221697",
+      "scientific_name": "Hirundo rustica",
+      "evidence_type": "whole_organism",
+      "human_judgment": "accept",
+      "human_issue_category": "policy_accept",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [],
+      "before_borderline_uses": [
+        "confusion_learning",
+        "field_observation",
+        "morphology_learning"
+      ],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": null,
+      "after_borderline_uses": [
+        "confusion_learning",
+        "field_observation",
+        "morphology_learning"
+      ],
+      "status_change": "unchanged",
+      "species_card_change": "unchanged",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [],
+        "intentional_lost_uses": [],
+        "truly_lost_uses": [],
+        "gained_borderline": [],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": false,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    },
+    {
+      "review_item_id": "pmp-policy-review-0017",
+      "media_key": "inaturalist::108788210",
+      "scientific_name": "Turdus philomelos",
+      "evidence_type": "whole_organism",
+      "human_judgment": "accept",
+      "human_issue_category": "policy_accept",
+      "before_policy_status": "profile_valid",
+      "before_recommended_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "field_observation",
+        "species_card"
+      ],
+      "before_borderline_uses": [
+        "morphology_learning"
+      ],
+      "after_policy_status": "profile_valid",
+      "after_recommended_uses": [
+        "basic_identification",
+        "confusion_learning",
+        "field_observation"
+      ],
+      "after_borderline_uses": [
+        "morphology_learning",
+        "species_card"
+      ],
+      "status_change": "unchanged",
+      "species_card_change": "downgraded",
+      "habitat_change": "n/a",
+      "usage_comparison": {
+        "gained_uses": [],
+        "lost_uses": [
+          "species_card"
+        ],
+        "intentional_lost_uses": [
+          "species_card"
+        ],
+        "truly_lost_uses": [],
+        "gained_borderline": [
+          "species_card"
+        ],
+        "lost_borderline": [],
+        "is_regression": false,
+        "is_calibration_downgrade": true,
+        "is_improvement": false
+      },
+      "compute_error": null,
+      "comparable": true
+    }
+  ]
+}
