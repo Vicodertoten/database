@@ -1,0 +1,36 @@
+{
+  "schema_version": "sprint14b_final_runtime_handoff_readiness_v1",
+  "run_date": "2026-05-05",
+  "decision": "READY_FOR_RUNTIME_CONTRACTS_WITH_WARNINGS",
+  "names_gate": {
+    "status": "pass_with_warnings",
+    "plan_hash": "8adeed82edfd168cd560740820b45678cca1f362e1ef8d85502d33d98821fbe1",
+    "observed_safe_target_count": 32,
+    "contractual_minimum": 30,
+    "safe_target_source": "localized_name_apply_plan_v1.json"
+  },
+  "distractor_integrity": {
+    "status": "INSUFFICIENT_DISTRACTOR_COVERAGE",
+    "source": "docs/audits/evidence/distractor_readiness_v1_sprint13.json",
+    "targets_ready": 47,
+    "targets_blocked": 3
+  },
+  "pmp_policy": {
+    "status": "READY_FOR_BROADER_PROFILED_CORPUS_WITH_POLICY",
+    "source": "docs/audits/evidence/pmp_policy_v1_broader_400_20260504_snapshot_audit.json",
+    "doctrine_pollution_detected": false
+  },
+  "cross_artifact_invariants": {
+    "plan_hash_match": true,
+    "emergency_fallback_count": 0,
+    "safe_target_count_threshold_pass": true
+  },
+  "sources": {
+    "localized_name_apply_plan": "docs/audits/evidence/localized_name_apply_plan_v1.json",
+    "runtime_handoff_audit": "docs/audits/evidence/database_integrity_runtime_handoff_audit.json",
+    "localized_name_reconciliation": "docs/audits/evidence/localized_name_projection_vs_14b_audit_reconciliation.json",
+    "distractor_readiness": "docs/audits/evidence/distractor_readiness_v1_sprint13.json",
+    "pmp_policy": "docs/audits/evidence/pmp_policy_v1_broader_400_20260504_snapshot_audit.json",
+    "distractor_delta": "docs/audits/evidence/distractor_readiness_sprint12_vs_sprint13.json"
+  }
+}
