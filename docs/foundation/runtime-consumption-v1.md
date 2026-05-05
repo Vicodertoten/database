@@ -13,15 +13,32 @@ Cette note fixe la frontiere de consommation entre `database` et `runtime-app`.
 `database` porte la verite des contrats et des artefacts de reference.
 `runtime-app` consomme ces surfaces officielles; il ne les redefinit pas.
 
+## Note MVP Golden Pack (2026-05-05)
+
+Pour le MVP Golden Pack, la surface runtime prioritaire est
+`golden_pack.v1`, produite comme artefact local versionne sous
+`data/exports/golden_packs/belgian_birds_mvp_v1/`.
+
+`golden_pack.v1` est un artefact pedagogique exporte contenant un contrat
+runtime strict. Le runtime MVP le consomme en mode artifact-only, sans transport
+HTTP owner-side obligatoire.
+
+Les surfaces et transports decrits ci-dessous (`playable_corpus.v1`,
+`pack.compiled.v1`, `pack.materialization.v1`, service HTTP owner-side) restent
+des surfaces existantes ou strategiques, mais ne sont pas le contrat MVP Golden
+Pack. Pour les decisions Golden Pack et runtime artifact-only, la reference
+canonique est `docs/architecture/MASTER_REFERENCE.md`.
+
 ## Etat de transport actuel
 
-Le transport inter-repos suit la sequence suivante:
+Hors MVP Golden Pack, le transport inter-repos existant suit la sequence
+suivante:
 
 - V1: fixtures de reference publiees cote owner et validees cote consumer
 - V1.5: API minimale de lecture cote `runtime-app/apps/api`
 - Phase 1: service HTTP owner-side minimal de lecture runtime cote `database`
 
-Le mode nominal de lecture runtime n'est plus fixture-only.
+Pour cette famille de surfaces, le mode nominal de lecture runtime n'est plus fixture-only.
 Le provider owner-side est maintenant la jonction nominale; les fixtures restent un fallback explicite dev/test.
 
 ## Etat courant visible (reference de wording)
@@ -79,7 +96,8 @@ Pour le deploiement cible Fly.io:
 
 ## Surfaces officiellement consommables
 
-`runtime-app` peut consommer les surfaces suivantes comme surfaces runtime officielles:
+Hors MVP Golden Pack artifact-only, `runtime-app` peut consommer les surfaces
+suivantes comme surfaces runtime officielles:
 
 - `playable_corpus.v1`
 - `pack.compiled.v1`
@@ -89,6 +107,9 @@ Contrats Phase 3 planifies, a consommer seulement apres production cote `databas
 
 - `pack.compiled.v2`
 - `pack.materialization.v2`
+
+Pour le MVP Golden Pack, ces surfaces ne doivent pas etre traitees comme le
+contrat runtime principal.
 
 ## Surface interdite pour le runtime
 

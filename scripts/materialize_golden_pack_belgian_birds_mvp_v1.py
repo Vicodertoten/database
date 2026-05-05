@@ -34,12 +34,31 @@ def _load_json(path: Path) -> dict[str, Any]:
     return payload
 
 
-def _label_safe_fr_map(plan: dict[str, Any]) -> dict[str, str]:
+def _target_label_safe_fr_map(plan: dict[str, Any]) -> dict[str, str]:
     out: dict[str, str] = {}
     for item in plan.get("items", []):
         if not isinstance(item, dict):
             continue
         if item.get("taxon_kind") != "canonical_taxon":
+            continue
+        if item.get("locale") != "fr":
+            continue
+        if item.get("decision") not in {"auto_accept", "same_value"}:
+            continue
+        taxon_id = str(item.get("taxon_id") or "").strip()
+        label = str(item.get("chosen_value") or "").strip()
+        if not taxon_id or not label:
+            continue
+        out[taxon_id] = label
+    return out
+
+
+def _option_label_safe_fr_map(plan: dict[str, Any]) -> dict[str, str]:
+    out: dict[str, str] = {}
+    for item in plan.get("items", []):
+        if not isinstance(item, dict):
+            continue
+        if item.get("taxon_kind") not in {"canonical_taxon", "referenced_taxon"}:
             continue
         if item.get("locale") != "fr":
             continue
@@ -83,8 +102,8 @@ def _candidate_counts_by_target(distractor: dict[str, Any]) -> dict[str, int]:
     return counts
 
 
-def _candidate_ids_by_target(distractor: dict[str, Any]) -> dict[str, list[str]]:
-    out: dict[str, list[tuple[int, str]]] = {}
+def _candidate_refs_by_target(distractor: dict[str, Any]) -> dict[str, list[dict[str, Any]]]:
+    out: dict[str, list[dict[str, Any]]] = {}
     for row in distractor.get("projected_records", []):
         if not isinstance(row, dict) or row.get("status") != "candidate":
             continue
@@ -98,10 +117,23 @@ def _candidate_ids_by_target(distractor: dict[str, Any]) -> dict[str, list[str]]
             rank = int(rank_raw)
         except (TypeError, ValueError):
             rank = 10**9
-        out.setdefault(target, []).append((rank, cid))
-    resolved: dict[str, list[str]] = {}
+        out.setdefault(target, []).append(
+            {
+                "source_rank": rank,
+                "candidate_taxon_ref_type": ctype,
+                "candidate_taxon_ref_id": cid,
+            }
+        )
+    resolved: dict[str, list[dict[str, Any]]] = {}
     for target, values in out.items():
-        resolved[target] = [cid for _, cid in sorted(values, key=lambda item: (item[0], item[1]))]
+        resolved[target] = sorted(
+            values,
+            key=lambda item: (
+                int(item["source_rank"]),
+                str(item["candidate_taxon_ref_type"]),
+                str(item["candidate_taxon_ref_id"]),
+            ),
+        )
     return resolved
 
 
@@ -127,24 +159,33 @@ def build_golden_pack() -> dict[str, Any]:
             raise ContractError(f"Duplicate target question in source materialization: {target}")
         questions_by_target[target] = question
 
-    fr_labels = _label_safe_fr_map(plan)
+    target_fr_labels = _target_label_safe_fr_map(plan)
+    option_fr_labels = _option_label_safe_fr_map(plan)
     candidate_counts = _candidate_counts_by_target(distractor)
-    candidate_ids_by_target = _candidate_ids_by_target(distractor)
+    candidate_refs_by_target = _candidate_refs_by_target(distractor)
 
-    target_to_distractors: dict[str, list[str]] = {}
+    target_to_distractors: dict[str, list[dict[str, Any]]] = {}
     for target_id in safe_targets:
         if target_id not in questions_by_target:
             continue
         if candidate_counts.get(target_id, 0) < 3:
             continue
-        if target_id not in fr_labels:
+        if target_id not in target_fr_labels:
             continue
-        candidate_ids = candidate_ids_by_target.get(target_id, [])
-        label_safe_candidate_ids = [cid for cid in candidate_ids if cid != target_id and cid in fr_labels]
-        deduped_candidates: list[str] = []
-        for cid in label_safe_candidate_ids:
-            if cid not in deduped_candidates:
-                deduped_candidates.append(cid)
+        candidate_refs = candidate_refs_by_target.get(target_id, [])
+        label_safe_candidate_refs = [
+            ref
+            for ref in candidate_refs
+            if ref["candidate_taxon_ref_id"] != target_id and ref["candidate_taxon_ref_id"] in option_fr_labels
+        ]
+        deduped_candidates: list[dict[str, Any]] = []
+        seen_pairs: set[tuple[str, str]] = set()
+        for ref in label_safe_candidate_refs:
+            key = (str(ref["candidate_taxon_ref_type"]), str(ref["candidate_taxon_ref_id"]))
+            if key in seen_pairs:
+                continue
+            seen_pairs.add(key)
+            deduped_candidates.append(ref)
         if len(deduped_candidates) >= 3:
             target_to_distractors[target_id] = deduped_candidates[:3]
 
@@ -170,7 +211,7 @@ def build_golden_pack() -> dict[str, Any]:
             raise ContractError(
                 f"Target {target_id} correct option mismatch canonical_taxon_id={target_canonical_taxon_id}"
             )
-        target_label = fr_labels[target_id]
+        target_label = target_fr_labels[target_id]
         selected_distractors = target_to_distractors[target_id]
 
         localized_options: list[dict[str, Any]] = [
@@ -191,8 +232,10 @@ def build_golden_pack() -> dict[str, Any]:
         normalized_labels: list[str] = [
             normalize_localized_name_for_compare(target_label)
         ]
-        for idx, candidate_id in enumerate(selected_distractors, start=2):
-            label = fr_labels[candidate_id]
+        for idx, candidate_ref in enumerate(selected_distractors, start=2):
+            candidate_id = str(candidate_ref["candidate_taxon_ref_id"])
+            candidate_type = str(candidate_ref["candidate_taxon_ref_type"])
+            label = option_fr_labels[candidate_id]
             normalized = normalize_localized_name_for_compare(label)
             if not normalized:
                 raise ContractError(
@@ -209,7 +252,7 @@ def build_golden_pack() -> dict[str, Any]:
                     "source": "distractor_relationships_v1_projected_sprint13",
                     "score": None,
                     "reason_codes": ["sprint14c2_label_safe_gate"],
-                    "referenced_only": False,
+                    "referenced_only": candidate_type == "referenced_taxon",
                 }
             )
 

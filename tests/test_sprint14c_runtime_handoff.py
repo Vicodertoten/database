@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -19,12 +20,150 @@ def test_14c1_synthesis_contracts_pass() -> None:
     assert payload["cross_artifact_invariants"]["emergency_fallback_count"] == 0
 
 
-def test_14c2_fails_fast_when_30_contract_cannot_be_met() -> None:
-    with pytest.raises(
-        ContractError,
-        match="Unable to select 30 deterministic targets with 3 label-safe distractors",
-    ):
-        build_golden_pack()
+def _build_fake_materializer_inputs(include_canonical_in_top3: bool = False) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
+    safe_targets = [f"taxon:birds:{idx:06d}" for idx in range(1, 31)]
+
+    plan_items: list[dict[str, Any]] = []
+    for idx, target_id in enumerate(safe_targets, start=1):
+        plan_items.append(
+            {
+                "taxon_kind": "canonical_taxon",
+                "taxon_id": target_id,
+                "locale": "fr",
+                "decision": "auto_accept",
+                "chosen_value": f"Target FR {idx}",
+            }
+        )
+    for rid, label in [
+        ("ref:birds:d1", "Distracteur FR A"),
+        ("ref:birds:d2", "Distracteur FR B"),
+        ("ref:birds:d3", "Distracteur FR C"),
+    ]:
+        plan_items.append(
+            {
+                "taxon_kind": "referenced_taxon",
+                "taxon_id": rid,
+                "locale": "fr",
+                "decision": "auto_accept",
+                "chosen_value": label,
+            }
+        )
+
+    plan_payload = {
+        "plan_hash": "test-plan-hash",
+        "metrics": {"safe_ready_targets_from_plan": safe_targets},
+        "items": plan_items,
+    }
+
+    materialization_payload = {
+        "questions": [
+            {
+                "target_canonical_taxon_id": target_id,
+                "target_playable_item_id": f"playable:{idx}",
+                "options": [
+                    {
+                        "is_correct": True,
+                        "canonical_taxon_id": target_id,
+                        "playable_item_id": f"playable:{idx}",
+                        "source": "playable_corpus.v1",
+                        "score": 1.0,
+                        "reason_codes": ["seed"],
+                        "referenced_only": False,
+                    }
+                ],
+            }
+            for idx, target_id in enumerate(safe_targets, start=1)
+        ]
+    }
+
+    projected_records: list[dict[str, Any]] = []
+    for idx, target_id in enumerate(safe_targets, start=1):
+        base_candidates = [
+            {
+                "status": "candidate",
+                "target_canonical_taxon_id": target_id,
+                "candidate_taxon_ref_type": "referenced_taxon",
+                "candidate_taxon_ref_id": "ref:birds:d1",
+                "source_rank": 1,
+            },
+            {
+                "status": "candidate",
+                "target_canonical_taxon_id": target_id,
+                "candidate_taxon_ref_type": "referenced_taxon",
+                "candidate_taxon_ref_id": "ref:birds:d2",
+                "source_rank": 2,
+            },
+            {
+                "status": "candidate",
+                "target_canonical_taxon_id": target_id,
+                "candidate_taxon_ref_type": "referenced_taxon",
+                "candidate_taxon_ref_id": "ref:birds:d3",
+                "source_rank": 3,
+            },
+            {
+                "status": "candidate",
+                "target_canonical_taxon_id": target_id,
+                "candidate_taxon_ref_type": "canonical_taxon",
+                "candidate_taxon_ref_id": safe_targets[idx % len(safe_targets)],
+                "source_rank": 4,
+            },
+        ]
+        if include_canonical_in_top3:
+            base_candidates[1] = {
+                "status": "candidate",
+                "target_canonical_taxon_id": target_id,
+                "candidate_taxon_ref_type": "canonical_taxon",
+                "candidate_taxon_ref_id": safe_targets[idx % len(safe_targets)],
+                "source_rank": 2,
+            }
+        projected_records.extend(base_candidates)
+
+    distractor_payload = {"projected_records": projected_records}
+    return plan_payload, materialization_payload, distractor_payload
+
+
+def _patch_fake_load_json(monkeypatch: pytest.MonkeyPatch, include_canonical_in_top3: bool = False) -> None:
+    from scripts import materialize_golden_pack_belgian_birds_mvp_v1 as mod
+
+    plan_payload, materialization_payload, distractor_payload = _build_fake_materializer_inputs(
+        include_canonical_in_top3=include_canonical_in_top3
+    )
+
+    def fake_load(path: Path):
+        if path == mod.PLAN_PATH:
+            return plan_payload
+        if path == mod.MATERIALIZATION_SOURCE_PATH:
+            return materialization_payload
+        if path == mod.DISTRACTOR_PATH:
+            return distractor_payload
+        raise AssertionError(f"Unexpected load path: {path}")
+
+    monkeypatch.setattr(mod, "_load_json", fake_load)
+
+
+def test_referenced_taxon_label_safe_distractors_are_allowed(monkeypatch: pytest.MonkeyPatch) -> None:
+    _patch_fake_load_json(monkeypatch)
+    payload = build_golden_pack()
+
+    assert payload["question_count"] == 30
+    for question in payload["questions"]:
+        distractors = [opt for opt in question["options"] if not opt["is_correct"]]
+        assert len(distractors) == 3
+        assert all(opt["canonical_taxon_id"].startswith("ref:birds:") for opt in distractors)
+        assert all(opt["referenced_only"] is True for opt in distractors)
+
+
+def test_distractor_can_be_target_in_another_question(monkeypatch: pytest.MonkeyPatch) -> None:
+    _patch_fake_load_json(monkeypatch, include_canonical_in_top3=True)
+    payload = build_golden_pack()
+
+    targets = {q["target_canonical_taxon_id"] for q in payload["questions"]}
+    appears_as_distractor = any(
+        (not opt["is_correct"]) and opt["canonical_taxon_id"] in targets
+        for question in payload["questions"]
+        for opt in question["options"]
+    )
+    assert appears_as_distractor is True
 
 
 def test_14c2_fails_when_plan_has_duplicate_safe_targets(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -50,8 +189,8 @@ def test_14c2_fails_when_plan_has_duplicate_safe_targets(monkeypatch: pytest.Mon
 
 def test_architecture_guard_no_csv_patch_snapshot_safe_ready_logic() -> None:
     paths = [
-        Path("database/scripts/synthesize_sprint14b_final_runtime_handoff_readiness.py"),
-        Path("database/scripts/materialize_golden_pack_belgian_birds_mvp_v1.py"),
+        Path("scripts/synthesize_sprint14b_final_runtime_handoff_readiness.py"),
+        Path("scripts/materialize_golden_pack_belgian_birds_mvp_v1.py"),
     ]
     forbidden = [
         "taxon_localized_name_source_attested_patches_sprint14.csv",

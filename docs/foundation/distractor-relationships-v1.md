@@ -27,11 +27,15 @@ A `DistractorRelationship` is **not** a question option and **not** a runtime ob
 | Concept | What it is | Owner |
 |---|---|---|
 | `DistractorRelationship` | A governed pedagogical relation between taxa | `database` |
-| `QuestionOption` (pack contract) | A compiled option in a question | `database` (compile-time) |
-| Runtime distractor selection | Which option is shown to the learner | `runtime` |
+| `QuestionOption` / Golden Pack option | A compiled or materialized option in a question | `database` (compile-time / artifact materialization) |
+| Runtime option display | Presentation order among already-provided options | `runtime` |
 
 The relationship layer is upstream of compile-time. It feeds the compiler, which then
 produces `QuestionOption` entries. The compiler consumes relationships; it does not own them.
+
+For the `golden_pack.v1` MVP path, runtime may shuffle and display options that
+are already present in the artifact. Runtime must not select, replace, add,
+score, or remap distractor taxa.
 
 ---
 
@@ -131,8 +135,8 @@ layer.
 Rationale:
 - A distractor can be pedagogically valuable even if the species does not occur in the
   learner's region (e.g. learning to distinguish closely related species globally).
-- Regional filtering, if needed, belongs at compile time or runtime selection, not in the
-  upstream relationship definition.
+- Regional filtering, if needed, belongs at compile time or artifact
+  materialization, not in the upstream relationship definition.
 - Hard-blocking by region at the relationship layer would silently discard useful candidates
   for cross-regional or global learning contexts.
 
@@ -143,8 +147,8 @@ Rationale:
 `DistractorRelationship` does not generate learner feedback in this phase.
 
 However, its fields are explicitly designed to support future post-answer differential
-explanations. When a learner selects a distractor, the runtime could generate a feedback
-explanation using:
+explanations. When a learner selects a distractor, database-authored feedback or
+a future audited feedback contract could use:
 
 - The **target image PMP profile** (visible field marks, limitations).
 - The **correct taxon** (target).
@@ -162,7 +166,7 @@ layer to encode full explanatory text now.
 The following are explicitly **not** in scope for this foundation:
 
 - Runtime session logic, scoring, or progression.
-- Pack materialization or compile-time distractor selection.
+- Golden Pack materialization or compile-time distractor selection.
 - `QuestionOption` generation (downstream concern).
 - Supabase/Postgres schema migrations (not required at this stage).
 - AI proposal implementation (Phase 3+).
