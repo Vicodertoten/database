@@ -117,16 +117,28 @@
       "name": "placeholder_french_labels_breakdown",
       "status": "warning",
       "value": {
-        "total_placeholder_french_label_count": 67,
-        "target_placeholder_count": 0,
-        "candidate_placeholder_count": 206,
-        "referenced_shell_placeholder_count": 67,
-        "corpus_facing_placeholder_count": 124,
-        "excluded_or_not_for_corpus_display_count": 82,
-        "affects_first_corpus_candidate_count": 124,
-        "unknown_impact_count": 0
+        "unique_placeholder_taxon_count": 67,
+        "target_placeholder_taxon_count": 0,
+        "candidate_placeholder_relationship_occurrence_count": 206,
+        "referenced_shell_placeholder_taxon_count": 67,
+        "corpus_facing_placeholder_relationship_occurrence_count": 124,
+        "excluded_or_not_for_corpus_display_relationship_occurrence_count": 82,
+        "affected_first_corpus_candidate_relationship_occurrence_count": 124,
+        "unknown_impact_count": 0,
+        "affected_target_taxon_count": 49,
+        "affected_ready_target_count": 40,
+        "safe_ready_target_count_after_placeholder_exclusion": 9
       },
-      "detail": "Placeholder FR labels include values equal to scientific names or Latin-binomial-like strings."
+      "detail": "67 reflects unique placeholder taxa while candidate placeholder metrics reflect relationship occurrences."
+    },
+    {
+      "name": "runtime_contract_placeholder_exclusion_guard",
+      "status": "fail",
+      "value": {
+        "documented_in_14d_runtime_contracts": false,
+        "required_condition": "14D runtime contracts must exclude or mark all provisional/placeholder FR labels as not_for_corpus_display."
+      },
+      "detail": "Runtime handoff requires 14D contracts to exclude or mark placeholder FR labels as not_for_corpus_display."
     },
     {
       "name": "referenced_shell_plan_status",
@@ -182,14 +194,17 @@
     "candidates_missing_french_name_count": 112,
     "low_confidence_fr_seed_count": 44,
     "placeholder_french_labels": {
-      "total_placeholder_french_label_count": 67,
-      "target_placeholder_count": 0,
-      "candidate_placeholder_count": 206,
-      "referenced_shell_placeholder_count": 67,
-      "corpus_facing_placeholder_count": 124,
-      "excluded_or_not_for_corpus_display_count": 82,
-      "affects_first_corpus_candidate_count": 124,
-      "unknown_impact_count": 0
+      "unique_placeholder_taxon_count": 67,
+      "target_placeholder_taxon_count": 0,
+      "candidate_placeholder_relationship_occurrence_count": 206,
+      "referenced_shell_placeholder_taxon_count": 67,
+      "corpus_facing_placeholder_relationship_occurrence_count": 124,
+      "excluded_or_not_for_corpus_display_relationship_occurrence_count": 82,
+      "affected_first_corpus_candidate_relationship_occurrence_count": 124,
+      "unknown_impact_count": 0,
+      "affected_target_taxon_count": 49,
+      "affected_ready_target_count": 40,
+      "safe_ready_target_count_after_placeholder_exclusion": 9
     },
     "referenced_shell_status": {
       "inat_candidates_assessed_count": 198,
@@ -281,10 +296,12 @@
       "recommended_action": "Classify impact on first-corpus candidate set before promoting to hard blocker."
     }
   ],
-  "blockers": [],
-  "decision": "READY_FOR_RUNTIME_CONTRACTS_WITH_WARNINGS",
-  "recommended_next_action": "Proceed with warnings register to Sprint 14C robustness/regression tests.",
-  "next_phase_recommendation": "14C Robustness and regression tests",
+  "blockers": [
+    "Corpus-facing placeholder FR relationship occurrences are present without a documented 14D runtime exclusion/marking guard."
+  ],
+  "decision": "BLOCKED_NEEDS_PLACEHOLDER_EXCLUSION",
+  "recommended_next_action": "Document and enforce 14D runtime placeholder exclusion (or not_for_corpus_display marking), then rerun Sprint 14B.",
+  "next_phase_recommendation": "Resolve blockers and rerun Sprint 14B data integrity gate",
   "non_actions": [
     "No DistractorRelationship persistence",
     "No ReferencedTaxon shell creation",
@@ -295,6 +312,10 @@
     "ready_for_first_corpus_distractor_gate": true,
     "persist_distractor_relationships_v1": false,
     "database_phase_closed": false,
-    "note": "Corpus gate readiness does not imply persistence or database phase closure."
+    "note": "Corpus gate readiness does not imply persistence or database phase closure.",
+    "runtime_contract_placeholder_exclusion_guard": {
+      "documented_in_14d_runtime_contracts": false,
+      "required_condition": "14D runtime contracts must exclude or mark all provisional/placeholder FR labels as not_for_corpus_display."
+    }
   }
 }

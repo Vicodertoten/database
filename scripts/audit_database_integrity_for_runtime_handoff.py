@@ -197,42 +197,59 @@ def compute_placeholder_breakdown(
     canonical_payload: dict[str, Any] | None,
     referenced_payload: dict[str, Any] | None,
 ) -> dict[str, Any]:
-    target_placeholder_ids, referenced_placeholder_ids, placeholder_scientific_names, _ = (
+    target_placeholder_ids, referenced_placeholder_ids, placeholder_scientific_names, all_placeholder_taxa = (
         extract_placeholder_sets(canonical_payload, referenced_payload)
     )
 
-    candidate_placeholder_count = 0
-    affects_ready_count = 0
+    candidate_placeholder_relationship_occurrence_count = 0
+    corpus_facing_placeholder_relationship_occurrence_count = 0
+    affected_target_taxa: set[str] = set()
+    affected_ready_targets: set[str] = set()
     for row in records:
         candidate_id = str(row.get("candidate_taxon_ref_id", "")).strip()
         candidate_sci = str(row.get("candidate_scientific_name", "")).strip()
+        target_id = str(row.get("target_canonical_taxon_id", "")).strip()
         is_placeholder = False
         if candidate_id and candidate_id in referenced_placeholder_ids:
             is_placeholder = True
         elif candidate_sci and candidate_sci in placeholder_scientific_names:
             is_placeholder = True
         if is_placeholder:
-            candidate_placeholder_count += 1
+            candidate_placeholder_relationship_occurrence_count += 1
+            if target_id:
+                affected_target_taxa.add(target_id)
             if str(row.get("status", "")).strip() == "candidate":
-                affects_ready_count += 1
+                corpus_facing_placeholder_relationship_occurrence_count += 1
+                if target_id:
+                    affected_ready_targets.add(target_id)
 
-    referenced_shell_placeholder_count = len(referenced_placeholder_ids)
-    target_placeholder_count = len(target_placeholder_ids)
-    total = target_placeholder_count + referenced_shell_placeholder_count
-    excluded_or_not_for_corpus_display_count = max(
-        candidate_placeholder_count - affects_ready_count,
+    referenced_shell_placeholder_taxon_count = len(referenced_placeholder_ids)
+    target_placeholder_taxon_count = len(target_placeholder_ids)
+    unique_placeholder_taxon_count = len(all_placeholder_taxa)
+    excluded_or_not_for_corpus_display_relationship_occurrence_count = max(
+        candidate_placeholder_relationship_occurrence_count
+        - corpus_facing_placeholder_relationship_occurrence_count,
+        0,
+    )
+    affected_target_taxon_count = len(affected_target_taxa)
+    affected_ready_target_count = len(affected_ready_targets)
+    safe_ready_target_count_after_placeholder_exclusion = max(
+        affected_target_taxon_count - affected_ready_target_count,
         0,
     )
 
     return {
-        "total_placeholder_french_label_count": total,
-        "target_placeholder_count": target_placeholder_count,
-        "candidate_placeholder_count": candidate_placeholder_count,
-        "referenced_shell_placeholder_count": referenced_shell_placeholder_count,
-        "corpus_facing_placeholder_count": affects_ready_count,
-        "excluded_or_not_for_corpus_display_count": excluded_or_not_for_corpus_display_count,
-        "affects_first_corpus_candidate_count": affects_ready_count,
+        "unique_placeholder_taxon_count": unique_placeholder_taxon_count,
+        "target_placeholder_taxon_count": target_placeholder_taxon_count,
+        "candidate_placeholder_relationship_occurrence_count": candidate_placeholder_relationship_occurrence_count,
+        "referenced_shell_placeholder_taxon_count": referenced_shell_placeholder_taxon_count,
+        "corpus_facing_placeholder_relationship_occurrence_count": corpus_facing_placeholder_relationship_occurrence_count,
+        "excluded_or_not_for_corpus_display_relationship_occurrence_count": excluded_or_not_for_corpus_display_relationship_occurrence_count,
+        "affected_first_corpus_candidate_relationship_occurrence_count": corpus_facing_placeholder_relationship_occurrence_count,
         "unknown_impact_count": 0,
+        "affected_target_taxon_count": affected_target_taxon_count,
+        "affected_ready_target_count": affected_ready_target_count,
+        "safe_ready_target_count_after_placeholder_exclusion": safe_ready_target_count_after_placeholder_exclusion,
     }
 
 
@@ -343,6 +360,7 @@ def classify_decision(
     audit_clarification_needed: bool,
     pmp_blocker_proven: bool,
     name_review_needed: bool,
+    placeholder_exclusion_needed: bool,
     referenced_shell_review_needed: bool,
     warning_only: bool,
 ) -> str:
@@ -352,6 +370,8 @@ def classify_decision(
         return "BLOCKED_NEEDS_AUDIT_CLARIFICATION"
     if pmp_blocker_proven:
         return "BLOCKED_NEEDS_PMP_POLICY_FIXES"
+    if placeholder_exclusion_needed:
+        return "BLOCKED_NEEDS_PLACEHOLDER_EXCLUSION"
     if name_review_needed:
         return "BLOCKED_NEEDS_NAME_REVIEW"
     if referenced_shell_review_needed:
@@ -493,6 +513,12 @@ def run_audit() -> dict[str, Any]:
         canonical_payload if isinstance(canonical_payload, dict) else None,
         referenced_payload if isinstance(referenced_payload, dict) else None,
     )
+    placeholder_exclusion_guard = {
+        "documented_in_14d_runtime_contracts": bool(
+            projected.get("runtime_contract_placeholder_exclusion_documented", False)
+        ),
+        "required_condition": "14D runtime contracts must exclude or mark all provisional/placeholder FR labels as not_for_corpus_display.",
+    }
 
     pmp_table = build_pmp_blocker_table(
         loaded.get("pmp_human_review_analysis") if isinstance(loaded.get("pmp_human_review_analysis"), dict) else None
@@ -570,9 +596,23 @@ def run_audit() -> dict[str, Any]:
         ),
         CheckResult(
             "placeholder_french_labels_breakdown",
-            "warning" if placeholder_breakdown["total_placeholder_french_label_count"] > 0 else "pass",
+            "warning" if placeholder_breakdown["unique_placeholder_taxon_count"] > 0 else "pass",
             placeholder_breakdown,
-            "Placeholder FR labels include values equal to scientific names or Latin-binomial-like strings.",
+            "67 reflects unique placeholder taxa while candidate placeholder metrics reflect relationship occurrences.",
+        ),
+        CheckResult(
+            "runtime_contract_placeholder_exclusion_guard",
+            (
+                "warning"
+                if placeholder_exclusion_guard["documented_in_14d_runtime_contracts"]
+                else (
+                    "fail"
+                    if placeholder_breakdown["corpus_facing_placeholder_relationship_occurrence_count"] > 0
+                    else "pass"
+                )
+            ),
+            placeholder_exclusion_guard,
+            "Runtime handoff requires 14D contracts to exclude or mark placeholder FR labels as not_for_corpus_display.",
         ),
         CheckResult(
             "referenced_shell_plan_status",
@@ -637,6 +677,10 @@ def run_audit() -> dict[str, Any]:
     pmp_blocker_proven = False
 
     name_review_needed = False
+    placeholder_exclusion_needed = (
+        placeholder_breakdown["corpus_facing_placeholder_relationship_occurrence_count"] > 0
+        and not placeholder_exclusion_guard["documented_in_14d_runtime_contracts"]
+    )
     referenced_shell_review_needed = False
 
     warning_only = any(c.status == "warning" for c in checks) and not hard_integrity and not audit_clarification_needed
@@ -646,6 +690,7 @@ def run_audit() -> dict[str, Any]:
         audit_clarification_needed=audit_clarification_needed,
         pmp_blocker_proven=pmp_blocker_proven,
         name_review_needed=name_review_needed,
+        placeholder_exclusion_needed=placeholder_exclusion_needed,
         referenced_shell_review_needed=referenced_shell_review_needed,
         warning_only=warning_only,
     )
@@ -653,6 +698,10 @@ def run_audit() -> dict[str, Any]:
     blockers: list[str] = []
     if hard_integrity:
         blockers.append("Hard distractor integrity checks failed.")
+    if placeholder_exclusion_needed:
+        blockers.append(
+            "Corpus-facing placeholder FR relationship occurrences are present without a documented 14D runtime exclusion/marking guard."
+        )
     blockers.extend(audit_consistency_issues)
 
     if decision == "BLOCKED_NEEDS_DISTRACTOR_INTEGRITY_FIXES":
@@ -661,6 +710,8 @@ def run_audit() -> dict[str, Any]:
         next_action = "Resolve audit evidence inconsistencies/missing sources and rerun Sprint 14B audit."
     elif decision == "BLOCKED_NEEDS_PMP_POLICY_FIXES":
         next_action = "Resolve proven PMP blockers that affect handoff candidates, then rerun Sprint 14B."
+    elif decision == "BLOCKED_NEEDS_PLACEHOLDER_EXCLUSION":
+        next_action = "Document and enforce 14D runtime placeholder exclusion (or not_for_corpus_display marking), then rerun Sprint 14B."
     elif decision == "BLOCKED_NEEDS_NAME_REVIEW":
         next_action = "Complete required name review for corpus-facing artifacts, then rerun Sprint 14B."
     elif decision == "BLOCKED_NEEDS_REFERENCED_SHELL_REVIEW":
@@ -713,6 +764,7 @@ def run_audit() -> dict[str, Any]:
             "persist_distractor_relationships_v1": False,
             "database_phase_closed": False,
             "note": "Corpus gate readiness does not imply persistence or database phase closure.",
+            "runtime_contract_placeholder_exclusion_guard": placeholder_exclusion_guard,
         },
     }
 
@@ -761,11 +813,18 @@ def render_markdown(report: dict[str, Any]) -> str:
             f"- placeholder_french_labels: {json.dumps(metrics.get('placeholder_french_labels'), ensure_ascii=False)}",
             f"- referenced_shell_status: {json.dumps(metrics.get('referenced_shell_status'), ensure_ascii=False)}",
             "",
+            "## Placeholder Semantics",
+            "",
+            f"- unique_placeholder_taxon_count={metrics.get('placeholder_french_labels', {}).get('unique_placeholder_taxon_count')} represents distinct placeholder taxa.",
+            f"- candidate_placeholder_relationship_occurrence_count={metrics.get('placeholder_french_labels', {}).get('candidate_placeholder_relationship_occurrence_count')} represents relationship-level occurrences.",
+            f"- corpus_facing_placeholder_relationship_occurrence_count={metrics.get('placeholder_french_labels', {}).get('corpus_facing_placeholder_relationship_occurrence_count')} are not acceptable for runtime display unless excluded/marked not_for_corpus_display.",
+            "",
             "## Corpus Gate vs Persistence",
             "",
             "- READY_FOR_FIRST_CORPUS_DISTRACTOR_GATE remains a corpus-readiness signal only.",
             "- It does not authorize DistractorRelationship persistence.",
             "- It does not authorize database-phase closure.",
+            "- 14D runtime contracts must exclude or mark all provisional/placeholder FR labels as not_for_corpus_display.",
             "",
             "## PMP Blocker Attribution",
             "",

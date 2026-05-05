@@ -70,9 +70,10 @@ def test_placeholder_breakdown() -> None:
         ]
     }
     out = compute_placeholder_breakdown(records, canonical, referenced)
-    assert out["total_placeholder_french_label_count"] == 2
-    assert out["candidate_placeholder_count"] == 2
-    assert out["corpus_facing_placeholder_count"] == 1
+    assert out["unique_placeholder_taxon_count"] == 2
+    assert out["candidate_placeholder_relationship_occurrence_count"] == 2
+    assert out["corpus_facing_placeholder_relationship_occurrence_count"] == 1
+    assert out["affected_first_corpus_candidate_relationship_occurrence_count"] == 1
 
 
 def test_low_confidence_fr_seed_detection_from_sprint13_apply_evidence() -> None:
@@ -136,10 +137,37 @@ def test_blocked_needs_audit_clarification_decision() -> None:
         audit_clarification_needed=True,
         pmp_blocker_proven=False,
         name_review_needed=False,
+        placeholder_exclusion_needed=False,
         referenced_shell_review_needed=False,
         warning_only=False,
     )
     assert decision == "BLOCKED_NEEDS_AUDIT_CLARIFICATION"
+
+
+def test_blocked_needs_placeholder_exclusion_decision() -> None:
+    decision = classify_decision(
+        hard_integrity=False,
+        audit_clarification_needed=False,
+        pmp_blocker_proven=False,
+        name_review_needed=False,
+        placeholder_exclusion_needed=True,
+        referenced_shell_review_needed=False,
+        warning_only=False,
+    )
+    assert decision == "BLOCKED_NEEDS_PLACEHOLDER_EXCLUSION"
+
+
+def test_ready_with_warnings_requires_no_placeholder_exclusion_blocker() -> None:
+    decision = classify_decision(
+        hard_integrity=False,
+        audit_clarification_needed=False,
+        pmp_blocker_proven=False,
+        name_review_needed=False,
+        placeholder_exclusion_needed=False,
+        referenced_shell_review_needed=False,
+        warning_only=True,
+    )
+    assert decision == "READY_FOR_RUNTIME_CONTRACTS_WITH_WARNINGS"
 
 
 def test_next_phase_recommendation_is_14c_when_ready() -> None:

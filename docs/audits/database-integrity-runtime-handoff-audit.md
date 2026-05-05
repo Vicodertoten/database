@@ -28,7 +28,8 @@ scope: sprint14b_data_integrity_gate
 | unresolved_marked_usable | pass | 0 |
 | candidates_missing_french_names | warning | 112 |
 | low_confidence_fr_seeds | warning | {"count": 44, "status": "known", "source": "localized_apply.applied"} |
-| placeholder_french_labels_breakdown | warning | {"total_placeholder_french_label_count": 67, "target_placeholder_count": 0, "candidate_placeholder_count": 206, "referenced_shell_placeholder_count": 67, "corpus_facing_placeholder_count": 124, "excluded_or_not_for_corpus_display_count": 82, "affects_first_corpus_candidate_count": 124, "unknown_impact_count": 0} |
+| placeholder_french_labels_breakdown | warning | {"unique_placeholder_taxon_count": 67, "target_placeholder_taxon_count": 0, "candidate_placeholder_relationship_occurrence_count": 206, "referenced_shell_placeholder_taxon_count": 67, "corpus_facing_placeholder_relationship_occurrence_count": 124, "excluded_or_not_for_corpus_display_relationship_occurrence_count": 82, "affected_first_corpus_candidate_relationship_occurrence_count": 124, "unknown_impact_count": 0, "affected_target_taxon_count": 49, "affected_ready_target_count": 40, "safe_ready_target_count_after_placeholder_exclusion": 9} |
+| runtime_contract_placeholder_exclusion_guard | fail | {"documented_in_14d_runtime_contracts": false, "required_condition": "14D runtime contracts must exclude or mark all provisional/placeholder FR labels as not_for_corpus_display."} |
 | referenced_shell_plan_status | warning | {"inat_candidates_assessed_count": 198, "mapped_to_canonical_count": 42, "referenced_shells_planned_count": 156, "referenced_shells_created_count": 0, "mode": "dry_run", "status": "planned_not_created"} |
 | localized_name_conflicts | pass | 0 |
 | invalid_pmp_records | warning | 4 |
@@ -42,14 +43,21 @@ scope: sprint14b_data_integrity_gate
 - emergency_fallback_count: 0
 - candidates_missing_french_name_count: 112
 - low_confidence_fr_seed_count: 44
-- placeholder_french_labels: {"total_placeholder_french_label_count": 67, "target_placeholder_count": 0, "candidate_placeholder_count": 206, "referenced_shell_placeholder_count": 67, "corpus_facing_placeholder_count": 124, "excluded_or_not_for_corpus_display_count": 82, "affects_first_corpus_candidate_count": 124, "unknown_impact_count": 0}
+- placeholder_french_labels: {"unique_placeholder_taxon_count": 67, "target_placeholder_taxon_count": 0, "candidate_placeholder_relationship_occurrence_count": 206, "referenced_shell_placeholder_taxon_count": 67, "corpus_facing_placeholder_relationship_occurrence_count": 124, "excluded_or_not_for_corpus_display_relationship_occurrence_count": 82, "affected_first_corpus_candidate_relationship_occurrence_count": 124, "unknown_impact_count": 0, "affected_target_taxon_count": 49, "affected_ready_target_count": 40, "safe_ready_target_count_after_placeholder_exclusion": 9}
 - referenced_shell_status: {"inat_candidates_assessed_count": 198, "mapped_to_canonical_count": 42, "referenced_shells_planned_count": 156, "referenced_shells_created_count": 0, "mode": "dry_run", "status": "planned_not_created"}
+
+## Placeholder Semantics
+
+- unique_placeholder_taxon_count=67 represents distinct placeholder taxa.
+- candidate_placeholder_relationship_occurrence_count=206 represents relationship-level occurrences.
+- corpus_facing_placeholder_relationship_occurrence_count=124 are not acceptable for runtime display unless excluded/marked not_for_corpus_display.
 
 ## Corpus Gate vs Persistence
 
 - READY_FOR_FIRST_CORPUS_DISTRACTOR_GATE remains a corpus-readiness signal only.
 - It does not authorize DistractorRelationship persistence.
 - It does not authorize database-phase closure.
+- 14D runtime contracts must exclude or mark all provisional/placeholder FR labels as not_for_corpus_display.
 
 ## PMP Blocker Attribution
 
@@ -66,7 +74,7 @@ scope: sprint14b_data_integrity_gate
 
 ## Exact Blockers
 
-- No hard blockers identified for Sprint 14B.
+- Corpus-facing placeholder FR relationship occurrences are present without a documented 14D runtime exclusion/marking guard.
 
 ## Exact Non-Actions
 
@@ -77,9 +85,9 @@ scope: sprint14b_data_integrity_gate
 
 ## Decision
 
-- decision: READY_FOR_RUNTIME_CONTRACTS_WITH_WARNINGS
-- recommended_next_action: Proceed with warnings register to Sprint 14C robustness/regression tests.
+- decision: BLOCKED_NEEDS_PLACEHOLDER_EXCLUSION
+- recommended_next_action: Document and enforce 14D runtime placeholder exclusion (or not_for_corpus_display marking), then rerun Sprint 14B.
 
 ## Next Phase Recommendation
 
-- 14C Robustness and regression tests
+- Resolve blockers and rerun Sprint 14B data integrity gate
