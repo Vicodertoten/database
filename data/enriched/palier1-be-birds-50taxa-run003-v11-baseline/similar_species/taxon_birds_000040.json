@@ -1,0 +1,356 @@
+{
+  "inat_id": "17835",
+  "scientific_name": "Dryocopus martius",
+  "fetched_at": "2026-05-05T11:24:22.323920+00:00",
+  "raw_payload": {
+    "total_results": 1,
+    "page": 1,
+    "per_page": 1,
+    "results": [
+      {
+        "taxon": {
+          "id": 891696,
+          "rank": "species",
+          "rank_level": 10,
+          "iconic_taxon_id": 3,
+          "ancestor_ids": [
+            48460,
+            1,
+            2,
+            355675,
+            3,
+            7251,
+            7823,
+            8318
+          ],
+          "is_active": true,
+          "min_species_taxon_id": 891696,
+          "name": "Pica pica",
+          "parent_id": 8318,
+          "ancestry": "48460/1/2/355675/3/7251/7823/8318",
+          "min_species_ancestry": "48460,1,2,355675,3,7251,7823,8318,891696",
+          "extinct": false,
+          "provisional": false,
+          "created_at": "2019-05-18T11:07:13+00:00",
+          "default_photo": {
+            "id": 103446096,
+            "license_code": "cc-by-nc-sa",
+            "attribution": "(c) Agust\u00edn Povedano, some rights reserved (CC BY-NC-SA)",
+            "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/103446096/square.jpg",
+            "original_dimensions": {
+              "height": 805,
+              "width": 1024
+            },
+            "flags": [],
+            "attribution_name": "Agust\u00edn Povedano",
+            "square_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/103446096/square.jpg",
+            "medium_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/103446096/medium.jpg"
+          },
+          "taxon_changes_count": 1,
+          "taxon_schemes_count": 1,
+          "observations_count": 166424,
+          "photos_locked": false,
+          "universal_search_rank": 166424,
+          "flag_counts": {
+            "resolved": 5,
+            "unresolved": 0
+          },
+          "current_synonymous_taxon_ids": null,
+          "taxon_photos": [
+            {
+              "taxon_id": 891696,
+              "photo": {
+                "id": 103446096,
+                "license_code": "cc-by-nc-sa",
+                "attribution": "(c) Agust\u00edn Povedano, some rights reserved (CC BY-NC-SA)",
+                "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/103446096/square.jpg",
+                "original_dimensions": {
+                  "height": 805,
+                  "width": 1024
+                },
+                "flags": [],
+                "native_page_url": "https://www.flickr.com/photos/decadiz/7289587512/",
+                "native_photo_id": "7289587512",
+                "type": "LocalPhoto",
+                "attribution_name": "Agust\u00edn Povedano",
+                "square_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/103446096/square.jpg",
+                "small_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/103446096/small.jpg",
+                "medium_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/103446096/medium.jpg",
+                "large_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/103446096/large.jpg",
+                "original_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/103446096/original.jpg"
+              }
+            },
+            {
+              "taxon_id": 891696,
+              "photo": {
+                "id": 270119612,
+                "license_code": "cc-by-nc",
+                "attribution": "(c) Li Jianong, some rights reserved (CC BY-NC), uploaded by Li Jianong",
+                "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/270119612/square.jpg",
+                "original_dimensions": {
+                  "height": 1367,
+                  "width": 2048
+                },
+                "flags": [],
+                "native_page_url": null,
+                "native_photo_id": null,
+                "type": "LocalPhoto",
+                "attribution_name": "Li Jianong",
+                "square_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/270119612/square.jpg",
+                "small_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/270119612/small.jpg",
+                "medium_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/270119612/medium.jpg",
+                "large_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/270119612/large.jpg",
+                "original_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/270119612/original.jpg"
+              }
+            },
+            {
+              "taxon_id": 891696,
+              "photo": {
+                "id": 256224620,
+                "license_code": null,
+                "attribution": "(c) Dietmar Kuballa, all rights reserved, uploaded by Dietmar Kuballa",
+                "url": "https://static.inaturalist.org/photos/256224620/square.jpg",
+                "original_dimensions": {
+                  "height": 1281,
+                  "width": 1920
+                },
+                "flags": [],
+                "native_page_url": null,
+                "native_photo_id": null,
+                "type": "LocalPhoto",
+                "attribution_name": "Dietmar Kuballa",
+                "square_url": "https://static.inaturalist.org/photos/256224620/square.jpg",
+                "small_url": "https://static.inaturalist.org/photos/256224620/small.jpg",
+                "medium_url": "https://static.inaturalist.org/photos/256224620/medium.jpg",
+                "large_url": "https://static.inaturalist.org/photos/256224620/large.jpg",
+                "original_url": "https://static.inaturalist.org/photos/256224620/original.jpg"
+              }
+            },
+            {
+              "taxon_id": 891696,
+              "photo": {
+                "id": 100267314,
+                "license_code": null,
+                "attribution": "(c) Chris Loos, all rights reserved, uploaded by Chris Loos",
+                "url": "https://static.inaturalist.org/photos/100267314/square.jpeg",
+                "original_dimensions": {
+                  "height": 1376,
+                  "width": 1927
+                },
+                "flags": [],
+                "native_page_url": null,
+                "native_photo_id": null,
+                "type": "LocalPhoto",
+                "attribution_name": "Chris Loos",
+                "square_url": "https://static.inaturalist.org/photos/100267314/square.jpeg",
+                "small_url": "https://static.inaturalist.org/photos/100267314/small.jpeg",
+                "medium_url": "https://static.inaturalist.org/photos/100267314/medium.jpeg",
+                "large_url": "https://static.inaturalist.org/photos/100267314/large.jpeg",
+                "original_url": "https://static.inaturalist.org/photos/100267314/original.jpeg"
+              }
+            },
+            {
+              "taxon_id": 891696,
+              "photo": {
+                "id": 249685564,
+                "license_code": "cc-by-nc",
+                "attribution": "(c) @joseluisrivasmartin, some rights reserved (CC BY-NC), uploaded by @joseluisrivasmartin",
+                "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/249685564/square.jpg",
+                "original_dimensions": {
+                  "height": 1859,
+                  "width": 2048
+                },
+                "flags": [],
+                "native_page_url": null,
+                "native_photo_id": null,
+                "type": "LocalPhoto",
+                "attribution_name": "@joseluisrivasmartin",
+                "square_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/249685564/square.jpg",
+                "small_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/249685564/small.jpg",
+                "medium_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/249685564/medium.jpg",
+                "large_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/249685564/large.jpg",
+                "original_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/249685564/original.jpg"
+              }
+            },
+            {
+              "taxon_id": 891696,
+              "photo": {
+                "id": 120085445,
+                "license_code": "cc-by-nc-nd",
+                "attribution": "(c) Thomas Landgren, some rights reserved (CC BY-NC-ND)",
+                "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/120085445/square.jpg",
+                "original_dimensions": {
+                  "height": 1366,
+                  "width": 2048
+                },
+                "flags": [],
+                "native_page_url": "https://www.flickr.com/photos/thovas1/15774515819/",
+                "native_photo_id": "15774515819",
+                "type": "LocalPhoto",
+                "attribution_name": "Thomas Landgren",
+                "square_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/120085445/square.jpg",
+                "small_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/120085445/small.jpg",
+                "medium_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/120085445/medium.jpg",
+                "large_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/120085445/large.jpg",
+                "original_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/120085445/original.jpg"
+              }
+            },
+            {
+              "taxon_id": 891696,
+              "photo": {
+                "id": 183028048,
+                "license_code": null,
+                "attribution": "(c) jmsandicor18, all rights reserved, uploaded by jmsandicor18",
+                "url": "https://static.inaturalist.org/photos/183028048/square.jpeg",
+                "original_dimensions": {
+                  "height": 1153,
+                  "width": 2048
+                },
+                "flags": [],
+                "native_page_url": null,
+                "native_photo_id": null,
+                "type": "LocalPhoto",
+                "attribution_name": "jmsandicor18",
+                "square_url": "https://static.inaturalist.org/photos/183028048/square.jpeg",
+                "small_url": "https://static.inaturalist.org/photos/183028048/small.jpeg",
+                "medium_url": "https://static.inaturalist.org/photos/183028048/medium.jpeg",
+                "large_url": "https://static.inaturalist.org/photos/183028048/large.jpeg",
+                "original_url": "https://static.inaturalist.org/photos/183028048/original.jpeg"
+              }
+            },
+            {
+              "taxon_id": 891696,
+              "photo": {
+                "id": 119728298,
+                "license_code": "cc-by-nc-sa",
+                "attribution": "(c) Agust\u00edn Povedano, some rights reserved (CC BY-NC-SA)",
+                "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/119728298/square.jpg",
+                "original_dimensions": {
+                  "height": 1008,
+                  "width": 1024
+                },
+                "flags": [],
+                "native_page_url": "https://www.flickr.com/photos/decadiz/7289590650/",
+                "native_photo_id": "7289590650",
+                "type": "LocalPhoto",
+                "attribution_name": "Agust\u00edn Povedano",
+                "square_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/119728298/square.jpg",
+                "small_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/119728298/small.jpg",
+                "medium_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/119728298/medium.jpg",
+                "large_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/119728298/large.jpg",
+                "original_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/119728298/original.jpg"
+              }
+            },
+            {
+              "taxon_id": 891696,
+              "photo": {
+                "id": 38789257,
+                "license_code": "cc-by-nc",
+                "attribution": "(c) \u041c\u0430\u0440\u0438\u043d\u0430 \u0413\u043e\u0440\u0431\u0443\u043d\u043e\u0432\u0430-\u00cb\u043b\u043a\u0438\u043d\u0430, some rights reserved (CC BY-NC), uploaded by \u041c\u0430\u0440\u0438\u043d\u0430 \u0413\u043e\u0440\u0431\u0443\u043d\u043e\u0432\u0430-\u00cb\u043b\u043a\u0438\u043d\u0430",
+                "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/38789257/square.jpg",
+                "original_dimensions": {
+                  "height": 1357,
+                  "width": 2048
+                },
+                "flags": [],
+                "native_page_url": null,
+                "native_photo_id": null,
+                "type": "LocalPhoto",
+                "attribution_name": "\u041c\u0430\u0440\u0438\u043d\u0430 \u0413\u043e\u0440\u0431\u0443\u043d\u043e\u0432\u0430-\u00cb\u043b\u043a\u0438\u043d\u0430",
+                "square_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/38789257/square.jpg",
+                "small_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/38789257/small.jpg",
+                "medium_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/38789257/medium.jpg",
+                "large_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/38789257/large.jpg",
+                "original_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/38789257/original.jpg"
+              }
+            },
+            {
+              "taxon_id": 891696,
+              "photo": {
+                "id": 29484098,
+                "license_code": "cc-by-nc-nd",
+                "attribution": "(c) nrjmelvint, some rights reserved (CC BY-NC-ND), uploaded by nrjmelvint",
+                "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/29484098/square.jpeg",
+                "original_dimensions": {
+                  "height": 1365,
+                  "width": 2048
+                },
+                "flags": [],
+                "native_page_url": null,
+                "native_photo_id": null,
+                "type": "LocalPhoto",
+                "attribution_name": "nrjmelvint",
+                "square_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/29484098/square.jpeg",
+                "small_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/29484098/small.jpeg",
+                "medium_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/29484098/medium.jpeg",
+                "large_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/29484098/large.jpeg",
+                "original_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/29484098/original.jpeg"
+              }
+            },
+            {
+              "taxon_id": 891696,
+              "photo": {
+                "id": 62090661,
+                "license_code": "cc-by-nc",
+                "attribution": "(c) Julio, some rights reserved (CC BY-NC), uploaded by Julio",
+                "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/62090661/square.jpeg",
+                "original_dimensions": {
+                  "height": 1536,
+                  "width": 2048
+                },
+                "flags": [],
+                "native_page_url": null,
+                "native_photo_id": null,
+                "type": "LocalPhoto",
+                "attribution_name": "Julio",
+                "square_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/62090661/square.jpeg",
+                "small_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/62090661/small.jpeg",
+                "medium_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/62090661/medium.jpeg",
+                "large_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/62090661/large.jpeg",
+                "original_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/62090661/original.jpeg"
+              }
+            },
+            {
+              "taxon_id": 891696,
+              "photo": {
+                "id": 204591031,
+                "license_code": null,
+                "attribution": "(c) Jose Gabriel Ramos Simonelli, all rights reserved, uploaded by Jose Gabriel Ramos Simonelli",
+                "url": "https://static.inaturalist.org/photos/204591031/square.jpeg",
+                "original_dimensions": {
+                  "height": 2048,
+                  "width": 2048
+                },
+                "flags": [],
+                "native_page_url": null,
+                "native_photo_id": null,
+                "type": "LocalPhoto",
+                "attribution_name": "Jose Gabriel Ramos Simonelli",
+                "square_url": "https://static.inaturalist.org/photos/204591031/square.jpeg",
+                "small_url": "https://static.inaturalist.org/photos/204591031/small.jpeg",
+                "medium_url": "https://static.inaturalist.org/photos/204591031/medium.jpeg",
+                "large_url": "https://static.inaturalist.org/photos/204591031/large.jpeg",
+                "original_url": "https://static.inaturalist.org/photos/204591031/original.jpeg"
+              }
+            }
+          ],
+          "atlas_id": 20859,
+          "complete_species_count": null,
+          "wikipedia_url": "https://en.wikipedia.org/wiki/Eurasian_magpie",
+          "complete_rank": "subspecies",
+          "iconic_taxon_name": "Aves",
+          "preferred_common_name": "Eurasian Magpie",
+          "establishment_means": {
+            "id": 35051533,
+            "place_id": 7008,
+            "user_id": 471631,
+            "occurrence_status_level": 50,
+            "establishment_means": "native"
+          },
+          "preferred_establishment_means": "native"
+        },
+        "count": 1
+      }
+    ]
+  }
+}

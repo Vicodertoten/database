@@ -1,0 +1,454 @@
+{
+  "canonical_taxa": [
+    {
+      "canonical_taxon_id": "taxon:birds:000001",
+      "scientific_name": "Columba palumbus",
+      "common_names_i18n": {
+        "en": [
+          "Common Wood-Pigeon"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000002",
+      "scientific_name": "Corvus corone",
+      "common_names_i18n": {
+        "en": [
+          "Carrion Crow"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000003",
+      "scientific_name": "Cyanistes caeruleus",
+      "common_names_i18n": {
+        "en": [
+          "Eurasian Blue Tit"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000004",
+      "scientific_name": "Erithacus rubecula",
+      "common_names_i18n": {
+        "en": [
+          "European Robin"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000005",
+      "scientific_name": "Fringilla coelebs",
+      "common_names_i18n": {
+        "en": [
+          "Common Chaffinch"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000006",
+      "scientific_name": "Garrulus glandarius",
+      "common_names_i18n": {
+        "en": [
+          "Eurasian Jay"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000007",
+      "scientific_name": "Motacilla alba",
+      "common_names_i18n": {
+        "en": [
+          "White Wagtail"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000008",
+      "scientific_name": "Parus major",
+      "common_names_i18n": {
+        "en": [
+          "Great Tit"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000009",
+      "scientific_name": "Passer domesticus",
+      "common_names_i18n": {
+        "en": [
+          "House Sparrow"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000010",
+      "scientific_name": "Pica pica",
+      "common_names_i18n": {
+        "en": [
+          "Eurasian Magpie"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000011",
+      "scientific_name": "Sturnus vulgaris",
+      "common_names_i18n": {
+        "en": [
+          "European Starling"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000012",
+      "scientific_name": "Sylvia atricapilla",
+      "common_names_i18n": {
+        "en": [
+          "Eurasian Blackcap"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000013",
+      "scientific_name": "Troglodytes troglodytes",
+      "common_names_i18n": {
+        "en": [
+          "Eurasian Wren"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000014",
+      "scientific_name": "Turdus merula",
+      "common_names_i18n": {
+        "en": [
+          "Eurasian Blackbird"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000015",
+      "scientific_name": "Turdus philomelos",
+      "common_names_i18n": {
+        "en": [
+          "Song Thrush"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000016",
+      "scientific_name": "Carduelis carduelis",
+      "common_names_i18n": {
+        "en": [
+          "European Goldfinch"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000017",
+      "scientific_name": "Chloris chloris",
+      "common_names_i18n": {
+        "en": [
+          "European Greenfinch"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000018",
+      "scientific_name": "Acrocephalus scirpaceus",
+      "common_names_i18n": {
+        "en": [
+          "Common Reed Warbler"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000019",
+      "scientific_name": "Coccothraustes coccothraustes",
+      "common_names_i18n": {
+        "en": [
+          "Hawfinch"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000020",
+      "scientific_name": "Phoenicurus ochruros",
+      "common_names_i18n": {
+        "en": [
+          "Black Redstart"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000021",
+      "scientific_name": "Anas platyrhynchos",
+      "common_names_i18n": {
+        "en": [
+          "Mallard"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000022",
+      "scientific_name": "Anser anser",
+      "common_names_i18n": {
+        "en": [
+          "Greylag Goose"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000023",
+      "scientific_name": "Cygnus olor",
+      "common_names_i18n": {
+        "en": [
+          "Mute Swan"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000024",
+      "scientific_name": "Fulica atra",
+      "common_names_i18n": {
+        "en": [
+          "Eurasian Coot"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000025",
+      "scientific_name": "Gallinula chloropus",
+      "common_names_i18n": {
+        "en": [
+          "Common Moorhen"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000026",
+      "scientific_name": "Larus michahellis",
+      "common_names_i18n": {
+        "en": [
+          "Yellow-legged Gull"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000027",
+      "scientific_name": "Larus argentatus",
+      "common_names_i18n": {
+        "en": [
+          "European Herring Gull"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000028",
+      "scientific_name": "Phalacrocorax carbo",
+      "common_names_i18n": {
+        "en": [
+          "Great Cormorant"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000029",
+      "scientific_name": "Ardea cinerea",
+      "common_names_i18n": {
+        "en": [
+          "Grey Heron"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000030",
+      "scientific_name": "Egretta garzetta",
+      "common_names_i18n": {
+        "en": [
+          "Little Egret"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000031",
+      "scientific_name": "Buteo buteo",
+      "common_names_i18n": {
+        "en": [
+          "Common Buzzard"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000032",
+      "scientific_name": "Accipiter nisus",
+      "common_names_i18n": {
+        "en": [
+          "Eurasian Sparrowhawk"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000033",
+      "scientific_name": "Falco tinnunculus",
+      "common_names_i18n": {
+        "en": [
+          "Eurasian Kestrel"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000034",
+      "scientific_name": "Falco peregrinus",
+      "common_names_i18n": {
+        "en": [
+          "Peregrine Falcon"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000035",
+      "scientific_name": "Strix aluco",
+      "common_names_i18n": {
+        "en": [
+          "Tawny Owl"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000036",
+      "scientific_name": "Asio otus",
+      "common_names_i18n": {
+        "en": [
+          "Long-eared Owl"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000037",
+      "scientific_name": "Athene noctua",
+      "common_names_i18n": {
+        "en": [
+          "Little Owl"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000038",
+      "scientific_name": "Picus viridis",
+      "common_names_i18n": {
+        "en": [
+          "Eurasian Green Woodpecker"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000039",
+      "scientific_name": "Dendrocopos major",
+      "common_names_i18n": {
+        "en": [
+          "Great Spotted Woodpecker"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000040",
+      "scientific_name": "Dryocopus martius",
+      "common_names_i18n": {
+        "en": [
+          "Black Woodpecker"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000041",
+      "scientific_name": "Apus apus",
+      "common_names_i18n": {
+        "en": [
+          "Common Swift"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000042",
+      "scientific_name": "Delichon urbicum",
+      "common_names_i18n": {
+        "en": [
+          "Western House Martin"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000043",
+      "scientific_name": "Hirundo rustica",
+      "common_names_i18n": {
+        "en": [
+          "Barn Swallow"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000044",
+      "scientific_name": "Riparia riparia",
+      "common_names_i18n": {
+        "en": [
+          "Bank Swallow"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000045",
+      "scientific_name": "Alauda arvensis",
+      "common_names_i18n": {
+        "en": [
+          "Eurasian Skylark"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000047",
+      "scientific_name": "Lanius collurio",
+      "common_names_i18n": {
+        "en": [
+          "Red-backed Shrike"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000048",
+      "scientific_name": "Coloeus monedula",
+      "common_names_i18n": {
+        "en": [
+          "Eurasian Jackdaw"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000049",
+      "scientific_name": "Corvus frugilegus",
+      "common_names_i18n": {
+        "en": [
+          "Rook"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000070",
+      "scientific_name": "Podiceps cristatus",
+      "common_names_i18n": {
+        "en": [
+          "Great Crested Grebe"
+        ]
+      }
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000079",
+      "scientific_name": "Streptopelia decaocto",
+      "common_names_i18n": {
+        "en": [
+          "Eurasian Collared-Dove"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/database/schemas/taxon_localized_name_patch_v1.schema.json",
+  "title": "TaxonLocalizedNamePatchV1",
+  "description": "Patch entry for localized taxon names (FR/EN/NL) across canonical and referenced taxa.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "patch_id",
+    "taxon_ref_type",
+    "source",
+    "confidence"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "patch_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "taxon_ref_type": {
+      "type": "string",
+      "enum": [
+        "canonical_taxon",
+        "referenced_taxon",
+        "unresolved_taxon"
+      ]
+    },
+    "canonical_taxon_id": {
+      "type": ["string", "null"],
+      "minLength": 1
+    },
+    "referenced_taxon_id": {
+      "type": ["string", "null"],
+      "minLength": 1
+    },
+    "source_taxon_id": {
+      "type": ["string", "null"],
+      "minLength": 1
+    },
+    "scientific_name": {
+      "type": ["string", "null"],
+      "minLength": 1
+    },
+    "common_name_fr": {
+      "type": ["string", "null"],
+      "minLength": 1
+    },
+    "common_name_en": {
+      "type": ["string", "null"],
+      "minLength": 1
+    },
+    "common_name_nl": {
+      "type": ["string", "null"],
+      "minLength": 1
+    },
+    "source": {
+      "type": "string",
+      "minLength": 1
+    },
+    "confidence": {
+      "type": "string",
+      "enum": ["high", "medium", "low"]
+    },
+    "reviewer": {
+      "type": ["string", "null"]
+    },
+    "notes": {
+      "type": ["string", "null"]
+    }
+  },
+  "allOf": [
+    {
+      "anyOf": [
+        {"required": ["canonical_taxon_id"]},
+        {"required": ["referenced_taxon_id"]},
+        {"required": ["source_taxon_id"]},
+        {"required": ["scientific_name"]}
+      ]
+    },
+    {
+      "anyOf": [
+        {"required": ["common_name_fr"]},
+        {"required": ["common_name_en"]},
+        {"required": ["common_name_nl"]}
+      ]
+    },
+    {
+      "if": {
+        "properties": {
+          "taxon_ref_type": {"const": "canonical_taxon"}
+        },
+        "required": ["taxon_ref_type"]
+      },
+      "then": {
+        "anyOf": [
+          {"required": ["canonical_taxon_id"]},
+          {"required": ["scientific_name"]}
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "taxon_ref_type": {"const": "referenced_taxon"}
+        },
+        "required": ["taxon_ref_type"]
+      },
+      "then": {
+        "anyOf": [
+          {"required": ["referenced_taxon_id"]},
+          {
+            "required": ["source_taxon_id", "scientific_name"]
+          },
+          {"required": ["scientific_name"]}
+        ]
+      }
+    }
+  ]
+}

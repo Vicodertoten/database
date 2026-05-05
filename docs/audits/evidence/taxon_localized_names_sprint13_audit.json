@@ -1,0 +1,36 @@
+{
+  "execution_status": "complete",
+  "run_date": "2026-05-05T12:33:02.762418+00:00",
+  "decision": "BLOCKED_BY_NAME_SOURCE_GAPS",
+  "total_taxa_inspected": 51,
+  "canonical_taxa_count": 50,
+  "referenced_taxa_count": 1,
+  "canonical_taxa_missing_fr": 50,
+  "canonical_taxa_missing_en": 0,
+  "canonical_taxa_missing_nl": 50,
+  "referenced_taxa_missing_fr": 1,
+  "referenced_taxa_missing_en": 0,
+  "referenced_taxa_missing_nl": 1,
+  "distractor_candidate_taxa_missing_fr": 202,
+  "names_available_from_existing_common_names_i18n": {
+    "canonical_with_any_localized_name": 50,
+    "referenced_with_any_localized_name": 1
+  },
+  "names_available_from_inaturalist_payloads": {
+    "canonical_with_inat_mapping_assumed": 50,
+    "referenced_with_shell_names": 1
+  },
+  "manual_patches_available": 0,
+  "conflicts": [],
+  "unresolved_rows": [],
+  "skipped_rows": [],
+  "invalid_patches": [],
+  "before": {
+    "can_be_used_now_fr": 0,
+    "can_be_used_now_multilingual": 0
+  },
+  "after": {
+    "can_be_used_now_fr": 0,
+    "can_be_used_now_multilingual": 0
+  }
+}

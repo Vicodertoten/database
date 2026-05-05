@@ -1,0 +1,2566 @@
+{
+  "referenced_taxa": [
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:10069",
+      "source_taxon_id": "10069",
+      "scientific_name": "Fringilla montifringilla",
+      "common_names_i18n": {
+        "en": [
+          "Brambling"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:10070",
+      "source_taxon_id": "10070",
+      "scientific_name": "Fringilla coelebs",
+      "common_names_i18n": {
+        "fr": [
+          "Pinson des arbres"
+        ],
+        "en": [
+          "Common Chaffinch"
+        ],
+        "nl": [
+          "Vink"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:10325",
+      "source_taxon_id": "10325",
+      "scientific_name": "Euphagus cyanocephalus",
+      "common_names_i18n": {
+        "en": [
+          "Brewer's Blackbird"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:10411",
+      "source_taxon_id": "10411",
+      "scientific_name": "Loxia curvirostra",
+      "common_names_i18n": {
+        "en": [
+          "Red Crossbill"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:116802",
+      "source_taxon_id": "116802",
+      "scientific_name": "Acrocephalus palustris",
+      "common_names_i18n": {
+        "en": [
+          "Marsh Warbler"
+        ],
+        "fr": [
+          "Acrocephalus palustris"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:116999",
+      "source_taxon_id": "116999",
+      "scientific_name": "Pandion haliaetus",
+      "common_names_i18n": {
+        "en": [
+          "Osprey"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:117016",
+      "source_taxon_id": "117016",
+      "scientific_name": "Phylloscopus collybita",
+      "common_names_i18n": {
+        "en": [
+          "Common Chiffchaff"
+        ],
+        "fr": [
+          "Phylloscopus collybita"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:117028",
+      "source_taxon_id": "117028",
+      "scientific_name": "Phylloscopus inornatus",
+      "common_names_i18n": {
+        "en": [
+          "Yellow-browed Warbler"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:117097",
+      "source_taxon_id": "117097",
+      "scientific_name": "Regulus ignicapilla",
+      "common_names_i18n": {
+        "en": [
+          "Common Firecrest"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:11901",
+      "source_taxon_id": "11901",
+      "scientific_name": "Hirundo rustica",
+      "common_names_i18n": {
+        "fr": [
+          "Hirondelle rustique"
+        ],
+        "en": [
+          "Barn Swallow"
+        ],
+        "nl": [
+          "Boerenzwaluw"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:11941",
+      "source_taxon_id": "11941",
+      "scientific_name": "Riparia riparia",
+      "common_names_i18n": {
+        "fr": [
+          "Hirondelle de rivage"
+        ],
+        "en": [
+          "Bank Swallow"
+        ],
+        "nl": [
+          "Oeverzwaluw"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:12021",
+      "source_taxon_id": "12021",
+      "scientific_name": "Lanius cristatus",
+      "common_names_i18n": {
+        "en": [
+          "Brown Shrike"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:12707",
+      "source_taxon_id": "12707",
+      "scientific_name": "Turdus pilaris",
+      "common_names_i18n": {
+        "en": [
+          "Fieldfare"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:12716",
+      "source_taxon_id": "12716",
+      "scientific_name": "Turdus merula",
+      "common_names_i18n": {
+        "fr": [
+          "Merle noir"
+        ],
+        "en": [
+          "Eurasian Blackbird"
+        ],
+        "nl": [
+          "Merel"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:12727",
+      "source_taxon_id": "12727",
+      "scientific_name": "Turdus migratorius",
+      "common_names_i18n": {
+        "en": [
+          "American Robin"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:12735",
+      "source_taxon_id": "12735",
+      "scientific_name": "Turdus viscivorus",
+      "common_names_i18n": {
+        "en": [
+          "Mistle Thrush"
+        ],
+        "fr": [
+          "Turdus viscivorus"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:12748",
+      "source_taxon_id": "12748",
+      "scientific_name": "Turdus philomelos",
+      "common_names_i18n": {
+        "fr": [
+          "Grive musicienne"
+        ],
+        "en": [
+          "Song Thrush"
+        ],
+        "nl": [
+          "Zanglijster"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:12749",
+      "source_taxon_id": "12749",
+      "scientific_name": "Turdus iliacus",
+      "common_names_i18n": {
+        "en": [
+          "Redwing"
+        ],
+        "fr": [
+          "Turdus iliacus"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:12781",
+      "source_taxon_id": "12781",
+      "scientific_name": "Turdus fuscater",
+      "common_names_i18n": {
+        "en": [
+          "Great Thrush"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:12878",
+      "source_taxon_id": "12878",
+      "scientific_name": "Catharus ustulatus",
+      "common_names_i18n": {
+        "en": [
+          "Swainson's Thrush"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:12890",
+      "source_taxon_id": "12890",
+      "scientific_name": "Catharus guttatus",
+      "common_names_i18n": {
+        "en": [
+          "Hermit Thrush"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:1289470",
+      "source_taxon_id": "1289470",
+      "scientific_name": "Curruca communis",
+      "common_names_i18n": {
+        "en": [
+          "Common Whitethroat"
+        ],
+        "fr": [
+          "Curruca communis"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:12992",
+      "source_taxon_id": "12992",
+      "scientific_name": "Phoenicurus phoenicurus",
+      "common_names_i18n": {
+        "en": [
+          "Common Redstart"
+        ],
+        "fr": [
+          "Phoenicurus phoenicurus"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:13000",
+      "source_taxon_id": "13000",
+      "scientific_name": "Phoenicurus ochruros",
+      "common_names_i18n": {
+        "fr": [
+          "Rougequeue noir"
+        ],
+        "en": [
+          "Black Redstart"
+        ],
+        "nl": [
+          "Zwarte Roodstaart"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:13079",
+      "source_taxon_id": "13079",
+      "scientific_name": "Luscinia megarhynchos",
+      "common_names_i18n": {
+        "en": [
+          "Common Nightingale"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:13094",
+      "source_taxon_id": "13094",
+      "scientific_name": "Erithacus rubecula",
+      "common_names_i18n": {
+        "fr": [
+          "Rougegorge familier"
+        ],
+        "en": [
+          "European Robin"
+        ],
+        "nl": [
+          "Roodborst"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:13632",
+      "source_taxon_id": "13632",
+      "scientific_name": "Baeolophus bicolor",
+      "common_names_i18n": {
+        "en": [
+          "Tufted Titmouse"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:13633",
+      "source_taxon_id": "13633",
+      "scientific_name": "Baeolophus inornatus",
+      "common_names_i18n": {
+        "en": [
+          "Oak Titmouse"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:13688",
+      "source_taxon_id": "13688",
+      "scientific_name": "Motacilla cinerea",
+      "common_names_i18n": {
+        "en": [
+          "Grey Wagtail"
+        ],
+        "fr": [
+          "Motacilla cinerea"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:13711",
+      "source_taxon_id": "13711",
+      "scientific_name": "Anthus trivialis",
+      "common_names_i18n": {
+        "en": [
+          "Tree Pipit"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:13729",
+      "source_taxon_id": "13729",
+      "scientific_name": "Anthus pratensis",
+      "common_names_i18n": {
+        "en": [
+          "Meadow Pipit"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:13851",
+      "source_taxon_id": "13851",
+      "scientific_name": "Passer montanus",
+      "common_names_i18n": {
+        "en": [
+          "Eurasian Tree Sparrow"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:13858",
+      "source_taxon_id": "13858",
+      "scientific_name": "Passer domesticus",
+      "common_names_i18n": {
+        "fr": [
+          "Moineau domestique"
+        ],
+        "en": [
+          "House Sparrow"
+        ],
+        "nl": [
+          "Huismus"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:13988",
+      "source_taxon_id": "13988",
+      "scientific_name": "Prunella modularis",
+      "common_names_i18n": {
+        "en": [
+          "Dunnock"
+        ],
+        "fr": [
+          "Prunella modularis"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:14076",
+      "source_taxon_id": "14076",
+      "scientific_name": "Petronia petronia",
+      "common_names_i18n": {
+        "en": [
+          "Rock Sparrow"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:143853",
+      "source_taxon_id": "143853",
+      "scientific_name": "Pica hudsonia",
+      "common_names_i18n": {
+        "en": [
+          "Black-billed Magpie"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:144242",
+      "source_taxon_id": "144242",
+      "scientific_name": "Picus sharpei",
+      "common_names_i18n": {
+        "en": [
+          "Iberian Green Woodpecker"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:144243",
+      "source_taxon_id": "144243",
+      "scientific_name": "Picus viridis",
+      "common_names_i18n": {
+        "fr": [
+          "Pic vert"
+        ],
+        "en": [
+          "Eurasian Green Woodpecker"
+        ],
+        "nl": [
+          "Groene specht"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:144294",
+      "source_taxon_id": "144294",
+      "scientific_name": "Stercorarius chilensis",
+      "common_names_i18n": {
+        "en": [
+          "Chilean Skua"
+        ],
+        "fr": [
+          "Stercorarius chilensis"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:144455",
+      "source_taxon_id": "144455",
+      "scientific_name": "Ardea alba",
+      "common_names_i18n": {
+        "en": [
+          "Great Egret"
+        ],
+        "fr": [
+          "Ardea alba"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:144508",
+      "source_taxon_id": "144508",
+      "scientific_name": "Chroicocephalus cirrocephalus",
+      "common_names_i18n": {
+        "en": [
+          "Gray-hooded Gull"
+        ],
+        "fr": [
+          "Chroicocephalus cirrocephalus"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:144510",
+      "source_taxon_id": "144510",
+      "scientific_name": "Chroicocephalus ridibundus",
+      "common_names_i18n": {
+        "en": [
+          "Black-headed Gull"
+        ],
+        "fr": [
+          "Chroicocephalus ridibundus"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:144809",
+      "source_taxon_id": "144809",
+      "scientific_name": "Poecile palustris",
+      "common_names_i18n": {
+        "en": [
+          "Marsh Tit"
+        ],
+        "fr": [
+          "Poecile palustris"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:144815",
+      "source_taxon_id": "144815",
+      "scientific_name": "Poecile atricapillus",
+      "common_names_i18n": {
+        "en": [
+          "Black-capped Chickadee"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:144823",
+      "source_taxon_id": "144823",
+      "scientific_name": "Periparus ater",
+      "common_names_i18n": {
+        "en": [
+          "Coal Tit"
+        ],
+        "fr": [
+          "Periparus ater"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:144830",
+      "source_taxon_id": "144830",
+      "scientific_name": "Lophophanes cristatus",
+      "common_names_i18n": {
+        "en": [
+          "Crested Tit"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:144849",
+      "source_taxon_id": "144849",
+      "scientific_name": "Cyanistes caeruleus",
+      "common_names_i18n": {
+        "fr": [
+          "M\u00e9sange bleue"
+        ],
+        "en": [
+          "Eurasian Blue Tit"
+        ],
+        "nl": [
+          "Pimpelmees"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:144882",
+      "source_taxon_id": "144882",
+      "scientific_name": "Troglodytes pacificus",
+      "common_names_i18n": {
+        "en": [
+          "Pacific Wren"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:145303",
+      "source_taxon_id": "145303",
+      "scientific_name": "Spinus spinus",
+      "common_names_i18n": {
+        "en": [
+          "Eurasian Siskin"
+        ],
+        "fr": [
+          "Spinus spinus"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:145310",
+      "source_taxon_id": "145310",
+      "scientific_name": "Spinus tristis",
+      "common_names_i18n": {
+        "en": [
+          "American Goldfinch"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:145360",
+      "source_taxon_id": "145360",
+      "scientific_name": "Chloris chloris",
+      "common_names_i18n": {
+        "fr": [
+          "Verdier d'Europe"
+        ],
+        "en": [
+          "European Greenfinch"
+        ],
+        "nl": [
+          "Groenling"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:145363",
+      "source_taxon_id": "145363",
+      "scientific_name": "Troglodytes troglodytes",
+      "common_names_i18n": {
+        "fr": [
+          "Troglodyte mignon"
+        ],
+        "en": [
+          "Eurasian Wren"
+        ],
+        "nl": [
+          "Winterkoning"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:1454382",
+      "source_taxon_id": "1454382",
+      "scientific_name": "Nannopterum auritum",
+      "common_names_i18n": {
+        "en": [
+          "Double-crested Cormorant"
+        ],
+        "fr": [
+          "Nannopterum auritum"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:1455918",
+      "source_taxon_id": "1455918",
+      "scientific_name": "Spilopelia chinensis",
+      "common_names_i18n": {
+        "en": [
+          "Spotted Dove"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:14849",
+      "source_taxon_id": "14849",
+      "scientific_name": "Sturnus unicolor",
+      "common_names_i18n": {
+        "en": [
+          "Spotless Starling"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:14850",
+      "source_taxon_id": "14850",
+      "scientific_name": "Sturnus vulgaris",
+      "common_names_i18n": {
+        "fr": [
+          "\u00c9tourneau sansonnet"
+        ],
+        "en": [
+          "European Starling"
+        ],
+        "nl": [
+          "Spreeuw"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:15282",
+      "source_taxon_id": "15282",
+      "scientific_name": "Sylvia atricapilla",
+      "common_names_i18n": {
+        "fr": [
+          "Fauvette \u00e0 t\u00eate noire"
+        ],
+        "en": [
+          "Eurasian Blackcap"
+        ],
+        "nl": [
+          "Zwartkop"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:15302",
+      "source_taxon_id": "15302",
+      "scientific_name": "Sylvia borin",
+      "common_names_i18n": {
+        "en": [
+          "Garden Warbler"
+        ],
+        "fr": [
+          "Sylvia borin"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:1579015",
+      "source_taxon_id": "1579015",
+      "scientific_name": "Astur gentilis",
+      "common_names_i18n": {
+        "en": [
+          "Eurasian Goshawk"
+        ],
+        "fr": [
+          "Astur gentilis"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:1587553",
+      "source_taxon_id": "1587553",
+      "scientific_name": "Larus smithsonianus \u00d7 glaucescens",
+      "common_names_i18n": {
+        "en": [
+          "Cook Inlet Gull"
+        ],
+        "fr": [
+          "Larus smithsonianus \u00d7 glaucescens"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:1667146",
+      "source_taxon_id": "1667146",
+      "scientific_name": "Anser caerulescens \u00d7 Branta canadensis",
+      "common_names_i18n": {
+        "en": [
+          "Snow \u00d7 Canada Goose"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:1667148",
+      "source_taxon_id": "1667148",
+      "scientific_name": "Anser anser \u00d7 Branta canadensis",
+      "common_names_i18n": {
+        "en": [
+          "Greylag \u00d7 Canada Goose"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:17835",
+      "source_taxon_id": "17835",
+      "scientific_name": "Dryocopus martius",
+      "common_names_i18n": {
+        "fr": [
+          "Pic noir"
+        ],
+        "en": [
+          "Black Woodpecker"
+        ],
+        "nl": [
+          "Zwarte Specht"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:17871",
+      "source_taxon_id": "17871",
+      "scientific_name": "Dendrocopos major",
+      "common_names_i18n": {
+        "fr": [
+          "Pic \u00e9peiche"
+        ],
+        "en": [
+          "Great Spotted Woodpecker"
+        ],
+        "nl": [
+          "Grote bonte specht"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:18204",
+      "source_taxon_id": "18204",
+      "scientific_name": "Melanerpes erythrocephalus",
+      "common_names_i18n": {
+        "en": [
+          "Red-headed Woodpecker"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:18205",
+      "source_taxon_id": "18205",
+      "scientific_name": "Melanerpes carolinus",
+      "common_names_i18n": {
+        "en": [
+          "Red-bellied Woodpecker"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:18236",
+      "source_taxon_id": "18236",
+      "scientific_name": "Colaptes auratus",
+      "common_names_i18n": {
+        "en": [
+          "Northern Flicker"
+        ],
+        "fr": [
+          "Colaptes auratus"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:18911",
+      "source_taxon_id": "18911",
+      "scientific_name": "Psittacula krameri",
+      "common_names_i18n": {
+        "en": [
+          "Rose-ringed Parakeet"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:1907",
+      "source_taxon_id": "1907",
+      "scientific_name": "Cuculus canorus",
+      "common_names_i18n": {
+        "en": [
+          "Common Cuckoo"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:19898",
+      "source_taxon_id": "19898",
+      "scientific_name": "Strix aluco",
+      "common_names_i18n": {
+        "fr": [
+          "Chouette hulotte"
+        ],
+        "en": [
+          "Tawny Owl"
+        ],
+        "nl": [
+          "Bosuil"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:199913",
+      "source_taxon_id": "199913",
+      "scientific_name": "Buteo plagiatus",
+      "common_names_i18n": {
+        "en": [
+          "Gray Hawk"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:199916",
+      "source_taxon_id": "199916",
+      "scientific_name": "Setophaga caerulescens",
+      "common_names_i18n": {
+        "en": [
+          "Black-throated Blue Warbler"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:19998",
+      "source_taxon_id": "19998",
+      "scientific_name": "Athene noctua",
+      "common_names_i18n": {
+        "fr": [
+          "Chev\u00eache d'Ath\u00e9na"
+        ],
+        "en": [
+          "Little Owl"
+        ],
+        "nl": [
+          "Steenuil"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:20059",
+      "source_taxon_id": "20059",
+      "scientific_name": "Bubo bubo",
+      "common_names_i18n": {
+        "en": [
+          "Eurasian Eagle-Owl"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:201035",
+      "source_taxon_id": "201035",
+      "scientific_name": "Clanga clanga",
+      "common_names_i18n": {
+        "en": [
+          "Greater Spotted Eagle"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:201041",
+      "source_taxon_id": "201041",
+      "scientific_name": "Rupornis magnirostris",
+      "common_names_i18n": {
+        "en": [
+          "Roadside Hawk"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:201282",
+      "source_taxon_id": "201282",
+      "scientific_name": "Gallinula chloropus",
+      "common_names_i18n": {
+        "fr": [
+          "Gallinule poule-d'eau"
+        ],
+        "en": [
+          "Common Moorhen"
+        ],
+        "nl": [
+          "Waterhoen"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:20307",
+      "source_taxon_id": "20307",
+      "scientific_name": "Asio otus",
+      "common_names_i18n": {
+        "fr": [
+          "Hibou moyen-duc"
+        ],
+        "en": [
+          "Long-eared Owl"
+        ],
+        "nl": [
+          "Ransuil"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:20315",
+      "source_taxon_id": "20315",
+      "scientific_name": "Asio flammeus",
+      "common_names_i18n": {
+        "en": [
+          "Short-eared Owl"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:203153",
+      "source_taxon_id": "203153",
+      "scientific_name": "Parus major",
+      "common_names_i18n": {
+        "fr": [
+          "M\u00e9sange charbonni\u00e8re"
+        ],
+        "en": [
+          "Great Tit"
+        ],
+        "nl": [
+          "Koolmees"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:20445",
+      "source_taxon_id": "20445",
+      "scientific_name": "Tyto alba",
+      "common_names_i18n": {
+        "en": [
+          "Western Barn Owl"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:204456",
+      "source_taxon_id": "204456",
+      "scientific_name": "Acrocephalus arundinaceus",
+      "common_names_i18n": {
+        "en": [
+          "Great Reed Warbler"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:204472",
+      "source_taxon_id": "204472",
+      "scientific_name": "Buteo buteo",
+      "common_names_i18n": {
+        "fr": [
+          "Buse variable"
+        ],
+        "en": [
+          "Common Buzzard"
+        ],
+        "nl": [
+          "Buizerd"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:204496",
+      "source_taxon_id": "204496",
+      "scientific_name": "Corvus corone",
+      "common_names_i18n": {
+        "fr": [
+          "Corneille noire"
+        ],
+        "en": [
+          "Carrion Crow"
+        ],
+        "nl": [
+          "Zwarte Kraai"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:204533",
+      "source_taxon_id": "204533",
+      "scientific_name": "Larus argentatus",
+      "common_names_i18n": {
+        "fr": [
+          "Go\u00e9land argent\u00e9"
+        ],
+        "en": [
+          "European Herring Gull"
+        ],
+        "nl": [
+          "Zilvermeeuw"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:204545",
+      "source_taxon_id": "204545",
+      "scientific_name": "Motacilla flava",
+      "common_names_i18n": {
+        "en": [
+          "Western Yellow Wagtail"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:204556",
+      "source_taxon_id": "204556",
+      "scientific_name": "Oriolus oriolus",
+      "common_names_i18n": {
+        "en": [
+          "Eurasian Golden Oriole"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:2599",
+      "source_taxon_id": "2599",
+      "scientific_name": "Alcedo atthis",
+      "common_names_i18n": {
+        "en": [
+          "Common Kingfisher"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:2938",
+      "source_taxon_id": "2938",
+      "scientific_name": "Streptopelia turtur",
+      "common_names_i18n": {
+        "en": [
+          "European Turtle-Dove"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:2969",
+      "source_taxon_id": "2969",
+      "scientific_name": "Streptopelia decaocto",
+      "common_names_i18n": {
+        "fr": [
+          "Tourterelle turque"
+        ],
+        "en": [
+          "Eurasian Collared-Dove"
+        ],
+        "nl": [
+          "Turkse Tortel"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:3017",
+      "source_taxon_id": "3017",
+      "scientific_name": "Columba livia",
+      "common_names_i18n": {
+        "en": [
+          "Rock Pigeon"
+        ],
+        "fr": [
+          "Columba livia"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:3033",
+      "source_taxon_id": "3033",
+      "scientific_name": "Columba oenas",
+      "common_names_i18n": {
+        "en": [
+          "Stock Dove"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:3048",
+      "source_taxon_id": "3048",
+      "scientific_name": "Columba palumbus",
+      "common_names_i18n": {
+        "fr": [
+          "Pigeon ramier"
+        ],
+        "en": [
+          "Common Wood-Pigeon"
+        ],
+        "nl": [
+          "Houtduif"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:3108",
+      "source_taxon_id": "3108",
+      "scientific_name": "Patagioenas fasciata",
+      "common_names_i18n": {
+        "en": [
+          "Band-tailed Pigeon"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:326092",
+      "source_taxon_id": "326092",
+      "scientific_name": "Anas platyrhynchos \u00d7 Cairina moschata",
+      "common_names_i18n": {
+        "en": [
+          "Mallard \u00d7 Muscovy Duck"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:336399",
+      "source_taxon_id": "336399",
+      "scientific_name": "Coloeus monedula",
+      "common_names_i18n": {
+        "fr": [
+          "Choucas des tours"
+        ],
+        "en": [
+          "Eurasian Jackdaw"
+        ],
+        "nl": [
+          "Kauw"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:339691",
+      "source_taxon_id": "339691",
+      "scientific_name": "Parus cinereus",
+      "common_names_i18n": {
+        "en": [
+          "Asian Tit"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:34",
+      "source_taxon_id": "34",
+      "scientific_name": "Grus americana",
+      "common_names_i18n": {
+        "en": [
+          "Whooping Crane"
+        ],
+        "fr": [
+          "Grus americana"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:3439",
+      "source_taxon_id": "3439",
+      "scientific_name": "Zenaida auriculata",
+      "common_names_i18n": {
+        "en": [
+          "Eared Dove"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:3454",
+      "source_taxon_id": "3454",
+      "scientific_name": "Zenaida macroura",
+      "common_names_i18n": {
+        "en": [
+          "Mourning Dove"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:357",
+      "source_taxon_id": "357",
+      "scientific_name": "Gallinula tenebrosa",
+      "common_names_i18n": {
+        "en": [
+          "Dusky Moorhen"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:3731",
+      "source_taxon_id": "3731",
+      "scientific_name": "Platalea leucorodia",
+      "common_names_i18n": {
+        "en": [
+          "Eurasian Spoonbill"
+        ],
+        "fr": [
+          "Platalea leucorodia"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:41",
+      "source_taxon_id": "41",
+      "scientific_name": "Grus grus",
+      "common_names_i18n": {
+        "en": [
+          "Common Crane"
+        ],
+        "fr": [
+          "Grus grus"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:410743",
+      "source_taxon_id": "410743",
+      "scientific_name": "Anas superciliosa \u00d7 platyrhynchos",
+      "common_names_i18n": {
+        "en": [
+          "Pacific Black Duck \u00d7 Mallard"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:411086",
+      "source_taxon_id": "411086",
+      "scientific_name": "Ardea ibis",
+      "common_names_i18n": {
+        "en": [
+          "Western Cattle-Egret"
+        ],
+        "fr": [
+          "Ardea ibis"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:4234",
+      "source_taxon_id": "4234",
+      "scientific_name": "Aechmophorus clarkii",
+      "common_names_i18n": {
+        "en": [
+          "Clark's Grebe"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:4237",
+      "source_taxon_id": "4237",
+      "scientific_name": "Tachybaptus ruficollis",
+      "common_names_i18n": {
+        "en": [
+          "Little Grebe"
+        ],
+        "fr": [
+          "Tachybaptus ruficollis"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:4270",
+      "source_taxon_id": "4270",
+      "scientific_name": "Phalacrocorax carbo",
+      "common_names_i18n": {
+        "fr": [
+          "Grand Cormoran"
+        ],
+        "en": [
+          "Great Cormorant"
+        ],
+        "nl": [
+          "Aalscholver"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:4273",
+      "source_taxon_id": "4273",
+      "scientific_name": "Phalacrocorax sulcirostris",
+      "common_names_i18n": {
+        "en": [
+          "Little Black Cormorant"
+        ],
+        "fr": [
+          "Phalacrocorax sulcirostris"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:4311",
+      "source_taxon_id": "4311",
+      "scientific_name": "Phalacrocorax fuscescens",
+      "common_names_i18n": {
+        "en": [
+          "Black-faced Cormorant"
+        ],
+        "fr": [
+          "Phalacrocorax fuscescens"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:4349",
+      "source_taxon_id": "4349",
+      "scientific_name": "Larus hyperboreus",
+      "common_names_i18n": {
+        "en": [
+          "Glaucous Gull"
+        ],
+        "fr": [
+          "Larus hyperboreus"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:4356",
+      "source_taxon_id": "4356",
+      "scientific_name": "Larus canus",
+      "common_names_i18n": {
+        "en": [
+          "Common Gull"
+        ],
+        "fr": [
+          "Larus canus"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:4368",
+      "source_taxon_id": "4368",
+      "scientific_name": "Larus marinus",
+      "common_names_i18n": {
+        "en": [
+          "Great Black-backed Gull"
+        ],
+        "fr": [
+          "Larus marinus"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:4381",
+      "source_taxon_id": "4381",
+      "scientific_name": "Larus fuscus",
+      "common_names_i18n": {
+        "en": [
+          "Lesser Black-backed Gull"
+        ],
+        "fr": [
+          "Larus fuscus"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:4389",
+      "source_taxon_id": "4389",
+      "scientific_name": "Larus cachinnans",
+      "common_names_i18n": {
+        "en": [
+          "Caspian Gull"
+        ],
+        "fr": [
+          "Larus cachinnans"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:4643",
+      "source_taxon_id": "4643",
+      "scientific_name": "Falco subbuteo",
+      "common_names_i18n": {
+        "en": [
+          "Eurasian Hobby"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:4647",
+      "source_taxon_id": "4647",
+      "scientific_name": "Falco peregrinus",
+      "common_names_i18n": {
+        "fr": [
+          "Faucon p\u00e8lerin"
+        ],
+        "en": [
+          "Peregrine Falcon"
+        ],
+        "nl": [
+          "Slechtvalk"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:4658",
+      "source_taxon_id": "4658",
+      "scientific_name": "Falco newtoni",
+      "common_names_i18n": {
+        "en": [
+          "Malagasy Kestrel"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:4672",
+      "source_taxon_id": "4672",
+      "scientific_name": "Falco columbarius",
+      "common_names_i18n": {
+        "en": [
+          "Merlin"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:468988",
+      "source_taxon_id": "468988",
+      "scientific_name": "Anas platyrhynchos \u00d7 acuta",
+      "common_names_i18n": {
+        "en": [
+          "Mallard \u00d7 Northern Pintail"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:472287",
+      "source_taxon_id": "472287",
+      "scientific_name": "Anser anser \u00d7 cygnoides",
+      "common_names_i18n": {
+        "en": [
+          "Greylag \u00d7 Swan Goose"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:472766",
+      "source_taxon_id": "472766",
+      "scientific_name": "Falco tinnunculus",
+      "common_names_i18n": {
+        "fr": [
+          "Faucon cr\u00e9cerelle"
+        ],
+        "en": [
+          "Eurasian Kestrel"
+        ],
+        "nl": [
+          "Torenvalk"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:473",
+      "source_taxon_id": "473",
+      "scientific_name": "Fulica americana",
+      "common_names_i18n": {
+        "en": [
+          "American Coot"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:4733",
+      "source_taxon_id": "4733",
+      "scientific_name": "Ciconia ciconia",
+      "common_names_i18n": {
+        "en": [
+          "White Stork"
+        ],
+        "fr": [
+          "Ciconia ciconia"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:4756",
+      "source_taxon_id": "4756",
+      "scientific_name": "Cathartes aura",
+      "common_names_i18n": {
+        "en": [
+          "Turkey Vulture"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:478",
+      "source_taxon_id": "478",
+      "scientific_name": "Fulica alai",
+      "common_names_i18n": {
+        "en": [
+          "Hawaiian Coot"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:479",
+      "source_taxon_id": "479",
+      "scientific_name": "Fulica ardesiaca",
+      "common_names_i18n": {
+        "en": [
+          "Slate-colored Coot"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:482",
+      "source_taxon_id": "482",
+      "scientific_name": "Fulica atra",
+      "common_names_i18n": {
+        "fr": [
+          "Foulque macroule"
+        ],
+        "en": [
+          "Eurasian Coot"
+        ],
+        "nl": [
+          "Meerkoet"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:4843",
+      "source_taxon_id": "4843",
+      "scientific_name": "Haematopus ostralegus",
+      "common_names_i18n": {
+        "en": [
+          "Eurasian Oystercatcher"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:4937",
+      "source_taxon_id": "4937",
+      "scientific_name": "Egretta caerulea",
+      "common_names_i18n": {
+        "en": [
+          "Little Blue Heron"
+        ],
+        "fr": [
+          "Egretta caerulea"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:4951",
+      "source_taxon_id": "4951",
+      "scientific_name": "Ardea purpurea",
+      "common_names_i18n": {
+        "en": [
+          "Purple Heron"
+        ],
+        "fr": [
+          "Ardea purpurea"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:4952",
+      "source_taxon_id": "4952",
+      "scientific_name": "Ardea cocoi",
+      "common_names_i18n": {
+        "en": [
+          "Cocoi Heron"
+        ],
+        "fr": [
+          "Ardea cocoi"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:4954",
+      "source_taxon_id": "4954",
+      "scientific_name": "Ardea cinerea",
+      "common_names_i18n": {
+        "fr": [
+          "H\u00e9ron cendr\u00e9"
+        ],
+        "en": [
+          "Grey Heron"
+        ],
+        "nl": [
+          "Blauwe Reiger"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:4956",
+      "source_taxon_id": "4956",
+      "scientific_name": "Ardea herodias",
+      "common_names_i18n": {
+        "en": [
+          "Great Blue Heron"
+        ],
+        "fr": [
+          "Ardea herodias"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:4966",
+      "source_taxon_id": "4966",
+      "scientific_name": "Ardea pacifica",
+      "common_names_i18n": {
+        "en": [
+          "White-necked Heron"
+        ],
+        "fr": [
+          "Ardea pacifica"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:4972",
+      "source_taxon_id": "4972",
+      "scientific_name": "Ardea melanocephala",
+      "common_names_i18n": {
+        "en": [
+          "Black-headed Heron"
+        ],
+        "fr": [
+          "Ardea melanocephala"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:507881",
+      "source_taxon_id": "507881",
+      "scientific_name": "Porphyriops melanops",
+      "common_names_i18n": {
+        "en": [
+          "Spot-flanked Gallinule"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:510458",
+      "source_taxon_id": "510458",
+      "scientific_name": "Anas platyrhynchos \u00d7 Netta rufina",
+      "common_names_i18n": {
+        "en": [
+          "Mallard \u00d7 Red-crested Pochard"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:5106",
+      "source_taxon_id": "5106",
+      "scientific_name": "Accipiter nisus",
+      "common_names_i18n": {
+        "fr": [
+          "\u00c9pervier d'Europe"
+        ],
+        "en": [
+          "Eurasian Sparrowhawk"
+        ],
+        "nl": [
+          "Sperwer"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:513926",
+      "source_taxon_id": "513926",
+      "scientific_name": "Rallus aquaticus",
+      "common_names_i18n": {
+        "en": [
+          "Water Rail"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:5173",
+      "source_taxon_id": "5173",
+      "scientific_name": "Circus aeruginosus",
+      "common_names_i18n": {
+        "en": [
+          "Western Marsh Harrier"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:5200",
+      "source_taxon_id": "5200",
+      "scientific_name": "Buteo lagopus",
+      "common_names_i18n": {
+        "en": [
+          "Rough-legged Hawk"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:5227",
+      "source_taxon_id": "5227",
+      "scientific_name": "Buteo platypterus",
+      "common_names_i18n": {
+        "en": [
+          "Broad-winged Hawk"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:5267",
+      "source_taxon_id": "5267",
+      "scientific_name": "Milvus milvus",
+      "common_names_i18n": {
+        "en": [
+          "Red Kite"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:5325",
+      "source_taxon_id": "5325",
+      "scientific_name": "Pernis apivorus",
+      "common_names_i18n": {
+        "en": [
+          "European Honey-buzzard"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:558426",
+      "source_taxon_id": "558426",
+      "scientific_name": "Anser caerulescens",
+      "common_names_i18n": {
+        "en": [
+          "Snow Goose"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:558427",
+      "source_taxon_id": "558427",
+      "scientific_name": "Anser rossii",
+      "common_names_i18n": {
+        "en": [
+          "Ross's Goose"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:558429",
+      "source_taxon_id": "558429",
+      "scientific_name": "Spatula querquedula",
+      "common_names_i18n": {
+        "en": [
+          "Garganey"
+        ],
+        "fr": [
+          "Spatula querquedula"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:558433",
+      "source_taxon_id": "558433",
+      "scientific_name": "Spatula discors",
+      "common_names_i18n": {
+        "en": [
+          "Blue-winged Teal"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:558438",
+      "source_taxon_id": "558438",
+      "scientific_name": "Spatula clypeata",
+      "common_names_i18n": {
+        "en": [
+          "Northern Shoveler"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:558439",
+      "source_taxon_id": "558439",
+      "scientific_name": "Mareca strepera",
+      "common_names_i18n": {
+        "en": [
+          "Gadwall"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:558442",
+      "source_taxon_id": "558442",
+      "scientific_name": "Mareca sibilatrix",
+      "common_names_i18n": {
+        "en": [
+          "Chiloe Wigeon"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:59202",
+      "source_taxon_id": "59202",
+      "scientific_name": "Larus michahellis",
+      "common_names_i18n": {
+        "fr": [
+          "Go\u00e9land leucoph\u00e9e"
+        ],
+        "en": [
+          "Yellow-legged Gull"
+        ],
+        "nl": [
+          "Geelpootmeeuw"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:64705",
+      "source_taxon_id": "64705",
+      "scientific_name": "Delichon urbicum",
+      "common_names_i18n": {
+        "fr": [
+          "Hirondelle de fen\u00eatre"
+        ],
+        "en": [
+          "Western House Martin"
+        ],
+        "nl": [
+          "Huiszwaluw"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:6571",
+      "source_taxon_id": "6571",
+      "scientific_name": "Chaetura pelagica",
+      "common_names_i18n": {
+        "en": [
+          "Chimney Swift"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:6638",
+      "source_taxon_id": "6638",
+      "scientific_name": "Apus apus",
+      "common_names_i18n": {
+        "fr": [
+          "Martinet noir"
+        ],
+        "en": [
+          "Common Swift"
+        ],
+        "nl": [
+          "Gierzwaluw"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:6916",
+      "source_taxon_id": "6916",
+      "scientific_name": "Cygnus cygnus",
+      "common_names_i18n": {
+        "en": [
+          "Whooper Swan"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:6917",
+      "source_taxon_id": "6917",
+      "scientific_name": "Cygnus columbianus",
+      "common_names_i18n": {
+        "en": [
+          "Tundra Swan"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:6930",
+      "source_taxon_id": "6930",
+      "scientific_name": "Anas platyrhynchos",
+      "common_names_i18n": {
+        "fr": [
+          "Canard colvert"
+        ],
+        "en": [
+          "Mallard"
+        ],
+        "nl": [
+          "Wilde Eend"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:6990",
+      "source_taxon_id": "6990",
+      "scientific_name": "Bucephala clangula",
+      "common_names_i18n": {
+        "en": [
+          "Common Goldeneye"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:7008",
+      "source_taxon_id": "7008",
+      "scientific_name": "Anser indicus",
+      "common_names_i18n": {
+        "en": [
+          "Bar-headed Goose"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:7014",
+      "source_taxon_id": "7014",
+      "scientific_name": "Anser cygnoides",
+      "common_names_i18n": {
+        "en": [
+          "Swan Goose"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:7018",
+      "source_taxon_id": "7018",
+      "scientific_name": "Anser anser",
+      "common_names_i18n": {
+        "fr": [
+          "Oie cendr\u00e9e"
+        ],
+        "en": [
+          "Greylag Goose"
+        ],
+        "nl": [
+          "Grauwe Gans"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:7019",
+      "source_taxon_id": "7019",
+      "scientific_name": "Anser albifrons",
+      "common_names_i18n": {
+        "en": [
+          "Greater White-fronted Goose"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:7045",
+      "source_taxon_id": "7045",
+      "scientific_name": "Aythya ferina",
+      "common_names_i18n": {
+        "en": [
+          "Common Pochard"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:7067",
+      "source_taxon_id": "7067",
+      "scientific_name": "Tadorna tadorna",
+      "common_names_i18n": {
+        "en": [
+          "Common Shelduck"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:7089",
+      "source_taxon_id": "7089",
+      "scientific_name": "Branta canadensis",
+      "common_names_i18n": {
+        "en": [
+          "Canada Goose"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:7101",
+      "source_taxon_id": "7101",
+      "scientific_name": "Branta leucopsis",
+      "common_names_i18n": {
+        "en": [
+          "Barnacle Goose"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:7104",
+      "source_taxon_id": "7104",
+      "scientific_name": "Branta sandvicensis",
+      "common_names_i18n": {
+        "en": [
+          "Hawaiian Goose"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:7120",
+      "source_taxon_id": "7120",
+      "scientific_name": "Cairina moschata",
+      "common_names_i18n": {
+        "en": [
+          "Muscovy Duck"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:7122",
+      "source_taxon_id": "7122",
+      "scientific_name": "Netta rufina",
+      "common_names_i18n": {
+        "en": [
+          "Red-crested Pochard"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:7123",
+      "source_taxon_id": "7123",
+      "scientific_name": "Netta erythrophthalma",
+      "common_names_i18n": {
+        "en": [
+          "Southern Pochard"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:7192",
+      "source_taxon_id": "7192",
+      "scientific_name": "Mergellus albellus",
+      "common_names_i18n": {
+        "en": [
+          "Smew"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:72486",
+      "source_taxon_id": "72486",
+      "scientific_name": "Alopochen aegyptiaca",
+      "common_names_i18n": {
+        "en": [
+          "Egyptian Goose"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:72502",
+      "source_taxon_id": "72502",
+      "scientific_name": "Anas chlorotis",
+      "common_names_i18n": {
+        "en": [
+          "Brown Teal"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:72994",
+      "source_taxon_id": "72994",
+      "scientific_name": "Lophonetta specularioides",
+      "common_names_i18n": {
+        "en": [
+          "Crested Duck"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:73542",
+      "source_taxon_id": "73542",
+      "scientific_name": "Turdus flavipes",
+      "common_names_i18n": {
+        "en": [
+          "Yellow-legged Thrush"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:792977",
+      "source_taxon_id": "792977",
+      "scientific_name": "Dryobates minor",
+      "common_names_i18n": {
+        "en": [
+          "Lesser Spotted Woodpecker"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:792985",
+      "source_taxon_id": "792985",
+      "scientific_name": "Dendrocoptes medius",
+      "common_names_i18n": {
+        "en": [
+          "Middle Spotted Woodpecker"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:792988",
+      "source_taxon_id": "792988",
+      "scientific_name": "Dryobates pubescens",
+      "common_names_i18n": {
+        "en": [
+          "Downy Woodpecker"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:793469",
+      "source_taxon_id": "793469",
+      "scientific_name": "Regulus regulus",
+      "common_names_i18n": {
+        "en": [
+          "Goldcrest"
+        ],
+        "fr": [
+          "Regulus regulus"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:8001",
+      "source_taxon_id": "8001",
+      "scientific_name": "Corvus ossifragus",
+      "common_names_i18n": {
+        "en": [
+          "Fish Crow"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:8010",
+      "source_taxon_id": "8010",
+      "scientific_name": "Corvus corax",
+      "common_names_i18n": {
+        "en": [
+          "Common Raven"
+        ],
+        "fr": [
+          "Corvus corax"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:8029",
+      "source_taxon_id": "8029",
+      "scientific_name": "Corvus frugilegus",
+      "common_names_i18n": {
+        "fr": [
+          "Corbeau freux"
+        ],
+        "en": [
+          "Rook"
+        ],
+        "nl": [
+          "Roek"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:8088",
+      "source_taxon_id": "8088",
+      "scientific_name": "Garrulus glandarius",
+      "common_names_i18n": {
+        "fr": [
+          "Geai des ch\u00eanes"
+        ],
+        "en": [
+          "Eurasian Jay"
+        ],
+        "nl": [
+          "Gaai"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:8143",
+      "source_taxon_id": "8143",
+      "scientific_name": "Rhipidura leucophrys",
+      "common_names_i18n": {
+        "en": [
+          "Willie Wagtail"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:827372",
+      "source_taxon_id": "827372",
+      "scientific_name": "Anas diazi",
+      "common_names_i18n": {
+        "en": [
+          "Mexican Duck"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:827401",
+      "source_taxon_id": "827401",
+      "scientific_name": "Pica serica",
+      "common_names_i18n": {
+        "en": [
+          "Oriental Magpie"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:8423",
+      "source_taxon_id": "8423",
+      "scientific_name": "Strepera graculina",
+      "common_names_i18n": {
+        "en": [
+          "Pied Currawong"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:8575",
+      "source_taxon_id": "8575",
+      "scientific_name": "Gymnorhina tibicen",
+      "common_names_i18n": {
+        "en": [
+          "Australian Magpie"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:891696",
+      "source_taxon_id": "891696",
+      "scientific_name": "Pica pica",
+      "common_names_i18n": {
+        "fr": [
+          "Pie bavarde"
+        ],
+        "en": [
+          "Eurasian Magpie"
+        ],
+        "nl": [
+          "Ekster"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:9195",
+      "source_taxon_id": "9195",
+      "scientific_name": "Emberiza citrinella",
+      "common_names_i18n": {
+        "en": [
+          "Yellowhammer"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:9236",
+      "source_taxon_id": "9236",
+      "scientific_name": "Serinus serinus",
+      "common_names_i18n": {
+        "en": [
+          "European Serin"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:9246",
+      "source_taxon_id": "9246",
+      "scientific_name": "Serinus canaria",
+      "common_names_i18n": {
+        "en": [
+          "Island Canary"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:9398",
+      "source_taxon_id": "9398",
+      "scientific_name": "Carduelis carduelis",
+      "common_names_i18n": {
+        "fr": [
+          "Chardonneret \u00e9l\u00e9gant"
+        ],
+        "en": [
+          "European Goldfinch"
+        ],
+        "nl": [
+          "Putter"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:9462",
+      "source_taxon_id": "9462",
+      "scientific_name": "Pyrrhula pyrrhula",
+      "common_names_i18n": {
+        "en": [
+          "Eurasian Bullfinch"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:979813",
+      "source_taxon_id": "979813",
+      "scientific_name": "Microcarbo pygmaeus",
+      "common_names_i18n": {
+        "en": [
+          "Pygmy Cormorant"
+        ],
+        "fr": [
+          "Microcarbo pygmaeus"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    },
+    {
+      "referenced_taxon_id": "reftaxon:inaturalist:981",
+      "source_taxon_id": "981",
+      "scientific_name": "Phasianus colchicus",
+      "common_names_i18n": {
+        "en": [
+          "Ring-necked Pheasant"
+        ]
+      },
+      "source_record": "referenced_taxon_shell_candidates_sprint12"
+    }
+  ]
+}

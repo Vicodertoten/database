@@ -1,0 +1,333 @@
+{
+  "inat_id": "19998",
+  "scientific_name": "Athene noctua",
+  "fetched_at": "2026-05-05T11:24:16.244810+00:00",
+  "raw_payload": {
+    "total_results": 1,
+    "page": 1,
+    "per_page": 1,
+    "results": [
+      {
+        "taxon": {
+          "id": 19898,
+          "rank": "species",
+          "rank_level": 10,
+          "iconic_taxon_id": 3,
+          "ancestor_ids": [
+            48460,
+            1,
+            2,
+            355675,
+            3,
+            19350,
+            19728,
+            19885
+          ],
+          "is_active": true,
+          "min_species_taxon_id": 19898,
+          "name": "Strix aluco",
+          "parent_id": 19885,
+          "ancestry": "48460/1/2/355675/3/19350/19728/19885",
+          "min_species_ancestry": "48460,1,2,355675,3,19350,19728,19885,19898",
+          "extinct": false,
+          "provisional": false,
+          "created_at": "2008-03-13T03:47:59+00:00",
+          "default_photo": {
+            "id": 451350360,
+            "license_code": "cc-by",
+            "attribution": "(c) caroline legg, some rights reserved (CC BY)",
+            "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/451350360/square.jpg",
+            "original_dimensions": {
+              "height": 2048,
+              "width": 2048
+            },
+            "flags": [],
+            "attribution_name": "caroline legg",
+            "square_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/451350360/square.jpg",
+            "medium_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/451350360/medium.jpg"
+          },
+          "taxon_changes_count": 1,
+          "taxon_schemes_count": 7,
+          "observations_count": 20773,
+          "photos_locked": false,
+          "universal_search_rank": 20773,
+          "flag_counts": {
+            "resolved": 0,
+            "unresolved": 0
+          },
+          "current_synonymous_taxon_ids": null,
+          "taxon_photos": [
+            {
+              "taxon_id": 19898,
+              "photo": {
+                "id": 451350360,
+                "license_code": "cc-by",
+                "attribution": "(c) caroline legg, some rights reserved (CC BY)",
+                "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/451350360/square.jpg",
+                "original_dimensions": {
+                  "height": 2048,
+                  "width": 2048
+                },
+                "flags": [],
+                "native_page_url": "https://www.flickr.com/photos/128941223@N02/52100272088/",
+                "native_photo_id": "52100272088",
+                "type": "LocalPhoto",
+                "attribution_name": "caroline legg",
+                "square_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/451350360/square.jpg",
+                "small_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/451350360/small.jpg",
+                "medium_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/451350360/medium.jpg",
+                "large_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/451350360/large.jpg",
+                "original_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/451350360/original.jpg"
+              }
+            },
+            {
+              "taxon_id": 19898,
+              "photo": {
+                "id": 31660213,
+                "license_code": "cc-by-nc",
+                "attribution": "(c) naturpel, some rights reserved (CC BY-NC), uploaded by naturpel",
+                "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/31660213/square.jpg",
+                "original_dimensions": {
+                  "height": 800,
+                  "width": 1200
+                },
+                "flags": [],
+                "native_page_url": null,
+                "native_photo_id": null,
+                "type": "LocalPhoto",
+                "attribution_name": "naturpel",
+                "square_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/31660213/square.jpg",
+                "small_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/31660213/small.jpg",
+                "medium_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/31660213/medium.jpg",
+                "large_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/31660213/large.jpg",
+                "original_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/31660213/original.jpg"
+              }
+            },
+            {
+              "taxon_id": 19898,
+              "photo": {
+                "id": 40675990,
+                "license_code": "cc-by-nc",
+                "attribution": "(c) Jakob Fahr, some rights reserved (CC BY-NC), uploaded by Jakob Fahr",
+                "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/40675990/square.jpeg",
+                "original_dimensions": {
+                  "height": 2047,
+                  "width": 2048
+                },
+                "flags": [],
+                "native_page_url": null,
+                "native_photo_id": null,
+                "type": "LocalPhoto",
+                "attribution_name": "Jakob Fahr",
+                "square_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/40675990/square.jpeg",
+                "small_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/40675990/small.jpeg",
+                "medium_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/40675990/medium.jpeg",
+                "large_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/40675990/large.jpeg",
+                "original_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/40675990/original.jpeg"
+              }
+            },
+            {
+              "taxon_id": 19898,
+              "photo": {
+                "id": 111584775,
+                "license_code": "cc-by-nc-sa",
+                "attribution": "(c) Pekka Malinen, some rights reserved (CC BY-NC-SA), uploaded by Pekka Malinen",
+                "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/111584775/square.jpg",
+                "original_dimensions": {
+                  "height": 1333,
+                  "width": 2000
+                },
+                "flags": [],
+                "native_page_url": null,
+                "native_photo_id": null,
+                "type": "LocalPhoto",
+                "attribution_name": "Pekka Malinen",
+                "square_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/111584775/square.jpg",
+                "small_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/111584775/small.jpg",
+                "medium_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/111584775/medium.jpg",
+                "large_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/111584775/large.jpg",
+                "original_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/111584775/original.jpg"
+              }
+            },
+            {
+              "taxon_id": 19898,
+              "photo": {
+                "id": 323677103,
+                "license_code": "cc-by-nc",
+                "attribution": "(c) Erik Eckstein, some rights reserved (CC BY-NC), uploaded by Erik Eckstein",
+                "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/323677103/square.jpg",
+                "original_dimensions": {
+                  "height": 1365,
+                  "width": 2048
+                },
+                "flags": [],
+                "native_page_url": null,
+                "native_photo_id": null,
+                "type": "LocalPhoto",
+                "attribution_name": "Erik Eckstein",
+                "square_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/323677103/square.jpg",
+                "small_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/323677103/small.jpg",
+                "medium_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/323677103/medium.jpg",
+                "large_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/323677103/large.jpg",
+                "original_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/323677103/original.jpg"
+              }
+            },
+            {
+              "taxon_id": 19898,
+              "photo": {
+                "id": 52682592,
+                "license_code": "cc-by-nc",
+                "attribution": "(c) hehaden, some rights reserved (CC BY-NC)",
+                "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/52682592/square.jpg",
+                "original_dimensions": {
+                  "height": 1333,
+                  "width": 2000
+                },
+                "flags": [],
+                "native_page_url": "https://www.flickr.com/photos/hellie55/26758130145/",
+                "native_photo_id": "26758130145",
+                "type": "LocalPhoto",
+                "attribution_name": "hehaden",
+                "square_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/52682592/square.jpg",
+                "small_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/52682592/small.jpg",
+                "medium_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/52682592/medium.jpg",
+                "large_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/52682592/large.jpg",
+                "original_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/52682592/original.jpg"
+              }
+            },
+            {
+              "taxon_id": 19898,
+              "photo": {
+                "id": 62121282,
+                "license_code": "cc-by-nc",
+                "attribution": "(c) tonipons, some rights reserved (CC BY-NC), uploaded by tonipons",
+                "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/62121282/square.jpeg",
+                "original_dimensions": {
+                  "height": 1367,
+                  "width": 2048
+                },
+                "flags": [],
+                "native_page_url": null,
+                "native_photo_id": null,
+                "type": "LocalPhoto",
+                "attribution_name": "tonipons",
+                "square_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/62121282/square.jpeg",
+                "small_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/62121282/small.jpeg",
+                "medium_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/62121282/medium.jpeg",
+                "large_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/62121282/large.jpeg",
+                "original_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/62121282/original.jpeg"
+              }
+            },
+            {
+              "taxon_id": 19898,
+              "photo": {
+                "id": 34254143,
+                "license_code": "cc-by-nc",
+                "attribution": "(c) ccnactionature, some rights reserved (CC BY-NC), uploaded by ccnactionature",
+                "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/34254143/square.jpeg",
+                "original_dimensions": {
+                  "height": 1365,
+                  "width": 2048
+                },
+                "flags": [],
+                "native_page_url": null,
+                "native_photo_id": null,
+                "type": "LocalPhoto",
+                "attribution_name": "ccnactionature",
+                "square_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/34254143/square.jpeg",
+                "small_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/34254143/small.jpeg",
+                "medium_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/34254143/medium.jpeg",
+                "large_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/34254143/large.jpeg",
+                "original_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/34254143/original.jpeg"
+              }
+            },
+            {
+              "taxon_id": 19898,
+              "photo": {
+                "id": 39787286,
+                "license_code": "cc-by-nc",
+                "attribution": "(c) ZTSurvival, some rights reserved (CC BY-NC), uploaded by ZTSurvival",
+                "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/39787286/square.jpg",
+                "original_dimensions": {
+                  "height": 1363,
+                  "width": 2048
+                },
+                "flags": [],
+                "native_page_url": null,
+                "native_photo_id": null,
+                "type": "LocalPhoto",
+                "attribution_name": "ZTSurvival",
+                "square_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/39787286/square.jpg",
+                "small_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/39787286/small.jpg",
+                "medium_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/39787286/medium.jpg",
+                "large_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/39787286/large.jpg",
+                "original_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/39787286/original.jpg"
+              }
+            },
+            {
+              "taxon_id": 19898,
+              "photo": {
+                "id": 181798459,
+                "license_code": "cc-by-nc",
+                "attribution": "(c) Aleksey Levashkin, some rights reserved (CC BY-NC), uploaded by Aleksey Levashkin",
+                "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/181798459/square.jpg",
+                "original_dimensions": {
+                  "height": 1797,
+                  "width": 1800
+                },
+                "flags": [],
+                "native_page_url": null,
+                "native_photo_id": null,
+                "type": "LocalPhoto",
+                "attribution_name": "Aleksey Levashkin",
+                "square_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/181798459/square.jpg",
+                "small_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/181798459/small.jpg",
+                "medium_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/181798459/medium.jpg",
+                "large_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/181798459/large.jpg",
+                "original_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/181798459/original.jpg"
+              }
+            },
+            {
+              "taxon_id": 19898,
+              "photo": {
+                "id": 32043717,
+                "license_code": "cc-by-nc",
+                "attribution": "(c) naturpel, some rights reserved (CC BY-NC), uploaded by naturpel",
+                "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/32043717/square.jpg",
+                "original_dimensions": {
+                  "height": 800,
+                  "width": 1200
+                },
+                "flags": [],
+                "native_page_url": null,
+                "native_photo_id": null,
+                "type": "LocalPhoto",
+                "attribution_name": "naturpel",
+                "square_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/32043717/square.jpg",
+                "small_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/32043717/small.jpg",
+                "medium_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/32043717/medium.jpg",
+                "large_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/32043717/large.jpg",
+                "original_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/32043717/original.jpg"
+              }
+            }
+          ],
+          "atlas_id": 40201,
+          "complete_species_count": null,
+          "wikipedia_url": "http://en.wikipedia.org/wiki/Tawny_owl",
+          "complete_rank": "subspecies",
+          "iconic_taxon_name": "Aves",
+          "preferred_common_name": "Tawny Owl",
+          "establishment_means": {
+            "id": 110578308,
+            "place_id": 7008,
+            "user_id": 2059107,
+            "occurrence_status_level": 60,
+            "establishment_means": "native"
+          },
+          "preferred_establishment_means": "native"
+        },
+        "count": 1
+      }
+    ]
+  }
+}
