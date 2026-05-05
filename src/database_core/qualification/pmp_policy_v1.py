@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 
 PMP_POLICY_VERSION = "pmp_qualification_policy.v1"
 
@@ -29,6 +29,8 @@ BORDERLINE_THRESHOLD = 50.0
 STRICT_ELIGIBLE_THRESHOLD = 80.0
 STRICT_BORDERLINE_THRESHOLD = 60.0
 VERY_STRICT_ELIGIBLE_THRESHOLD = 85.0
+SPECIES_CARD_ELIGIBLE_THRESHOLD = 80.0
+SPECIES_CARD_BORDERLINE_THRESHOLD = 65.0
 
 PRE_AI_STATUSES = {
     "missing_cached_image",
@@ -37,6 +39,16 @@ PRE_AI_STATUSES = {
     "decode_error_pre_ai",
     "blur_pre_ai",
     "duplicate_pre_ai",
+}
+
+TARGET_TAXON_VISIBILITY_VALUES = {
+    "clear_primary",
+    "clear_secondary",
+    "multiple_individuals_same_taxon",
+    "multiple_species_target_clear",
+    "multiple_species_target_unclear",
+    "target_not_visible",
+    "unknown",
 }
 
 INDIRECT_EVIDENCE_TYPES = {
@@ -127,6 +139,12 @@ def evaluate_pmp_profile_policy(
 
     review_status = _normalize_text(profile.get("review_status"))
     evidence_type = _normalize_text(profile.get("evidence_type"))
+    identification_profile = (
+        profile.get("identification_profile")
+        if isinstance(profile.get("identification_profile"), Mapping)
+        else {}
+    )
+    policy_context = _policy_context(profile)
     scores = profile.get("scores") if isinstance(profile.get("scores"), Mapping) else {}
     usage_scores = (
         scores.get("usage_scores") if isinstance(scores.get("usage_scores"), Mapping) else {}
@@ -153,8 +171,6 @@ def evaluate_pmp_profile_policy(
         }
 
     usage_statuses: dict[str, dict[str, object]] = {}
-    eligible_database_uses: list[str] = []
-    not_recommended_database_uses: list[str] = []
 
     for usage_name in USAGE_NAMES:
         score_value = _safe_float(usage_scores.get(usage_name))
@@ -170,10 +186,6 @@ def evaluate_pmp_profile_policy(
             "score": score_value,
             "reason": reason,
         }
-        if usage_status == USAGE_STATUS_ELIGIBLE:
-            eligible_database_uses.append(usage_name)
-        elif usage_status == USAGE_STATUS_NOT_RECOMMENDED:
-            not_recommended_database_uses.append(usage_name)
 
     policy_notes: list[str] = []
     if evidence_type and is_indirect_evidence_type(evidence_type):
@@ -185,6 +197,16 @@ def evaluate_pmp_profile_policy(
 
     if _safe_float(scores.get("global_quality_score")) is not None:
         policy_notes.append("global_quality_is_broad_signal_not_selection")
+
+    _apply_policy_overrides(
+        profile=profile,
+        policy_context=policy_context,
+        identification_profile=identification_profile,
+        evidence_type=evidence_type,
+        usage_statuses=usage_statuses,
+        policy_notes=policy_notes,
+    )
+    eligible_database_uses, not_recommended_database_uses = _usage_sets(usage_statuses)
 
     return {
         "policy_version": PMP_POLICY_VERSION,
@@ -329,6 +351,419 @@ def _all_usage_not_applicable() -> dict[str, dict[str, object]]:
         }
         for usage_name in USAGE_NAMES
     }
+
+
+def _usage_sets(
+    usage_statuses: Mapping[str, Mapping[str, object]],
+) -> tuple[list[str], list[str]]:
+    eligible_database_uses: list[str] = []
+    not_recommended_database_uses: list[str] = []
+    for usage_name, usage in usage_statuses.items():
+        status = _normalize_text(usage.get("status"))
+        if status == USAGE_STATUS_ELIGIBLE:
+            eligible_database_uses.append(usage_name)
+        elif status == USAGE_STATUS_NOT_RECOMMENDED:
+            not_recommended_database_uses.append(usage_name)
+    return eligible_database_uses, not_recommended_database_uses
+
+
+def _apply_policy_overrides(
+    *,
+    profile: Mapping[str, object],
+    policy_context: Mapping[str, object],
+    identification_profile: Mapping[str, object],
+    evidence_type: str,
+    usage_statuses: dict[str, dict[str, object]],
+    policy_notes: list[str],
+) -> None:
+    target_taxon_visibility = _normalize_target_taxon_visibility(
+        policy_context.get("target_taxon_visibility") or profile.get("target_taxon_visibility")
+    )
+    contains_visible_answer_text = _context_bool(
+        policy_context.get("contains_visible_answer_text")
+        or profile.get("contains_visible_answer_text")
+    )
+    contains_ui_screenshot = _context_bool(
+        policy_context.get("contains_ui_screenshot") or profile.get("contains_ui_screenshot")
+    )
+
+    _apply_species_card_override(
+        profile=profile,
+        identification_profile=identification_profile,
+        evidence_type=evidence_type,
+        target_taxon_visibility=target_taxon_visibility,
+        usage_statuses=usage_statuses,
+        policy_notes=policy_notes,
+    )
+
+    if target_taxon_visibility == "multiple_individuals_same_taxon":
+        policy_notes.append("target_taxon_visibility_multiple_individuals_same_taxon")
+    elif target_taxon_visibility == "multiple_species_target_unclear":
+        _downgrade_usage_to_borderline(
+            usage_statuses,
+            "basic_identification",
+            reason="target_taxon_visibility_multiple_species_target_unclear",
+        )
+        _downgrade_usage_to_borderline(
+            usage_statuses,
+            "confusion_learning",
+            reason="target_taxon_visibility_multiple_species_target_unclear",
+        )
+        _set_usage_status(
+            usage_statuses,
+            "species_card",
+            USAGE_STATUS_NOT_RECOMMENDED,
+            reason="target_taxon_visibility_multiple_species_target_unclear",
+        )
+        policy_notes.append("target_taxon_visibility_multiple_species_target_unclear")
+    elif target_taxon_visibility == "target_not_visible":
+        for usage_name in (
+            "basic_identification",
+            "confusion_learning",
+            "morphology_learning",
+            "species_card",
+        ):
+            _set_usage_status(
+                usage_statuses,
+                usage_name,
+                USAGE_STATUS_NOT_RECOMMENDED,
+                reason="target_taxon_visibility_target_not_visible",
+            )
+        field_observation_score = _safe_float(usage_statuses["field_observation"].get("score"))
+        if (
+            field_observation_score is not None
+            and field_observation_score >= ELIGIBLE_THRESHOLD
+            and (evidence_type == "habitat" or is_indirect_evidence_type(evidence_type))
+        ):
+            _set_usage_status(
+                usage_statuses,
+                "field_observation",
+                USAGE_STATUS_BORDERLINE,
+                reason="target_taxon_visibility_target_not_visible_context_only",
+            )
+        else:
+            _set_usage_status(
+                usage_statuses,
+                "field_observation",
+                USAGE_STATUS_NOT_RECOMMENDED,
+                reason="target_taxon_visibility_target_not_visible",
+            )
+        policy_notes.append("target_taxon_visibility_target_not_visible")
+
+    if contains_visible_answer_text or contains_ui_screenshot:
+        for usage_name in (
+            "basic_identification",
+            "field_observation",
+            "confusion_learning",
+            "morphology_learning",
+            "species_card",
+        ):
+            _set_usage_status(
+                usage_statuses,
+                usage_name,
+                USAGE_STATUS_NOT_RECOMMENDED,
+                reason="visible_answer_text_or_ui_overlay",
+            )
+        if contains_visible_answer_text:
+            policy_notes.append("contains_visible_answer_text")
+        if contains_ui_screenshot:
+            policy_notes.append("contains_ui_screenshot")
+
+    if evidence_type == "habitat":
+        _apply_habitat_indirect_override(
+            profile=profile,
+            identification_profile=identification_profile,
+            usage_statuses=usage_statuses,
+            policy_notes=policy_notes,
+        )
+
+
+def _apply_habitat_indirect_override(
+    *,
+    profile: Mapping[str, object],
+    identification_profile: Mapping[str, object],
+    usage_statuses: dict[str, dict[str, object]],
+    policy_notes: list[str],
+) -> None:
+    score = _safe_float(usage_statuses["indirect_evidence_learning"].get("score"))
+    if score is None:
+        return
+
+    if _is_generic_habitat_context(profile=profile, identification_profile=identification_profile):
+        _set_usage_status(
+            usage_statuses,
+            "indirect_evidence_learning",
+            USAGE_STATUS_NOT_RECOMMENDED,
+            reason="generic_habitat_not_species_relevant",
+        )
+        policy_notes.append("generic_habitat_indirect_evidence_downgraded")
+        return
+
+    if _has_species_relevant_habitat_signal(
+        profile=profile,
+        identification_profile=identification_profile,
+    ):
+        if score >= VERY_STRICT_ELIGIBLE_THRESHOLD:
+            _set_usage_status(
+                usage_statuses,
+                "indirect_evidence_learning",
+                USAGE_STATUS_ELIGIBLE,
+                reason="species_relevant_habitat_signal",
+            )
+        elif score >= ELIGIBLE_THRESHOLD:
+            _set_usage_status(
+                usage_statuses,
+                "indirect_evidence_learning",
+                USAGE_STATUS_BORDERLINE,
+                reason="species_relevant_habitat_signal_borderline",
+            )
+        else:
+            _set_usage_status(
+                usage_statuses,
+                "indirect_evidence_learning",
+                USAGE_STATUS_NOT_RECOMMENDED,
+                reason="score_below_habitat_indirect_threshold",
+            )
+        policy_notes.append("habitat_species_relevant_signal_reviewed")
+        return
+
+    if score >= VERY_STRICT_ELIGIBLE_THRESHOLD:
+        _set_usage_status(
+            usage_statuses,
+            "indirect_evidence_learning",
+            USAGE_STATUS_ELIGIBLE,
+            reason="high_score_habitat_indirect_evidence",
+        )
+    elif score >= ELIGIBLE_THRESHOLD:
+        _set_usage_status(
+            usage_statuses,
+            "indirect_evidence_learning",
+            USAGE_STATUS_BORDERLINE,
+            reason="habitat_indirect_evidence_borderline",
+        )
+    else:
+        _set_usage_status(
+            usage_statuses,
+            "indirect_evidence_learning",
+            USAGE_STATUS_NOT_RECOMMENDED,
+            reason="score_below_habitat_indirect_threshold",
+        )
+
+
+def _apply_species_card_override(
+    *,
+    profile: Mapping[str, object],
+    identification_profile: Mapping[str, object],
+    evidence_type: str,
+    target_taxon_visibility: str,
+    usage_statuses: dict[str, dict[str, object]],
+    policy_notes: list[str],
+) -> None:
+    species_card = usage_statuses.get("species_card")
+    if species_card is None:
+        return
+    score = _safe_float(species_card.get("score"))
+    if score is None:
+        return
+
+    allowed_same_taxon_multiple = (
+        evidence_type == "multiple_organisms"
+        and target_taxon_visibility == "multiple_individuals_same_taxon"
+    )
+    if (
+        evidence_type not in {"whole_organism", "multiple_organisms"}
+        and not allowed_same_taxon_multiple
+    ):
+        return
+
+    if _has_severe_species_card_limitations(
+        profile=profile,
+        identification_profile=identification_profile,
+    ):
+        _set_usage_status(
+            usage_statuses,
+            "species_card",
+            USAGE_STATUS_NOT_RECOMMENDED,
+            reason="species_card_severe_limitations",
+        )
+        policy_notes.append("species_card_severe_limitations_applied")
+        return
+
+    if score >= SPECIES_CARD_ELIGIBLE_THRESHOLD:
+        _set_usage_status(
+            usage_statuses,
+            "species_card",
+            USAGE_STATUS_ELIGIBLE,
+            reason="species_card_representative_threshold_met",
+        )
+    elif score >= SPECIES_CARD_BORDERLINE_THRESHOLD:
+        _set_usage_status(
+            usage_statuses,
+            "species_card",
+            USAGE_STATUS_BORDERLINE,
+            reason="species_card_borderline_representative",
+        )
+    else:
+        _set_usage_status(
+            usage_statuses,
+            "species_card",
+            USAGE_STATUS_NOT_RECOMMENDED,
+            reason="species_card_score_below_representative_threshold",
+        )
+
+
+def _set_usage_status(
+    usage_statuses: dict[str, dict[str, object]],
+    usage_name: str,
+    status: str,
+    *,
+    reason: str,
+) -> None:
+    if usage_name not in usage_statuses:
+        return
+    usage_statuses[usage_name]["status"] = status
+    usage_statuses[usage_name]["reason"] = reason
+
+
+def _downgrade_usage_to_borderline(
+    usage_statuses: dict[str, dict[str, object]],
+    usage_name: str,
+    *,
+    reason: str,
+) -> None:
+    current_status = _normalize_text(usage_statuses.get(usage_name, {}).get("status"))
+    if current_status == USAGE_STATUS_ELIGIBLE:
+        _set_usage_status(usage_statuses, usage_name, USAGE_STATUS_BORDERLINE, reason=reason)
+
+
+def _policy_context(profile: Mapping[str, object]) -> Mapping[str, object]:
+    policy_context = profile.get("policy_context")
+    if isinstance(policy_context, Mapping):
+        return policy_context
+    return {}
+
+
+def _context_bool(value: object) -> bool:
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, str):
+        return _normalize_text(value) in {"true", "yes", "1"}
+    return False
+
+
+def _normalize_target_taxon_visibility(value: object) -> str:
+    normalized = _normalize_text(value)
+    if normalized in TARGET_TAXON_VISIBILITY_VALUES:
+        return normalized
+    return "unknown"
+
+
+def _profile_text_fragments(
+    *,
+    profile: Mapping[str, object],
+    identification_profile: Mapping[str, object],
+) -> list[str]:
+    fragments: list[str] = []
+
+    limitations = profile.get("limitations")
+    if isinstance(limitations, Sequence) and not isinstance(limitations, (str, bytes)):
+        fragments.extend(str(item).strip().lower() for item in limitations if str(item).strip())
+
+    identification_limitations = identification_profile.get("identification_limitations")
+    if isinstance(identification_limitations, Sequence) and not isinstance(
+        identification_limitations,
+        (str, bytes),
+    ):
+        fragments.extend(
+            str(item).strip().lower() for item in identification_limitations if str(item).strip()
+        )
+
+    visible_field_marks = identification_profile.get("visible_field_marks")
+    if isinstance(visible_field_marks, Sequence) and not isinstance(
+        visible_field_marks,
+        (str, bytes),
+    ):
+        for item in visible_field_marks:
+            if not isinstance(item, Mapping):
+                continue
+            for key in ("feature", "body_part"):
+                value = str(item.get(key) or "").strip().lower()
+                if value:
+                    fragments.append(value)
+
+    return fragments
+
+
+def _has_any_keyword(fragments: Sequence[str], keywords: Sequence[str]) -> bool:
+    return any(keyword in fragment for fragment in fragments for keyword in keywords)
+
+
+def _is_generic_habitat_context(
+    *,
+    profile: Mapping[str, object],
+    identification_profile: Mapping[str, object],
+) -> bool:
+    fragments = _profile_text_fragments(
+        profile=profile,
+        identification_profile=identification_profile,
+    )
+    generic_keywords = (
+        "no organism present",
+        "environmental context only",
+        "bird feeder",
+        "feeding station",
+        "feeder",
+        "garden",
+        "generic habitat",
+        "subject is not directly visible",
+        "organism not directly visible",
+    )
+    return _has_any_keyword(fragments, generic_keywords)
+
+
+def _has_species_relevant_habitat_signal(
+    *,
+    profile: Mapping[str, object],
+    identification_profile: Mapping[str, object],
+) -> bool:
+    fragments = _profile_text_fragments(
+        profile=profile,
+        identification_profile=identification_profile,
+    )
+    keywords = (
+        "foraging damage",
+        "woodpecker",
+        "burrow",
+        "nest site",
+        "cavity",
+        "excavation",
+        "ecological sign",
+    )
+    return _has_any_keyword(fragments, keywords)
+
+
+def _has_severe_species_card_limitations(
+    *,
+    profile: Mapping[str, object],
+    identification_profile: Mapping[str, object],
+) -> bool:
+    fragments = _profile_text_fragments(
+        profile=profile,
+        identification_profile=identification_profile,
+    )
+    keywords = (
+        "small in frame",
+        "subject too small",
+        "low resolution",
+        "silhouette only",
+        "heavily obscured",
+        "lack of detail",
+        "target unclear",
+        "multiple species",
+        "screenshot",
+        "visible answer text",
+    )
+    return _has_any_keyword(fragments, keywords)
 
 
 def _classify_by_thresholds(

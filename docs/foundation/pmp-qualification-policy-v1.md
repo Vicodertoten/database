@@ -1,7 +1,7 @@
 ---
 owner: database
 status: stable
-last_reviewed: 2026-05-04
+last_reviewed: 2026-05-05
 source_of_truth: docs/foundation/pmp-qualification-policy-v1.md
 scope: foundation
 ---
@@ -134,12 +134,28 @@ Open calibration questions are tracked in:
 - `species_card` is stricter than base thresholds.
 - `basic_identification` can still be `borderline`/`eligible` when score supports it.
 
+Phase 2 calibration note:
+- same-species multiple individuals are often acceptable and should not be
+  automatically penalized when target identity remains clear;
+- mixed-species frames with unclear target should downgrade
+  `basic_identification` / `confusion_learning` and block `species_card`;
+- this uses `target_taxon_visibility` as a policy-side concept, not a taxonomic
+  override and not a runtime selection field.
+
 ### feather / nest / track / scat / burrow / habitat / dead_organism / egg
 - `basic_identification` usually `not_recommended`.
 - `indirect_evidence_learning` can be `eligible` at score >= 70.
 - `field_observation` can be `eligible` at score >= 70.
 - `species_card` is stricter and usually not recommended unless score strongly
   supports it.
+
+Phase 2 calibration note for `habitat`:
+- generic habitat or feeder/garden context is weak species-level evidence and
+  should not be over-promoted;
+- `habitat` indirect evidence is stricter than `feather` / `nest` /
+  `dead_organism`;
+- species-relevant ecological signs such as woodpecker foraging damage can still
+  support `indirect_evidence_learning` when score is high enough.
 
 ### partial_organism
 - score-driven interpretation is retained,
@@ -153,6 +169,90 @@ Policy guardrail:
 - high `global_quality_score` alone must not force
   `basic_identification=eligible`.
 - usage-specific eligibility is driven by usage scores and evidence type.
+
+## visible_answer_text_or_ui_overlay
+
+Meaning:
+- the media contains visible text or UI that reveals the species answer, or is a
+  screenshot/app artifact.
+
+Policy effect:
+- unsuitable for `basic_identification`, `confusion_learning`, and
+  `species_card`;
+- in v1.1 policy calibration, explicit flags can also downgrade
+  `field_observation` and `morphology_learning` because the artifact itself is
+  pedagogically contaminating.
+
+Implementation boundary:
+- no OCR is implemented in v1.1;
+- no filename heuristics are used;
+- policy only reacts when explicit optional context flags are present.
+
+Optional context flags accepted by policy:
+- `contains_visible_answer_text`
+- `contains_ui_screenshot`
+
+These are policy-side hints only. They are not runtime fields and are not part
+of quiz selection logic.
+
+## target_taxon_visibility
+
+Policy may consume an optional `target_taxon_visibility` hint.
+
+Current policy-side interpretations:
+- `multiple_individuals_same_taxon`: same-species groups can remain useful for
+  `basic_identification`, `morphology_learning`, and `field_observation` when
+  scores support them;
+- `multiple_species_target_unclear`: downgrade identification-oriented uses and
+  block `species_card`;
+- `target_not_visible`: identification-oriented uses are not recommended; field
+  observation may remain only as limited context.
+
+This concept:
+- does not rename the taxon,
+- does not override canonical identity,
+- does not introduce `selectedOptionId`,
+- does not add runtime coupling.
+
+## species_card calibration
+
+`species_card` is intentionally stricter than `basic_identification`.
+
+Phase 2 v1.1 guidance:
+- representative whole-organism media can remain eligible;
+- same-species multiple-individual media can remain borderline/eligible when the
+  target remains clear and the image is representative;
+- severe limitations should downgrade `species_card`, including:
+  `subject too small`, `small in frame`, `low resolution`, `silhouette only`,
+  `heavily obscured`, `lack of detail`, explicit target ambiguity, or visible
+  answer/UI contamination.
+
+This does not require perfect media.
+It requires that `species_card` remain more representative than a merely usable
+field observation.
+
+## field_observation clarification
+
+`field_observation` is intentionally broader than `basic_identification`.
+
+It can be useful for:
+- real-world context,
+- posture,
+- distance and viewing difficulty,
+- habitat or behavior context,
+- realistic field conditions.
+
+It does **not** mean:
+- quiz-ready,
+- species-card ready,
+- clean identification,
+- generally high quality.
+
+Phase 2 decision:
+- no broad threshold change was applied;
+- field observation remains broad by design;
+- only explicit severe flags (for example visible answer text / UI artifact or
+  target not visible) justify policy downgrades in v1.1.
 
 ## Policy output contract (separate from PMP contract)
 
@@ -203,3 +303,5 @@ collapsed "playable" decision.
 - current policy is still bird-first in observed data, even though contract is
   multi-taxon oriented.
 - policy outputs are recommendations for database usage, not final selection.
+- rare model-subject misses can still occur for extremely distant subjects;
+  these remain second-review notes rather than a new policy category in v1.1.

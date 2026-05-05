@@ -22,8 +22,14 @@ def _profile(
     species_card: float,
     indirect_evidence_learning: float,
     review_status: str = "valid",
+    target_taxon_visibility: str | None = None,
+    contains_visible_answer_text: bool | None = None,
+    contains_ui_screenshot: bool | None = None,
+    limitations: list[str] | None = None,
+    identification_limitations: list[str] | None = None,
+    visible_field_marks: list[dict[str, object]] | None = None,
 ) -> dict[str, object]:
-    return {
+    profile = {
         "review_status": review_status,
         "evidence_type": evidence_type,
         "scores": {
@@ -37,7 +43,19 @@ def _profile(
                 "indirect_evidence_learning": indirect_evidence_learning,
             },
         },
+        "identification_profile": {
+            "identification_limitations": identification_limitations or [],
+            "visible_field_marks": visible_field_marks or [],
+        },
+        "limitations": limitations or [],
     }
+    if target_taxon_visibility is not None:
+        profile["target_taxon_visibility"] = target_taxon_visibility
+    if contains_visible_answer_text is not None:
+        profile["contains_visible_answer_text"] = contains_visible_answer_text
+    if contains_ui_screenshot is not None:
+        profile["contains_ui_screenshot"] = contains_ui_screenshot
+    return profile
 
 
 def _outcome(profile: dict[str, object], *, status: str = "ok") -> dict[str, object]:
@@ -166,6 +184,164 @@ def test_multiple_organisms_has_stricter_species_card() -> None:
 
     assert decision["usage_statuses"]["field_observation"]["status"] == "eligible"
     assert decision["usage_statuses"]["species_card"]["status"] == "borderline"
+
+
+def test_multiple_same_taxon_can_remain_eligible_for_relevant_uses() -> None:
+    decision = evaluate_pmp_profile_policy(
+        _profile(
+            evidence_type="multiple_organisms",
+            global_quality_score=86,
+            basic_identification=84,
+            field_observation=84,
+            confusion_learning=78,
+            morphology_learning=82,
+            species_card=82,
+            indirect_evidence_learning=40,
+            target_taxon_visibility="multiple_individuals_same_taxon",
+        )
+    )
+
+    assert decision["usage_statuses"]["basic_identification"]["status"] == "eligible"
+    assert decision["usage_statuses"]["morphology_learning"]["status"] == "eligible"
+    assert decision["usage_statuses"]["field_observation"]["status"] == "eligible"
+    assert decision["usage_statuses"]["species_card"]["status"] == "eligible"
+
+
+def test_multiple_species_target_unclear_downgrades_identification_and_blocks_species_card(
+) -> None:
+    decision = evaluate_pmp_profile_policy(
+        _profile(
+            evidence_type="multiple_organisms",
+            global_quality_score=82,
+            basic_identification=76,
+            field_observation=83,
+            confusion_learning=74,
+            morphology_learning=75,
+            species_card=86,
+            indirect_evidence_learning=45,
+            target_taxon_visibility="multiple_species_target_unclear",
+        )
+    )
+
+    assert decision["usage_statuses"]["basic_identification"]["status"] == "borderline"
+    assert decision["usage_statuses"]["confusion_learning"]["status"] == "borderline"
+    assert decision["usage_statuses"]["species_card"]["status"] == "not_recommended"
+    assert decision["usage_statuses"]["field_observation"]["status"] == "eligible"
+
+
+def test_visible_answer_text_blocks_quiz_like_and_card_uses() -> None:
+    decision = evaluate_pmp_profile_policy(
+        _profile(
+            evidence_type="whole_organism",
+            global_quality_score=88,
+            basic_identification=85,
+            field_observation=84,
+            confusion_learning=82,
+            morphology_learning=80,
+            species_card=87,
+            indirect_evidence_learning=10,
+            contains_visible_answer_text=True,
+            contains_ui_screenshot=True,
+        )
+    )
+
+    for usage_name in (
+        "basic_identification",
+        "field_observation",
+        "confusion_learning",
+        "morphology_learning",
+        "species_card",
+    ):
+        assert decision["usage_statuses"][usage_name]["status"] == "not_recommended"
+
+
+def test_generic_habitat_with_score_70_is_not_indirectly_eligible() -> None:
+    decision = evaluate_pmp_profile_policy(
+        _profile(
+            evidence_type="habitat",
+            global_quality_score=72,
+            basic_identification=10,
+            field_observation=76,
+            confusion_learning=35,
+            morphology_learning=30,
+            species_card=20,
+            indirect_evidence_learning=70,
+            identification_limitations=["environmental context only", "no organism present"],
+        )
+    )
+
+    assert decision["usage_statuses"]["indirect_evidence_learning"]["status"] == "not_recommended"
+
+
+def test_generic_habitat_feeder_context_is_not_indirectly_eligible() -> None:
+    decision = evaluate_pmp_profile_policy(
+        _profile(
+            evidence_type="habitat",
+            global_quality_score=84,
+            basic_identification=15,
+            field_observation=74,
+            confusion_learning=30,
+            morphology_learning=30,
+            species_card=22,
+            indirect_evidence_learning=92,
+            visible_field_marks=[
+                {
+                    "feature": "bird feeder habitat",
+                    "body_part": "habitat",
+                }
+            ],
+            identification_limitations=["feeding station only"],
+        )
+    )
+
+    assert decision["usage_statuses"]["indirect_evidence_learning"]["status"] == "not_recommended"
+
+
+def test_species_relevant_habitat_signal_can_be_eligible_at_85_plus() -> None:
+    decision = evaluate_pmp_profile_policy(
+        _profile(
+            evidence_type="habitat",
+            global_quality_score=85,
+            basic_identification=12,
+            field_observation=77,
+            confusion_learning=42,
+            morphology_learning=45,
+            species_card=25,
+            indirect_evidence_learning=86,
+            visible_field_marks=[
+                {
+                    "feature": "woodpecker foraging damage",
+                    "body_part": "habitat",
+                }
+            ],
+            identification_limitations=[
+                "indirect evidence only, typical of large woodpecker activity"
+            ],
+        )
+    )
+
+    assert decision["usage_statuses"]["indirect_evidence_learning"]["status"] == "eligible"
+
+
+def test_distant_low_detail_whole_organism_is_downgraded_for_species_card() -> None:
+    decision = evaluate_pmp_profile_policy(
+        _profile(
+            evidence_type="whole_organism",
+            global_quality_score=78,
+            basic_identification=60,
+            field_observation=77,
+            confusion_learning=58,
+            morphology_learning=62,
+            species_card=82,
+            indirect_evidence_learning=10,
+            identification_limitations=[
+                "Subject is small in frame",
+                "lack of detail for definitive ID",
+            ],
+        )
+    )
+
+    assert decision["usage_statuses"]["species_card"]["status"] == "not_recommended"
 
 
 def test_failed_profile_maps_to_profile_failed() -> None:

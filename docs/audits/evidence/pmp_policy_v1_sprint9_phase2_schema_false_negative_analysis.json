@@ -1,0 +1,97 @@
+{
+  "snapshot_id": "palier1-be-birds-50taxa-run003-pmp-policy-broader-400-20260504",
+  "generated_at": "2026-05-05",
+  "source_phase1_analysis": "docs/audits/evidence/pmp_policy_v1_broader_400_20260504_human_review_analysis.json",
+  "schema_false_negative_count": 4,
+  "analysis_decision": "PATCH_NORMALIZER_AND_PROMPT_ONLY",
+  "findings": [
+    {
+      "review_item_id": "pmp-policy-review-0138",
+      "source_media_id": "14306882",
+      "scientific_name": "Podiceps cristatus",
+      "failure_reason": "schema_validation_failed",
+      "schema_error_path": "group_specific_profile.bird.bird_visible_parts.2",
+      "schema_error_cause": "enum_mismatch",
+      "actual_invalid_value": "body",
+      "expected_value": [
+        "head",
+        "beak",
+        "eye",
+        "neck",
+        "breast",
+        "belly",
+        "back",
+        "wing",
+        "tail",
+        "legs",
+        "feet",
+        "whole_body",
+        "unknown"
+      ],
+      "root_cause_class": "prompt_output_inconsistency",
+      "root_cause_detail": "Model used body instead of whole_body for bird_visible_parts.",
+      "safe_patch_applied": "normalize bird_visible_parts body -> whole_body before validation"
+    },
+    {
+      "review_item_id": "pmp-policy-review-0283",
+      "source_media_id": "264553506",
+      "scientific_name": "Podiceps cristatus",
+      "failure_reason": "schema_validation_failed",
+      "schema_error_path": "group_specific_profile.bird.posture",
+      "schema_error_cause": "enum_mismatch",
+      "actual_invalid_value": "sitting",
+      "expected_value": [
+        "perched",
+        "standing",
+        "swimming",
+        "flying",
+        "foraging",
+        "resting",
+        "unknown"
+      ],
+      "root_cause_class": "prompt_output_inconsistency",
+      "root_cause_detail": "Model used sitting instead of the allowed bird posture enum.",
+      "safe_patch_applied": "normalize posture sitting -> resting before validation"
+    },
+    {
+      "review_item_id": "pmp-policy-review-0284",
+      "source_media_id": "264553526",
+      "scientific_name": "Larus argentatus",
+      "failure_reason": "schema_validation_failed",
+      "schema_error_path": "biological_profile_visible.plumage_state.visible_basis",
+      "schema_error_cause": "invalid_biological_basis",
+      "actual_invalid_value": null,
+      "expected_value": "non-empty string",
+      "root_cause_class": "prompt_output_inconsistency",
+      "root_cause_detail": "Model asserted non_breeding_plumage with no visible basis.",
+      "safe_patch_applied": "downgrade unsupported biological assertion to unknown before validation"
+    },
+    {
+      "review_item_id": "pmp-policy-review-0213",
+      "source_media_id": "197128124",
+      "scientific_name": "Coccothraustes coccothraustes",
+      "failure_reason": "schema_validation_failed",
+      "schema_error_path": "biological_profile_visible.seasonal_state.visible_basis",
+      "schema_error_cause": "invalid_biological_basis",
+      "actual_invalid_value": null,
+      "expected_value": "non-empty string",
+      "root_cause_class": "prompt_output_inconsistency",
+      "root_cause_detail": "Model asserted breeding_season with no visible basis.",
+      "safe_patch_applied": "downgrade unsupported biological assertion to unknown before validation"
+    }
+  ],
+  "pre_ai_borderline_review": {
+    "review_item_id": "pmp-policy-review-0335",
+    "source_media_id": "30487921",
+    "scientific_name": "Phoenicurus ochruros",
+    "pre_ai_status": "insufficient_resolution_pre_ai",
+    "downloaded_width": 500,
+    "downloaded_height": 1301,
+    "current_thresholds": {
+      "min_ai_image_width": 512,
+      "min_ai_image_height": 512
+    },
+    "phase2_decision": "NO_THRESHOLD_CHANGE",
+    "rationale": "Single borderline example only; reviewer explicitly preferred keeping pre-AI strict to avoid future layout/crop issues."
+  }
+}

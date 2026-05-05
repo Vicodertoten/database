@@ -37,16 +37,13 @@ INTENDED_VALID_FIXTURES = {
     "nest.json",
     "habitat.json",
     "multiple_organisms.json",
+    "invalid_biological_basis.json",
 }
 
 INTENDED_INVALID_EXPECTATIONS = {
     "invalid_feedback_field.json": {
         "failure_reason": "schema_validation_failed",
         "schema_failure_cause": "additional_property",
-    },
-    "invalid_biological_basis.json": {
-        "failure_reason": "schema_validation_failed",
-        "schema_failure_cause": "invalid_biological_basis",
     },
     "failed_media_uninspectable.json": {
         "failure_reason": "media_uninspectable",

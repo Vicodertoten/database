@@ -445,6 +445,7 @@ def normalize_pedagogical_media_profile_v1(
     group_specific_profile = _mapping(normalized.get("group_specific_profile"))
     bird_profile = _mapping(group_specific_profile.get("bird"))
     if bird_profile:
+        _normalize_bird_profile_aliases(bird_profile)
         _normalize_known_enum_field(
             bird_profile,
             "posture",
@@ -1143,6 +1144,39 @@ def _normalize_string_enum_list(
         pass
 
 
+def _normalize_bird_profile_aliases(bird_profile: Mapping[str, object]) -> None:
+    posture_aliases = {
+        "sitting": "resting",
+    }
+    visible_part_aliases = {
+        "body": "whole_body",
+    }
+
+    posture = _normalize_text(bird_profile.get("posture"))
+    if posture in posture_aliases:
+        try:
+            bird_profile["posture"] = posture_aliases[posture]  # type: ignore[index]
+        except TypeError:
+            pass
+
+    raw_parts = bird_profile.get("bird_visible_parts")
+    if not isinstance(raw_parts, Sequence) or isinstance(raw_parts, (str, bytes)):
+        return
+
+    normalized_parts: list[object] = []
+    for item in raw_parts:
+        if not isinstance(item, str):
+            normalized_parts.append(item)
+            continue
+        token = _normalize_text(item)
+        normalized_parts.append(visible_part_aliases.get(token, item))
+
+    try:
+        bird_profile["bird_visible_parts"] = normalized_parts  # type: ignore[index]
+    except TypeError:
+        pass
+
+
 def _normalize_context_visible_aliases(observation_profile: Mapping[str, object]) -> None:
     raw = observation_profile.get("context_visible")
     if not isinstance(raw, Sequence) or isinstance(raw, (str, bytes)):
@@ -1187,6 +1221,17 @@ def _normalize_biological_attribute(
     if value_raw in {"unknown", "not_applicable"} and confidence_raw == "unknown":
         try:
             field["confidence"] = "low"
+        except TypeError:
+            pass
+    # If the model makes a concrete biological claim but provides no visible basis,
+    # degrade it to unknown rather than failing the entire PMP payload.
+    visible_basis = _non_empty(field.get("visible_basis"))
+    if value_raw and value_raw not in {"unknown", "not_applicable"} and visible_basis is None:
+        try:
+            field["value"] = "unknown"
+            if confidence_raw not in {"low", "medium"}:
+                field["confidence"] = "low"
+            field["visible_basis"] = None
         except TypeError:
             pass
 
