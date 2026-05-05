@@ -1,0 +1,294 @@
+{
+  "run_date": "2026-05-05",
+  "phase": "Sprint 14B.2",
+  "policy_doc": "docs/foundation/localized-name-source-policy-v1.md",
+  "providers": [
+    "inaturalist",
+    "wikidata",
+    "gbif"
+  ],
+  "provider_status": {
+    "inaturalist": "available_local_artifact",
+    "wikidata": "not_configured",
+    "gbif": "not_configured"
+  },
+  "taxa_considered_count": 248,
+  "taxa_considered_by_kind": {
+    "canonical_taxon": 50,
+    "referenced_taxon": 198
+  },
+  "candidate_names_by_language": {
+    "fr": 178,
+    "en": 340,
+    "nl": 134
+  },
+  "selected_names_by_language": {
+    "fr": 136,
+    "en": 248,
+    "nl": 92
+  },
+  "displayable_source_attested_count_by_language": {
+    "nl": 50,
+    "fr": 23
+  },
+  "displayable_curated_count_by_language": {
+    "en": 248,
+    "nl": 42,
+    "fr": 19
+  },
+  "needs_review_conflict_count_by_language": {},
+  "not_displayable_count_by_language": {
+    "fr": 206,
+    "nl": 156
+  },
+  "conflict_count": 0,
+  "source_priority_distribution": {
+    "inaturalist": 123,
+    "manual_or_curated_existing": 353
+  },
+  "projected_fr_safe_label_gain": 23,
+  "current_safe_ready_target_count_after_guard": 10,
+  "projected_safe_ready_target_count_after_source_attested_names": 36,
+  "first_corpus_minimum_target_count": 30,
+  "projected_decision": "READY_FOR_RUNTIME_CONTRACTS_WITH_WARNINGS",
+  "selected_high_value_name_candidates": [
+    {
+      "taxon_id": "taxon:birds:000006",
+      "taxon_kind": "canonical_taxon",
+      "scientific_name": "Garrulus glandarius",
+      "language": "fr",
+      "selected_candidate_name": "Geai des ch\u00eanes",
+      "selected_source": "inaturalist",
+      "display_status": "displayable_source_attested",
+      "affected_ready_target_count": 5,
+      "projected_unlock_value": 5
+    },
+    {
+      "taxon_id": "taxon:birds:000008",
+      "taxon_kind": "canonical_taxon",
+      "scientific_name": "Parus major",
+      "language": "fr",
+      "selected_candidate_name": "M\u00e9sange charbonni\u00e8re",
+      "selected_source": "inaturalist",
+      "display_status": "displayable_source_attested",
+      "affected_ready_target_count": 5,
+      "projected_unlock_value": 5
+    },
+    {
+      "taxon_id": "taxon:birds:000016",
+      "taxon_kind": "canonical_taxon",
+      "scientific_name": "Carduelis carduelis",
+      "language": "fr",
+      "selected_candidate_name": "Chardonneret \u00e9l\u00e9gant",
+      "selected_source": "inaturalist",
+      "display_status": "displayable_source_attested",
+      "affected_ready_target_count": 5,
+      "projected_unlock_value": 5
+    },
+    {
+      "taxon_id": "taxon:birds:000033",
+      "taxon_kind": "canonical_taxon",
+      "scientific_name": "Falco tinnunculus",
+      "language": "fr",
+      "selected_candidate_name": "Faucon cr\u00e9cerelle",
+      "selected_source": "inaturalist",
+      "display_status": "displayable_source_attested",
+      "affected_ready_target_count": 5,
+      "projected_unlock_value": 5
+    },
+    {
+      "taxon_id": "taxon:birds:000042",
+      "taxon_kind": "canonical_taxon",
+      "scientific_name": "Delichon urbicum",
+      "language": "fr",
+      "selected_candidate_name": "Hirondelle de fen\u00eatre",
+      "selected_source": "inaturalist",
+      "display_status": "displayable_source_attested",
+      "affected_ready_target_count": 5,
+      "projected_unlock_value": 5
+    },
+    {
+      "taxon_id": "taxon:birds:000017",
+      "taxon_kind": "canonical_taxon",
+      "scientific_name": "Chloris chloris",
+      "language": "fr",
+      "selected_candidate_name": "Verdier d'Europe",
+      "selected_source": "inaturalist",
+      "display_status": "displayable_source_attested",
+      "affected_ready_target_count": 4,
+      "projected_unlock_value": 4
+    },
+    {
+      "taxon_id": "taxon:birds:000011",
+      "taxon_kind": "canonical_taxon",
+      "scientific_name": "Sturnus vulgaris",
+      "language": "fr",
+      "selected_candidate_name": "\u00c9tourneau sansonnet",
+      "selected_source": "inaturalist",
+      "display_status": "displayable_source_attested",
+      "affected_ready_target_count": 3,
+      "projected_unlock_value": 3
+    },
+    {
+      "taxon_id": "taxon:birds:000012",
+      "taxon_kind": "canonical_taxon",
+      "scientific_name": "Sylvia atricapilla",
+      "language": "fr",
+      "selected_candidate_name": "Fauvette \u00e0 t\u00eate noire",
+      "selected_source": "inaturalist",
+      "display_status": "displayable_source_attested",
+      "affected_ready_target_count": 3,
+      "projected_unlock_value": 3
+    },
+    {
+      "taxon_id": "taxon:birds:000019",
+      "taxon_kind": "canonical_taxon",
+      "scientific_name": "Coccothraustes coccothraustes",
+      "language": "fr",
+      "selected_candidate_name": "Gros-bec casse-noyaux",
+      "selected_source": "inaturalist",
+      "display_status": "displayable_source_attested",
+      "affected_ready_target_count": 3,
+      "projected_unlock_value": 3
+    },
+    {
+      "taxon_id": "taxon:birds:000039",
+      "taxon_kind": "canonical_taxon",
+      "scientific_name": "Dendrocopos major",
+      "language": "fr",
+      "selected_candidate_name": "Pic \u00e9peiche",
+      "selected_source": "inaturalist",
+      "display_status": "displayable_source_attested",
+      "affected_ready_target_count": 3,
+      "projected_unlock_value": 3
+    },
+    {
+      "taxon_id": "taxon:birds:000003",
+      "taxon_kind": "canonical_taxon",
+      "scientific_name": "Cyanistes caeruleus",
+      "language": "fr",
+      "selected_candidate_name": "M\u00e9sange bleue",
+      "selected_source": "inaturalist",
+      "display_status": "displayable_source_attested",
+      "affected_ready_target_count": 2,
+      "projected_unlock_value": 2
+    },
+    {
+      "taxon_id": "taxon:birds:000022",
+      "taxon_kind": "canonical_taxon",
+      "scientific_name": "Anser anser",
+      "language": "fr",
+      "selected_candidate_name": "Oie cendr\u00e9e",
+      "selected_source": "inaturalist",
+      "display_status": "displayable_source_attested",
+      "affected_ready_target_count": 2,
+      "projected_unlock_value": 2
+    },
+    {
+      "taxon_id": "taxon:birds:000023",
+      "taxon_kind": "canonical_taxon",
+      "scientific_name": "Cygnus olor",
+      "language": "fr",
+      "selected_candidate_name": "Cygne tubercul\u00e9",
+      "selected_source": "inaturalist",
+      "display_status": "displayable_source_attested",
+      "affected_ready_target_count": 2,
+      "projected_unlock_value": 2
+    },
+    {
+      "taxon_id": "taxon:birds:000025",
+      "taxon_kind": "canonical_taxon",
+      "scientific_name": "Gallinula chloropus",
+      "language": "fr",
+      "selected_candidate_name": "Gallinule poule-d'eau",
+      "selected_source": "inaturalist",
+      "display_status": "displayable_source_attested",
+      "affected_ready_target_count": 2,
+      "projected_unlock_value": 2
+    },
+    {
+      "taxon_id": "taxon:birds:000029",
+      "taxon_kind": "canonical_taxon",
+      "scientific_name": "Ardea cinerea",
+      "language": "fr",
+      "selected_candidate_name": "H\u00e9ron cendr\u00e9",
+      "selected_source": "inaturalist",
+      "display_status": "displayable_source_attested",
+      "affected_ready_target_count": 2,
+      "projected_unlock_value": 2
+    },
+    {
+      "taxon_id": "taxon:birds:000032",
+      "taxon_kind": "canonical_taxon",
+      "scientific_name": "Accipiter nisus",
+      "language": "fr",
+      "selected_candidate_name": "\u00c9pervier d'Europe",
+      "selected_source": "inaturalist",
+      "display_status": "displayable_source_attested",
+      "affected_ready_target_count": 2,
+      "projected_unlock_value": 2
+    },
+    {
+      "taxon_id": "taxon:birds:000034",
+      "taxon_kind": "canonical_taxon",
+      "scientific_name": "Falco peregrinus",
+      "language": "fr",
+      "selected_candidate_name": "Faucon p\u00e8lerin",
+      "selected_source": "inaturalist",
+      "display_status": "displayable_source_attested",
+      "affected_ready_target_count": 2,
+      "projected_unlock_value": 2
+    },
+    {
+      "taxon_id": "taxon:birds:000037",
+      "taxon_kind": "canonical_taxon",
+      "scientific_name": "Athene noctua",
+      "language": "fr",
+      "selected_candidate_name": "Chev\u00eache d'Ath\u00e9na",
+      "selected_source": "inaturalist",
+      "display_status": "displayable_source_attested",
+      "affected_ready_target_count": 2,
+      "projected_unlock_value": 2
+    },
+    {
+      "taxon_id": "taxon:birds:000026",
+      "taxon_kind": "canonical_taxon",
+      "scientific_name": "Larus michahellis",
+      "language": "fr",
+      "selected_candidate_name": "Go\u00e9land leucoph\u00e9e",
+      "selected_source": "inaturalist",
+      "display_status": "displayable_source_attested",
+      "affected_ready_target_count": 1,
+      "projected_unlock_value": 1
+    },
+    {
+      "taxon_id": "taxon:birds:000027",
+      "taxon_kind": "canonical_taxon",
+      "scientific_name": "Larus argentatus",
+      "language": "fr",
+      "selected_candidate_name": "Go\u00e9land argent\u00e9",
+      "selected_source": "inaturalist",
+      "display_status": "displayable_source_attested",
+      "affected_ready_target_count": 1,
+      "projected_unlock_value": 1
+    },
+    {
+      "taxon_id": "taxon:birds:000028",
+      "taxon_kind": "canonical_taxon",
+      "scientific_name": "Phalacrocorax carbo",
+      "language": "fr",
+      "selected_candidate_name": "Grand Cormoran",
+      "selected_source": "inaturalist",
+      "display_status": "displayable_source_attested",
+      "affected_ready_target_count": 1,
+      "projected_unlock_value": 1
+    }
+  ],
+  "non_actions": [
+    "No DistractorRelationship persistence",
+    "No ReferencedTaxon shell creation",
+    "No PMP/media score changes",
+    "No runtime app code",
+    "No invented names"
+  ]
+}

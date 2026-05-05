@@ -6,6 +6,9 @@
       "common_names_i18n": {
         "en": [
           "Common Wood-Pigeon"
+        ],
+        "nl": [
+          "Houtduif"
         ]
       }
     },
@@ -15,6 +18,9 @@
       "common_names_i18n": {
         "en": [
           "Carrion Crow"
+        ],
+        "nl": [
+          "Zwarte Kraai"
         ]
       }
     },
@@ -24,6 +30,12 @@
       "common_names_i18n": {
         "en": [
           "Eurasian Blue Tit"
+        ],
+        "fr": [
+          "M\u00e9sange bleue"
+        ],
+        "nl": [
+          "Pimpelmees"
         ]
       }
     },
@@ -33,6 +45,9 @@
       "common_names_i18n": {
         "en": [
           "European Robin"
+        ],
+        "nl": [
+          "Roodborst"
         ]
       }
     },
@@ -42,6 +57,9 @@
       "common_names_i18n": {
         "en": [
           "Common Chaffinch"
+        ],
+        "nl": [
+          "Vink"
         ]
       }
     },
@@ -51,6 +69,12 @@
       "common_names_i18n": {
         "en": [
           "Eurasian Jay"
+        ],
+        "fr": [
+          "Geai des ch\u00eanes"
+        ],
+        "nl": [
+          "Gaai"
         ]
       }
     },
@@ -60,6 +84,9 @@
       "common_names_i18n": {
         "en": [
           "White Wagtail"
+        ],
+        "nl": [
+          "Witte kwikstaart"
         ]
       }
     },
@@ -69,6 +96,12 @@
       "common_names_i18n": {
         "en": [
           "Great Tit"
+        ],
+        "fr": [
+          "M\u00e9sange charbonni\u00e8re"
+        ],
+        "nl": [
+          "Koolmees"
         ]
       }
     },
@@ -78,6 +111,9 @@
       "common_names_i18n": {
         "en": [
           "House Sparrow"
+        ],
+        "nl": [
+          "Huismus"
         ]
       }
     },
@@ -87,6 +123,9 @@
       "common_names_i18n": {
         "en": [
           "Eurasian Magpie"
+        ],
+        "nl": [
+          "Ekster"
         ]
       }
     },
@@ -96,6 +135,12 @@
       "common_names_i18n": {
         "en": [
           "European Starling"
+        ],
+        "fr": [
+          "\u00c9tourneau sansonnet"
+        ],
+        "nl": [
+          "Spreeuw"
         ]
       }
     },
@@ -105,6 +150,12 @@
       "common_names_i18n": {
         "en": [
           "Eurasian Blackcap"
+        ],
+        "fr": [
+          "Fauvette \u00e0 t\u00eate noire"
+        ],
+        "nl": [
+          "Zwartkop"
         ]
       }
     },
@@ -114,6 +165,9 @@
       "common_names_i18n": {
         "en": [
           "Eurasian Wren"
+        ],
+        "nl": [
+          "Winterkoning"
         ]
       }
     },
@@ -123,6 +177,9 @@
       "common_names_i18n": {
         "en": [
           "Eurasian Blackbird"
+        ],
+        "nl": [
+          "Merel"
         ]
       }
     },
@@ -132,6 +189,9 @@
       "common_names_i18n": {
         "en": [
           "Song Thrush"
+        ],
+        "nl": [
+          "Zanglijster"
         ]
       }
     },
@@ -141,6 +201,12 @@
       "common_names_i18n": {
         "en": [
           "European Goldfinch"
+        ],
+        "fr": [
+          "Chardonneret \u00e9l\u00e9gant"
+        ],
+        "nl": [
+          "Putter"
         ]
       }
     },
@@ -150,6 +216,12 @@
       "common_names_i18n": {
         "en": [
           "European Greenfinch"
+        ],
+        "fr": [
+          "Verdier d'Europe"
+        ],
+        "nl": [
+          "Groenling"
         ]
       }
     },
@@ -159,6 +231,9 @@
       "common_names_i18n": {
         "en": [
           "Common Reed Warbler"
+        ],
+        "nl": [
+          "Kleine Karekiet"
         ]
       }
     },
@@ -168,6 +243,12 @@
       "common_names_i18n": {
         "en": [
           "Hawfinch"
+        ],
+        "fr": [
+          "Gros-bec casse-noyaux"
+        ],
+        "nl": [
+          "Appelvink"
         ]
       }
     },
@@ -177,6 +258,9 @@
       "common_names_i18n": {
         "en": [
           "Black Redstart"
+        ],
+        "nl": [
+          "Zwarte Roodstaart"
         ]
       }
     },
@@ -186,6 +270,9 @@
       "common_names_i18n": {
         "en": [
           "Mallard"
+        ],
+        "nl": [
+          "Wilde Eend"
         ]
       }
     },
@@ -195,6 +282,12 @@
       "common_names_i18n": {
         "en": [
           "Greylag Goose"
+        ],
+        "fr": [
+          "Oie cendr\u00e9e"
+        ],
+        "nl": [
+          "Grauwe Gans"
         ]
       }
     },
@@ -204,6 +297,12 @@
       "common_names_i18n": {
         "en": [
           "Mute Swan"
+        ],
+        "fr": [
+          "Cygne tubercul\u00e9"
+        ],
+        "nl": [
+          "Knobbelzwaan"
         ]
       }
     },
@@ -213,6 +312,9 @@
       "common_names_i18n": {
         "en": [
           "Eurasian Coot"
+        ],
+        "nl": [
+          "Meerkoet"
         ]
       }
     },
@@ -222,6 +324,12 @@
       "common_names_i18n": {
         "en": [
           "Common Moorhen"
+        ],
+        "fr": [
+          "Gallinule poule-d'eau"
+        ],
+        "nl": [
+          "Waterhoen"
         ]
       }
     },
@@ -231,6 +339,12 @@
       "common_names_i18n": {
         "en": [
           "Yellow-legged Gull"
+        ],
+        "fr": [
+          "Go\u00e9land leucoph\u00e9e"
+        ],
+        "nl": [
+          "Geelpootmeeuw"
         ]
       }
     },
@@ -240,6 +354,12 @@
       "common_names_i18n": {
         "en": [
           "European Herring Gull"
+        ],
+        "fr": [
+          "Go\u00e9land argent\u00e9"
+        ],
+        "nl": [
+          "Zilvermeeuw"
         ]
       }
     },
@@ -249,6 +369,12 @@
       "common_names_i18n": {
         "en": [
           "Great Cormorant"
+        ],
+        "fr": [
+          "Grand Cormoran"
+        ],
+        "nl": [
+          "Aalscholver"
         ]
       }
     },
@@ -258,6 +384,12 @@
       "common_names_i18n": {
         "en": [
           "Grey Heron"
+        ],
+        "fr": [
+          "H\u00e9ron cendr\u00e9"
+        ],
+        "nl": [
+          "Blauwe Reiger"
         ]
       }
     },
@@ -267,6 +399,9 @@
       "common_names_i18n": {
         "en": [
           "Little Egret"
+        ],
+        "nl": [
+          "Kleine Zilverreiger"
         ]
       }
     },
@@ -276,6 +411,9 @@
       "common_names_i18n": {
         "en": [
           "Common Buzzard"
+        ],
+        "nl": [
+          "Buizerd"
         ]
       }
     },
@@ -285,6 +423,12 @@
       "common_names_i18n": {
         "en": [
           "Eurasian Sparrowhawk"
+        ],
+        "fr": [
+          "\u00c9pervier d'Europe"
+        ],
+        "nl": [
+          "Sperwer"
         ]
       }
     },
@@ -294,6 +438,12 @@
       "common_names_i18n": {
         "en": [
           "Eurasian Kestrel"
+        ],
+        "fr": [
+          "Faucon cr\u00e9cerelle"
+        ],
+        "nl": [
+          "Torenvalk"
         ]
       }
     },
@@ -303,6 +453,12 @@
       "common_names_i18n": {
         "en": [
           "Peregrine Falcon"
+        ],
+        "fr": [
+          "Faucon p\u00e8lerin"
+        ],
+        "nl": [
+          "Slechtvalk"
         ]
       }
     },
@@ -312,6 +468,9 @@
       "common_names_i18n": {
         "en": [
           "Tawny Owl"
+        ],
+        "nl": [
+          "Bosuil"
         ]
       }
     },
@@ -321,6 +480,9 @@
       "common_names_i18n": {
         "en": [
           "Long-eared Owl"
+        ],
+        "nl": [
+          "Ransuil"
         ]
       }
     },
@@ -330,6 +492,12 @@
       "common_names_i18n": {
         "en": [
           "Little Owl"
+        ],
+        "fr": [
+          "Chev\u00eache d'Ath\u00e9na"
+        ],
+        "nl": [
+          "Steenuil"
         ]
       }
     },
@@ -339,6 +507,9 @@
       "common_names_i18n": {
         "en": [
           "Eurasian Green Woodpecker"
+        ],
+        "nl": [
+          "Groene specht"
         ]
       }
     },
@@ -348,6 +519,12 @@
       "common_names_i18n": {
         "en": [
           "Great Spotted Woodpecker"
+        ],
+        "fr": [
+          "Pic \u00e9peiche"
+        ],
+        "nl": [
+          "Grote bonte specht"
         ]
       }
     },
@@ -357,6 +534,9 @@
       "common_names_i18n": {
         "en": [
           "Black Woodpecker"
+        ],
+        "nl": [
+          "Zwarte Specht"
         ]
       }
     },
@@ -366,6 +546,9 @@
       "common_names_i18n": {
         "en": [
           "Common Swift"
+        ],
+        "nl": [
+          "Gierzwaluw"
         ]
       }
     },
@@ -375,6 +558,12 @@
       "common_names_i18n": {
         "en": [
           "Western House Martin"
+        ],
+        "fr": [
+          "Hirondelle de fen\u00eatre"
+        ],
+        "nl": [
+          "Huiszwaluw"
         ]
       }
     },
@@ -384,6 +573,9 @@
       "common_names_i18n": {
         "en": [
           "Barn Swallow"
+        ],
+        "nl": [
+          "Boerenzwaluw"
         ]
       }
     },
@@ -393,6 +585,9 @@
       "common_names_i18n": {
         "en": [
           "Bank Swallow"
+        ],
+        "nl": [
+          "Oeverzwaluw"
         ]
       }
     },
@@ -402,6 +597,9 @@
       "common_names_i18n": {
         "en": [
           "Eurasian Skylark"
+        ],
+        "nl": [
+          "Veldleeuwerik"
         ]
       }
     },
@@ -411,6 +609,12 @@
       "common_names_i18n": {
         "en": [
           "Red-backed Shrike"
+        ],
+        "fr": [
+          "Pie-gri\u00e8che \u00e9corcheur"
+        ],
+        "nl": [
+          "Grauwe Klauwier"
         ]
       }
     },
@@ -420,6 +624,9 @@
       "common_names_i18n": {
         "en": [
           "Eurasian Jackdaw"
+        ],
+        "nl": [
+          "Kauw"
         ]
       }
     },
@@ -429,6 +636,9 @@
       "common_names_i18n": {
         "en": [
           "Rook"
+        ],
+        "nl": [
+          "Roek"
         ]
       }
     },
@@ -438,6 +648,12 @@
       "common_names_i18n": {
         "en": [
           "Great Crested Grebe"
+        ],
+        "fr": [
+          "Gr\u00e8be hupp\u00e9"
+        ],
+        "nl": [
+          "Fuut"
         ]
       }
     },
@@ -447,6 +663,9 @@
       "common_names_i18n": {
         "en": [
           "Eurasian Collared-Dove"
+        ],
+        "nl": [
+          "Turkse Tortel"
         ]
       }
     }

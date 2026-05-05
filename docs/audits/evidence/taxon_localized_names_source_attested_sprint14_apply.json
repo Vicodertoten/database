@@ -1,0 +1,2545 @@
+{
+  "execution_status": "complete",
+  "run_date": "2026-05-05T16:16:24.542958+00:00",
+  "mode": "apply",
+  "patch_file": "data/manual/taxon_localized_name_patches_sprint14_source_attested.json",
+  "patch_schema": "schemas/taxon_localized_name_patch_v1.schema.json",
+  "input_patch_count": 382,
+  "valid_patch_count": 382,
+  "invalid_patch_count": 0,
+  "applied_count": 73,
+  "conflict_count": 0,
+  "skipped_count": 309,
+  "unresolved_count": 0,
+  "invalid_patches": [],
+  "applied": [
+    {
+      "patch_id": "s14-source-attested-0002",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0004",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0005",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0007",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0009",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0011",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0012",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0014",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0016",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0017",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0019",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0021",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0023",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0024",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0026",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0027",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0029",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0031",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0033",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0035",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0036",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0038",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0039",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0041",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0043",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0044",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0046",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0048",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0050",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0051",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0053",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0054",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0056",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0058",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0059",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0061",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0062",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0064",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0065",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0067",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0068",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0070",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0071",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0073",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0075",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0077",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0078",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0080",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0081",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0083",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0084",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0086",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0088",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0090",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0091",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0093",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0095",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0096",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0098",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0100",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0102",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0103",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0105",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0107",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0109",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0111",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0112",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0114",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0116",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0118",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0119",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0121",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    },
+    {
+      "patch_id": "s14-source-attested-0123",
+      "taxon_ref_type": "canonical_taxon",
+      "applied_languages_count": 1,
+      "source": "manual_override",
+      "confidence": "medium",
+      "reviewer": "system/source_policy",
+      "notes": "source-attested by localized-name-source-policy-v1"
+    }
+  ],
+  "conflicts": [],
+  "skipped": [
+    {
+      "patch_id": "s14-source-attested-0001",
+      "reason": "same_value_en",
+      "existing": "Common Wood-Pigeon",
+      "proposed": "Common Wood-Pigeon"
+    },
+    {
+      "patch_id": "s14-source-attested-0003",
+      "reason": "same_value_en",
+      "existing": "Carrion Crow",
+      "proposed": "Carrion Crow"
+    },
+    {
+      "patch_id": "s14-source-attested-0006",
+      "reason": "same_value_en",
+      "existing": "Eurasian Blue Tit",
+      "proposed": "Eurasian Blue Tit"
+    },
+    {
+      "patch_id": "s14-source-attested-0008",
+      "reason": "same_value_en",
+      "existing": "European Robin",
+      "proposed": "European Robin"
+    },
+    {
+      "patch_id": "s14-source-attested-0010",
+      "reason": "same_value_en",
+      "existing": "Common Chaffinch",
+      "proposed": "Common Chaffinch"
+    },
+    {
+      "patch_id": "s14-source-attested-0013",
+      "reason": "same_value_en",
+      "existing": "Eurasian Jay",
+      "proposed": "Eurasian Jay"
+    },
+    {
+      "patch_id": "s14-source-attested-0015",
+      "reason": "same_value_en",
+      "existing": "White Wagtail",
+      "proposed": "White Wagtail"
+    },
+    {
+      "patch_id": "s14-source-attested-0018",
+      "reason": "same_value_en",
+      "existing": "Great Tit",
+      "proposed": "Great Tit"
+    },
+    {
+      "patch_id": "s14-source-attested-0020",
+      "reason": "same_value_en",
+      "existing": "House Sparrow",
+      "proposed": "House Sparrow"
+    },
+    {
+      "patch_id": "s14-source-attested-0022",
+      "reason": "same_value_en",
+      "existing": "Eurasian Magpie",
+      "proposed": "Eurasian Magpie"
+    },
+    {
+      "patch_id": "s14-source-attested-0025",
+      "reason": "same_value_en",
+      "existing": "European Starling",
+      "proposed": "European Starling"
+    },
+    {
+      "patch_id": "s14-source-attested-0028",
+      "reason": "same_value_en",
+      "existing": "Eurasian Blackcap",
+      "proposed": "Eurasian Blackcap"
+    },
+    {
+      "patch_id": "s14-source-attested-0030",
+      "reason": "same_value_en",
+      "existing": "Eurasian Wren",
+      "proposed": "Eurasian Wren"
+    },
+    {
+      "patch_id": "s14-source-attested-0032",
+      "reason": "same_value_en",
+      "existing": "Eurasian Blackbird",
+      "proposed": "Eurasian Blackbird"
+    },
+    {
+      "patch_id": "s14-source-attested-0034",
+      "reason": "same_value_en",
+      "existing": "Song Thrush",
+      "proposed": "Song Thrush"
+    },
+    {
+      "patch_id": "s14-source-attested-0037",
+      "reason": "same_value_en",
+      "existing": "European Goldfinch",
+      "proposed": "European Goldfinch"
+    },
+    {
+      "patch_id": "s14-source-attested-0040",
+      "reason": "same_value_en",
+      "existing": "European Greenfinch",
+      "proposed": "European Greenfinch"
+    },
+    {
+      "patch_id": "s14-source-attested-0042",
+      "reason": "same_value_en",
+      "existing": "Common Reed Warbler",
+      "proposed": "Common Reed Warbler"
+    },
+    {
+      "patch_id": "s14-source-attested-0045",
+      "reason": "same_value_en",
+      "existing": "Hawfinch",
+      "proposed": "Hawfinch"
+    },
+    {
+      "patch_id": "s14-source-attested-0047",
+      "reason": "same_value_en",
+      "existing": "Black Redstart",
+      "proposed": "Black Redstart"
+    },
+    {
+      "patch_id": "s14-source-attested-0049",
+      "reason": "same_value_en",
+      "existing": "Mallard",
+      "proposed": "Mallard"
+    },
+    {
+      "patch_id": "s14-source-attested-0052",
+      "reason": "same_value_en",
+      "existing": "Greylag Goose",
+      "proposed": "Greylag Goose"
+    },
+    {
+      "patch_id": "s14-source-attested-0055",
+      "reason": "same_value_en",
+      "existing": "Mute Swan",
+      "proposed": "Mute Swan"
+    },
+    {
+      "patch_id": "s14-source-attested-0057",
+      "reason": "same_value_en",
+      "existing": "Eurasian Coot",
+      "proposed": "Eurasian Coot"
+    },
+    {
+      "patch_id": "s14-source-attested-0060",
+      "reason": "same_value_en",
+      "existing": "Common Moorhen",
+      "proposed": "Common Moorhen"
+    },
+    {
+      "patch_id": "s14-source-attested-0063",
+      "reason": "same_value_en",
+      "existing": "Yellow-legged Gull",
+      "proposed": "Yellow-legged Gull"
+    },
+    {
+      "patch_id": "s14-source-attested-0066",
+      "reason": "same_value_en",
+      "existing": "European Herring Gull",
+      "proposed": "European Herring Gull"
+    },
+    {
+      "patch_id": "s14-source-attested-0069",
+      "reason": "same_value_en",
+      "existing": "Great Cormorant",
+      "proposed": "Great Cormorant"
+    },
+    {
+      "patch_id": "s14-source-attested-0072",
+      "reason": "same_value_en",
+      "existing": "Grey Heron",
+      "proposed": "Grey Heron"
+    },
+    {
+      "patch_id": "s14-source-attested-0074",
+      "reason": "same_value_en",
+      "existing": "Little Egret",
+      "proposed": "Little Egret"
+    },
+    {
+      "patch_id": "s14-source-attested-0076",
+      "reason": "same_value_en",
+      "existing": "Common Buzzard",
+      "proposed": "Common Buzzard"
+    },
+    {
+      "patch_id": "s14-source-attested-0079",
+      "reason": "same_value_en",
+      "existing": "Eurasian Sparrowhawk",
+      "proposed": "Eurasian Sparrowhawk"
+    },
+    {
+      "patch_id": "s14-source-attested-0082",
+      "reason": "same_value_en",
+      "existing": "Eurasian Kestrel",
+      "proposed": "Eurasian Kestrel"
+    },
+    {
+      "patch_id": "s14-source-attested-0085",
+      "reason": "same_value_en",
+      "existing": "Peregrine Falcon",
+      "proposed": "Peregrine Falcon"
+    },
+    {
+      "patch_id": "s14-source-attested-0087",
+      "reason": "same_value_en",
+      "existing": "Tawny Owl",
+      "proposed": "Tawny Owl"
+    },
+    {
+      "patch_id": "s14-source-attested-0089",
+      "reason": "same_value_en",
+      "existing": "Long-eared Owl",
+      "proposed": "Long-eared Owl"
+    },
+    {
+      "patch_id": "s14-source-attested-0092",
+      "reason": "same_value_en",
+      "existing": "Little Owl",
+      "proposed": "Little Owl"
+    },
+    {
+      "patch_id": "s14-source-attested-0094",
+      "reason": "same_value_en",
+      "existing": "Eurasian Green Woodpecker",
+      "proposed": "Eurasian Green Woodpecker"
+    },
+    {
+      "patch_id": "s14-source-attested-0097",
+      "reason": "same_value_en",
+      "existing": "Great Spotted Woodpecker",
+      "proposed": "Great Spotted Woodpecker"
+    },
+    {
+      "patch_id": "s14-source-attested-0099",
+      "reason": "same_value_en",
+      "existing": "Black Woodpecker",
+      "proposed": "Black Woodpecker"
+    },
+    {
+      "patch_id": "s14-source-attested-0101",
+      "reason": "same_value_en",
+      "existing": "Common Swift",
+      "proposed": "Common Swift"
+    },
+    {
+      "patch_id": "s14-source-attested-0104",
+      "reason": "same_value_en",
+      "existing": "Western House Martin",
+      "proposed": "Western House Martin"
+    },
+    {
+      "patch_id": "s14-source-attested-0106",
+      "reason": "same_value_en",
+      "existing": "Barn Swallow",
+      "proposed": "Barn Swallow"
+    },
+    {
+      "patch_id": "s14-source-attested-0108",
+      "reason": "same_value_en",
+      "existing": "Bank Swallow",
+      "proposed": "Bank Swallow"
+    },
+    {
+      "patch_id": "s14-source-attested-0110",
+      "reason": "same_value_en",
+      "existing": "Eurasian Skylark",
+      "proposed": "Eurasian Skylark"
+    },
+    {
+      "patch_id": "s14-source-attested-0113",
+      "reason": "same_value_en",
+      "existing": "Red-backed Shrike",
+      "proposed": "Red-backed Shrike"
+    },
+    {
+      "patch_id": "s14-source-attested-0115",
+      "reason": "same_value_en",
+      "existing": "Eurasian Jackdaw",
+      "proposed": "Eurasian Jackdaw"
+    },
+    {
+      "patch_id": "s14-source-attested-0117",
+      "reason": "same_value_en",
+      "existing": "Rook",
+      "proposed": "Rook"
+    },
+    {
+      "patch_id": "s14-source-attested-0120",
+      "reason": "same_value_en",
+      "existing": "Great Crested Grebe",
+      "proposed": "Great Crested Grebe"
+    },
+    {
+      "patch_id": "s14-source-attested-0122",
+      "reason": "same_value_en",
+      "existing": "Eurasian Collared-Dove",
+      "proposed": "Eurasian Collared-Dove"
+    },
+    {
+      "patch_id": "s14-source-attested-0124",
+      "reason": "same_value_en",
+      "existing": "Brambling",
+      "proposed": "Brambling"
+    },
+    {
+      "patch_id": "s14-source-attested-0125",
+      "reason": "same_value_en",
+      "existing": "Common Chaffinch",
+      "proposed": "Common Chaffinch"
+    },
+    {
+      "patch_id": "s14-source-attested-0126",
+      "reason": "same_value_nl",
+      "existing": "Vink",
+      "proposed": "Vink"
+    },
+    {
+      "patch_id": "s14-source-attested-0127",
+      "reason": "same_value_en",
+      "existing": "Brewer's Blackbird",
+      "proposed": "Brewer's Blackbird"
+    },
+    {
+      "patch_id": "s14-source-attested-0128",
+      "reason": "same_value_en",
+      "existing": "Red Crossbill",
+      "proposed": "Red Crossbill"
+    },
+    {
+      "patch_id": "s14-source-attested-0129",
+      "reason": "same_value_en",
+      "existing": "Marsh Warbler",
+      "proposed": "Marsh Warbler"
+    },
+    {
+      "patch_id": "s14-source-attested-0130",
+      "reason": "same_value_en",
+      "existing": "Osprey",
+      "proposed": "Osprey"
+    },
+    {
+      "patch_id": "s14-source-attested-0131",
+      "reason": "same_value_en",
+      "existing": "Common Chiffchaff",
+      "proposed": "Common Chiffchaff"
+    },
+    {
+      "patch_id": "s14-source-attested-0132",
+      "reason": "same_value_en",
+      "existing": "Yellow-browed Warbler",
+      "proposed": "Yellow-browed Warbler"
+    },
+    {
+      "patch_id": "s14-source-attested-0133",
+      "reason": "same_value_en",
+      "existing": "Common Firecrest",
+      "proposed": "Common Firecrest"
+    },
+    {
+      "patch_id": "s14-source-attested-0134",
+      "reason": "same_value_en",
+      "existing": "Barn Swallow",
+      "proposed": "Barn Swallow"
+    },
+    {
+      "patch_id": "s14-source-attested-0135",
+      "reason": "same_value_nl",
+      "existing": "Boerenzwaluw",
+      "proposed": "Boerenzwaluw"
+    },
+    {
+      "patch_id": "s14-source-attested-0136",
+      "reason": "same_value_en",
+      "existing": "Bank Swallow",
+      "proposed": "Bank Swallow"
+    },
+    {
+      "patch_id": "s14-source-attested-0137",
+      "reason": "same_value_nl",
+      "existing": "Oeverzwaluw",
+      "proposed": "Oeverzwaluw"
+    },
+    {
+      "patch_id": "s14-source-attested-0138",
+      "reason": "same_value_en",
+      "existing": "Brown Shrike",
+      "proposed": "Brown Shrike"
+    },
+    {
+      "patch_id": "s14-source-attested-0139",
+      "reason": "same_value_en",
+      "existing": "Fieldfare",
+      "proposed": "Fieldfare"
+    },
+    {
+      "patch_id": "s14-source-attested-0140",
+      "reason": "same_value_en",
+      "existing": "Eurasian Blackbird",
+      "proposed": "Eurasian Blackbird"
+    },
+    {
+      "patch_id": "s14-source-attested-0141",
+      "reason": "same_value_nl",
+      "existing": "Merel",
+      "proposed": "Merel"
+    },
+    {
+      "patch_id": "s14-source-attested-0142",
+      "reason": "same_value_en",
+      "existing": "American Robin",
+      "proposed": "American Robin"
+    },
+    {
+      "patch_id": "s14-source-attested-0143",
+      "reason": "same_value_en",
+      "existing": "Mistle Thrush",
+      "proposed": "Mistle Thrush"
+    },
+    {
+      "patch_id": "s14-source-attested-0144",
+      "reason": "same_value_en",
+      "existing": "Song Thrush",
+      "proposed": "Song Thrush"
+    },
+    {
+      "patch_id": "s14-source-attested-0145",
+      "reason": "same_value_nl",
+      "existing": "Zanglijster",
+      "proposed": "Zanglijster"
+    },
+    {
+      "patch_id": "s14-source-attested-0146",
+      "reason": "same_value_en",
+      "existing": "Redwing",
+      "proposed": "Redwing"
+    },
+    {
+      "patch_id": "s14-source-attested-0147",
+      "reason": "same_value_en",
+      "existing": "Great Thrush",
+      "proposed": "Great Thrush"
+    },
+    {
+      "patch_id": "s14-source-attested-0148",
+      "reason": "same_value_en",
+      "existing": "Swainson's Thrush",
+      "proposed": "Swainson's Thrush"
+    },
+    {
+      "patch_id": "s14-source-attested-0149",
+      "reason": "same_value_en",
+      "existing": "Hermit Thrush",
+      "proposed": "Hermit Thrush"
+    },
+    {
+      "patch_id": "s14-source-attested-0150",
+      "reason": "same_value_en",
+      "existing": "Common Whitethroat",
+      "proposed": "Common Whitethroat"
+    },
+    {
+      "patch_id": "s14-source-attested-0151",
+      "reason": "same_value_en",
+      "existing": "Common Redstart",
+      "proposed": "Common Redstart"
+    },
+    {
+      "patch_id": "s14-source-attested-0152",
+      "reason": "same_value_en",
+      "existing": "Black Redstart",
+      "proposed": "Black Redstart"
+    },
+    {
+      "patch_id": "s14-source-attested-0153",
+      "reason": "same_value_nl",
+      "existing": "Zwarte Roodstaart",
+      "proposed": "Zwarte Roodstaart"
+    },
+    {
+      "patch_id": "s14-source-attested-0154",
+      "reason": "same_value_en",
+      "existing": "Common Nightingale",
+      "proposed": "Common Nightingale"
+    },
+    {
+      "patch_id": "s14-source-attested-0155",
+      "reason": "same_value_en",
+      "existing": "European Robin",
+      "proposed": "European Robin"
+    },
+    {
+      "patch_id": "s14-source-attested-0156",
+      "reason": "same_value_nl",
+      "existing": "Roodborst",
+      "proposed": "Roodborst"
+    },
+    {
+      "patch_id": "s14-source-attested-0157",
+      "reason": "same_value_en",
+      "existing": "Tufted Titmouse",
+      "proposed": "Tufted Titmouse"
+    },
+    {
+      "patch_id": "s14-source-attested-0158",
+      "reason": "same_value_en",
+      "existing": "Oak Titmouse",
+      "proposed": "Oak Titmouse"
+    },
+    {
+      "patch_id": "s14-source-attested-0159",
+      "reason": "same_value_en",
+      "existing": "Grey Wagtail",
+      "proposed": "Grey Wagtail"
+    },
+    {
+      "patch_id": "s14-source-attested-0160",
+      "reason": "same_value_en",
+      "existing": "Tree Pipit",
+      "proposed": "Tree Pipit"
+    },
+    {
+      "patch_id": "s14-source-attested-0161",
+      "reason": "same_value_en",
+      "existing": "Meadow Pipit",
+      "proposed": "Meadow Pipit"
+    },
+    {
+      "patch_id": "s14-source-attested-0162",
+      "reason": "same_value_en",
+      "existing": "Eurasian Tree Sparrow",
+      "proposed": "Eurasian Tree Sparrow"
+    },
+    {
+      "patch_id": "s14-source-attested-0163",
+      "reason": "same_value_en",
+      "existing": "House Sparrow",
+      "proposed": "House Sparrow"
+    },
+    {
+      "patch_id": "s14-source-attested-0164",
+      "reason": "same_value_nl",
+      "existing": "Huismus",
+      "proposed": "Huismus"
+    },
+    {
+      "patch_id": "s14-source-attested-0165",
+      "reason": "same_value_en",
+      "existing": "Dunnock",
+      "proposed": "Dunnock"
+    },
+    {
+      "patch_id": "s14-source-attested-0166",
+      "reason": "same_value_en",
+      "existing": "Rock Sparrow",
+      "proposed": "Rock Sparrow"
+    },
+    {
+      "patch_id": "s14-source-attested-0167",
+      "reason": "same_value_en",
+      "existing": "Black-billed Magpie",
+      "proposed": "Black-billed Magpie"
+    },
+    {
+      "patch_id": "s14-source-attested-0168",
+      "reason": "same_value_en",
+      "existing": "Iberian Green Woodpecker",
+      "proposed": "Iberian Green Woodpecker"
+    },
+    {
+      "patch_id": "s14-source-attested-0169",
+      "reason": "same_value_en",
+      "existing": "Eurasian Green Woodpecker",
+      "proposed": "Eurasian Green Woodpecker"
+    },
+    {
+      "patch_id": "s14-source-attested-0170",
+      "reason": "same_value_nl",
+      "existing": "Groene specht",
+      "proposed": "Groene specht"
+    },
+    {
+      "patch_id": "s14-source-attested-0171",
+      "reason": "same_value_en",
+      "existing": "Chilean Skua",
+      "proposed": "Chilean Skua"
+    },
+    {
+      "patch_id": "s14-source-attested-0172",
+      "reason": "same_value_en",
+      "existing": "Great Egret",
+      "proposed": "Great Egret"
+    },
+    {
+      "patch_id": "s14-source-attested-0173",
+      "reason": "same_value_en",
+      "existing": "Gray-hooded Gull",
+      "proposed": "Gray-hooded Gull"
+    },
+    {
+      "patch_id": "s14-source-attested-0174",
+      "reason": "same_value_en",
+      "existing": "Black-headed Gull",
+      "proposed": "Black-headed Gull"
+    },
+    {
+      "patch_id": "s14-source-attested-0175",
+      "reason": "same_value_en",
+      "existing": "Marsh Tit",
+      "proposed": "Marsh Tit"
+    },
+    {
+      "patch_id": "s14-source-attested-0176",
+      "reason": "same_value_en",
+      "existing": "Black-capped Chickadee",
+      "proposed": "Black-capped Chickadee"
+    },
+    {
+      "patch_id": "s14-source-attested-0177",
+      "reason": "same_value_en",
+      "existing": "Coal Tit",
+      "proposed": "Coal Tit"
+    },
+    {
+      "patch_id": "s14-source-attested-0178",
+      "reason": "same_value_en",
+      "existing": "Crested Tit",
+      "proposed": "Crested Tit"
+    },
+    {
+      "patch_id": "s14-source-attested-0179",
+      "reason": "same_value_fr",
+      "existing": "M\u00e9sange bleue",
+      "proposed": "M\u00e9sange bleue"
+    },
+    {
+      "patch_id": "s14-source-attested-0180",
+      "reason": "same_value_en",
+      "existing": "Eurasian Blue Tit",
+      "proposed": "Eurasian Blue Tit"
+    },
+    {
+      "patch_id": "s14-source-attested-0181",
+      "reason": "same_value_nl",
+      "existing": "Pimpelmees",
+      "proposed": "Pimpelmees"
+    },
+    {
+      "patch_id": "s14-source-attested-0182",
+      "reason": "same_value_en",
+      "existing": "Pacific Wren",
+      "proposed": "Pacific Wren"
+    },
+    {
+      "patch_id": "s14-source-attested-0183",
+      "reason": "same_value_en",
+      "existing": "Eurasian Siskin",
+      "proposed": "Eurasian Siskin"
+    },
+    {
+      "patch_id": "s14-source-attested-0184",
+      "reason": "same_value_en",
+      "existing": "American Goldfinch",
+      "proposed": "American Goldfinch"
+    },
+    {
+      "patch_id": "s14-source-attested-0185",
+      "reason": "same_value_fr",
+      "existing": "Verdier d'Europe",
+      "proposed": "Verdier d'Europe"
+    },
+    {
+      "patch_id": "s14-source-attested-0186",
+      "reason": "same_value_en",
+      "existing": "European Greenfinch",
+      "proposed": "European Greenfinch"
+    },
+    {
+      "patch_id": "s14-source-attested-0187",
+      "reason": "same_value_nl",
+      "existing": "Groenling",
+      "proposed": "Groenling"
+    },
+    {
+      "patch_id": "s14-source-attested-0188",
+      "reason": "same_value_en",
+      "existing": "Eurasian Wren",
+      "proposed": "Eurasian Wren"
+    },
+    {
+      "patch_id": "s14-source-attested-0189",
+      "reason": "same_value_nl",
+      "existing": "Winterkoning",
+      "proposed": "Winterkoning"
+    },
+    {
+      "patch_id": "s14-source-attested-0190",
+      "reason": "same_value_en",
+      "existing": "Double-crested Cormorant",
+      "proposed": "Double-crested Cormorant"
+    },
+    {
+      "patch_id": "s14-source-attested-0191",
+      "reason": "same_value_en",
+      "existing": "Spotted Dove",
+      "proposed": "Spotted Dove"
+    },
+    {
+      "patch_id": "s14-source-attested-0192",
+      "reason": "same_value_en",
+      "existing": "Spotless Starling",
+      "proposed": "Spotless Starling"
+    },
+    {
+      "patch_id": "s14-source-attested-0193",
+      "reason": "same_value_fr",
+      "existing": "\u00c9tourneau sansonnet",
+      "proposed": "\u00c9tourneau sansonnet"
+    },
+    {
+      "patch_id": "s14-source-attested-0194",
+      "reason": "same_value_en",
+      "existing": "European Starling",
+      "proposed": "European Starling"
+    },
+    {
+      "patch_id": "s14-source-attested-0195",
+      "reason": "same_value_nl",
+      "existing": "Spreeuw",
+      "proposed": "Spreeuw"
+    },
+    {
+      "patch_id": "s14-source-attested-0196",
+      "reason": "same_value_fr",
+      "existing": "Fauvette \u00e0 t\u00eate noire",
+      "proposed": "Fauvette \u00e0 t\u00eate noire"
+    },
+    {
+      "patch_id": "s14-source-attested-0197",
+      "reason": "same_value_en",
+      "existing": "Eurasian Blackcap",
+      "proposed": "Eurasian Blackcap"
+    },
+    {
+      "patch_id": "s14-source-attested-0198",
+      "reason": "same_value_nl",
+      "existing": "Zwartkop",
+      "proposed": "Zwartkop"
+    },
+    {
+      "patch_id": "s14-source-attested-0199",
+      "reason": "same_value_en",
+      "existing": "Garden Warbler",
+      "proposed": "Garden Warbler"
+    },
+    {
+      "patch_id": "s14-source-attested-0200",
+      "reason": "same_value_en",
+      "existing": "Eurasian Goshawk",
+      "proposed": "Eurasian Goshawk"
+    },
+    {
+      "patch_id": "s14-source-attested-0201",
+      "reason": "same_value_en",
+      "existing": "Cook Inlet Gull",
+      "proposed": "Cook Inlet Gull"
+    },
+    {
+      "patch_id": "s14-source-attested-0202",
+      "reason": "same_value_en",
+      "existing": "Snow \u00d7 Canada Goose",
+      "proposed": "Snow \u00d7 Canada Goose"
+    },
+    {
+      "patch_id": "s14-source-attested-0203",
+      "reason": "same_value_en",
+      "existing": "Greylag \u00d7 Canada Goose",
+      "proposed": "Greylag \u00d7 Canada Goose"
+    },
+    {
+      "patch_id": "s14-source-attested-0204",
+      "reason": "same_value_en",
+      "existing": "Black Woodpecker",
+      "proposed": "Black Woodpecker"
+    },
+    {
+      "patch_id": "s14-source-attested-0205",
+      "reason": "same_value_nl",
+      "existing": "Zwarte Specht",
+      "proposed": "Zwarte Specht"
+    },
+    {
+      "patch_id": "s14-source-attested-0206",
+      "reason": "same_value_fr",
+      "existing": "Pic \u00e9peiche",
+      "proposed": "Pic \u00e9peiche"
+    },
+    {
+      "patch_id": "s14-source-attested-0207",
+      "reason": "same_value_en",
+      "existing": "Great Spotted Woodpecker",
+      "proposed": "Great Spotted Woodpecker"
+    },
+    {
+      "patch_id": "s14-source-attested-0208",
+      "reason": "same_value_nl",
+      "existing": "Grote bonte specht",
+      "proposed": "Grote bonte specht"
+    },
+    {
+      "patch_id": "s14-source-attested-0209",
+      "reason": "same_value_en",
+      "existing": "Red-headed Woodpecker",
+      "proposed": "Red-headed Woodpecker"
+    },
+    {
+      "patch_id": "s14-source-attested-0210",
+      "reason": "same_value_en",
+      "existing": "Red-bellied Woodpecker",
+      "proposed": "Red-bellied Woodpecker"
+    },
+    {
+      "patch_id": "s14-source-attested-0211",
+      "reason": "same_value_en",
+      "existing": "Northern Flicker",
+      "proposed": "Northern Flicker"
+    },
+    {
+      "patch_id": "s14-source-attested-0212",
+      "reason": "same_value_en",
+      "existing": "Rose-ringed Parakeet",
+      "proposed": "Rose-ringed Parakeet"
+    },
+    {
+      "patch_id": "s14-source-attested-0213",
+      "reason": "same_value_en",
+      "existing": "Common Cuckoo",
+      "proposed": "Common Cuckoo"
+    },
+    {
+      "patch_id": "s14-source-attested-0214",
+      "reason": "same_value_en",
+      "existing": "Tawny Owl",
+      "proposed": "Tawny Owl"
+    },
+    {
+      "patch_id": "s14-source-attested-0215",
+      "reason": "same_value_nl",
+      "existing": "Bosuil",
+      "proposed": "Bosuil"
+    },
+    {
+      "patch_id": "s14-source-attested-0216",
+      "reason": "same_value_en",
+      "existing": "Gray Hawk",
+      "proposed": "Gray Hawk"
+    },
+    {
+      "patch_id": "s14-source-attested-0217",
+      "reason": "same_value_en",
+      "existing": "Black-throated Blue Warbler",
+      "proposed": "Black-throated Blue Warbler"
+    },
+    {
+      "patch_id": "s14-source-attested-0218",
+      "reason": "same_value_fr",
+      "existing": "Chev\u00eache d'Ath\u00e9na",
+      "proposed": "Chev\u00eache d'Ath\u00e9na"
+    },
+    {
+      "patch_id": "s14-source-attested-0219",
+      "reason": "same_value_en",
+      "existing": "Little Owl",
+      "proposed": "Little Owl"
+    },
+    {
+      "patch_id": "s14-source-attested-0220",
+      "reason": "same_value_nl",
+      "existing": "Steenuil",
+      "proposed": "Steenuil"
+    },
+    {
+      "patch_id": "s14-source-attested-0221",
+      "reason": "same_value_en",
+      "existing": "Eurasian Eagle-Owl",
+      "proposed": "Eurasian Eagle-Owl"
+    },
+    {
+      "patch_id": "s14-source-attested-0222",
+      "reason": "same_value_en",
+      "existing": "Greater Spotted Eagle",
+      "proposed": "Greater Spotted Eagle"
+    },
+    {
+      "patch_id": "s14-source-attested-0223",
+      "reason": "same_value_en",
+      "existing": "Roadside Hawk",
+      "proposed": "Roadside Hawk"
+    },
+    {
+      "patch_id": "s14-source-attested-0224",
+      "reason": "same_value_fr",
+      "existing": "Gallinule poule-d'eau",
+      "proposed": "Gallinule poule-d'eau"
+    },
+    {
+      "patch_id": "s14-source-attested-0225",
+      "reason": "same_value_en",
+      "existing": "Common Moorhen",
+      "proposed": "Common Moorhen"
+    },
+    {
+      "patch_id": "s14-source-attested-0226",
+      "reason": "same_value_nl",
+      "existing": "Waterhoen",
+      "proposed": "Waterhoen"
+    },
+    {
+      "patch_id": "s14-source-attested-0227",
+      "reason": "same_value_en",
+      "existing": "Long-eared Owl",
+      "proposed": "Long-eared Owl"
+    },
+    {
+      "patch_id": "s14-source-attested-0228",
+      "reason": "same_value_nl",
+      "existing": "Ransuil",
+      "proposed": "Ransuil"
+    },
+    {
+      "patch_id": "s14-source-attested-0229",
+      "reason": "same_value_en",
+      "existing": "Short-eared Owl",
+      "proposed": "Short-eared Owl"
+    },
+    {
+      "patch_id": "s14-source-attested-0230",
+      "reason": "same_value_fr",
+      "existing": "M\u00e9sange charbonni\u00e8re",
+      "proposed": "M\u00e9sange charbonni\u00e8re"
+    },
+    {
+      "patch_id": "s14-source-attested-0231",
+      "reason": "same_value_en",
+      "existing": "Great Tit",
+      "proposed": "Great Tit"
+    },
+    {
+      "patch_id": "s14-source-attested-0232",
+      "reason": "same_value_nl",
+      "existing": "Koolmees",
+      "proposed": "Koolmees"
+    },
+    {
+      "patch_id": "s14-source-attested-0233",
+      "reason": "same_value_en",
+      "existing": "Western Barn Owl",
+      "proposed": "Western Barn Owl"
+    },
+    {
+      "patch_id": "s14-source-attested-0234",
+      "reason": "same_value_en",
+      "existing": "Great Reed Warbler",
+      "proposed": "Great Reed Warbler"
+    },
+    {
+      "patch_id": "s14-source-attested-0235",
+      "reason": "same_value_en",
+      "existing": "Common Buzzard",
+      "proposed": "Common Buzzard"
+    },
+    {
+      "patch_id": "s14-source-attested-0236",
+      "reason": "same_value_nl",
+      "existing": "Buizerd",
+      "proposed": "Buizerd"
+    },
+    {
+      "patch_id": "s14-source-attested-0237",
+      "reason": "same_value_en",
+      "existing": "Carrion Crow",
+      "proposed": "Carrion Crow"
+    },
+    {
+      "patch_id": "s14-source-attested-0238",
+      "reason": "same_value_nl",
+      "existing": "Zwarte Kraai",
+      "proposed": "Zwarte Kraai"
+    },
+    {
+      "patch_id": "s14-source-attested-0239",
+      "reason": "same_value_fr",
+      "existing": "Go\u00e9land argent\u00e9",
+      "proposed": "Go\u00e9land argent\u00e9"
+    },
+    {
+      "patch_id": "s14-source-attested-0240",
+      "reason": "same_value_en",
+      "existing": "European Herring Gull",
+      "proposed": "European Herring Gull"
+    },
+    {
+      "patch_id": "s14-source-attested-0241",
+      "reason": "same_value_nl",
+      "existing": "Zilvermeeuw",
+      "proposed": "Zilvermeeuw"
+    },
+    {
+      "patch_id": "s14-source-attested-0242",
+      "reason": "same_value_en",
+      "existing": "Western Yellow Wagtail",
+      "proposed": "Western Yellow Wagtail"
+    },
+    {
+      "patch_id": "s14-source-attested-0243",
+      "reason": "same_value_en",
+      "existing": "Eurasian Golden Oriole",
+      "proposed": "Eurasian Golden Oriole"
+    },
+    {
+      "patch_id": "s14-source-attested-0244",
+      "reason": "same_value_en",
+      "existing": "Common Kingfisher",
+      "proposed": "Common Kingfisher"
+    },
+    {
+      "patch_id": "s14-source-attested-0245",
+      "reason": "same_value_en",
+      "existing": "European Turtle-Dove",
+      "proposed": "European Turtle-Dove"
+    },
+    {
+      "patch_id": "s14-source-attested-0246",
+      "reason": "same_value_en",
+      "existing": "Eurasian Collared-Dove",
+      "proposed": "Eurasian Collared-Dove"
+    },
+    {
+      "patch_id": "s14-source-attested-0247",
+      "reason": "same_value_nl",
+      "existing": "Turkse Tortel",
+      "proposed": "Turkse Tortel"
+    },
+    {
+      "patch_id": "s14-source-attested-0248",
+      "reason": "same_value_en",
+      "existing": "Rock Pigeon",
+      "proposed": "Rock Pigeon"
+    },
+    {
+      "patch_id": "s14-source-attested-0249",
+      "reason": "same_value_en",
+      "existing": "Stock Dove",
+      "proposed": "Stock Dove"
+    },
+    {
+      "patch_id": "s14-source-attested-0250",
+      "reason": "same_value_en",
+      "existing": "Common Wood-Pigeon",
+      "proposed": "Common Wood-Pigeon"
+    },
+    {
+      "patch_id": "s14-source-attested-0251",
+      "reason": "same_value_nl",
+      "existing": "Houtduif",
+      "proposed": "Houtduif"
+    },
+    {
+      "patch_id": "s14-source-attested-0252",
+      "reason": "same_value_en",
+      "existing": "Band-tailed Pigeon",
+      "proposed": "Band-tailed Pigeon"
+    },
+    {
+      "patch_id": "s14-source-attested-0253",
+      "reason": "same_value_en",
+      "existing": "Mallard \u00d7 Muscovy Duck",
+      "proposed": "Mallard \u00d7 Muscovy Duck"
+    },
+    {
+      "patch_id": "s14-source-attested-0254",
+      "reason": "same_value_en",
+      "existing": "Eurasian Jackdaw",
+      "proposed": "Eurasian Jackdaw"
+    },
+    {
+      "patch_id": "s14-source-attested-0255",
+      "reason": "same_value_nl",
+      "existing": "Kauw",
+      "proposed": "Kauw"
+    },
+    {
+      "patch_id": "s14-source-attested-0256",
+      "reason": "same_value_en",
+      "existing": "Asian Tit",
+      "proposed": "Asian Tit"
+    },
+    {
+      "patch_id": "s14-source-attested-0257",
+      "reason": "same_value_en",
+      "existing": "Whooping Crane",
+      "proposed": "Whooping Crane"
+    },
+    {
+      "patch_id": "s14-source-attested-0258",
+      "reason": "same_value_en",
+      "existing": "Eared Dove",
+      "proposed": "Eared Dove"
+    },
+    {
+      "patch_id": "s14-source-attested-0259",
+      "reason": "same_value_en",
+      "existing": "Mourning Dove",
+      "proposed": "Mourning Dove"
+    },
+    {
+      "patch_id": "s14-source-attested-0260",
+      "reason": "same_value_en",
+      "existing": "Dusky Moorhen",
+      "proposed": "Dusky Moorhen"
+    },
+    {
+      "patch_id": "s14-source-attested-0261",
+      "reason": "same_value_en",
+      "existing": "Eurasian Spoonbill",
+      "proposed": "Eurasian Spoonbill"
+    },
+    {
+      "patch_id": "s14-source-attested-0262",
+      "reason": "same_value_en",
+      "existing": "Common Crane",
+      "proposed": "Common Crane"
+    },
+    {
+      "patch_id": "s14-source-attested-0263",
+      "reason": "same_value_en",
+      "existing": "Pacific Black Duck \u00d7 Mallard",
+      "proposed": "Pacific Black Duck \u00d7 Mallard"
+    },
+    {
+      "patch_id": "s14-source-attested-0264",
+      "reason": "same_value_en",
+      "existing": "Western Cattle-Egret",
+      "proposed": "Western Cattle-Egret"
+    },
+    {
+      "patch_id": "s14-source-attested-0265",
+      "reason": "same_value_en",
+      "existing": "Clark's Grebe",
+      "proposed": "Clark's Grebe"
+    },
+    {
+      "patch_id": "s14-source-attested-0266",
+      "reason": "same_value_en",
+      "existing": "Little Grebe",
+      "proposed": "Little Grebe"
+    },
+    {
+      "patch_id": "s14-source-attested-0267",
+      "reason": "same_value_fr",
+      "existing": "Grand Cormoran",
+      "proposed": "Grand Cormoran"
+    },
+    {
+      "patch_id": "s14-source-attested-0268",
+      "reason": "same_value_en",
+      "existing": "Great Cormorant",
+      "proposed": "Great Cormorant"
+    },
+    {
+      "patch_id": "s14-source-attested-0269",
+      "reason": "same_value_nl",
+      "existing": "Aalscholver",
+      "proposed": "Aalscholver"
+    },
+    {
+      "patch_id": "s14-source-attested-0270",
+      "reason": "same_value_en",
+      "existing": "Little Black Cormorant",
+      "proposed": "Little Black Cormorant"
+    },
+    {
+      "patch_id": "s14-source-attested-0271",
+      "reason": "same_value_en",
+      "existing": "Black-faced Cormorant",
+      "proposed": "Black-faced Cormorant"
+    },
+    {
+      "patch_id": "s14-source-attested-0272",
+      "reason": "same_value_en",
+      "existing": "Glaucous Gull",
+      "proposed": "Glaucous Gull"
+    },
+    {
+      "patch_id": "s14-source-attested-0273",
+      "reason": "same_value_en",
+      "existing": "Common Gull",
+      "proposed": "Common Gull"
+    },
+    {
+      "patch_id": "s14-source-attested-0274",
+      "reason": "same_value_en",
+      "existing": "Great Black-backed Gull",
+      "proposed": "Great Black-backed Gull"
+    },
+    {
+      "patch_id": "s14-source-attested-0275",
+      "reason": "same_value_en",
+      "existing": "Lesser Black-backed Gull",
+      "proposed": "Lesser Black-backed Gull"
+    },
+    {
+      "patch_id": "s14-source-attested-0276",
+      "reason": "same_value_en",
+      "existing": "Caspian Gull",
+      "proposed": "Caspian Gull"
+    },
+    {
+      "patch_id": "s14-source-attested-0277",
+      "reason": "same_value_en",
+      "existing": "Eurasian Hobby",
+      "proposed": "Eurasian Hobby"
+    },
+    {
+      "patch_id": "s14-source-attested-0278",
+      "reason": "same_value_fr",
+      "existing": "Faucon p\u00e8lerin",
+      "proposed": "Faucon p\u00e8lerin"
+    },
+    {
+      "patch_id": "s14-source-attested-0279",
+      "reason": "same_value_en",
+      "existing": "Peregrine Falcon",
+      "proposed": "Peregrine Falcon"
+    },
+    {
+      "patch_id": "s14-source-attested-0280",
+      "reason": "same_value_nl",
+      "existing": "Slechtvalk",
+      "proposed": "Slechtvalk"
+    },
+    {
+      "patch_id": "s14-source-attested-0281",
+      "reason": "same_value_en",
+      "existing": "Malagasy Kestrel",
+      "proposed": "Malagasy Kestrel"
+    },
+    {
+      "patch_id": "s14-source-attested-0282",
+      "reason": "same_value_en",
+      "existing": "Merlin",
+      "proposed": "Merlin"
+    },
+    {
+      "patch_id": "s14-source-attested-0283",
+      "reason": "same_value_en",
+      "existing": "Mallard \u00d7 Northern Pintail",
+      "proposed": "Mallard \u00d7 Northern Pintail"
+    },
+    {
+      "patch_id": "s14-source-attested-0284",
+      "reason": "same_value_en",
+      "existing": "Greylag \u00d7 Swan Goose",
+      "proposed": "Greylag \u00d7 Swan Goose"
+    },
+    {
+      "patch_id": "s14-source-attested-0285",
+      "reason": "same_value_fr",
+      "existing": "Faucon cr\u00e9cerelle",
+      "proposed": "Faucon cr\u00e9cerelle"
+    },
+    {
+      "patch_id": "s14-source-attested-0286",
+      "reason": "same_value_en",
+      "existing": "Eurasian Kestrel",
+      "proposed": "Eurasian Kestrel"
+    },
+    {
+      "patch_id": "s14-source-attested-0287",
+      "reason": "same_value_nl",
+      "existing": "Torenvalk",
+      "proposed": "Torenvalk"
+    },
+    {
+      "patch_id": "s14-source-attested-0288",
+      "reason": "same_value_en",
+      "existing": "American Coot",
+      "proposed": "American Coot"
+    },
+    {
+      "patch_id": "s14-source-attested-0289",
+      "reason": "same_value_en",
+      "existing": "White Stork",
+      "proposed": "White Stork"
+    },
+    {
+      "patch_id": "s14-source-attested-0290",
+      "reason": "same_value_en",
+      "existing": "Turkey Vulture",
+      "proposed": "Turkey Vulture"
+    },
+    {
+      "patch_id": "s14-source-attested-0291",
+      "reason": "same_value_en",
+      "existing": "Hawaiian Coot",
+      "proposed": "Hawaiian Coot"
+    },
+    {
+      "patch_id": "s14-source-attested-0292",
+      "reason": "same_value_en",
+      "existing": "Slate-colored Coot",
+      "proposed": "Slate-colored Coot"
+    },
+    {
+      "patch_id": "s14-source-attested-0293",
+      "reason": "same_value_en",
+      "existing": "Eurasian Coot",
+      "proposed": "Eurasian Coot"
+    },
+    {
+      "patch_id": "s14-source-attested-0294",
+      "reason": "same_value_nl",
+      "existing": "Meerkoet",
+      "proposed": "Meerkoet"
+    },
+    {
+      "patch_id": "s14-source-attested-0295",
+      "reason": "same_value_en",
+      "existing": "Eurasian Oystercatcher",
+      "proposed": "Eurasian Oystercatcher"
+    },
+    {
+      "patch_id": "s14-source-attested-0296",
+      "reason": "same_value_en",
+      "existing": "Little Blue Heron",
+      "proposed": "Little Blue Heron"
+    },
+    {
+      "patch_id": "s14-source-attested-0297",
+      "reason": "same_value_en",
+      "existing": "Purple Heron",
+      "proposed": "Purple Heron"
+    },
+    {
+      "patch_id": "s14-source-attested-0298",
+      "reason": "same_value_en",
+      "existing": "Cocoi Heron",
+      "proposed": "Cocoi Heron"
+    },
+    {
+      "patch_id": "s14-source-attested-0299",
+      "reason": "same_value_fr",
+      "existing": "H\u00e9ron cendr\u00e9",
+      "proposed": "H\u00e9ron cendr\u00e9"
+    },
+    {
+      "patch_id": "s14-source-attested-0300",
+      "reason": "same_value_en",
+      "existing": "Grey Heron",
+      "proposed": "Grey Heron"
+    },
+    {
+      "patch_id": "s14-source-attested-0301",
+      "reason": "same_value_nl",
+      "existing": "Blauwe Reiger",
+      "proposed": "Blauwe Reiger"
+    },
+    {
+      "patch_id": "s14-source-attested-0302",
+      "reason": "same_value_en",
+      "existing": "Great Blue Heron",
+      "proposed": "Great Blue Heron"
+    },
+    {
+      "patch_id": "s14-source-attested-0303",
+      "reason": "same_value_en",
+      "existing": "White-necked Heron",
+      "proposed": "White-necked Heron"
+    },
+    {
+      "patch_id": "s14-source-attested-0304",
+      "reason": "same_value_en",
+      "existing": "Black-headed Heron",
+      "proposed": "Black-headed Heron"
+    },
+    {
+      "patch_id": "s14-source-attested-0305",
+      "reason": "same_value_en",
+      "existing": "Spot-flanked Gallinule",
+      "proposed": "Spot-flanked Gallinule"
+    },
+    {
+      "patch_id": "s14-source-attested-0306",
+      "reason": "same_value_en",
+      "existing": "Mallard \u00d7 Red-crested Pochard",
+      "proposed": "Mallard \u00d7 Red-crested Pochard"
+    },
+    {
+      "patch_id": "s14-source-attested-0307",
+      "reason": "same_value_fr",
+      "existing": "\u00c9pervier d'Europe",
+      "proposed": "\u00c9pervier d'Europe"
+    },
+    {
+      "patch_id": "s14-source-attested-0308",
+      "reason": "same_value_en",
+      "existing": "Eurasian Sparrowhawk",
+      "proposed": "Eurasian Sparrowhawk"
+    },
+    {
+      "patch_id": "s14-source-attested-0309",
+      "reason": "same_value_nl",
+      "existing": "Sperwer",
+      "proposed": "Sperwer"
+    },
+    {
+      "patch_id": "s14-source-attested-0310",
+      "reason": "same_value_en",
+      "existing": "Water Rail",
+      "proposed": "Water Rail"
+    },
+    {
+      "patch_id": "s14-source-attested-0311",
+      "reason": "same_value_en",
+      "existing": "Western Marsh Harrier",
+      "proposed": "Western Marsh Harrier"
+    },
+    {
+      "patch_id": "s14-source-attested-0312",
+      "reason": "same_value_en",
+      "existing": "Rough-legged Hawk",
+      "proposed": "Rough-legged Hawk"
+    },
+    {
+      "patch_id": "s14-source-attested-0313",
+      "reason": "same_value_en",
+      "existing": "Broad-winged Hawk",
+      "proposed": "Broad-winged Hawk"
+    },
+    {
+      "patch_id": "s14-source-attested-0314",
+      "reason": "same_value_en",
+      "existing": "Red Kite",
+      "proposed": "Red Kite"
+    },
+    {
+      "patch_id": "s14-source-attested-0315",
+      "reason": "same_value_en",
+      "existing": "European Honey-buzzard",
+      "proposed": "European Honey-buzzard"
+    },
+    {
+      "patch_id": "s14-source-attested-0316",
+      "reason": "same_value_en",
+      "existing": "Snow Goose",
+      "proposed": "Snow Goose"
+    },
+    {
+      "patch_id": "s14-source-attested-0317",
+      "reason": "same_value_en",
+      "existing": "Ross's Goose",
+      "proposed": "Ross's Goose"
+    },
+    {
+      "patch_id": "s14-source-attested-0318",
+      "reason": "same_value_en",
+      "existing": "Garganey",
+      "proposed": "Garganey"
+    },
+    {
+      "patch_id": "s14-source-attested-0319",
+      "reason": "same_value_en",
+      "existing": "Blue-winged Teal",
+      "proposed": "Blue-winged Teal"
+    },
+    {
+      "patch_id": "s14-source-attested-0320",
+      "reason": "same_value_en",
+      "existing": "Northern Shoveler",
+      "proposed": "Northern Shoveler"
+    },
+    {
+      "patch_id": "s14-source-attested-0321",
+      "reason": "same_value_en",
+      "existing": "Gadwall",
+      "proposed": "Gadwall"
+    },
+    {
+      "patch_id": "s14-source-attested-0322",
+      "reason": "same_value_en",
+      "existing": "Chiloe Wigeon",
+      "proposed": "Chiloe Wigeon"
+    },
+    {
+      "patch_id": "s14-source-attested-0323",
+      "reason": "same_value_fr",
+      "existing": "Go\u00e9land leucoph\u00e9e",
+      "proposed": "Go\u00e9land leucoph\u00e9e"
+    },
+    {
+      "patch_id": "s14-source-attested-0324",
+      "reason": "same_value_en",
+      "existing": "Yellow-legged Gull",
+      "proposed": "Yellow-legged Gull"
+    },
+    {
+      "patch_id": "s14-source-attested-0325",
+      "reason": "same_value_nl",
+      "existing": "Geelpootmeeuw",
+      "proposed": "Geelpootmeeuw"
+    },
+    {
+      "patch_id": "s14-source-attested-0326",
+      "reason": "same_value_fr",
+      "existing": "Hirondelle de fen\u00eatre",
+      "proposed": "Hirondelle de fen\u00eatre"
+    },
+    {
+      "patch_id": "s14-source-attested-0327",
+      "reason": "same_value_en",
+      "existing": "Western House Martin",
+      "proposed": "Western House Martin"
+    },
+    {
+      "patch_id": "s14-source-attested-0328",
+      "reason": "same_value_nl",
+      "existing": "Huiszwaluw",
+      "proposed": "Huiszwaluw"
+    },
+    {
+      "patch_id": "s14-source-attested-0329",
+      "reason": "same_value_en",
+      "existing": "Chimney Swift",
+      "proposed": "Chimney Swift"
+    },
+    {
+      "patch_id": "s14-source-attested-0330",
+      "reason": "same_value_en",
+      "existing": "Common Swift",
+      "proposed": "Common Swift"
+    },
+    {
+      "patch_id": "s14-source-attested-0331",
+      "reason": "same_value_nl",
+      "existing": "Gierzwaluw",
+      "proposed": "Gierzwaluw"
+    },
+    {
+      "patch_id": "s14-source-attested-0332",
+      "reason": "same_value_en",
+      "existing": "Whooper Swan",
+      "proposed": "Whooper Swan"
+    },
+    {
+      "patch_id": "s14-source-attested-0333",
+      "reason": "same_value_en",
+      "existing": "Tundra Swan",
+      "proposed": "Tundra Swan"
+    },
+    {
+      "patch_id": "s14-source-attested-0334",
+      "reason": "same_value_en",
+      "existing": "Mallard",
+      "proposed": "Mallard"
+    },
+    {
+      "patch_id": "s14-source-attested-0335",
+      "reason": "same_value_nl",
+      "existing": "Wilde Eend",
+      "proposed": "Wilde Eend"
+    },
+    {
+      "patch_id": "s14-source-attested-0336",
+      "reason": "same_value_en",
+      "existing": "Common Goldeneye",
+      "proposed": "Common Goldeneye"
+    },
+    {
+      "patch_id": "s14-source-attested-0337",
+      "reason": "same_value_en",
+      "existing": "Bar-headed Goose",
+      "proposed": "Bar-headed Goose"
+    },
+    {
+      "patch_id": "s14-source-attested-0338",
+      "reason": "same_value_en",
+      "existing": "Swan Goose",
+      "proposed": "Swan Goose"
+    },
+    {
+      "patch_id": "s14-source-attested-0339",
+      "reason": "same_value_fr",
+      "existing": "Oie cendr\u00e9e",
+      "proposed": "Oie cendr\u00e9e"
+    },
+    {
+      "patch_id": "s14-source-attested-0340",
+      "reason": "same_value_en",
+      "existing": "Greylag Goose",
+      "proposed": "Greylag Goose"
+    },
+    {
+      "patch_id": "s14-source-attested-0341",
+      "reason": "same_value_nl",
+      "existing": "Grauwe Gans",
+      "proposed": "Grauwe Gans"
+    },
+    {
+      "patch_id": "s14-source-attested-0342",
+      "reason": "same_value_en",
+      "existing": "Greater White-fronted Goose",
+      "proposed": "Greater White-fronted Goose"
+    },
+    {
+      "patch_id": "s14-source-attested-0343",
+      "reason": "same_value_en",
+      "existing": "Common Pochard",
+      "proposed": "Common Pochard"
+    },
+    {
+      "patch_id": "s14-source-attested-0344",
+      "reason": "same_value_en",
+      "existing": "Common Shelduck",
+      "proposed": "Common Shelduck"
+    },
+    {
+      "patch_id": "s14-source-attested-0345",
+      "reason": "same_value_en",
+      "existing": "Canada Goose",
+      "proposed": "Canada Goose"
+    },
+    {
+      "patch_id": "s14-source-attested-0346",
+      "reason": "same_value_en",
+      "existing": "Barnacle Goose",
+      "proposed": "Barnacle Goose"
+    },
+    {
+      "patch_id": "s14-source-attested-0347",
+      "reason": "same_value_en",
+      "existing": "Hawaiian Goose",
+      "proposed": "Hawaiian Goose"
+    },
+    {
+      "patch_id": "s14-source-attested-0348",
+      "reason": "same_value_en",
+      "existing": "Muscovy Duck",
+      "proposed": "Muscovy Duck"
+    },
+    {
+      "patch_id": "s14-source-attested-0349",
+      "reason": "same_value_en",
+      "existing": "Red-crested Pochard",
+      "proposed": "Red-crested Pochard"
+    },
+    {
+      "patch_id": "s14-source-attested-0350",
+      "reason": "same_value_en",
+      "existing": "Southern Pochard",
+      "proposed": "Southern Pochard"
+    },
+    {
+      "patch_id": "s14-source-attested-0351",
+      "reason": "same_value_en",
+      "existing": "Smew",
+      "proposed": "Smew"
+    },
+    {
+      "patch_id": "s14-source-attested-0352",
+      "reason": "same_value_en",
+      "existing": "Egyptian Goose",
+      "proposed": "Egyptian Goose"
+    },
+    {
+      "patch_id": "s14-source-attested-0353",
+      "reason": "same_value_en",
+      "existing": "Brown Teal",
+      "proposed": "Brown Teal"
+    },
+    {
+      "patch_id": "s14-source-attested-0354",
+      "reason": "same_value_en",
+      "existing": "Crested Duck",
+      "proposed": "Crested Duck"
+    },
+    {
+      "patch_id": "s14-source-attested-0355",
+      "reason": "same_value_en",
+      "existing": "Yellow-legged Thrush",
+      "proposed": "Yellow-legged Thrush"
+    },
+    {
+      "patch_id": "s14-source-attested-0356",
+      "reason": "same_value_en",
+      "existing": "Lesser Spotted Woodpecker",
+      "proposed": "Lesser Spotted Woodpecker"
+    },
+    {
+      "patch_id": "s14-source-attested-0357",
+      "reason": "same_value_en",
+      "existing": "Middle Spotted Woodpecker",
+      "proposed": "Middle Spotted Woodpecker"
+    },
+    {
+      "patch_id": "s14-source-attested-0358",
+      "reason": "same_value_en",
+      "existing": "Downy Woodpecker",
+      "proposed": "Downy Woodpecker"
+    },
+    {
+      "patch_id": "s14-source-attested-0359",
+      "reason": "same_value_en",
+      "existing": "Goldcrest",
+      "proposed": "Goldcrest"
+    },
+    {
+      "patch_id": "s14-source-attested-0360",
+      "reason": "same_value_en",
+      "existing": "Fish Crow",
+      "proposed": "Fish Crow"
+    },
+    {
+      "patch_id": "s14-source-attested-0361",
+      "reason": "same_value_en",
+      "existing": "Common Raven",
+      "proposed": "Common Raven"
+    },
+    {
+      "patch_id": "s14-source-attested-0362",
+      "reason": "same_value_en",
+      "existing": "Rook",
+      "proposed": "Rook"
+    },
+    {
+      "patch_id": "s14-source-attested-0363",
+      "reason": "same_value_nl",
+      "existing": "Roek",
+      "proposed": "Roek"
+    },
+    {
+      "patch_id": "s14-source-attested-0364",
+      "reason": "same_value_fr",
+      "existing": "Geai des ch\u00eanes",
+      "proposed": "Geai des ch\u00eanes"
+    },
+    {
+      "patch_id": "s14-source-attested-0365",
+      "reason": "same_value_en",
+      "existing": "Eurasian Jay",
+      "proposed": "Eurasian Jay"
+    },
+    {
+      "patch_id": "s14-source-attested-0366",
+      "reason": "same_value_nl",
+      "existing": "Gaai",
+      "proposed": "Gaai"
+    },
+    {
+      "patch_id": "s14-source-attested-0367",
+      "reason": "same_value_en",
+      "existing": "Willie Wagtail",
+      "proposed": "Willie Wagtail"
+    },
+    {
+      "patch_id": "s14-source-attested-0368",
+      "reason": "same_value_en",
+      "existing": "Mexican Duck",
+      "proposed": "Mexican Duck"
+    },
+    {
+      "patch_id": "s14-source-attested-0369",
+      "reason": "same_value_en",
+      "existing": "Oriental Magpie",
+      "proposed": "Oriental Magpie"
+    },
+    {
+      "patch_id": "s14-source-attested-0370",
+      "reason": "same_value_en",
+      "existing": "Pied Currawong",
+      "proposed": "Pied Currawong"
+    },
+    {
+      "patch_id": "s14-source-attested-0371",
+      "reason": "same_value_en",
+      "existing": "Australian Magpie",
+      "proposed": "Australian Magpie"
+    },
+    {
+      "patch_id": "s14-source-attested-0372",
+      "reason": "same_value_en",
+      "existing": "Eurasian Magpie",
+      "proposed": "Eurasian Magpie"
+    },
+    {
+      "patch_id": "s14-source-attested-0373",
+      "reason": "same_value_nl",
+      "existing": "Ekster",
+      "proposed": "Ekster"
+    },
+    {
+      "patch_id": "s14-source-attested-0374",
+      "reason": "same_value_en",
+      "existing": "Yellowhammer",
+      "proposed": "Yellowhammer"
+    },
+    {
+      "patch_id": "s14-source-attested-0375",
+      "reason": "same_value_en",
+      "existing": "European Serin",
+      "proposed": "European Serin"
+    },
+    {
+      "patch_id": "s14-source-attested-0376",
+      "reason": "same_value_en",
+      "existing": "Island Canary",
+      "proposed": "Island Canary"
+    },
+    {
+      "patch_id": "s14-source-attested-0377",
+      "reason": "same_value_fr",
+      "existing": "Chardonneret \u00e9l\u00e9gant",
+      "proposed": "Chardonneret \u00e9l\u00e9gant"
+    },
+    {
+      "patch_id": "s14-source-attested-0378",
+      "reason": "same_value_en",
+      "existing": "European Goldfinch",
+      "proposed": "European Goldfinch"
+    },
+    {
+      "patch_id": "s14-source-attested-0379",
+      "reason": "same_value_nl",
+      "existing": "Putter",
+      "proposed": "Putter"
+    },
+    {
+      "patch_id": "s14-source-attested-0380",
+      "reason": "same_value_en",
+      "existing": "Eurasian Bullfinch",
+      "proposed": "Eurasian Bullfinch"
+    },
+    {
+      "patch_id": "s14-source-attested-0381",
+      "reason": "same_value_en",
+      "existing": "Pygmy Cormorant",
+      "proposed": "Pygmy Cormorant"
+    },
+    {
+      "patch_id": "s14-source-attested-0382",
+      "reason": "same_value_en",
+      "existing": "Ring-necked Pheasant",
+      "proposed": "Ring-necked Pheasant"
+    }
+  ],
+  "unresolved": [],
+  "provenance": {
+    "sources": {
+      "manual_override": 382
+    },
+    "confidence_distribution": {
+      "high": 309,
+      "medium": 73
+    }
+  },
+  "outputs": {
+    "canonical": "data/enriched/taxon_localized_names_v1/canonical_taxa_patched.json",
+    "referenced": "data/enriched/taxon_localized_names_v1/referenced_taxa_patched.json"
+  }
+}
