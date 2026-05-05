@@ -1,0 +1,85 @@
+---
+owner: database
+status: ready_for_validation
+last_reviewed: 2026-05-05
+source_of_truth: docs/audits/database-integrity-runtime-handoff-audit.md
+scope: sprint14b_data_integrity_gate
+---
+
+# Database Integrity Runtime Handoff Audit (Sprint 14B)
+
+## What Was Audited
+
+- Sprint 13 projected distractor relationships and integrity invariants.
+- Referenced shell plan semantics (assessed, mapped, planned, created, mode, status).
+- FR quality signals (missing FR, low-confidence seeds, placeholder FR labels breakdown).
+- PMP policy artifacts with explicit attribution and impact uncertainty.
+
+## Pass/Warning/Fail
+
+| Check | Status | Value |
+|---|---|---|
+| projected_relationship_schema_validity | pass | {"schema_validation_error_count": 0, "rejected_records_count": 0} |
+| duplicate_relationship_ids | pass | {"duplicate_id_count": 0, "sample": []} |
+| orphan_target_taxon_references | pass | 0 |
+| orphan_candidate_taxon_references | pass | 0 |
+| target_equals_candidate | pass | 0 |
+| emergency_fallback_count | pass | 0 |
+| unresolved_marked_usable | pass | 0 |
+| candidates_missing_french_names | warning | 112 |
+| low_confidence_fr_seeds | warning | {"count": 44, "status": "known", "source": "localized_apply.applied"} |
+| placeholder_french_labels_breakdown | warning | {"total_placeholder_french_label_count": 67, "target_placeholder_count": 0, "candidate_placeholder_count": 206, "referenced_shell_placeholder_count": 67, "corpus_facing_placeholder_count": 124, "excluded_or_not_for_corpus_display_count": 82, "affects_first_corpus_candidate_count": 124, "unknown_impact_count": 0} |
+| referenced_shell_plan_status | warning | {"inat_candidates_assessed_count": 198, "mapped_to_canonical_count": 42, "referenced_shells_planned_count": 156, "referenced_shells_created_count": 0, "mode": "dry_run", "status": "planned_not_created"} |
+| localized_name_conflicts | pass | 0 |
+| invalid_pmp_records | warning | 4 |
+| visible_answer_text_or_screenshot_blockers | warning | 1 |
+| pmp_policy_blocker_attribution | warning | {"count": 14, "table_rows": 8} |
+
+## Key Counts
+
+- projected_record_count: 407
+- duplicate_relationship_id_count: 0
+- emergency_fallback_count: 0
+- candidates_missing_french_name_count: 112
+- low_confidence_fr_seed_count: 44
+- placeholder_french_labels: {"total_placeholder_french_label_count": 67, "target_placeholder_count": 0, "candidate_placeholder_count": 206, "referenced_shell_placeholder_count": 67, "corpus_facing_placeholder_count": 124, "excluded_or_not_for_corpus_display_count": 82, "affects_first_corpus_candidate_count": 124, "unknown_impact_count": 0}
+- referenced_shell_status: {"inat_candidates_assessed_count": 198, "mapped_to_canonical_count": 42, "referenced_shells_planned_count": 156, "referenced_shells_created_count": 0, "mode": "dry_run", "status": "planned_not_created"}
+
+## Corpus Gate vs Persistence
+
+- READY_FOR_FIRST_CORPUS_DISTRACTOR_GATE remains a corpus-readiness signal only.
+- It does not authorize DistractorRelationship persistence.
+- It does not authorize database-phase closure.
+
+## PMP Blocker Attribution
+
+| blocker_category | count | source_artifact | affects_first_corpus_candidate | affects_runtime_handoff | severity | recommended_action |
+|---|---:|---|---|---|---|---|
+| schema_false_negative | 4 | docs/audits/evidence/pmp_policy_v1_broader_400_20260504_human_review_analysis.json | unknown | unknown | warning | Classify impact on first-corpus candidate set before promoting to hard blocker. |
+| multiple_species_target_unclear | 4 | docs/audits/evidence/pmp_policy_v1_broader_400_20260504_human_review_analysis.json | unknown | unknown | warning | Classify impact on first-corpus candidate set before promoting to hard blocker. |
+| text_overlay_or_answer_visible | 1 | docs/audits/evidence/pmp_policy_v1_broader_400_20260504_human_review_analysis.json | unknown | unknown | warning | Classify impact on first-corpus candidate set before promoting to hard blocker. |
+| field_observation_too_permissive | 1 | docs/audits/evidence/pmp_policy_v1_broader_400_20260504_human_review_analysis.json | unknown | unknown | warning | Classify impact on first-corpus candidate set before promoting to hard blocker. |
+| species_card_too_permissive | 1 | docs/audits/evidence/pmp_policy_v1_broader_400_20260504_human_review_analysis.json | unknown | unknown | warning | Classify impact on first-corpus candidate set before promoting to hard blocker. |
+| habitat_too_permissive | 1 | docs/audits/evidence/pmp_policy_v1_broader_400_20260504_human_review_analysis.json | unknown | unknown | warning | Classify impact on first-corpus candidate set before promoting to hard blocker. |
+| pre_ai_borderline | 1 | docs/audits/evidence/pmp_policy_v1_broader_400_20260504_human_review_analysis.json | unknown | unknown | warning | Classify impact on first-corpus candidate set before promoting to hard blocker. |
+| rare_model_subject_miss | 1 | docs/audits/evidence/pmp_policy_v1_broader_400_20260504_human_review_analysis.json | unknown | unknown | warning | Classify impact on first-corpus candidate set before promoting to hard blocker. |
+
+## Exact Blockers
+
+- No hard blockers identified for Sprint 14B.
+
+## Exact Non-Actions
+
+- No DistractorRelationship persistence
+- No ReferencedTaxon shell creation
+- No localized-name modifications
+- No delete/archive/deprecate actions
+
+## Decision
+
+- decision: READY_FOR_RUNTIME_CONTRACTS_WITH_WARNINGS
+- recommended_next_action: Proceed with warnings register to Sprint 14C robustness/regression tests.
+
+## Next Phase Recommendation
+
+- 14C Robustness and regression tests

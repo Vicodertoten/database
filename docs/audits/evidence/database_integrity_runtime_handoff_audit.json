@@ -1,0 +1,300 @@
+{
+  "run_date": "2026-05-05",
+  "phase": "Sprint 14B",
+  "inputs": {
+    "projected_relationships": {
+      "path": "docs/audits/evidence/distractor_relationships_v1_projected_sprint13.json",
+      "required": true,
+      "exists": true
+    },
+    "readiness_sprint13": {
+      "path": "docs/audits/evidence/distractor_readiness_v1_sprint13.json",
+      "required": true,
+      "exists": true
+    },
+    "readiness_sprint12_vs_sprint13": {
+      "path": "docs/audits/evidence/distractor_readiness_sprint12_vs_sprint13.json",
+      "required": true,
+      "exists": true
+    },
+    "shell_apply_plan": {
+      "path": "docs/audits/evidence/referenced_taxon_shell_apply_plan_sprint13.json",
+      "required": false,
+      "exists": true
+    },
+    "localized_apply": {
+      "path": "docs/audits/evidence/taxon_localized_names_sprint13_apply.json",
+      "required": false,
+      "exists": true
+    },
+    "pmp_human_review_analysis": {
+      "path": "docs/audits/evidence/pmp_policy_v1_broader_400_20260504_human_review_analysis.json",
+      "required": false,
+      "exists": true
+    },
+    "canonical_taxa_patched": {
+      "path": "data/enriched/taxon_localized_names_v1/canonical_taxa_patched.json",
+      "required": false,
+      "exists": true
+    },
+    "referenced_taxa_patched": {
+      "path": "data/enriched/taxon_localized_names_v1/referenced_taxa_patched.json",
+      "required": false,
+      "exists": true
+    },
+    "priority_seed_csv": {
+      "path": "data/manual/taxon_localized_name_patches_sprint13.csv",
+      "required": false,
+      "exists": true
+    }
+  },
+  "checks": [
+    {
+      "name": "projected_relationship_schema_validity",
+      "status": "pass",
+      "value": {
+        "schema_validation_error_count": 0,
+        "rejected_records_count": 0
+      },
+      "detail": "Projected DistractorRelationship artifact remains schema-valid."
+    },
+    {
+      "name": "duplicate_relationship_ids",
+      "status": "pass",
+      "value": {
+        "duplicate_id_count": 0,
+        "sample": []
+      },
+      "detail": "Relationship IDs must be unique."
+    },
+    {
+      "name": "orphan_target_taxon_references",
+      "status": "pass",
+      "value": 0,
+      "detail": "Projected targets should resolve to canonical taxon registry."
+    },
+    {
+      "name": "orphan_candidate_taxon_references",
+      "status": "pass",
+      "value": 0,
+      "detail": "Projected candidate refs should resolve to canonical/referenced registries."
+    },
+    {
+      "name": "target_equals_candidate",
+      "status": "pass",
+      "value": 0,
+      "detail": "Target must not equal candidate taxon."
+    },
+    {
+      "name": "emergency_fallback_count",
+      "status": "pass",
+      "value": 0,
+      "detail": "Emergency fallback count must remain 0 for first-corpus candidate set."
+    },
+    {
+      "name": "unresolved_marked_usable",
+      "status": "pass",
+      "value": 0,
+      "detail": "Unresolved candidates must not be marked usable."
+    },
+    {
+      "name": "candidates_missing_french_names",
+      "status": "warning",
+      "value": 112,
+      "detail": "Missing FR names remain a persistence-quality warning."
+    },
+    {
+      "name": "low_confidence_fr_seeds",
+      "status": "warning",
+      "value": {
+        "count": 44,
+        "status": "known",
+        "source": "localized_apply.applied"
+      },
+      "detail": "Low-confidence FR seeds must be reviewed before production label usage."
+    },
+    {
+      "name": "placeholder_french_labels_breakdown",
+      "status": "warning",
+      "value": {
+        "total_placeholder_french_label_count": 67,
+        "target_placeholder_count": 0,
+        "candidate_placeholder_count": 206,
+        "referenced_shell_placeholder_count": 67,
+        "corpus_facing_placeholder_count": 124,
+        "excluded_or_not_for_corpus_display_count": 82,
+        "affects_first_corpus_candidate_count": 124,
+        "unknown_impact_count": 0
+      },
+      "detail": "Placeholder FR labels include values equal to scientific names or Latin-binomial-like strings."
+    },
+    {
+      "name": "referenced_shell_plan_status",
+      "status": "warning",
+      "value": {
+        "inat_candidates_assessed_count": 198,
+        "mapped_to_canonical_count": 42,
+        "referenced_shells_planned_count": 156,
+        "referenced_shells_created_count": 0,
+        "mode": "dry_run",
+        "status": "planned_not_created"
+      },
+      "detail": "Referenced shell plan semantics: planned vs created, with explicit dry-run/apply status."
+    },
+    {
+      "name": "localized_name_conflicts",
+      "status": "pass",
+      "value": 0,
+      "detail": "Localized-name conflict count where evidence exists."
+    },
+    {
+      "name": "invalid_pmp_records",
+      "status": "warning",
+      "value": 4,
+      "detail": "Schema false negatives in PMP review evidence."
+    },
+    {
+      "name": "visible_answer_text_or_screenshot_blockers",
+      "status": "warning",
+      "value": 1,
+      "detail": "Visible answer text/screenshot categories from PMP review evidence."
+    },
+    {
+      "name": "pmp_policy_blocker_attribution",
+      "status": "warning",
+      "value": {
+        "count": 14,
+        "table_rows": 8
+      },
+      "detail": "PMP blocker categories are warning-level until corpus/runtime impact is proven."
+    }
+  ],
+  "metrics": {
+    "projected_record_count": 407,
+    "schema_validation_error_count": 0,
+    "rejected_records_count": 0,
+    "duplicate_relationship_id_count": 0,
+    "orphan_target_taxon_count": 0,
+    "orphan_candidate_taxon_count": 0,
+    "target_equals_candidate_count": 0,
+    "emergency_fallback_count": 0,
+    "unresolved_marked_usable_count": 0,
+    "candidates_missing_french_name_count": 112,
+    "low_confidence_fr_seed_count": 44,
+    "placeholder_french_labels": {
+      "total_placeholder_french_label_count": 67,
+      "target_placeholder_count": 0,
+      "candidate_placeholder_count": 206,
+      "referenced_shell_placeholder_count": 67,
+      "corpus_facing_placeholder_count": 124,
+      "excluded_or_not_for_corpus_display_count": 82,
+      "affects_first_corpus_candidate_count": 124,
+      "unknown_impact_count": 0
+    },
+    "referenced_shell_status": {
+      "inat_candidates_assessed_count": 198,
+      "mapped_to_canonical_count": 42,
+      "referenced_shells_planned_count": 156,
+      "referenced_shells_created_count": 0,
+      "mode": "dry_run",
+      "status": "planned_not_created"
+    },
+    "localized_name_conflict_count": 0,
+    "invalid_pmp_count": 4,
+    "visible_answer_text_or_screenshot_count": 1,
+    "pmp_policy_blockers_count": 14
+  },
+  "warnings": [],
+  "missing_required_files": [],
+  "missing_optional_files": [],
+  "pmp_blocker_attribution": [
+    {
+      "blocker_category": "schema_false_negative",
+      "count": 4,
+      "source_artifact": "docs/audits/evidence/pmp_policy_v1_broader_400_20260504_human_review_analysis.json",
+      "affects_first_corpus_candidate": "unknown",
+      "affects_runtime_handoff": "unknown",
+      "severity": "warning",
+      "recommended_action": "Classify impact on first-corpus candidate set before promoting to hard blocker."
+    },
+    {
+      "blocker_category": "multiple_species_target_unclear",
+      "count": 4,
+      "source_artifact": "docs/audits/evidence/pmp_policy_v1_broader_400_20260504_human_review_analysis.json",
+      "affects_first_corpus_candidate": "unknown",
+      "affects_runtime_handoff": "unknown",
+      "severity": "warning",
+      "recommended_action": "Classify impact on first-corpus candidate set before promoting to hard blocker."
+    },
+    {
+      "blocker_category": "text_overlay_or_answer_visible",
+      "count": 1,
+      "source_artifact": "docs/audits/evidence/pmp_policy_v1_broader_400_20260504_human_review_analysis.json",
+      "affects_first_corpus_candidate": "unknown",
+      "affects_runtime_handoff": "unknown",
+      "severity": "warning",
+      "recommended_action": "Classify impact on first-corpus candidate set before promoting to hard blocker."
+    },
+    {
+      "blocker_category": "field_observation_too_permissive",
+      "count": 1,
+      "source_artifact": "docs/audits/evidence/pmp_policy_v1_broader_400_20260504_human_review_analysis.json",
+      "affects_first_corpus_candidate": "unknown",
+      "affects_runtime_handoff": "unknown",
+      "severity": "warning",
+      "recommended_action": "Classify impact on first-corpus candidate set before promoting to hard blocker."
+    },
+    {
+      "blocker_category": "species_card_too_permissive",
+      "count": 1,
+      "source_artifact": "docs/audits/evidence/pmp_policy_v1_broader_400_20260504_human_review_analysis.json",
+      "affects_first_corpus_candidate": "unknown",
+      "affects_runtime_handoff": "unknown",
+      "severity": "warning",
+      "recommended_action": "Classify impact on first-corpus candidate set before promoting to hard blocker."
+    },
+    {
+      "blocker_category": "habitat_too_permissive",
+      "count": 1,
+      "source_artifact": "docs/audits/evidence/pmp_policy_v1_broader_400_20260504_human_review_analysis.json",
+      "affects_first_corpus_candidate": "unknown",
+      "affects_runtime_handoff": "unknown",
+      "severity": "warning",
+      "recommended_action": "Classify impact on first-corpus candidate set before promoting to hard blocker."
+    },
+    {
+      "blocker_category": "pre_ai_borderline",
+      "count": 1,
+      "source_artifact": "docs/audits/evidence/pmp_policy_v1_broader_400_20260504_human_review_analysis.json",
+      "affects_first_corpus_candidate": "unknown",
+      "affects_runtime_handoff": "unknown",
+      "severity": "warning",
+      "recommended_action": "Classify impact on first-corpus candidate set before promoting to hard blocker."
+    },
+    {
+      "blocker_category": "rare_model_subject_miss",
+      "count": 1,
+      "source_artifact": "docs/audits/evidence/pmp_policy_v1_broader_400_20260504_human_review_analysis.json",
+      "affects_first_corpus_candidate": "unknown",
+      "affects_runtime_handoff": "unknown",
+      "severity": "warning",
+      "recommended_action": "Classify impact on first-corpus candidate set before promoting to hard blocker."
+    }
+  ],
+  "blockers": [],
+  "decision": "READY_FOR_RUNTIME_CONTRACTS_WITH_WARNINGS",
+  "recommended_next_action": "Proceed with warnings register to Sprint 14C robustness/regression tests.",
+  "next_phase_recommendation": "14C Robustness and regression tests",
+  "non_actions": [
+    "No DistractorRelationship persistence",
+    "No ReferencedTaxon shell creation",
+    "No localized-name modifications",
+    "No delete/archive/deprecate actions"
+  ],
+  "integrity_gate_context": {
+    "ready_for_first_corpus_distractor_gate": true,
+    "persist_distractor_relationships_v1": false,
+    "database_phase_closed": false,
+    "note": "Corpus gate readiness does not imply persistence or database phase closure."
+  }
+}

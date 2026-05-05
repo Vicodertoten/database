@@ -1,0 +1,102 @@
+{
+  "run_date": "2026-05-05",
+  "repository": "Vicodertoten/database",
+  "branch": "sprint14-database-closure-runtime-handoff",
+  "observed_local_branch": "main",
+  "phase": "Sprint 14A",
+  "decision": "READY_FOR_DATA_INTEGRITY_GATE",
+  "state_flags": {
+    "READY_FOR_FIRST_CORPUS_DISTRACTOR_GATE": true,
+    "PERSIST_DISTRACTOR_RELATIONSHIPS_V1": false,
+    "DATABASE_PHASE_CLOSED": false,
+    "READY_FOR_DATA_INTEGRITY_GATE": true
+  },
+  "sprint13_baseline_metrics": {
+    "comparison_decision": "READY_FOR_FIRST_CORPUS_DISTRACTOR_GATE",
+    "targets_ready": 47,
+    "targets_blocked": 3,
+    "targets_with_3_plus_fr_usable": 47,
+    "candidates_missing_french_name_count": 112,
+    "missing_french_names_sprint12": 156,
+    "missing_french_names_sprint13": 112,
+    "missing_french_names_delta": -44,
+    "sprint13_persisted_distractor_relationship_rows": false,
+    "emergency_fallback_count": 0,
+    "inat_usable_candidate_count": 201
+  },
+  "remaining_blockers": [
+    "DistractorRelationship persistence remains deferred.",
+    "Referenced shell apply remains conditional and must be handled only after integrity/name review.",
+    "Low-confidence FR seed quality and long-tail localized-name coverage require integrity verification.",
+    "Database phase closure is not authorized before 14B/14C/14D completion."
+  ],
+  "classification_policy": {
+    "docs/audits/**": [
+      "historical_keep",
+      "active_source_of_truth"
+    ],
+    "docs/audits/evidence/**": "active_supporting_artifact",
+    "fixtures/**": "unclear_needs_review",
+    "data/enriched/*.similar_species_v1.json": "active_supporting_artifact",
+    "scripts/analyze_pmp_policy_broader_human_review.py": "unclear_needs_review",
+    "pedagogical_image_profile.py": "unclear_needs_review_until_imports_and_tests_checked",
+    "pack_v1_artifacts": "unclear_needs_review_until_runtime_and_artifact_usage_checked"
+  },
+  "classified_examples": {
+    "active_source_of_truth": [
+      "docs/audits/distractor-relationships-v1-sprint13.md",
+      "docs/audits/distractor-relationships-v1-sprint13-persistence-decision.md",
+      "docs/foundation/taxon-localized-names-enrichment-v1.md"
+    ],
+    "historical_keep": [
+      "docs/audits/distractor-readiness-sprint12-vs-sprint13.md",
+      "docs/audits/referenced-taxon-shell-apply-plan-sprint13.md",
+      "docs/audits/taxon-localized-names-sprint13-audit.md",
+      "docs/audits/taxon-localized-names-sprint13-apply.md"
+    ],
+    "active_supporting_artifact": [
+      "docs/audits/evidence/distractor_relationships_v1_projected_sprint13.json",
+      "docs/audits/evidence/distractor_readiness_v1_sprint13.json",
+      "docs/audits/evidence/distractor_readiness_sprint12_vs_sprint13.json",
+      "docs/audits/evidence/referenced_taxon_shell_apply_plan_sprint13.json",
+      "docs/audits/evidence/taxon_localized_names_sprint13_audit.json",
+      "docs/audits/evidence/taxon_localized_names_sprint13_apply.json",
+      "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/*.json"
+    ],
+    "unclear_needs_review": [
+      "scripts/analyze_pmp_policy_broader_human_review.py",
+      "src/database_core/qualification/pedagogical_image_profile.py",
+      "tests/test_pedagogical_image_profile.py",
+      "scripts/manage_packs.py",
+      "tests/fixtures/**",
+      "pack_v1_artifacts/**"
+    ]
+  },
+  "next_phases": [
+    "14B Data integrity gate",
+    "14C Robustness and regression tests",
+    "14D Runtime artifact contracts and handoff docs",
+    "14E Conservative cleanup/archive/deprecation",
+    "14F Official database closure"
+  ],
+  "explicit_non_actions": [
+    "No deletion",
+    "No archive move",
+    "No deprecation headers",
+    "No shell creation",
+    "No DistractorRelationship persistence",
+    "No runtime API"
+  ],
+  "files_inspected": [
+    "docs/audits/distractor-relationships-v1-sprint13.md",
+    "docs/audits/distractor-relationships-v1-sprint13-persistence-decision.md",
+    "docs/audits/evidence/distractor_relationships_v1_projected_sprint13.json",
+    "docs/audits/evidence/distractor_readiness_v1_sprint13.json",
+    "docs/audits/evidence/distractor_readiness_sprint12_vs_sprint13.json",
+    "docs/foundation/taxon-localized-names-enrichment-v1.md",
+    "scripts/analyze_pmp_policy_broader_human_review.py",
+    "scripts/manage_packs.py",
+    "tests/test_pedagogical_image_profile.py",
+    "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/*.json"
+  ]
+}
