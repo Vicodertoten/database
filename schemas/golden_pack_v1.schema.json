@@ -1,0 +1,286 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "golden_pack_v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "pack_id",
+    "locale",
+    "questions",
+    "media"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "golden_pack.v1"
+    },
+    "pack_id": {
+      "type": "string",
+      "const": "belgian_birds_mvp_v1"
+    },
+    "locale": {
+      "type": "string",
+      "const": "fr"
+    },
+    "questions": {
+      "type": "array",
+      "minItems": 30,
+      "maxItems": 30,
+      "items": {
+        "$ref": "#/$defs/question"
+      }
+    },
+    "media": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/media_entry"
+      }
+    }
+  },
+  "$defs": {
+    "question": {
+      "type": "object",
+      "required": [
+        "question_id",
+        "primary_media_id",
+        "prompt",
+        "options",
+        "correct_option_id",
+        "feedback_short",
+        "feedback_source"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "question_id": {
+          "type": "string",
+          "pattern": "^gbbmvp1_q[0-9]{4}$"
+        },
+        "primary_media_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "prompt": {
+          "type": "string",
+          "minLength": 1
+        },
+        "options": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "contains": {
+            "type": "object",
+            "required": [
+              "is_correct"
+            ],
+            "properties": {
+              "is_correct": {
+                "const": true
+              }
+            }
+          },
+          "minContains": 1,
+          "maxContains": 1,
+          "items": {
+            "$ref": "#/$defs/question_option"
+          }
+        },
+        "correct_option_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "feedback_short": {
+          "type": "string",
+          "minLength": 1
+        },
+        "feedback_source": {
+          "type": "string",
+          "enum": [
+            "database_authored",
+            "fallback_database_mvp"
+          ]
+        }
+      }
+    },
+    "question_option": {
+      "type": "object",
+      "required": [
+        "option_id",
+        "taxon_ref",
+        "display_label",
+        "is_correct"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "option_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "taxon_ref": {
+          "$ref": "#/$defs/taxon_ref"
+        },
+        "display_label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "is_correct": {
+          "type": "boolean"
+        },
+        "referenced_only": {
+          "type": "boolean"
+        },
+        "provenance": {
+          "type": "object",
+          "required": [
+            "source"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "source": {
+              "type": "string",
+              "minLength": 1
+            },
+            "note": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "taxon_ref": {
+                "properties": {
+                  "type": {
+                    "const": "referenced_taxon"
+                  }
+                },
+                "required": [
+                  "type"
+                ]
+              }
+            },
+            "required": [
+              "taxon_ref"
+            ]
+          },
+          "then": {
+            "required": [
+              "referenced_only"
+            ],
+            "properties": {
+              "referenced_only": {
+                "const": true
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "taxon_ref": {
+                "properties": {
+                  "type": {
+                    "const": "canonical_taxon"
+                  }
+                },
+                "required": [
+                  "type"
+                ]
+              }
+            },
+            "required": [
+              "taxon_ref"
+            ]
+          },
+          "then": {
+            "properties": {
+              "referenced_only": {
+                "const": false
+              }
+            }
+          }
+        }
+      ]
+    },
+    "taxon_ref": {
+      "type": "object",
+      "required": [
+        "type",
+        "id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "canonical_taxon",
+            "referenced_taxon"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "media_entry": {
+      "type": "object",
+      "required": [
+        "media_id",
+        "runtime_uri",
+        "source_url",
+        "source",
+        "creator",
+        "license",
+        "license_url",
+        "attribution_text",
+        "checksum"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "media_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "runtime_uri": {
+          "type": "string",
+          "pattern": "^media/.+"
+        },
+        "source_url": {
+          "type": "string",
+          "format": "uri",
+          "minLength": 1
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "creator": {
+          "type": "string",
+          "minLength": 1
+        },
+        "license": {
+          "type": "string",
+          "minLength": 1
+        },
+        "license_url": {
+          "type": "string",
+          "format": "uri",
+          "minLength": 1
+        },
+        "attribution_text": {
+          "type": "string",
+          "minLength": 1
+        },
+        "checksum": {
+          "type": "string",
+          "pattern": "^(sha256:)?[A-Fa-f0-9]{64}$"
+        }
+      }
+    }
+  }
+}

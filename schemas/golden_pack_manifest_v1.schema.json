@@ -1,0 +1,201 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "golden_pack_manifest_v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "pack_id",
+    "contract_version",
+    "build_timestamp",
+    "scope",
+    "runtime_surface",
+    "contract_status",
+    "gates",
+    "warnings",
+    "non_actions",
+    "evidence_links",
+    "audit_links",
+    "checksums",
+    "PERSIST_DISTRACTOR_RELATIONSHIPS_V1",
+    "DATABASE_PHASE_CLOSED"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "golden_pack_manifest.v1"
+    },
+    "pack_id": {
+      "type": "string",
+      "const": "belgian_birds_mvp_v1"
+    },
+    "contract_version": {
+      "type": "string",
+      "const": "golden_pack.v1"
+    },
+    "build_timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "scope": {
+      "type": "string",
+      "minLength": 1
+    },
+    "runtime_surface": {
+      "type": "string",
+      "const": "artifact_only"
+    },
+    "contract_status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "before_mvp_candidate",
+        "runtime_smoke_ready",
+        "runtime_smoke_validated",
+        "deprecated"
+      ]
+    },
+    "gates": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/gate"
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "non_actions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "evidence_links": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/link"
+      }
+    },
+    "audit_links": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/link"
+      }
+    },
+    "checksums": {
+      "$ref": "#/$defs/checksums"
+    },
+    "PERSIST_DISTRACTOR_RELATIONSHIPS_V1": {
+      "type": "boolean",
+      "const": false
+    },
+    "DATABASE_PHASE_CLOSED": {
+      "type": "boolean",
+      "const": false
+    }
+  },
+  "$defs": {
+    "gate": {
+      "type": "object",
+      "required": [
+        "gate_id",
+        "status"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "gate_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "passed",
+            "warning",
+            "failed"
+          ]
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "link": {
+      "type": "object",
+      "required": [
+        "path"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "checksums": {
+      "type": "object",
+      "required": [
+        "pack.json",
+        "validation_report.json",
+        "media_files"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "pack.json": {
+          "$ref": "#/$defs/sha256_entry"
+        },
+        "validation_report.json": {
+          "$ref": "#/$defs/sha256_entry"
+        },
+        "media_files": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/media_checksum_entry"
+          }
+        }
+      }
+    },
+    "sha256_entry": {
+      "type": "object",
+      "required": [
+        "sha256"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "sha256": {
+          "type": "string",
+          "pattern": "^[A-Fa-f0-9]{64}$"
+        }
+      }
+    },
+    "media_checksum_entry": {
+      "type": "object",
+      "required": [
+        "path",
+        "sha256"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "type": "string",
+          "pattern": "^media/.+"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[A-Fa-f0-9]{64}$"
+        }
+      }
+    }
+  }
+}

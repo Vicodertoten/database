@@ -1,0 +1,362 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "golden_pack_validation_report_v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "pack_id",
+    "status",
+    "schema_validity",
+    "count_checks",
+    "target_candidates_considered",
+    "selected_targets",
+    "rejected_targets",
+    "label_checks",
+    "distractor_checks",
+    "media_eligibility_checks",
+    "media_copy_checksum_checks",
+    "media_pack_size_check",
+    "attribution_checks",
+    "feedback_checks",
+    "warnings",
+    "blockers"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "golden_pack_validation_report.v1"
+    },
+    "pack_id": {
+      "type": "string",
+      "const": "belgian_birds_mvp_v1"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "passed",
+        "failed"
+      ]
+    },
+    "schema_validity": {
+      "$ref": "#/$defs/schema_validity"
+    },
+    "count_checks": {
+      "$ref": "#/$defs/count_checks"
+    },
+    "target_candidates_considered": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "selected_targets": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "rejected_targets": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/rejected_target"
+      }
+    },
+    "label_checks": {
+      "$ref": "#/$defs/label_checks"
+    },
+    "distractor_checks": {
+      "$ref": "#/$defs/distractor_checks"
+    },
+    "media_eligibility_checks": {
+      "$ref": "#/$defs/media_eligibility_checks"
+    },
+    "media_copy_checksum_checks": {
+      "$ref": "#/$defs/media_copy_checksum_checks"
+    },
+    "media_pack_size_check": {
+      "$ref": "#/$defs/media_pack_size_check"
+    },
+    "attribution_checks": {
+      "$ref": "#/$defs/attribution_checks"
+    },
+    "feedback_checks": {
+      "$ref": "#/$defs/feedback_checks"
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "blockers": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  },
+  "$defs": {
+    "schema_validity": {
+      "type": "object",
+      "required": [
+        "manifest_schema_valid",
+        "pack_schema_valid",
+        "validation_report_schema_valid"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "manifest_schema_valid": {
+          "type": "boolean"
+        },
+        "pack_schema_valid": {
+          "type": "boolean"
+        },
+        "validation_report_schema_valid": {
+          "type": "boolean"
+        }
+      }
+    },
+    "count_checks": {
+      "type": "object",
+      "required": [
+        "expected_questions",
+        "actual_questions",
+        "expected_options_per_question",
+        "expected_correct_options_per_question",
+        "expected_distractors_per_question",
+        "status"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "expected_questions": {
+          "type": "integer",
+          "const": 30
+        },
+        "actual_questions": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "expected_options_per_question": {
+          "type": "integer",
+          "const": 4
+        },
+        "expected_correct_options_per_question": {
+          "type": "integer",
+          "const": 1
+        },
+        "expected_distractors_per_question": {
+          "type": "integer",
+          "const": 3
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "passed",
+            "failed"
+          ]
+        }
+      }
+    },
+    "rejected_target": {
+      "type": "object",
+      "required": [
+        "taxon_ref_id",
+        "reason_codes"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "taxon_ref_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "label_checks": {
+      "type": "object",
+      "required": [
+        "all_display_labels_runtime_safe",
+        "no_placeholder_labels",
+        "no_empty_labels",
+        "no_invented_labels",
+        "no_scientific_fallback_primary_labels"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "all_display_labels_runtime_safe": {
+          "type": "boolean"
+        },
+        "no_placeholder_labels": {
+          "type": "boolean"
+        },
+        "no_empty_labels": {
+          "type": "boolean"
+        },
+        "no_invented_labels": {
+          "type": "boolean"
+        },
+        "no_scientific_fallback_primary_labels": {
+          "type": "boolean"
+        }
+      }
+    },
+    "distractor_checks": {
+      "type": "object",
+      "required": [
+        "exactly_three_distractors_per_question",
+        "options_have_taxon_ref",
+        "no_generic_canonical_taxon_id_fields",
+        "referenced_taxon_rules_valid",
+        "no_emergency_fallback_distractors"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "exactly_three_distractors_per_question": {
+          "type": "boolean"
+        },
+        "options_have_taxon_ref": {
+          "type": "boolean"
+        },
+        "no_generic_canonical_taxon_id_fields": {
+          "type": "boolean"
+        },
+        "referenced_taxon_rules_valid": {
+          "type": "boolean"
+        },
+        "no_emergency_fallback_distractors": {
+          "type": "boolean"
+        }
+      }
+    },
+    "media_eligibility_checks": {
+      "type": "object",
+      "required": [
+        "all_primary_media_basic_identification_eligible",
+        "missing_primary_media_count"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "all_primary_media_basic_identification_eligible": {
+          "type": "boolean"
+        },
+        "missing_primary_media_count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "media_copy_checksum_checks": {
+      "type": "object",
+      "required": [
+        "all_runtime_media_copied",
+        "all_media_checksums_verified",
+        "missing_runtime_media_paths"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "all_runtime_media_copied": {
+          "type": "boolean"
+        },
+        "all_media_checksums_verified": {
+          "type": "boolean"
+        },
+        "missing_runtime_media_paths": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "media_pack_size_check": {
+      "type": "object",
+      "required": [
+        "total_bytes",
+        "max_bytes",
+        "within_limit"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "total_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_bytes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "within_limit": {
+          "type": "boolean"
+        }
+      }
+    },
+    "attribution_checks": {
+      "type": "object",
+      "required": [
+        "all_attribution_fields_present",
+        "missing_attribution_entries"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "all_attribution_fields_present": {
+          "type": "boolean"
+        },
+        "missing_attribution_entries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/media_field_issue"
+          }
+        }
+      }
+    },
+    "feedback_checks": {
+      "type": "object",
+      "required": [
+        "all_questions_have_feedback_short",
+        "fallback_database_mvp_count"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "all_questions_have_feedback_short": {
+          "type": "boolean"
+        },
+        "fallback_database_mvp_count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "media_field_issue": {
+      "type": "object",
+      "required": [
+        "media_id",
+        "missing_fields"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "media_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "missing_fields": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}
