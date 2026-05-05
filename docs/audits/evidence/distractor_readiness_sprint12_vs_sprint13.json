@@ -1,0 +1,48 @@
+{
+  "comparison_version": "sprint12_vs_sprint13.v1",
+  "execution_status": "complete",
+  "decision": "READY_FOR_FIRST_CORPUS_DISTRACTOR_GATE",
+  "decision_note": ">=30 targets have >=3 FR-usable candidates, missing FR ratio is <=30%, and no shell blockers remain.",
+  "metrics": {
+    "targets_ready": {
+      "sprint12": 39,
+      "sprint13": 47,
+      "delta": 8
+    },
+    "targets_blocked": {
+      "sprint12": 11,
+      "sprint13": 3,
+      "delta": -8
+    },
+    "targets_with_3_plus_fr_usable": {
+      "sprint12": 39,
+      "sprint13": 47,
+      "delta": 8
+    },
+    "missing_french_names": {
+      "sprint12": 156,
+      "sprint13": 112,
+      "delta": -44
+    },
+    "shell_candidates_with_fr": {
+      "sprint12": 0,
+      "sprint13": 44,
+      "delta": 44
+    },
+    "emergency_fallback_count": {
+      "sprint12": 0,
+      "sprint13": 0,
+      "delta": 0
+    },
+    "taxonomic_only_dependency": {
+      "sprint12": 1,
+      "sprint13": 1,
+      "delta": 0
+    },
+    "inat_usable_candidate_count": {
+      "sprint12": 119,
+      "sprint13": 201,
+      "delta": 82
+    }
+  }
+}
