@@ -127,18 +127,38 @@
         "unknown_impact_count": 0,
         "affected_target_taxon_count": 49,
         "affected_ready_target_count": 40,
-        "safe_ready_target_count_after_placeholder_exclusion": 9
+        "safe_ready_target_count_after_placeholder_exclusion": 10,
+        "runtime_contract_placeholder_exclusion_guard": true,
+        "placeholder_labels_runtime_policy": "exclude_or_mark_not_for_corpus_display",
+        "corpus_facing_placeholder_relationship_occurrence_count_before_guard": 124,
+        "corpus_facing_placeholder_relationship_occurrence_count_after_guard": 0,
+        "placeholder_relationship_occurrences_marked_not_for_corpus_display": 124,
+        "first_corpus_minimum_target_count": 30,
+        "first_corpus_target_count_after_guard": 10,
+        "first_corpus_target_count_after_guard_status": "fail"
       },
       "detail": "67 reflects unique placeholder taxa while candidate placeholder metrics reflect relationship occurrences."
     },
     {
       "name": "runtime_contract_placeholder_exclusion_guard",
-      "status": "fail",
+      "status": "pass",
       "value": {
-        "documented_in_14d_runtime_contracts": false,
-        "required_condition": "14D runtime contracts must exclude or mark all provisional/placeholder FR labels as not_for_corpus_display."
+        "documented_in_14d_runtime_contracts": true,
+        "required_condition": "14D runtime contracts must exclude or mark all provisional/placeholder FR labels as not_for_corpus_display.",
+        "placeholder_labels_runtime_policy": "exclude_or_mark_not_for_corpus_display",
+        "active": true
       },
       "detail": "Runtime handoff requires 14D contracts to exclude or mark placeholder FR labels as not_for_corpus_display."
+    },
+    {
+      "name": "first_corpus_target_count_after_guard",
+      "status": "fail",
+      "value": {
+        "first_corpus_minimum_target_count": 30,
+        "first_corpus_target_count_after_guard": 10,
+        "status": "fail"
+      },
+      "detail": "After placeholder exclusion guard, first-corpus target count must stay at or above minimum."
     },
     {
       "name": "referenced_shell_plan_status",
@@ -204,7 +224,15 @@
       "unknown_impact_count": 0,
       "affected_target_taxon_count": 49,
       "affected_ready_target_count": 40,
-      "safe_ready_target_count_after_placeholder_exclusion": 9
+      "safe_ready_target_count_after_placeholder_exclusion": 10,
+      "runtime_contract_placeholder_exclusion_guard": true,
+      "placeholder_labels_runtime_policy": "exclude_or_mark_not_for_corpus_display",
+      "corpus_facing_placeholder_relationship_occurrence_count_before_guard": 124,
+      "corpus_facing_placeholder_relationship_occurrence_count_after_guard": 0,
+      "placeholder_relationship_occurrences_marked_not_for_corpus_display": 124,
+      "first_corpus_minimum_target_count": 30,
+      "first_corpus_target_count_after_guard": 10,
+      "first_corpus_target_count_after_guard_status": "fail"
     },
     "referenced_shell_status": {
       "inat_candidates_assessed_count": 198,
@@ -297,10 +325,19 @@
     }
   ],
   "blockers": [
-    "Corpus-facing placeholder FR relationship occurrences are present without a documented 14D runtime exclusion/marking guard."
+    "Safe ready target count after placeholder exclusion is below first-corpus minimum (30)."
   ],
-  "decision": "BLOCKED_NEEDS_PLACEHOLDER_EXCLUSION",
-  "recommended_next_action": "Document and enforce 14D runtime placeholder exclusion (or not_for_corpus_display marking), then rerun Sprint 14B.",
+  "decision": "BLOCKED_NEEDS_NAME_REVIEW",
+  "decision_rationale": {
+    "runtime_contract_placeholder_exclusion_guard": true,
+    "placeholder_labels_runtime_policy": "exclude_or_mark_not_for_corpus_display",
+    "corpus_facing_placeholder_relationship_occurrence_count_before_guard": 124,
+    "corpus_facing_placeholder_relationship_occurrence_count_after_guard": 0,
+    "safe_ready_target_count_after_placeholder_exclusion": 10,
+    "first_corpus_minimum_target_count": 30,
+    "first_corpus_target_count_after_guard_status": "fail"
+  },
+  "recommended_next_action": "Complete required name review for corpus-facing artifacts, then rerun Sprint 14B.",
   "next_phase_recommendation": "Resolve blockers and rerun Sprint 14B data integrity gate",
   "non_actions": [
     "No DistractorRelationship persistence",
@@ -314,8 +351,10 @@
     "database_phase_closed": false,
     "note": "Corpus gate readiness does not imply persistence or database phase closure.",
     "runtime_contract_placeholder_exclusion_guard": {
-      "documented_in_14d_runtime_contracts": false,
-      "required_condition": "14D runtime contracts must exclude or mark all provisional/placeholder FR labels as not_for_corpus_display."
+      "documented_in_14d_runtime_contracts": true,
+      "required_condition": "14D runtime contracts must exclude or mark all provisional/placeholder FR labels as not_for_corpus_display.",
+      "placeholder_labels_runtime_policy": "exclude_or_mark_not_for_corpus_display",
+      "active": true
     }
   }
 }

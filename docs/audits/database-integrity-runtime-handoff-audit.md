@@ -28,8 +28,9 @@ scope: sprint14b_data_integrity_gate
 | unresolved_marked_usable | pass | 0 |
 | candidates_missing_french_names | warning | 112 |
 | low_confidence_fr_seeds | warning | {"count": 44, "status": "known", "source": "localized_apply.applied"} |
-| placeholder_french_labels_breakdown | warning | {"unique_placeholder_taxon_count": 67, "target_placeholder_taxon_count": 0, "candidate_placeholder_relationship_occurrence_count": 206, "referenced_shell_placeholder_taxon_count": 67, "corpus_facing_placeholder_relationship_occurrence_count": 124, "excluded_or_not_for_corpus_display_relationship_occurrence_count": 82, "affected_first_corpus_candidate_relationship_occurrence_count": 124, "unknown_impact_count": 0, "affected_target_taxon_count": 49, "affected_ready_target_count": 40, "safe_ready_target_count_after_placeholder_exclusion": 9} |
-| runtime_contract_placeholder_exclusion_guard | fail | {"documented_in_14d_runtime_contracts": false, "required_condition": "14D runtime contracts must exclude or mark all provisional/placeholder FR labels as not_for_corpus_display."} |
+| placeholder_french_labels_breakdown | warning | {"unique_placeholder_taxon_count": 67, "target_placeholder_taxon_count": 0, "candidate_placeholder_relationship_occurrence_count": 206, "referenced_shell_placeholder_taxon_count": 67, "corpus_facing_placeholder_relationship_occurrence_count": 124, "excluded_or_not_for_corpus_display_relationship_occurrence_count": 82, "affected_first_corpus_candidate_relationship_occurrence_count": 124, "unknown_impact_count": 0, "affected_target_taxon_count": 49, "affected_ready_target_count": 40, "safe_ready_target_count_after_placeholder_exclusion": 10, "runtime_contract_placeholder_exclusion_guard": true, "placeholder_labels_runtime_policy": "exclude_or_mark_not_for_corpus_display", "corpus_facing_placeholder_relationship_occurrence_count_before_guard": 124, "corpus_facing_placeholder_relationship_occurrence_count_after_guard": 0, "placeholder_relationship_occurrences_marked_not_for_corpus_display": 124, "first_corpus_minimum_target_count": 30, "first_corpus_target_count_after_guard": 10, "first_corpus_target_count_after_guard_status": "fail"} |
+| runtime_contract_placeholder_exclusion_guard | pass | {"documented_in_14d_runtime_contracts": true, "required_condition": "14D runtime contracts must exclude or mark all provisional/placeholder FR labels as not_for_corpus_display.", "placeholder_labels_runtime_policy": "exclude_or_mark_not_for_corpus_display", "active": true} |
+| first_corpus_target_count_after_guard | fail | {"first_corpus_minimum_target_count": 30, "first_corpus_target_count_after_guard": 10, "status": "fail"} |
 | referenced_shell_plan_status | warning | {"inat_candidates_assessed_count": 198, "mapped_to_canonical_count": 42, "referenced_shells_planned_count": 156, "referenced_shells_created_count": 0, "mode": "dry_run", "status": "planned_not_created"} |
 | localized_name_conflicts | pass | 0 |
 | invalid_pmp_records | warning | 4 |
@@ -43,21 +44,28 @@ scope: sprint14b_data_integrity_gate
 - emergency_fallback_count: 0
 - candidates_missing_french_name_count: 112
 - low_confidence_fr_seed_count: 44
-- placeholder_french_labels: {"unique_placeholder_taxon_count": 67, "target_placeholder_taxon_count": 0, "candidate_placeholder_relationship_occurrence_count": 206, "referenced_shell_placeholder_taxon_count": 67, "corpus_facing_placeholder_relationship_occurrence_count": 124, "excluded_or_not_for_corpus_display_relationship_occurrence_count": 82, "affected_first_corpus_candidate_relationship_occurrence_count": 124, "unknown_impact_count": 0, "affected_target_taxon_count": 49, "affected_ready_target_count": 40, "safe_ready_target_count_after_placeholder_exclusion": 9}
+- placeholder_french_labels: {"unique_placeholder_taxon_count": 67, "target_placeholder_taxon_count": 0, "candidate_placeholder_relationship_occurrence_count": 206, "referenced_shell_placeholder_taxon_count": 67, "corpus_facing_placeholder_relationship_occurrence_count": 124, "excluded_or_not_for_corpus_display_relationship_occurrence_count": 82, "affected_first_corpus_candidate_relationship_occurrence_count": 124, "unknown_impact_count": 0, "affected_target_taxon_count": 49, "affected_ready_target_count": 40, "safe_ready_target_count_after_placeholder_exclusion": 10, "runtime_contract_placeholder_exclusion_guard": true, "placeholder_labels_runtime_policy": "exclude_or_mark_not_for_corpus_display", "corpus_facing_placeholder_relationship_occurrence_count_before_guard": 124, "corpus_facing_placeholder_relationship_occurrence_count_after_guard": 0, "placeholder_relationship_occurrences_marked_not_for_corpus_display": 124, "first_corpus_minimum_target_count": 30, "first_corpus_target_count_after_guard": 10, "first_corpus_target_count_after_guard_status": "fail"}
 - referenced_shell_status: {"inat_candidates_assessed_count": 198, "mapped_to_canonical_count": 42, "referenced_shells_planned_count": 156, "referenced_shells_created_count": 0, "mode": "dry_run", "status": "planned_not_created"}
 
 ## Placeholder Semantics
 
 - unique_placeholder_taxon_count=67 represents distinct placeholder taxa.
 - candidate_placeholder_relationship_occurrence_count=206 represents relationship-level occurrences.
-- corpus_facing_placeholder_relationship_occurrence_count=124 are not acceptable for runtime display unless excluded/marked not_for_corpus_display.
+- corpus_facing_placeholder_relationship_occurrence_count_before_guard=124 are unsafe before runtime filtering.
+- corpus_facing_placeholder_relationship_occurrence_count_after_guard=0 must be 0 for runtime-facing output.
+- placeholder_relationship_occurrences_marked_not_for_corpus_display=124 remain in source/audit data but are excluded from corpus-facing display.
+- safe_ready_target_count_after_placeholder_exclusion=10 against minimum=30 (fail).
 
 ## Corpus Gate vs Persistence
 
 - READY_FOR_FIRST_CORPUS_DISTRACTOR_GATE remains a corpus-readiness signal only.
+- PERSIST_DISTRACTOR_RELATIONSHIPS_V1 remains false in Sprint 14B/14B.1.
+- DATABASE_PHASE_CLOSED remains false in Sprint 14B/14B.1.
 - It does not authorize DistractorRelationship persistence.
 - It does not authorize database-phase closure.
 - 14D runtime contracts must exclude or mark all provisional/placeholder FR labels as not_for_corpus_display.
+- Placeholder/provisional labels remain preserved in source and audit evidence for traceability.
+- Runtime-facing label selection must use only safe localized labels.
 
 ## PMP Blocker Attribution
 
@@ -74,7 +82,7 @@ scope: sprint14b_data_integrity_gate
 
 ## Exact Blockers
 
-- Corpus-facing placeholder FR relationship occurrences are present without a documented 14D runtime exclusion/marking guard.
+- Safe ready target count after placeholder exclusion is below first-corpus minimum (30).
 
 ## Exact Non-Actions
 
@@ -85,8 +93,8 @@ scope: sprint14b_data_integrity_gate
 
 ## Decision
 
-- decision: BLOCKED_NEEDS_PLACEHOLDER_EXCLUSION
-- recommended_next_action: Document and enforce 14D runtime placeholder exclusion (or not_for_corpus_display marking), then rerun Sprint 14B.
+- decision: BLOCKED_NEEDS_NAME_REVIEW
+- recommended_next_action: Complete required name review for corpus-facing artifacts, then rerun Sprint 14B.
 
 ## Next Phase Recommendation
 

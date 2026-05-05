@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from scripts.audit_database_integrity_for_runtime_handoff import (
+    build_low_confidence_or_provisional_seed_ids,
     build_pmp_blocker_table,
     build_referenced_shell_status,
     classify_decision,
@@ -9,6 +10,7 @@ from scripts.audit_database_integrity_for_runtime_handoff import (
     count_unresolved_marked_usable,
     detect_duplicate_relationship_ids,
     detect_low_confidence_fr_seed_count,
+    is_runtime_unsafe_label,
     next_phase_for_decision,
 )
 
@@ -168,6 +170,134 @@ def test_ready_with_warnings_requires_no_placeholder_exclusion_blocker() -> None
         warning_only=True,
     )
     assert decision == "READY_FOR_RUNTIME_CONTRACTS_WITH_WARNINGS"
+
+
+def test_runtime_unsafe_label_low_confidence_seed_is_unsafe() -> None:
+    assert is_runtime_unsafe_label(
+        common_name_fr="Nom valide apparent",
+        scientific_name="Parus major",
+        low_confidence_or_provisional_seed=True,
+        explicit_placeholder_or_provisional=False,
+    )
+
+
+def test_runtime_unsafe_label_scientific_name_as_fr_is_unsafe() -> None:
+    assert is_runtime_unsafe_label(
+        common_name_fr="Parus major",
+        scientific_name="Parus major",
+        low_confidence_or_provisional_seed=False,
+        explicit_placeholder_or_provisional=False,
+    )
+
+
+def test_runtime_unsafe_label_latin_binomial_fr_is_unsafe() -> None:
+    assert is_runtime_unsafe_label(
+        common_name_fr="Corvus corone",
+        scientific_name="Parus major",
+        low_confidence_or_provisional_seed=False,
+        explicit_placeholder_or_provisional=False,
+    )
+
+
+def test_build_low_confidence_or_provisional_seed_ids() -> None:
+    rows = [
+        {
+            "candidate_taxon_ref_id": "reftaxon:1",
+            "confidence": "low",
+            "source": "manual_override",
+            "recommended_action": "seed_fr_then_human_review",
+            "notes": "provisional seed",
+        },
+        {
+            "candidate_taxon_ref_id": "reftaxon:2",
+            "confidence": "high",
+            "source": "manual_override",
+            "recommended_action": "",
+            "notes": "",
+        },
+    ]
+    out = build_low_confidence_or_provisional_seed_ids(rows)
+    assert out == {"reftaxon:1"}
+
+
+def test_guard_excludes_unsafe_runtime_occurrences_but_preserves_audit_counts() -> None:
+    records = [
+        {
+            "target_canonical_taxon_id": "taxon:1",
+            "candidate_taxon_ref_id": "reftaxon:1",
+            "candidate_scientific_name": "Phylloscopus collybita",
+            "status": "candidate",
+        },
+        {
+            "target_canonical_taxon_id": "taxon:1",
+            "candidate_taxon_ref_id": "reftaxon:2",
+            "candidate_scientific_name": "Parus major",
+            "status": "candidate",
+        },
+        {
+            "target_canonical_taxon_id": "taxon:1",
+            "candidate_taxon_ref_id": "reftaxon:3",
+            "candidate_scientific_name": "Erithacus rubecula",
+            "status": "candidate",
+        },
+    ]
+    referenced = {
+        "referenced_taxa": [
+            {
+                "referenced_taxon_id": "reftaxon:1",
+                "scientific_name": "Phylloscopus collybita",
+                "common_names_i18n": {"fr": ["Phylloscopus collybita"]},
+            },
+            {
+                "referenced_taxon_id": "reftaxon:2",
+                "scientific_name": "Parus major",
+                "common_names_i18n": {"fr": ["Mésange charbonnière"]},
+            },
+            {
+                "referenced_taxon_id": "reftaxon:3",
+                "scientific_name": "Erithacus rubecula",
+                "common_names_i18n": {"fr": ["Rougegorge"]},
+            },
+        ]
+    }
+    out = compute_placeholder_breakdown(
+        records,
+        {"canonical_taxa": []},
+        referenced,
+        low_confidence_or_provisional_seed_ids={"reftaxon:1"},
+        runtime_guard_active=True,
+        first_corpus_minimum_target_count=1,
+    )
+    assert out["corpus_facing_placeholder_relationship_occurrence_count_before_guard"] == 1
+    assert out["corpus_facing_placeholder_relationship_occurrence_count_after_guard"] == 0
+    assert out["placeholder_relationship_occurrences_marked_not_for_corpus_display"] == 1
+    assert out["candidate_placeholder_relationship_occurrence_count"] == 1
+
+
+def test_decision_blocks_when_guard_absent_and_placeholder_corpus_facing() -> None:
+    decision = classify_decision(
+        hard_integrity=False,
+        audit_clarification_needed=False,
+        pmp_blocker_proven=False,
+        name_review_needed=False,
+        placeholder_exclusion_needed=True,
+        referenced_shell_review_needed=False,
+        warning_only=False,
+    )
+    assert decision == "BLOCKED_NEEDS_PLACEHOLDER_EXCLUSION"
+
+
+def test_decision_blocks_name_review_when_safe_target_count_below_30() -> None:
+    decision = classify_decision(
+        hard_integrity=False,
+        audit_clarification_needed=False,
+        pmp_blocker_proven=False,
+        name_review_needed=True,
+        placeholder_exclusion_needed=False,
+        referenced_shell_review_needed=False,
+        warning_only=False,
+    )
+    assert decision == "BLOCKED_NEEDS_NAME_REVIEW"
 
 
 def test_next_phase_recommendation_is_14c_when_ready() -> None:
