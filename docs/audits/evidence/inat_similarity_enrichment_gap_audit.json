@@ -1,0 +1,185 @@
+{
+  "audit_version": "similarity_gap_audit.v1",
+  "run_date": "2026-05-05T11:17:12.912500+00:00",
+  "execution_status": "complete",
+  "snapshot_id": "palier1-be-birds-50taxa-run003-v11-baseline",
+  "root_cause_classification": "SIMILAR_HINTS_REQUIRE_API_REFRESH",
+  "phase_b_decision": "READY_FOR_INAT_TAXON_REFRESH",
+  "reasoning": "Raw taxon payloads (from GET /v1/taxa/{id}) do not contain `similar_taxa`. The harvest adapter does not call GET /v1/identifications/similar_species. A separate enrichment pass using the similar_species endpoint is required.",
+  "evidence_summary": {
+    "taxa_inspected": 50,
+    "taxa_with_inat_similarity_hints": 0,
+    "taxa_with_similar_taxa": 0,
+    "raw_payloads_found": 50,
+    "raw_payloads_with_similar_taxa": 0,
+    "raw_payload_api_endpoint": "https://api.inaturalist.org/v1/taxa/{inat_id}",
+    "similar_species_api_endpoint": "https://api.inaturalist.org/v1/identifications/similar_species?taxon_id={inat_id}&place_id=7008",
+    "harvest_calls_similar_species_endpoint": false,
+    "enrichment_status_distribution": {
+      "complete": 50
+    },
+    "test_fixture_has_similar_taxa": true,
+    "fixture_files_with_similar_taxa": [
+      "taxon_birds_000009.json",
+      "taxon_birds_000014.json"
+    ],
+    "enrichment_reads_key": "raw_hints = record.get(\"similar_taxa\") or []"
+  },
+  "affected_taxa": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50
+  ],
+  "sample_payload_paths": [
+    "data/raw/inaturalist/palier1-be-birds-50taxa-run003-v11-baseline/taxa/taxon_birds_000001.json"
+  ],
+  "sample_similarity_fields_found": {},
+  "recommended_next_action": "Implement scripts/fetch_inat_similar_species_v1.py \u2014 call GET /v1/identifications/similar_species?taxon_id={inat_id}&place_id=7008 for each of the 50 target taxa and write enrichment JSON to data/enriched/{snapshot_id}.similar_species_v1.json. Then re-run candidate generation and readiness synthesis.",
+  "levels": {
+    "A_canonical_taxa": {
+      "normalized_path": "data/normalized/palier1_be_birds_50taxa_run003_v11_baseline.normalized.json",
+      "total_taxa": 50,
+      "taxa_with_any_similarity_hints": 0,
+      "taxa_with_inat_similarity_hints": 0,
+      "taxa_with_similar_taxa": 0,
+      "taxa_with_similar_taxon_ids": 0,
+      "enrichment_status_distribution": {
+        "complete": 50
+      },
+      "conclusion": "All taxa enriched to completion but with empty similarity hints."
+    },
+    "B_raw_payloads": {
+      "taxa_dir": "data/raw/inaturalist/palier1-be-birds-50taxa-run003-v11-baseline/taxa",
+      "total_payload_files": 50,
+      "payloads_with_similar_taxa": 0,
+      "all_result_keys": [
+        "ancestor_ids",
+        "ancestors",
+        "ancestry",
+        "atlas_id",
+        "children",
+        "complete_rank",
+        "complete_species_count",
+        "conservation_status",
+        "conservation_statuses",
+        "current_synonymous_taxon_ids",
+        "default_photo",
+        "extinct",
+        "flag_counts",
+        "iconic_taxon_id",
+        "iconic_taxon_name",
+        "id",
+        "is_active",
+        "listed_taxa",
+        "listed_taxa_count",
+        "name",
+        "observations_count",
+        "parent_id",
+        "photos_locked",
+        "preferred_common_name",
+        "provisional",
+        "rank",
+        "rank_level",
+        "taxon_changes_count",
+        "taxon_photos",
+        "taxon_schemes_count",
+        "vision",
+        "wikipedia_summary",
+        "wikipedia_url"
+      ],
+      "similarity_fields_found": {},
+      "api_endpoint_used": "https://api.inaturalist.org/v1/taxa/{inat_id}",
+      "similar_taxa_field_absent": true,
+      "sample_payload_paths": [
+        "data/raw/inaturalist/palier1-be-birds-50taxa-run003-v11-baseline/taxa/taxon_birds_000001.json"
+      ],
+      "conclusion": "Raw payloads from GET /v1/taxa/{id} do not contain a `similar_taxa` field. The iNat taxon-detail endpoint does not expose visual similarity data. A separate endpoint is required: GET /v1/identifications/similar_species."
+    },
+    "C_manifest": {
+      "manifest_path": "data/raw/inaturalist/palier1-be-birds-50taxa-run003-v11-baseline/manifest.json",
+      "snapshot_id": "palier1-be-birds-50taxa-run003-v11-baseline",
+      "manifest_version": "inaturalist.snapshot.v3",
+      "enrichment_version": null,
+      "source_name": "inaturalist",
+      "total_seeds": 50,
+      "seeds_with_taxon_payload_path": 50,
+      "seeds_with_payload_file_on_disk": 50,
+      "conclusion": "Manifest has no enrichment_version field \u2014 snapshot was built before a multi-pass enrichment model was defined. All 50/50 taxon payload files exist on disk."
+    },
+    "D_code_paths": {
+      "enrichment_source": "src/database_core/enrichment/taxa.py",
+      "enrichment_similarity_functions": [
+        "_extract_similarity_hints",
+        "_resolve_similarity_hints",
+        "_merge_similarity_hints",
+        "_merge_similar_taxa",
+        "_coerce_similarity_relation_type"
+      ],
+      "enrichment_reads_key": "raw_hints = record.get(\"similar_taxa\") or []",
+      "harvest_source": "src/database_core/adapters/inaturalist_harvest.py",
+      "harvest_similarity_functions": [
+        "_write_taxon_payload"
+      ],
+      "harvest_calls_similar_species_endpoint": false,
+      "snapshot_adapter_source": "src/database_core/adapters/inaturalist_snapshot.py",
+      "snapshot_similarity_functions": [],
+      "test_snapshot_covers_similar_taxa": true,
+      "fixture_info": {
+        "fixture_dir_found": true,
+        "fixture_files_checked": 3,
+        "fixtures_with_similar_taxa": [
+          "taxon_birds_000009.json",
+          "taxon_birds_000014.json"
+        ]
+      },
+      "conclusion": "The enrichment function `_extract_similarity_hints` reads `record.get('similar_taxa')` from the taxon payload results[0]. Test fixtures confirm this works when the field is manually injected. The harvest adapter calls GET /v1/taxa/{id} which does NOT return `similar_taxa`. The harvest adapter does NOT call GET /v1/identifications/similar_species."
+    }
+  }
+}

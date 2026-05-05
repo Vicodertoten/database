@@ -1,0 +1,1227 @@
+{
+  "audit_version": "localized_names_gap.v1",
+  "run_date": "2026-05-05T11:43:08.644309+00:00",
+  "execution_status": "complete",
+  "snapshot_id": "palier1-be-birds-50taxa-run003-v11-baseline",
+  "fetch_live": true,
+  "decision": "READY_FOR_DISTRACTOR_READINESS_RERUN",
+  "decision_note": "After applying names, 244 candidates will be FR-usable. Proceed to apply, then rerun readiness.",
+  "targets_total": 50,
+  "targets_missing_fr": 50,
+  "targets_missing_nl": 50,
+  "targets_missing_en": 0,
+  "candidate_taxa_total": 43,
+  "candidate_taxa_missing_fr": 43,
+  "candidate_taxa_missing_nl": 43,
+  "candidate_taxa_missing_en": 0,
+  "fr_resolvable_from_inat": 43,
+  "nl_resolvable_from_inat": 43,
+  "names_from_inat": 50,
+  "names_requiring_manual": 0,
+  "candidates_fr_usable_now": 0,
+  "candidates_fr_usable_projected": 244,
+  "per_taxon": [
+    {
+      "canonical_taxon_id": "taxon:birds:000001",
+      "scientific_name": "Columba palumbus",
+      "inat_id": "3048",
+      "is_target": true,
+      "is_candidate": true,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "Common Wood-Pigeon"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "Pigeon ramier",
+        "nl": "Houtduif"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000002",
+      "scientific_name": "Corvus corone",
+      "inat_id": "204496",
+      "is_target": true,
+      "is_candidate": true,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "Carrion Crow"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "Corneille noire",
+        "nl": "Zwarte Kraai"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000003",
+      "scientific_name": "Cyanistes caeruleus",
+      "inat_id": "144849",
+      "is_target": true,
+      "is_candidate": true,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "Eurasian Blue Tit"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "M\u00e9sange bleue",
+        "nl": "Pimpelmees"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000004",
+      "scientific_name": "Erithacus rubecula",
+      "inat_id": "13094",
+      "is_target": true,
+      "is_candidate": true,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "European Robin"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "Rougegorge familier",
+        "nl": "Roodborst"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000005",
+      "scientific_name": "Fringilla coelebs",
+      "inat_id": "10070",
+      "is_target": true,
+      "is_candidate": true,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "Common Chaffinch"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "Pinson des arbres",
+        "nl": "Vink"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000006",
+      "scientific_name": "Garrulus glandarius",
+      "inat_id": "8088",
+      "is_target": true,
+      "is_candidate": true,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "Eurasian Jay"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "Geai des ch\u00eanes",
+        "nl": "Gaai"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000007",
+      "scientific_name": "Motacilla alba",
+      "inat_id": "13695",
+      "is_target": true,
+      "is_candidate": true,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "White Wagtail"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "Bergeronnette grise",
+        "nl": "Witte kwikstaart"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000008",
+      "scientific_name": "Parus major",
+      "inat_id": "203153",
+      "is_target": true,
+      "is_candidate": true,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "Great Tit"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "M\u00e9sange charbonni\u00e8re",
+        "nl": "Koolmees"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000009",
+      "scientific_name": "Passer domesticus",
+      "inat_id": "13858",
+      "is_target": true,
+      "is_candidate": false,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "House Sparrow"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "Moineau domestique",
+        "nl": "Huismus"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000010",
+      "scientific_name": "Pica pica",
+      "inat_id": "891696",
+      "is_target": true,
+      "is_candidate": true,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "Eurasian Magpie"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "Pie bavarde",
+        "nl": "Ekster"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000011",
+      "scientific_name": "Sturnus vulgaris",
+      "inat_id": "14850",
+      "is_target": true,
+      "is_candidate": true,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "European Starling"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "\u00c9tourneau sansonnet",
+        "nl": "Spreeuw"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000012",
+      "scientific_name": "Sylvia atricapilla",
+      "inat_id": "15282",
+      "is_target": true,
+      "is_candidate": false,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "Eurasian Blackcap"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "Fauvette \u00e0 t\u00eate noire",
+        "nl": "Zwartkop"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000013",
+      "scientific_name": "Troglodytes troglodytes",
+      "inat_id": "145363",
+      "is_target": true,
+      "is_candidate": true,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "Eurasian Wren"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "Troglodyte mignon",
+        "nl": "Winterkoning"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000014",
+      "scientific_name": "Turdus merula",
+      "inat_id": "12716",
+      "is_target": true,
+      "is_candidate": true,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "Eurasian Blackbird"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "Merle noir",
+        "nl": "Merel"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000015",
+      "scientific_name": "Turdus philomelos",
+      "inat_id": "12748",
+      "is_target": true,
+      "is_candidate": true,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "Song Thrush"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "Grive musicienne",
+        "nl": "Zanglijster"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000016",
+      "scientific_name": "Carduelis carduelis",
+      "inat_id": "9398",
+      "is_target": true,
+      "is_candidate": true,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "European Goldfinch"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "Chardonneret \u00e9l\u00e9gant",
+        "nl": "Putter"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000017",
+      "scientific_name": "Chloris chloris",
+      "inat_id": "145360",
+      "is_target": true,
+      "is_candidate": true,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "European Greenfinch"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "Verdier d'Europe",
+        "nl": "Groenling"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000018",
+      "scientific_name": "Acrocephalus scirpaceus",
+      "inat_id": "204455",
+      "is_target": true,
+      "is_candidate": true,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "Common Reed Warbler"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "Rousserolle effarvatte",
+        "nl": "Kleine Karekiet"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000019",
+      "scientific_name": "Coccothraustes coccothraustes",
+      "inat_id": "9801",
+      "is_target": true,
+      "is_candidate": true,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "Hawfinch"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "Gros-bec casse-noyaux",
+        "nl": "Appelvink"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000020",
+      "scientific_name": "Phoenicurus ochruros",
+      "inat_id": "13000",
+      "is_target": true,
+      "is_candidate": true,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "Black Redstart"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "Rougequeue noir",
+        "nl": "Zwarte Roodstaart"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000021",
+      "scientific_name": "Anas platyrhynchos",
+      "inat_id": "6930",
+      "is_target": true,
+      "is_candidate": true,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "Mallard"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "Canard colvert",
+        "nl": "Wilde Eend"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000022",
+      "scientific_name": "Anser anser",
+      "inat_id": "7018",
+      "is_target": true,
+      "is_candidate": true,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "Greylag Goose"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "Oie cendr\u00e9e",
+        "nl": "Grauwe Gans"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000023",
+      "scientific_name": "Cygnus olor",
+      "inat_id": "6921",
+      "is_target": true,
+      "is_candidate": true,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "Mute Swan"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "Cygne tubercul\u00e9",
+        "nl": "Knobbelzwaan"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000024",
+      "scientific_name": "Fulica atra",
+      "inat_id": "482",
+      "is_target": true,
+      "is_candidate": true,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "Eurasian Coot"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "Foulque macroule",
+        "nl": "Meerkoet"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000025",
+      "scientific_name": "Gallinula chloropus",
+      "inat_id": "201282",
+      "is_target": true,
+      "is_candidate": true,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "Common Moorhen"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "Gallinule poule-d'eau",
+        "nl": "Waterhoen"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000026",
+      "scientific_name": "Larus michahellis",
+      "inat_id": "59202",
+      "is_target": true,
+      "is_candidate": true,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "Yellow-legged Gull"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "Go\u00e9land leucoph\u00e9e",
+        "nl": "Geelpootmeeuw"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000027",
+      "scientific_name": "Larus argentatus",
+      "inat_id": "204533",
+      "is_target": true,
+      "is_candidate": true,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "European Herring Gull"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "Go\u00e9land argent\u00e9",
+        "nl": "Zilvermeeuw"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000028",
+      "scientific_name": "Phalacrocorax carbo",
+      "inat_id": "4270",
+      "is_target": true,
+      "is_candidate": false,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "Great Cormorant"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "Grand Cormoran",
+        "nl": "Aalscholver"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000029",
+      "scientific_name": "Ardea cinerea",
+      "inat_id": "4954",
+      "is_target": true,
+      "is_candidate": true,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "Grey Heron"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "H\u00e9ron cendr\u00e9",
+        "nl": "Blauwe Reiger"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000030",
+      "scientific_name": "Egretta garzetta",
+      "inat_id": "4943",
+      "is_target": true,
+      "is_candidate": true,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "Little Egret"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "Aigrette garzette",
+        "nl": "Kleine Zilverreiger"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000031",
+      "scientific_name": "Buteo buteo",
+      "inat_id": "204472",
+      "is_target": true,
+      "is_candidate": true,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "Common Buzzard"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "Buse variable",
+        "nl": "Buizerd"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000032",
+      "scientific_name": "Accipiter nisus",
+      "inat_id": "5106",
+      "is_target": true,
+      "is_candidate": true,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "Eurasian Sparrowhawk"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "\u00c9pervier d'Europe",
+        "nl": "Sperwer"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000033",
+      "scientific_name": "Falco tinnunculus",
+      "inat_id": "472766",
+      "is_target": true,
+      "is_candidate": true,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "Eurasian Kestrel"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "Faucon cr\u00e9cerelle",
+        "nl": "Torenvalk"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000034",
+      "scientific_name": "Falco peregrinus",
+      "inat_id": "4647",
+      "is_target": true,
+      "is_candidate": true,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "Peregrine Falcon"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "Faucon p\u00e8lerin",
+        "nl": "Slechtvalk"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000035",
+      "scientific_name": "Strix aluco",
+      "inat_id": "19898",
+      "is_target": true,
+      "is_candidate": true,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "Tawny Owl"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "Chouette hulotte",
+        "nl": "Bosuil"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000036",
+      "scientific_name": "Asio otus",
+      "inat_id": "20307",
+      "is_target": true,
+      "is_candidate": true,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "Long-eared Owl"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "Hibou moyen-duc",
+        "nl": "Ransuil"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000037",
+      "scientific_name": "Athene noctua",
+      "inat_id": "19998",
+      "is_target": true,
+      "is_candidate": true,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "Little Owl"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "Chev\u00eache d'Ath\u00e9na",
+        "nl": "Steenuil"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000038",
+      "scientific_name": "Picus viridis",
+      "inat_id": "144243",
+      "is_target": true,
+      "is_candidate": true,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "Eurasian Green Woodpecker"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "Pic vert",
+        "nl": "Groene specht"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000039",
+      "scientific_name": "Dendrocopos major",
+      "inat_id": "17871",
+      "is_target": true,
+      "is_candidate": true,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "Great Spotted Woodpecker"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "Pic \u00e9peiche",
+        "nl": "Grote bonte specht"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000040",
+      "scientific_name": "Dryocopus martius",
+      "inat_id": "17835",
+      "is_target": true,
+      "is_candidate": true,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "Black Woodpecker"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "Pic noir",
+        "nl": "Zwarte Specht"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000041",
+      "scientific_name": "Apus apus",
+      "inat_id": "6638",
+      "is_target": true,
+      "is_candidate": false,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "Common Swift"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "Martinet noir",
+        "nl": "Gierzwaluw"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000042",
+      "scientific_name": "Delichon urbicum",
+      "inat_id": "64705",
+      "is_target": true,
+      "is_candidate": true,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "Western House Martin"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "Hirondelle de fen\u00eatre",
+        "nl": "Huiszwaluw"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000043",
+      "scientific_name": "Hirundo rustica",
+      "inat_id": "11901",
+      "is_target": true,
+      "is_candidate": true,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "Barn Swallow"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "Hirondelle rustique",
+        "nl": "Boerenzwaluw"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000044",
+      "scientific_name": "Riparia riparia",
+      "inat_id": "11941",
+      "is_target": true,
+      "is_candidate": true,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "Bank Swallow"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "Hirondelle de rivage",
+        "nl": "Oeverzwaluw"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000045",
+      "scientific_name": "Alauda arvensis",
+      "inat_id": "7347",
+      "is_target": true,
+      "is_candidate": false,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "Eurasian Skylark"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "Alouette des champs",
+        "nl": "Veldleeuwerik"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000047",
+      "scientific_name": "Lanius collurio",
+      "inat_id": "12038",
+      "is_target": true,
+      "is_candidate": false,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "Red-backed Shrike"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "Pie-gri\u00e8che \u00e9corcheur",
+        "nl": "Grauwe Klauwier"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000048",
+      "scientific_name": "Coloeus monedula",
+      "inat_id": "336399",
+      "is_target": true,
+      "is_candidate": true,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "Eurasian Jackdaw"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "Choucas des tours",
+        "nl": "Kauw"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000049",
+      "scientific_name": "Corvus frugilegus",
+      "inat_id": "8029",
+      "is_target": true,
+      "is_candidate": true,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "Rook"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "Corbeau freux",
+        "nl": "Roek"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000070",
+      "scientific_name": "Podiceps cristatus",
+      "inat_id": "4208",
+      "is_target": true,
+      "is_candidate": false,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "Great Crested Grebe"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "Gr\u00e8be hupp\u00e9",
+        "nl": "Fuut"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000079",
+      "scientific_name": "Streptopelia decaocto",
+      "inat_id": "2969",
+      "is_target": true,
+      "is_candidate": true,
+      "existing_fr": [],
+      "existing_nl": [],
+      "existing_en": [
+        "Eurasian Collared-Dove"
+      ],
+      "missing_langs": [
+        "fr",
+        "nl"
+      ],
+      "proposed_names": {
+        "fr": "Tourterelle turque",
+        "nl": "Turkse Tortel"
+      },
+      "name_source": "inat_all_names_live",
+      "fr_resolvable": true,
+      "nl_resolvable": true,
+      "en_resolvable": false
+    }
+  ],
+  "csv_rows_written": 50,
+  "csv_path": "data/manual/taxon_common_names_i18n_sprint12.csv"
+}

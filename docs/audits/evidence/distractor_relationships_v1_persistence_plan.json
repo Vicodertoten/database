@@ -1,0 +1,35 @@
+{
+  "plan_version": "distractor_relationships_v1_persistence_plan.sprint12.v1",
+  "run_date": "2026-05-05",
+  "dry_run_only": true,
+  "decision_context": "DEFER_PERSISTENCE_USE_ARTIFACTS_ONLY_FOR_NOW",
+  "target_table_design": {
+    "table": "distractor_relationships",
+    "schema": "schemas/distractor_relationship_v1.schema.json",
+    "notes": "Persistence requires projection from audit-rich candidate records to strict schema fields."
+  },
+  "records_to_insert": 407,
+  "records_to_update": 0,
+  "referenced_taxon_dependencies": {
+    "count": 156,
+    "status": "pending_reviewed_shell_creation_path",
+    "notes": "Relationships referencing reftaxon:inaturalist:* require stable referenced taxon storage lifecycle before writes."
+  },
+  "conflicts": [],
+  "validation_errors": [
+    {
+      "code": "SCHEMA_ADDITIONAL_PROPERTIES",
+      "count": 407,
+      "detail": "All candidate records contain audit-only fields not allowed by distractor_relationship_v1 schema."
+    }
+  ],
+  "rollback_strategy": {
+    "type": "pre_write_snapshot_and_transactional_batch",
+    "steps": [
+      "Export existing distractor_relationships rows before any write",
+      "Apply writes in single transaction per chunk",
+      "On validation or referential error, rollback full transaction",
+      "Store before/after hashes and conflict report"
+    ]
+  }
+}

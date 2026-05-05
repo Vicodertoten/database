@@ -1,0 +1,82 @@
+{
+  "comparison_version": "sprint11_vs_sprint12.v1",
+  "run_date": "2026-05-05T11:54:54.125257+00:00",
+  "execution_status": "complete",
+  "decision": "NEEDS_MORE_TAXON_NAME_ENRICHMENT",
+  "decision_note": "Missing French names still dominate candidate coverage.",
+  "metrics": {
+    "inat_similar_count": {
+      "sprint11": 0,
+      "sprint12": 323,
+      "delta": 323
+    },
+    "total_candidates": {
+      "sprint11": 244,
+      "sprint12": 407,
+      "delta": 163
+    },
+    "source_distribution": {
+      "sprint11": {
+        "inaturalist_similar_species": 0,
+        "taxonomic_neighbor_same_genus": 8,
+        "taxonomic_neighbor_same_family": 66,
+        "taxonomic_neighbor_same_order": 170
+      },
+      "sprint12": {
+        "inaturalist_similar_species": 323,
+        "taxonomic_neighbor_same_genus": 8,
+        "taxonomic_neighbor_same_family": 66,
+        "taxonomic_neighbor_same_order": 10
+      }
+    },
+    "targets_ready": {
+      "sprint11": 0,
+      "sprint12": 39,
+      "delta": 39
+    },
+    "targets_blocked": {
+      "sprint11": 50,
+      "sprint12": 11,
+      "delta": -39
+    },
+    "targets_with_3_plus_candidates": {
+      "sprint11": 26,
+      "sprint12": 49,
+      "delta": 23
+    },
+    "targets_with_3_plus_fr_usable": {
+      "sprint11": 0,
+      "sprint12": 39,
+      "delta": 39
+    },
+    "missing_french_names": {
+      "sprint11": 43,
+      "sprint12": 156,
+      "delta": 113
+    },
+    "referenced_shells_needed": {
+      "sprint11": 0,
+      "sprint12": 0,
+      "delta": 0
+    },
+    "targets_with_no_candidates": {
+      "sprint11": 3,
+      "sprint12": 0,
+      "delta": -3
+    },
+    "taxonomic_only_dependency": {
+      "sprint11": 26,
+      "sprint12": 1,
+      "delta": -25
+    },
+    "same_order_dependency": {
+      "sprint11": 17,
+      "sprint12": 1,
+      "delta": -16
+    },
+    "no_emergency_diversity_fallback_generated": {
+      "sprint11": true,
+      "sprint12": true
+    }
+  }
+}

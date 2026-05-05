@@ -1,0 +1,101 @@
+{
+  "apply_version": "localized_names_apply.v1",
+  "run_date": "2026-05-05T11:43:15.792544+00:00",
+  "execution_status": "complete",
+  "snapshot_id": "palier1-be-birds-50taxa-run003-v11-baseline",
+  "decision": "READY_FOR_DISTRACTOR_READINESS_RERUN",
+  "decision_note": "All candidate FR names resolved. Rerun distractor readiness.",
+  "patches_applied": 50,
+  "fr_added_count": 50,
+  "nl_added_count": 50,
+  "en_added_count": 0,
+  "candidates_now_fr_usable": 43,
+  "candidates_still_missing_fr": 0,
+  "conflicts": [],
+  "skipped_rows": [],
+  "unresolved_rows": [],
+  "names_before_sample": {
+    "taxon:birds:000001": {
+      "en": [
+        "Common Wood-Pigeon"
+      ]
+    },
+    "taxon:birds:000002": {
+      "en": [
+        "Carrion Crow"
+      ]
+    },
+    "taxon:birds:000003": {
+      "en": [
+        "Eurasian Blue Tit"
+      ]
+    },
+    "taxon:birds:000004": {
+      "en": [
+        "European Robin"
+      ]
+    },
+    "taxon:birds:000005": {
+      "en": [
+        "Common Chaffinch"
+      ]
+    }
+  },
+  "names_after_sample": {
+    "taxon:birds:000001": {
+      "en": [
+        "Common Wood-Pigeon"
+      ],
+      "fr": [
+        "Pigeon ramier"
+      ],
+      "nl": [
+        "Houtduif"
+      ]
+    },
+    "taxon:birds:000002": {
+      "en": [
+        "Carrion Crow"
+      ],
+      "fr": [
+        "Corneille noire"
+      ],
+      "nl": [
+        "Zwarte Kraai"
+      ]
+    },
+    "taxon:birds:000003": {
+      "en": [
+        "Eurasian Blue Tit"
+      ],
+      "fr": [
+        "M\u00e9sange bleue"
+      ],
+      "nl": [
+        "Pimpelmees"
+      ]
+    },
+    "taxon:birds:000004": {
+      "en": [
+        "European Robin"
+      ],
+      "fr": [
+        "Rougegorge familier"
+      ],
+      "nl": [
+        "Roodborst"
+      ]
+    },
+    "taxon:birds:000005": {
+      "en": [
+        "Common Chaffinch"
+      ],
+      "fr": [
+        "Pinson des arbres"
+      ],
+      "nl": [
+        "Vink"
+      ]
+    }
+  }
+}

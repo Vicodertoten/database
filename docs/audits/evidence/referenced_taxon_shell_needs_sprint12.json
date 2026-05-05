@@ -1,0 +1,42 @@
+{
+  "audit_version": "referenced_taxon_shell_prep.v1",
+  "run_date": "2026-05-05T11:49:27.063733+00:00",
+  "execution_status": "complete",
+  "snapshot_id": "palier1-be-birds-50taxa-run003-v11-baseline",
+  "inputs": {
+    "phase_b_path": "docs/audits/evidence/inat_similarity_enrichment_sprint12.json",
+    "canonical_path": "data/normalized/palier1_be_birds_50taxa_run003_v11_baseline.normalized.json",
+    "localized_path": "data/enriched/palier1_be_birds_50taxa_run003_v11_baseline.names_enriched_v1.json",
+    "candidates_path": "docs/audits/evidence/distractor_relationship_candidates_v1.json",
+    "existing_referenced_path": "data/review_overrides/referenced_taxa_snapshot.json",
+    "manual_csv_path": "data/manual/taxon_common_names_i18n_sprint12.csv"
+  },
+  "decision": "NEEDS_REFERENCED_TAXON_STORAGE_WORK",
+  "decision_note": "Shell candidates identified. Implement a reviewed storage apply path before creation.",
+  "metrics": {
+    "total_candidate_taxa_from_inat_similar_species": 198,
+    "candidates_mapped_to_canonical_taxa": 42,
+    "candidates_already_existing_as_referenced_taxa": 0,
+    "candidates_needing_new_referenced_shell": 156,
+    "candidates_ambiguous": 0,
+    "candidates_ignored": 0,
+    "candidates_missing_scientific_name": 0,
+    "candidates_with_fr_name": 42,
+    "candidates_without_fr_name": 156
+  },
+  "shell_creation_mode": "dry_run",
+  "safe_apply_pathway_available": false,
+  "apply_result": {
+    "apply_requested": false,
+    "records_created": 0,
+    "records_updated": 0,
+    "storage_mutated": false
+  },
+  "required_future_storage_changes": [
+    "Provide a reviewed admin script to upsert ReferencedTaxon records outside runtime paths.",
+    "Use transaction-safe writes with explicit dry-run and --apply confirmation.",
+    "Enforce mapping_status invariants and unique (source, source_taxon_id).",
+    "Capture before/after snapshots and conflict logs for governance review."
+  ],
+  "candidate_relationships_count": 244
+}

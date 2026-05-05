@@ -1,0 +1,3537 @@
+{
+  "audit_version": "inat.similarity.v1",
+  "run_date": "2026-05-05T11:24:45.498691+00:00",
+  "execution_status": "complete",
+  "snapshot_id": "palier1-be-birds-50taxa-run003-v11-baseline",
+  "enrichment_mode": "live_api_fetch_with_cache",
+  "dry_run": false,
+  "decision": "NEEDS_REFERENCED_TAXON_SHELL_PREP",
+  "decision_note": "204 hints reference taxa not in the canonical corpus",
+  "targets_attempted": 50,
+  "targets_enriched": 49,
+  "targets_with_inat_similarity_hints": 49,
+  "total_similarity_hints": 323,
+  "hints_with_external_taxon_id": 323,
+  "hints_with_scientific_name": 323,
+  "hints_with_common_name": 323,
+  "hints_mapped_to_existing_canonical_taxon": 119,
+  "hints_unmapped": 204,
+  "raw_payloads_read": 0,
+  "raw_payloads_fetched_live": 50,
+  "cache_paths_written": 49,
+  "errors": [],
+  "skipped_taxa": [],
+  "fetch_status_distribution": {
+    "ok": 49,
+    "empty": 1
+  },
+  "per_target": [
+    {
+      "canonical_taxon_id": "taxon:birds:000001",
+      "scientific_name": "Columba palumbus",
+      "inat_id": "3048",
+      "hint_count": 8,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:22:53.599051+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000001.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "3017",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Columba livia",
+          "common_name": "Rock Pigeon",
+          "confidence": null,
+          "note": "iNat co-identification count: 11; rank: 0"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "2969",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Streptopelia decaocto",
+          "common_name": "Eurasian Collared-Dove",
+          "confidence": null,
+          "note": "iNat co-identification count: 6; rank: 1"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "3108",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Patagioenas fasciata",
+          "common_name": "Band-tailed Pigeon",
+          "confidence": null,
+          "note": "iNat co-identification count: 5; rank: 2"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "3033",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Columba oenas",
+          "common_name": "Stock Dove",
+          "confidence": null,
+          "note": "iNat co-identification count: 3; rank: 3"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "1455918",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Spilopelia chinensis",
+          "common_name": "Spotted Dove",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 4"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "891696",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Pica pica",
+          "common_name": "Eurasian Magpie",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 5"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "145363",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Troglodytes troglodytes",
+          "common_name": "Eurasian Wren",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 6"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "7089",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Branta canadensis",
+          "common_name": "Canada Goose",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 7"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000002",
+      "scientific_name": "Corvus corone",
+      "inat_id": "204496",
+      "hint_count": 7,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:22:56.077462+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000002.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "8010",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Corvus corax",
+          "common_name": "Common Raven",
+          "confidence": null,
+          "note": "iNat co-identification count: 11; rank: 0"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "336399",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Coloeus monedula",
+          "common_name": "Eurasian Jackdaw",
+          "confidence": null,
+          "note": "iNat co-identification count: 9; rank: 1"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "8029",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Corvus frugilegus",
+          "common_name": "Rook",
+          "confidence": null,
+          "note": "iNat co-identification count: 9; rank: 2"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "64705",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Delichon urbicum",
+          "common_name": "Western House Martin",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 3"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "14850",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Sturnus vulgaris",
+          "common_name": "European Starling",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 4"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "8423",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Strepera graculina",
+          "common_name": "Pied Currawong",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 5"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "8001",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Corvus ossifragus",
+          "common_name": "Fish Crow",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 6"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000003",
+      "scientific_name": "Cyanistes caeruleus",
+      "inat_id": "144849",
+      "hint_count": 6,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:22:58.262503+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000003.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "203153",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Parus major",
+          "common_name": "Great Tit",
+          "confidence": null,
+          "note": "iNat co-identification count: 15; rank: 0"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "339691",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Parus cinereus",
+          "common_name": "Asian Tit",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 1"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "144823",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Periparus ater",
+          "common_name": "Coal Tit",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 2"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "13688",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Motacilla cinerea",
+          "common_name": "Grey Wagtail",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 3"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "13632",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Baeolophus bicolor",
+          "common_name": "Tufted Titmouse",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 4"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "12716",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Turdus merula",
+          "common_name": "Eurasian Blackbird",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 5"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000004",
+      "scientific_name": "Erithacus rubecula",
+      "inat_id": "13094",
+      "hint_count": 14,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:23:00.464710+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000004.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "145363",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Troglodytes troglodytes",
+          "common_name": "Eurasian Wren",
+          "confidence": null,
+          "note": "iNat co-identification count: 2; rank: 0"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "13988",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Prunella modularis",
+          "common_name": "Dunnock",
+          "confidence": null,
+          "note": "iNat co-identification count: 2; rank: 1"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "12748",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Turdus philomelos",
+          "common_name": "Song Thrush",
+          "confidence": null,
+          "note": "iNat co-identification count: 2; rank: 2"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "12716",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Turdus merula",
+          "common_name": "Eurasian Blackbird",
+          "confidence": null,
+          "note": "iNat co-identification count: 2; rank: 3"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "1289470",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Curruca communis",
+          "common_name": "Common Whitethroat",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 4"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "144882",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Troglodytes pacificus",
+          "common_name": "Pacific Wren",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 5"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "17871",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Dendrocopos major",
+          "common_name": "Great Spotted Woodpecker",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 6"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "15282",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Sylvia atricapilla",
+          "common_name": "Eurasian Blackcap",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 7"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "12890",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Catharus guttatus",
+          "common_name": "Hermit Thrush",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 8"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "12727",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Turdus migratorius",
+          "common_name": "American Robin",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 9"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "10411",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Loxia curvirostra",
+          "common_name": "Red Crossbill",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 10"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "10070",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Fringilla coelebs",
+          "common_name": "Common Chaffinch",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 11"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "9236",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Serinus serinus",
+          "common_name": "European Serin",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 12"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "9195",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Emberiza citrinella",
+          "common_name": "Yellowhammer",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 13"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000005",
+      "scientific_name": "Fringilla coelebs",
+      "inat_id": "10070",
+      "hint_count": 12,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:23:02.927735+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000005.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "10069",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Fringilla montifringilla",
+          "common_name": "Brambling",
+          "confidence": null,
+          "note": "iNat co-identification count: 4; rank: 0"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "13858",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Passer domesticus",
+          "common_name": "House Sparrow",
+          "confidence": null,
+          "note": "iNat co-identification count: 3; rank: 1"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "145360",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Chloris chloris",
+          "common_name": "European Greenfinch",
+          "confidence": null,
+          "note": "iNat co-identification count: 2; rank: 2"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "117016",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Phylloscopus collybita",
+          "common_name": "Common Chiffchaff",
+          "confidence": null,
+          "note": "iNat co-identification count: 2; rank: 3"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "793469",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Regulus regulus",
+          "common_name": "Goldcrest",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 4"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "203153",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Parus major",
+          "common_name": "Great Tit",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 5"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "145310",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Spinus tristis",
+          "common_name": "American Goldfinch",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 6"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "117028",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Phylloscopus inornatus",
+          "common_name": "Yellow-browed Warbler",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 7"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "13633",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Baeolophus inornatus",
+          "common_name": "Oak Titmouse",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 8"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "13094",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Erithacus rubecula",
+          "common_name": "European Robin",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 9"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "12716",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Turdus merula",
+          "common_name": "Eurasian Blackbird",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 10"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "9398",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Carduelis carduelis",
+          "common_name": "European Goldfinch",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 11"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000006",
+      "scientific_name": "Garrulus glandarius",
+      "inat_id": "8088",
+      "hint_count": 2,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:23:05.283853+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000006.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "9398",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Carduelis carduelis",
+          "common_name": "European Goldfinch",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 0"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "3017",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Columba livia",
+          "common_name": "Rock Pigeon",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 1"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000007",
+      "scientific_name": "Motacilla alba",
+      "inat_id": "13695",
+      "hint_count": 6,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:23:07.562574+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000007.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "204545",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Motacilla flava",
+          "common_name": "Western Yellow Wagtail",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 0"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "199916",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Setophaga caerulescens",
+          "common_name": "Black-throated Blue Warbler",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 1"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "144809",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Poecile palustris",
+          "common_name": "Marsh Tit",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 2"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "15302",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Sylvia borin",
+          "common_name": "Garden Warbler",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 3"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "13688",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Motacilla cinerea",
+          "common_name": "Grey Wagtail",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 4"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "8143",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Rhipidura leucophrys",
+          "common_name": "Willie Wagtail",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 5"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000008",
+      "scientific_name": "Parus major",
+      "inat_id": "203153",
+      "hint_count": 11,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:23:09.750777+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000008.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "144849",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Cyanistes caeruleus",
+          "common_name": "Eurasian Blue Tit",
+          "confidence": null,
+          "note": "iNat co-identification count: 15; rank: 0"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "144823",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Periparus ater",
+          "common_name": "Coal Tit",
+          "confidence": null,
+          "note": "iNat co-identification count: 6; rank: 1"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "13858",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Passer domesticus",
+          "common_name": "House Sparrow",
+          "confidence": null,
+          "note": "iNat co-identification count: 3; rank: 2"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "144809",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Poecile palustris",
+          "common_name": "Marsh Tit",
+          "confidence": null,
+          "note": "iNat co-identification count: 2; rank: 3"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "117097",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Regulus ignicapilla",
+          "common_name": "Common Firecrest",
+          "confidence": null,
+          "note": "iNat co-identification count: 2; rank: 4"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "793469",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Regulus regulus",
+          "common_name": "Goldcrest",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 5"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "144815",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Poecile atricapillus",
+          "common_name": "Black-capped Chickadee",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 6"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "144242",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Picus sharpei",
+          "common_name": "Iberian Green Woodpecker",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 7"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "117016",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Phylloscopus collybita",
+          "common_name": "Common Chiffchaff",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 8"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "12716",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Turdus merula",
+          "common_name": "Eurasian Blackbird",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 9"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "10070",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Fringilla coelebs",
+          "common_name": "Common Chaffinch",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 10"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000009",
+      "scientific_name": "Passer domesticus",
+      "inat_id": "13858",
+      "hint_count": 13,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:23:12.261455+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000009.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "13851",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Passer montanus",
+          "common_name": "Eurasian Tree Sparrow",
+          "confidence": null,
+          "note": "iNat co-identification count: 5; rank: 0"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "203153",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Parus major",
+          "common_name": "Great Tit",
+          "confidence": null,
+          "note": "iNat co-identification count: 3; rank: 1"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "13988",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Prunella modularis",
+          "common_name": "Dunnock",
+          "confidence": null,
+          "note": "iNat co-identification count: 3; rank: 2"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "10070",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Fringilla coelebs",
+          "common_name": "Common Chaffinch",
+          "confidence": null,
+          "note": "iNat co-identification count: 3; rank: 3"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "145363",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Troglodytes troglodytes",
+          "common_name": "Eurasian Wren",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 4"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "145360",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Chloris chloris",
+          "common_name": "European Greenfinch",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 5"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "64705",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Delichon urbicum",
+          "common_name": "Western House Martin",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 6"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "15282",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Sylvia atricapilla",
+          "common_name": "Eurasian Blackcap",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 7"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "14076",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Petronia petronia",
+          "common_name": "Rock Sparrow",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 8"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "12748",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Turdus philomelos",
+          "common_name": "Song Thrush",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 9"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "11901",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Hirundo rustica",
+          "common_name": "Barn Swallow",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 10"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "2969",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Streptopelia decaocto",
+          "common_name": "Eurasian Collared-Dove",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 11"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "1907",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Cuculus canorus",
+          "common_name": "Common Cuckoo",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 12"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000010",
+      "scientific_name": "Pica pica",
+      "inat_id": "891696",
+      "hint_count": 5,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:23:14.822770+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000010.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "143853",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Pica hudsonia",
+          "common_name": "Black-billed Magpie",
+          "confidence": null,
+          "note": "iNat co-identification count: 3; rank: 0"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "827401",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Pica serica",
+          "common_name": "Oriental Magpie",
+          "confidence": null,
+          "note": "iNat co-identification count: 2; rank: 1"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "20445",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Tyto alba",
+          "common_name": "Western Barn Owl",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 2"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "17835",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Dryocopus martius",
+          "common_name": "Black Woodpecker",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 3"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "3048",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Columba palumbus",
+          "common_name": "Common Wood-Pigeon",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 4"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000011",
+      "scientific_name": "Sturnus vulgaris",
+      "inat_id": "14850",
+      "hint_count": 13,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:23:17.035623+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000011.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "12716",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Turdus merula",
+          "common_name": "Eurasian Blackbird",
+          "confidence": null,
+          "note": "iNat co-identification count: 4; rank: 0"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "12735",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Turdus viscivorus",
+          "common_name": "Mistle Thrush",
+          "confidence": null,
+          "note": "iNat co-identification count: 3; rank: 1"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "204556",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Oriolus oriolus",
+          "common_name": "Eurasian Golden Oriole",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 2"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "204496",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Corvus corone",
+          "common_name": "Carrion Crow",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 3"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "14849",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Sturnus unicolor",
+          "common_name": "Spotless Starling",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 4"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "13079",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Luscinia megarhynchos",
+          "common_name": "Common Nightingale",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 5"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "13000",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Phoenicurus ochruros",
+          "common_name": "Black Redstart",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 6"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "12749",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Turdus iliacus",
+          "common_name": "Redwing",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 7"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "9462",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Pyrrhula pyrrhula",
+          "common_name": "Eurasian Bullfinch",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 8"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "6638",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Apus apus",
+          "common_name": "Common Swift",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 9"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "6571",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Chaetura pelagica",
+          "common_name": "Chimney Swift",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 10"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "3017",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Columba livia",
+          "common_name": "Rock Pigeon",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 11"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "2599",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Alcedo atthis",
+          "common_name": "Common Kingfisher",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 12"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000012",
+      "scientific_name": "Sylvia atricapilla",
+      "inat_id": "15282",
+      "hint_count": 7,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:23:19.531307+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000012.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "15302",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Sylvia borin",
+          "common_name": "Garden Warbler",
+          "confidence": null,
+          "note": "iNat co-identification count: 5; rank: 0"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "144809",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Poecile palustris",
+          "common_name": "Marsh Tit",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 1"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "117016",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Phylloscopus collybita",
+          "common_name": "Common Chiffchaff",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 2"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "13858",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Passer domesticus",
+          "common_name": "House Sparrow",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 3"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "13094",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Erithacus rubecula",
+          "common_name": "European Robin",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 4"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "12735",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Turdus viscivorus",
+          "common_name": "Mistle Thrush",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 5"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "12716",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Turdus merula",
+          "common_name": "Eurasian Blackbird",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 6"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000013",
+      "scientific_name": "Troglodytes troglodytes",
+      "inat_id": "145363",
+      "hint_count": 5,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:23:21.778545+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000013.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "13094",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Erithacus rubecula",
+          "common_name": "European Robin",
+          "confidence": null,
+          "note": "iNat co-identification count: 2; rank: 0"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "793469",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Regulus regulus",
+          "common_name": "Goldcrest",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 1"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "116802",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Acrocephalus palustris",
+          "common_name": "Marsh Warbler",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 2"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "13858",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Passer domesticus",
+          "common_name": "House Sparrow",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 3"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "3048",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Columba palumbus",
+          "common_name": "Common Wood-Pigeon",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 4"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000014",
+      "scientific_name": "Turdus merula",
+      "inat_id": "12716",
+      "hint_count": 14,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:23:24.423486+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000014.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "12748",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Turdus philomelos",
+          "common_name": "Song Thrush",
+          "confidence": null,
+          "note": "iNat co-identification count: 12; rank: 0"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "14850",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Sturnus vulgaris",
+          "common_name": "European Starling",
+          "confidence": null,
+          "note": "iNat co-identification count: 4; rank: 1"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "336399",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Coloeus monedula",
+          "common_name": "Eurasian Jackdaw",
+          "confidence": null,
+          "note": "iNat co-identification count: 2; rank: 2"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "13094",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Erithacus rubecula",
+          "common_name": "European Robin",
+          "confidence": null,
+          "note": "iNat co-identification count: 2; rank: 3"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "12707",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Turdus pilaris",
+          "common_name": "Fieldfare",
+          "confidence": null,
+          "note": "iNat co-identification count: 2; rank: 4"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "203153",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Parus major",
+          "common_name": "Great Tit",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 5"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "144849",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Cyanistes caeruleus",
+          "common_name": "Eurasian Blue Tit",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 6"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "73542",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Turdus flavipes",
+          "common_name": "Yellow-legged Thrush",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 7"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "15282",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Sylvia atricapilla",
+          "common_name": "Eurasian Blackcap",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 8"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "13988",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Prunella modularis",
+          "common_name": "Dunnock",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 9"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "12781",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Turdus fuscater",
+          "common_name": "Great Thrush",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 10"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "12735",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Turdus viscivorus",
+          "common_name": "Mistle Thrush",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 11"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "10070",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Fringilla coelebs",
+          "common_name": "Common Chaffinch",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 12"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "8010",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Corvus corax",
+          "common_name": "Common Raven",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 13"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000015",
+      "scientific_name": "Turdus philomelos",
+      "inat_id": "12748",
+      "hint_count": 8,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:23:26.878889+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000015.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "12716",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Turdus merula",
+          "common_name": "Eurasian Blackbird",
+          "confidence": null,
+          "note": "iNat co-identification count: 12; rank: 0"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "12735",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Turdus viscivorus",
+          "common_name": "Mistle Thrush",
+          "confidence": null,
+          "note": "iNat co-identification count: 4; rank: 1"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "12749",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Turdus iliacus",
+          "common_name": "Redwing",
+          "confidence": null,
+          "note": "iNat co-identification count: 3; rank: 2"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "12707",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Turdus pilaris",
+          "common_name": "Fieldfare",
+          "confidence": null,
+          "note": "iNat co-identification count: 3; rank: 3"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "13094",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Erithacus rubecula",
+          "common_name": "European Robin",
+          "confidence": null,
+          "note": "iNat co-identification count: 2; rank: 4"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "13858",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Passer domesticus",
+          "common_name": "House Sparrow",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 5"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "12890",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Catharus guttatus",
+          "common_name": "Hermit Thrush",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 6"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "12878",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Catharus ustulatus",
+          "common_name": "Swainson's Thrush",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 7"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000016",
+      "scientific_name": "Carduelis carduelis",
+      "inat_id": "9398",
+      "hint_count": 4,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:23:29.227386+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000016.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "145303",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Spinus spinus",
+          "common_name": "Eurasian Siskin",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 0"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "18205",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Melanerpes carolinus",
+          "common_name": "Red-bellied Woodpecker",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 1"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "10070",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Fringilla coelebs",
+          "common_name": "Common Chaffinch",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 2"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "8088",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Garrulus glandarius",
+          "common_name": "Eurasian Jay",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 3"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000017",
+      "scientific_name": "Chloris chloris",
+      "inat_id": "145360",
+      "hint_count": 5,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:23:31.309599+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000017.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "10070",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Fringilla coelebs",
+          "common_name": "Common Chaffinch",
+          "confidence": null,
+          "note": "iNat co-identification count: 2; rank: 0"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "145303",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Spinus spinus",
+          "common_name": "Eurasian Siskin",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 1"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "13858",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Passer domesticus",
+          "common_name": "House Sparrow",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 2"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "9246",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Serinus canaria",
+          "common_name": "Island Canary",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 3"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "9195",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Emberiza citrinella",
+          "common_name": "Yellowhammer",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 4"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000018",
+      "scientific_name": "Acrocephalus scirpaceus",
+      "inat_id": "204455",
+      "hint_count": 5,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:23:33.532121+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000018.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "117016",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Phylloscopus collybita",
+          "common_name": "Common Chiffchaff",
+          "confidence": null,
+          "note": "iNat co-identification count: 2; rank: 0"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "116802",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Acrocephalus palustris",
+          "common_name": "Marsh Warbler",
+          "confidence": null,
+          "note": "iNat co-identification count: 2; rank: 1"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "1289470",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Curruca communis",
+          "common_name": "Common Whitethroat",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 2"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "204456",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Acrocephalus arundinaceus",
+          "common_name": "Great Reed Warbler",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 3"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "15302",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Sylvia borin",
+          "common_name": "Garden Warbler",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 4"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000019",
+      "scientific_name": "Coccothraustes coccothraustes",
+      "inat_id": "9801",
+      "hint_count": 0,
+      "fetch_status": "empty",
+      "fetched_at": "2026-05-05T11:23:35.678633+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000019.json",
+      "error": null,
+      "hints": []
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000020",
+      "scientific_name": "Phoenicurus ochruros",
+      "inat_id": "13000",
+      "hint_count": 2,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:23:37.461484+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000020.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "12992",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Phoenicurus phoenicurus",
+          "common_name": "Common Redstart",
+          "confidence": null,
+          "note": "iNat co-identification count: 6; rank: 0"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "14850",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Sturnus vulgaris",
+          "common_name": "European Starling",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 1"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000021",
+      "scientific_name": "Anas platyrhynchos",
+      "inat_id": "6930",
+      "hint_count": 24,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:23:39.492536+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000021.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "326092",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Anas platyrhynchos \u00d7 Cairina moschata",
+          "common_name": "Mallard \u00d7 Muscovy Duck",
+          "confidence": null,
+          "note": "iNat co-identification count: 15; rank: 0"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "7018",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Anser anser",
+          "common_name": "Greylag Goose",
+          "confidence": null,
+          "note": "iNat co-identification count: 6; rank: 1"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "410743",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Anas superciliosa \u00d7 platyrhynchos",
+          "common_name": "Pacific Black Duck \u00d7 Mallard",
+          "confidence": null,
+          "note": "iNat co-identification count: 5; rank: 2"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "7120",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Cairina moschata",
+          "common_name": "Muscovy Duck",
+          "confidence": null,
+          "note": "iNat co-identification count: 4; rank: 3"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "558439",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Mareca strepera",
+          "common_name": "Gadwall",
+          "confidence": null,
+          "note": "iNat co-identification count: 2; rank: 4"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "510458",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Anas platyrhynchos \u00d7 Netta rufina",
+          "common_name": "Mallard \u00d7 Red-crested Pochard",
+          "confidence": null,
+          "note": "iNat co-identification count: 2; rank: 5"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "201282",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Gallinula chloropus",
+          "common_name": "Common Moorhen",
+          "confidence": null,
+          "note": "iNat co-identification count: 2; rank: 6"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "6990",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Bucephala clangula",
+          "common_name": "Common Goldeneye",
+          "confidence": null,
+          "note": "iNat co-identification count: 2; rank: 7"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "482",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Fulica atra",
+          "common_name": "Eurasian Coot",
+          "confidence": null,
+          "note": "iNat co-identification count: 2; rank: 8"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "827372",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Anas diazi",
+          "common_name": "Mexican Duck",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 9"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "558442",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Mareca sibilatrix",
+          "common_name": "Chiloe Wigeon",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 10"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "558438",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Spatula clypeata",
+          "common_name": "Northern Shoveler",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 11"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "558433",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Spatula discors",
+          "common_name": "Blue-winged Teal",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 12"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "558429",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Spatula querquedula",
+          "common_name": "Garganey",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 13"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "558427",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Anser rossii",
+          "common_name": "Ross's Goose",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 14"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "558426",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Anser caerulescens",
+          "common_name": "Snow Goose",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 15"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "468988",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Anas platyrhynchos \u00d7 acuta",
+          "common_name": "Mallard \u00d7 Northern Pintail",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 16"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "72994",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Lophonetta specularioides",
+          "common_name": "Crested Duck",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 17"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "72502",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Anas chlorotis",
+          "common_name": "Brown Teal",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 18"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "7192",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Mergellus albellus",
+          "common_name": "Smew",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 19"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "7123",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Netta erythrophthalma",
+          "common_name": "Southern Pochard",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 20"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "7122",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Netta rufina",
+          "common_name": "Red-crested Pochard",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 21"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "7104",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Branta sandvicensis",
+          "common_name": "Hawaiian Goose",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 22"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "7101",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Branta leucopsis",
+          "common_name": "Barnacle Goose",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 23"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000022",
+      "scientific_name": "Anser anser",
+      "inat_id": "7018",
+      "hint_count": 12,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:23:42.633542+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000022.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "472287",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Anser anser \u00d7 cygnoides",
+          "common_name": "Greylag \u00d7 Swan Goose",
+          "confidence": null,
+          "note": "iNat co-identification count: 33; rank: 0"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "1667148",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Anser anser \u00d7 Branta canadensis",
+          "common_name": "Greylag \u00d7 Canada Goose",
+          "confidence": null,
+          "note": "iNat co-identification count: 6; rank: 1"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "6930",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Anas platyrhynchos",
+          "common_name": "Mallard",
+          "confidence": null,
+          "note": "iNat co-identification count: 6; rank: 2"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "558426",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Anser caerulescens",
+          "common_name": "Snow Goose",
+          "confidence": null,
+          "note": "iNat co-identification count: 4; rank: 3"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "72486",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Alopochen aegyptiaca",
+          "common_name": "Egyptian Goose",
+          "confidence": null,
+          "note": "iNat co-identification count: 3; rank: 4"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "7089",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Branta canadensis",
+          "common_name": "Canada Goose",
+          "confidence": null,
+          "note": "iNat co-identification count: 3; rank: 5"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "7019",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Anser albifrons",
+          "common_name": "Greater White-fronted Goose",
+          "confidence": null,
+          "note": "iNat co-identification count: 3; rank: 6"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "1667146",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Anser caerulescens \u00d7 Branta canadensis",
+          "common_name": "Snow \u00d7 Canada Goose",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 7"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "7101",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Branta leucopsis",
+          "common_name": "Barnacle Goose",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 8"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "7067",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Tadorna tadorna",
+          "common_name": "Common Shelduck",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 9"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "7014",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Anser cygnoides",
+          "common_name": "Swan Goose",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 10"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "7008",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Anser indicus",
+          "common_name": "Bar-headed Goose",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 11"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000023",
+      "scientific_name": "Cygnus olor",
+      "inat_id": "6921",
+      "hint_count": 3,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:23:45.391104+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000023.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "6916",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Cygnus cygnus",
+          "common_name": "Whooper Swan",
+          "confidence": null,
+          "note": "iNat co-identification count: 6; rank: 0"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "6930",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Anas platyrhynchos",
+          "common_name": "Mallard",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 1"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "6917",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Cygnus columbianus",
+          "common_name": "Tundra Swan",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 2"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000024",
+      "scientific_name": "Fulica atra",
+      "inat_id": "482",
+      "hint_count": 10,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:23:47.480226+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000024.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "201282",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Gallinula chloropus",
+          "common_name": "Common Moorhen",
+          "confidence": null,
+          "note": "iNat co-identification count: 10; rank: 0"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "473",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Fulica americana",
+          "common_name": "American Coot",
+          "confidence": null,
+          "note": "iNat co-identification count: 3; rank: 1"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "6930",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Anas platyrhynchos",
+          "common_name": "Mallard",
+          "confidence": null,
+          "note": "iNat co-identification count: 2; rank: 2"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "479",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Fulica ardesiaca",
+          "common_name": "Slate-colored Coot",
+          "confidence": null,
+          "note": "iNat co-identification count: 2; rank: 3"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "72486",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Alopochen aegyptiaca",
+          "common_name": "Egyptian Goose",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 4"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "10325",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Euphagus cyanocephalus",
+          "common_name": "Brewer's Blackbird",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 5"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "8575",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Gymnorhina tibicen",
+          "common_name": "Australian Magpie",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 6"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "4843",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Haematopus ostralegus",
+          "common_name": "Eurasian Oystercatcher",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 7"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "4237",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Tachybaptus ruficollis",
+          "common_name": "Little Grebe",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 8"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "478",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Fulica alai",
+          "common_name": "Hawaiian Coot",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 9"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000025",
+      "scientific_name": "Gallinula chloropus",
+      "inat_id": "201282",
+      "hint_count": 5,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:23:49.875251+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000025.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "482",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Fulica atra",
+          "common_name": "Eurasian Coot",
+          "confidence": null,
+          "note": "iNat co-identification count: 10; rank: 0"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "357",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Gallinula tenebrosa",
+          "common_name": "Dusky Moorhen",
+          "confidence": null,
+          "note": "iNat co-identification count: 3; rank: 1"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "6930",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Anas platyrhynchos",
+          "common_name": "Mallard",
+          "confidence": null,
+          "note": "iNat co-identification count: 2; rank: 2"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "513926",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Rallus aquaticus",
+          "common_name": "Water Rail",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 3"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "507881",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Porphyriops melanops",
+          "common_name": "Spot-flanked Gallinule",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 4"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000026",
+      "scientific_name": "Larus michahellis",
+      "inat_id": "59202",
+      "hint_count": 4,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:23:52.184536+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000026.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "204533",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Larus argentatus",
+          "common_name": "European Herring Gull",
+          "confidence": null,
+          "note": "iNat co-identification count: 6; rank: 0"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "4381",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Larus fuscus",
+          "common_name": "Lesser Black-backed Gull",
+          "confidence": null,
+          "note": "iNat co-identification count: 4; rank: 1"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "4389",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Larus cachinnans",
+          "common_name": "Caspian Gull",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 2"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "4356",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Larus canus",
+          "common_name": "Common Gull",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 3"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000027",
+      "scientific_name": "Larus argentatus",
+      "inat_id": "204533",
+      "hint_count": 10,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:23:54.132923+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000027.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "4381",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Larus fuscus",
+          "common_name": "Lesser Black-backed Gull",
+          "confidence": null,
+          "note": "iNat co-identification count: 11; rank: 0"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "59202",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Larus michahellis",
+          "common_name": "Yellow-legged Gull",
+          "confidence": null,
+          "note": "iNat co-identification count: 6; rank: 1"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "4368",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Larus marinus",
+          "common_name": "Great Black-backed Gull",
+          "confidence": null,
+          "note": "iNat co-identification count: 6; rank: 2"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "4356",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Larus canus",
+          "common_name": "Common Gull",
+          "confidence": null,
+          "note": "iNat co-identification count: 5; rank: 3"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "1587553",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Larus smithsonianus \u00d7 glaucescens",
+          "common_name": "Cook Inlet Gull",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 4"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "144510",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Chroicocephalus ridibundus",
+          "common_name": "Black-headed Gull",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 5"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "144508",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Chroicocephalus cirrocephalus",
+          "common_name": "Gray-hooded Gull",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 6"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "144294",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Stercorarius chilensis",
+          "common_name": "Chilean Skua",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 7"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "4389",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Larus cachinnans",
+          "common_name": "Caspian Gull",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 8"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "4349",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Larus hyperboreus",
+          "common_name": "Glaucous Gull",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 9"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000028",
+      "scientific_name": "Phalacrocorax carbo",
+      "inat_id": "4270",
+      "hint_count": 5,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:23:56.282189+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000028.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "1454382",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Nannopterum auritum",
+          "common_name": "Double-crested Cormorant",
+          "confidence": null,
+          "note": "iNat co-identification count: 9; rank: 0"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "979813",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Microcarbo pygmaeus",
+          "common_name": "Pygmy Cormorant",
+          "confidence": null,
+          "note": "iNat co-identification count: 3; rank: 1"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "4273",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Phalacrocorax sulcirostris",
+          "common_name": "Little Black Cormorant",
+          "confidence": null,
+          "note": "iNat co-identification count: 2; rank: 2"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "4954",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Ardea cinerea",
+          "common_name": "Grey Heron",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 3"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "4311",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Phalacrocorax fuscescens",
+          "common_name": "Black-faced Cormorant",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 4"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000029",
+      "scientific_name": "Ardea cinerea",
+      "inat_id": "4954",
+      "hint_count": 10,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:23:58.560841+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000029.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "4956",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Ardea herodias",
+          "common_name": "Great Blue Heron",
+          "confidence": null,
+          "note": "iNat co-identification count: 9; rank: 0"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "144455",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Ardea alba",
+          "common_name": "Great Egret",
+          "confidence": null,
+          "note": "iNat co-identification count: 4; rank: 1"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "4966",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Ardea pacifica",
+          "common_name": "White-necked Heron",
+          "confidence": null,
+          "note": "iNat co-identification count: 2; rank: 2"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "4952",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Ardea cocoi",
+          "common_name": "Cocoi Heron",
+          "confidence": null,
+          "note": "iNat co-identification count: 2; rank: 3"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "4972",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Ardea melanocephala",
+          "common_name": "Black-headed Heron",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 4"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "4951",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Ardea purpurea",
+          "common_name": "Purple Heron",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 5"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "4937",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Egretta caerulea",
+          "common_name": "Little Blue Heron",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 6"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "4270",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Phalacrocorax carbo",
+          "common_name": "Great Cormorant",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 7"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "41",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Grus grus",
+          "common_name": "Common Crane",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 8"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "34",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Grus americana",
+          "common_name": "Whooping Crane",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 9"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000030",
+      "scientific_name": "Egretta garzetta",
+      "inat_id": "4943",
+      "hint_count": 4,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:24:01.000318+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000030.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "144455",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Ardea alba",
+          "common_name": "Great Egret",
+          "confidence": null,
+          "note": "iNat co-identification count: 2; rank: 0"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "411086",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Ardea ibis",
+          "common_name": "Western Cattle-Egret",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 1"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "4733",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Ciconia ciconia",
+          "common_name": "White Stork",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 2"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "3731",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Platalea leucorodia",
+          "common_name": "Eurasian Spoonbill",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 3"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000031",
+      "scientific_name": "Buteo buteo",
+      "inat_id": "204472",
+      "hint_count": 16,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:24:03.261062+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000031.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "5325",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Pernis apivorus",
+          "common_name": "European Honey-buzzard",
+          "confidence": null,
+          "note": "iNat co-identification count: 7; rank: 0"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "19898",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Strix aluco",
+          "common_name": "Tawny Owl",
+          "confidence": null,
+          "note": "iNat co-identification count: 5; rank: 1"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "5173",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Circus aeruginosus",
+          "common_name": "Western Marsh Harrier",
+          "confidence": null,
+          "note": "iNat co-identification count: 4; rank: 2"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "5106",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Accipiter nisus",
+          "common_name": "Eurasian Sparrowhawk",
+          "confidence": null,
+          "note": "iNat co-identification count: 4; rank: 3"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "116999",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Pandion haliaetus",
+          "common_name": "Osprey",
+          "confidence": null,
+          "note": "iNat co-identification count: 3; rank: 4"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "5200",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Buteo lagopus",
+          "common_name": "Rough-legged Hawk",
+          "confidence": null,
+          "note": "iNat co-identification count: 3; rank: 5"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "1579015",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Astur gentilis",
+          "common_name": "Eurasian Goshawk",
+          "confidence": null,
+          "note": "iNat co-identification count: 2; rank: 6"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "472766",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Falco tinnunculus",
+          "common_name": "Eurasian Kestrel",
+          "confidence": null,
+          "note": "iNat co-identification count: 2; rank: 7"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "5267",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Milvus milvus",
+          "common_name": "Red Kite",
+          "confidence": null,
+          "note": "iNat co-identification count: 2; rank: 8"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "201041",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Rupornis magnirostris",
+          "common_name": "Roadside Hawk",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 9"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "201035",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Clanga clanga",
+          "common_name": "Greater Spotted Eagle",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 10"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "199913",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Buteo plagiatus",
+          "common_name": "Gray Hawk",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 11"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "20445",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Tyto alba",
+          "common_name": "Western Barn Owl",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 12"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "12749",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Turdus iliacus",
+          "common_name": "Redwing",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 13"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "5227",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Buteo platypterus",
+          "common_name": "Broad-winged Hawk",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 14"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "4756",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Cathartes aura",
+          "common_name": "Turkey Vulture",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 15"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000032",
+      "scientific_name": "Accipiter nisus",
+      "inat_id": "5106",
+      "hint_count": 3,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:24:05.714090+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000032.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "1579015",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Astur gentilis",
+          "common_name": "Eurasian Goshawk",
+          "confidence": null,
+          "note": "iNat co-identification count: 9; rank: 0"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "204472",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Buteo buteo",
+          "common_name": "Common Buzzard",
+          "confidence": null,
+          "note": "iNat co-identification count: 4; rank: 1"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "472766",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Falco tinnunculus",
+          "common_name": "Eurasian Kestrel",
+          "confidence": null,
+          "note": "iNat co-identification count: 2; rank: 2"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000033",
+      "scientific_name": "Falco tinnunculus",
+      "inat_id": "472766",
+      "hint_count": 9,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:24:07.786469+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000033.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "4672",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Falco columbarius",
+          "common_name": "Merlin",
+          "confidence": null,
+          "note": "iNat co-identification count: 3; rank: 0"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "204472",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Buteo buteo",
+          "common_name": "Common Buzzard",
+          "confidence": null,
+          "note": "iNat co-identification count: 2; rank: 1"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "5106",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Accipiter nisus",
+          "common_name": "Eurasian Sparrowhawk",
+          "confidence": null,
+          "note": "iNat co-identification count: 2; rank: 2"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "4647",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Falco peregrinus",
+          "common_name": "Peregrine Falcon",
+          "confidence": null,
+          "note": "iNat co-identification count: 2; rank: 3"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "19898",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Strix aluco",
+          "common_name": "Tawny Owl",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 4"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "18236",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Colaptes auratus",
+          "common_name": "Northern Flicker",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 5"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "12735",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Turdus viscivorus",
+          "common_name": "Mistle Thrush",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 6"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "4658",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Falco newtoni",
+          "common_name": "Malagasy Kestrel",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 7"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "2969",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Streptopelia decaocto",
+          "common_name": "Eurasian Collared-Dove",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 8"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000034",
+      "scientific_name": "Falco peregrinus",
+      "inat_id": "4647",
+      "hint_count": 3,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:24:10.122864+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000034.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "472766",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Falco tinnunculus",
+          "common_name": "Eurasian Kestrel",
+          "confidence": null,
+          "note": "iNat co-identification count: 2; rank: 0"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "19898",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Strix aluco",
+          "common_name": "Tawny Owl",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 1"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "4643",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Falco subbuteo",
+          "common_name": "Eurasian Hobby",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 2"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000035",
+      "scientific_name": "Strix aluco",
+      "inat_id": "19898",
+      "hint_count": 6,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:24:12.085104+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000035.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "204472",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Buteo buteo",
+          "common_name": "Common Buzzard",
+          "confidence": null,
+          "note": "iNat co-identification count: 5; rank: 0"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "472766",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Falco tinnunculus",
+          "common_name": "Eurasian Kestrel",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 1"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "20307",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Asio otus",
+          "common_name": "Long-eared Owl",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 2"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "19998",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Athene noctua",
+          "common_name": "Little Owl",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 3"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "4647",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Falco peregrinus",
+          "common_name": "Peregrine Falcon",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 4"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "981",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Phasianus colchicus",
+          "common_name": "Ring-necked Pheasant",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 5"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000036",
+      "scientific_name": "Asio otus",
+      "inat_id": "20307",
+      "hint_count": 4,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:24:14.254761+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000036.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "20315",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Asio flammeus",
+          "common_name": "Short-eared Owl",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 0"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "20059",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Bubo bubo",
+          "common_name": "Eurasian Eagle-Owl",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 1"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "19898",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Strix aluco",
+          "common_name": "Tawny Owl",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 2"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "981",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Phasianus colchicus",
+          "common_name": "Ring-necked Pheasant",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 3"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000037",
+      "scientific_name": "Athene noctua",
+      "inat_id": "19998",
+      "hint_count": 1,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:24:16.244810+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000037.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "19898",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Strix aluco",
+          "common_name": "Tawny Owl",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 0"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000038",
+      "scientific_name": "Picus viridis",
+      "inat_id": "144243",
+      "hint_count": 3,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:24:18.168938+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000038.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "17871",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Dendrocopos major",
+          "common_name": "Great Spotted Woodpecker",
+          "confidence": null,
+          "note": "iNat co-identification count: 3; rank: 0"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "18911",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Psittacula krameri",
+          "common_name": "Rose-ringed Parakeet",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 1"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "18236",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Colaptes auratus",
+          "common_name": "Northern Flicker",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 2"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000039",
+      "scientific_name": "Dendrocopos major",
+      "inat_id": "17871",
+      "hint_count": 7,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:24:20.178771+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000039.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "792985",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Dendrocoptes medius",
+          "common_name": "Middle Spotted Woodpecker",
+          "confidence": null,
+          "note": "iNat co-identification count: 7; rank: 0"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "792977",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Dryobates minor",
+          "common_name": "Lesser Spotted Woodpecker",
+          "confidence": null,
+          "note": "iNat co-identification count: 6; rank: 1"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "144243",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Picus viridis",
+          "common_name": "Eurasian Green Woodpecker",
+          "confidence": null,
+          "note": "iNat co-identification count: 3; rank: 2"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "144830",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Lophophanes cristatus",
+          "common_name": "Crested Tit",
+          "confidence": null,
+          "note": "iNat co-identification count: 2; rank: 3"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "792988",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Dryobates pubescens",
+          "common_name": "Downy Woodpecker",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 4"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "18204",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Melanerpes erythrocephalus",
+          "common_name": "Red-headed Woodpecker",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 5"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "13094",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Erithacus rubecula",
+          "common_name": "European Robin",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 6"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000040",
+      "scientific_name": "Dryocopus martius",
+      "inat_id": "17835",
+      "hint_count": 1,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:24:22.323920+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000040.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "891696",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Pica pica",
+          "common_name": "Eurasian Magpie",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 0"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000041",
+      "scientific_name": "Apus apus",
+      "inat_id": "6638",
+      "hint_count": 2,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:24:24.159719+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000041.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "64705",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Delichon urbicum",
+          "common_name": "Western House Martin",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 0"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "14850",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Sturnus vulgaris",
+          "common_name": "European Starling",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 1"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000042",
+      "scientific_name": "Delichon urbicum",
+      "inat_id": "64705",
+      "hint_count": 5,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:24:26.184433+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000042.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "11901",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Hirundo rustica",
+          "common_name": "Barn Swallow",
+          "confidence": null,
+          "note": "iNat co-identification count: 7; rank: 0"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "11941",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Riparia riparia",
+          "common_name": "Bank Swallow",
+          "confidence": null,
+          "note": "iNat co-identification count: 2; rank: 1"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "204496",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Corvus corone",
+          "common_name": "Carrion Crow",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 2"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "13858",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Passer domesticus",
+          "common_name": "House Sparrow",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 3"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "6638",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Apus apus",
+          "common_name": "Common Swift",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 4"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000043",
+      "scientific_name": "Hirundo rustica",
+      "inat_id": "11901",
+      "hint_count": 4,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:24:28.406858+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000043.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "64705",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Delichon urbicum",
+          "common_name": "Western House Martin",
+          "confidence": null,
+          "note": "iNat co-identification count: 7; rank: 0"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "336399",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Coloeus monedula",
+          "common_name": "Eurasian Jackdaw",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 1"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "13858",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Passer domesticus",
+          "common_name": "House Sparrow",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 2"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "11941",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Riparia riparia",
+          "common_name": "Bank Swallow",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 3"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000044",
+      "scientific_name": "Riparia riparia",
+      "inat_id": "11941",
+      "hint_count": 2,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:24:30.572488+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000044.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "64705",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Delichon urbicum",
+          "common_name": "Western House Martin",
+          "confidence": null,
+          "note": "iNat co-identification count: 2; rank: 0"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "11901",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Hirundo rustica",
+          "common_name": "Barn Swallow",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 1"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000045",
+      "scientific_name": "Alauda arvensis",
+      "inat_id": "7347",
+      "hint_count": 3,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:24:32.566349+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000045.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "13729",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Anthus pratensis",
+          "common_name": "Meadow Pipit",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 0"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "13711",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Anthus trivialis",
+          "common_name": "Tree Pipit",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 1"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "13688",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Motacilla cinerea",
+          "common_name": "Grey Wagtail",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 2"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000047",
+      "scientific_name": "Lanius collurio",
+      "inat_id": "12038",
+      "hint_count": 2,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:24:34.538593+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000047.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "1289470",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Curruca communis",
+          "common_name": "Common Whitethroat",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 0"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "12021",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Lanius cristatus",
+          "common_name": "Brown Shrike",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 1"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000048",
+      "scientific_name": "Coloeus monedula",
+      "inat_id": "336399",
+      "hint_count": 4,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:24:36.819096+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000048.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "204496",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Corvus corone",
+          "common_name": "Carrion Crow",
+          "confidence": null,
+          "note": "iNat co-identification count: 9; rank: 0"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "12716",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Turdus merula",
+          "common_name": "Eurasian Blackbird",
+          "confidence": null,
+          "note": "iNat co-identification count: 2; rank: 1"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "11901",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Hirundo rustica",
+          "common_name": "Barn Swallow",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 2"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "8010",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Corvus corax",
+          "common_name": "Common Raven",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 3"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000049",
+      "scientific_name": "Corvus frugilegus",
+      "inat_id": "8029",
+      "hint_count": 1,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:24:38.839014+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000049.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "204496",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Corvus corone",
+          "common_name": "Carrion Crow",
+          "confidence": null,
+          "note": "iNat co-identification count: 9; rank: 0"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000070",
+      "scientific_name": "Podiceps cristatus",
+      "inat_id": "4208",
+      "hint_count": 5,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:24:40.664075+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000070.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "4237",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Tachybaptus ruficollis",
+          "common_name": "Little Grebe",
+          "confidence": null,
+          "note": "iNat co-identification count: 2; rank: 0"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "558429",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Spatula querquedula",
+          "common_name": "Garganey",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 1"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "7067",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Tadorna tadorna",
+          "common_name": "Common Shelduck",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 2"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "7045",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Aythya ferina",
+          "common_name": "Common Pochard",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 3"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "4234",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Aechmophorus clarkii",
+          "common_name": "Clark's Grebe",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 4"
+        }
+      ]
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000079",
+      "scientific_name": "Streptopelia decaocto",
+      "inat_id": "2969",
+      "hint_count": 8,
+      "fetch_status": "ok",
+      "fetched_at": "2026-05-05T11:24:43.004774+00:00",
+      "cache_path": "data/enriched/palier1-be-birds-50taxa-run003-v11-baseline/similar_species/taxon_birds_000079.json",
+      "error": null,
+      "hints": [
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "3048",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Columba palumbus",
+          "common_name": "Common Wood-Pigeon",
+          "confidence": null,
+          "note": "iNat co-identification count: 6; rank: 0"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "472766",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Falco tinnunculus",
+          "common_name": "Eurasian Kestrel",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 1"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "13858",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Passer domesticus",
+          "common_name": "House Sparrow",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 2"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "12735",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Turdus viscivorus",
+          "common_name": "Mistle Thrush",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 3"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "3454",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Zenaida macroura",
+          "common_name": "Mourning Dove",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 4"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "3439",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Zenaida auriculata",
+          "common_name": "Eared Dove",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 5"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "3017",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Columba livia",
+          "common_name": "Rock Pigeon",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 6"
+        },
+        {
+          "source_name": "inaturalist",
+          "external_taxon_id": "2938",
+          "relation_type": "visual_lookalike",
+          "accepted_scientific_name": "Streptopelia turtur",
+          "common_name": "European Turtle-Dove",
+          "confidence": null,
+          "note": "iNat co-identification count: 1; rank: 7"
+        }
+      ]
+    }
+  ],
+  "enriched_taxa_count": 50
+}

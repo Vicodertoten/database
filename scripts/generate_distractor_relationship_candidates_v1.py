@@ -56,6 +56,16 @@ DEFAULT_OUTPUT_JSON = (
 DEFAULT_OUTPUT_MD = (
     REPO_ROOT / "docs" / "audits" / "distractor-relationship-candidates-v1.md"
 )
+DEFAULT_INAT_SIMILARITY_JSON = (
+    REPO_ROOT / "docs" / "audits" / "evidence" / "inat_similarity_enrichment_sprint12.json"
+)
+DEFAULT_REFERENCED_SHELL_CANDIDATES_JSON = (
+    REPO_ROOT
+    / "docs"
+    / "audits"
+    / "evidence"
+    / "referenced_taxon_shell_candidates_sprint12.json"
+)
 
 # Minimum candidates for a target to be considered "ready"
 READY_THRESHOLD = 3
@@ -115,6 +125,100 @@ def _load_normalized_index(
         for t in taxa
         if t.get("accepted_scientific_name")
     }
+
+
+def _load_inat_similarity_by_canonical_id(path: Path | None) -> dict[str, list[dict[str, Any]]]:
+    """Load Phase B evidence and index hints by target canonical taxon ID."""
+    if path is None or not path.is_file():
+        return {}
+    with open(path) as f:
+        payload = json.load(f)
+    index: dict[str, list[dict[str, Any]]] = {}
+    for item in payload.get("per_target", []):
+        target_id = str(item.get("canonical_taxon_id", "")).strip()
+        if not target_id:
+            continue
+        hints = [h for h in item.get("hints", []) if isinstance(h, dict)]
+        index[target_id] = hints
+    return index
+
+
+def _load_referenced_shell_candidates(path: Path | None) -> list[dict[str, Any]]:
+    """Load Phase D shell candidates artifact items."""
+    if path is None or not path.is_file():
+        return []
+    with open(path) as f:
+        payload = json.load(f)
+    items = payload.get("items", [])
+    return [i for i in items if isinstance(i, dict)]
+
+
+def _build_referenced_by_name_from_shell_candidates(
+    shell_candidates: list[dict[str, Any]],
+) -> dict[str, dict[str, Any]]:
+    """Build a virtual referenced_by_name index from Phase D shell candidates."""
+    by_name: dict[str, dict[str, Any]] = {}
+    for item in shell_candidates:
+        status = item.get("proposed_mapping_status")
+        if status not in {"auto_referenced_high_confidence", "auto_referenced_low_confidence"}:
+            continue
+        scientific_name = str(item.get("scientific_name", "")).strip()
+        if not scientific_name:
+            continue
+        source_taxon_id = str(item.get("source_taxon_id", "")).strip()
+        if not source_taxon_id:
+            continue
+        by_name[scientific_name] = {
+            "referenced_taxon_id": f"reftaxon:inaturalist:{source_taxon_id}",
+            "scientific_name": scientific_name,
+            "mapping_status": status,
+        }
+    return by_name
+
+
+def _inject_inat_hints_into_raw_taxa(
+    *,
+    raw_taxa: list[dict[str, Any]],
+    canonical_by_name: dict[str, dict[str, Any]],
+    hints_by_canonical_id: dict[str, list[dict[str, Any]]],
+) -> list[dict[str, Any]]:
+    """
+    Populate per-target raw `similar_taxa` from Phase B evidence when available.
+    This keeps existing generation logic unchanged while enabling Sprint 12 reruns.
+    """
+    if not hints_by_canonical_id:
+        return raw_taxa
+
+    enriched: list[dict[str, Any]] = []
+    for taxon in raw_taxa:
+        updated = dict(taxon)
+        name = str(taxon.get("name", "")).strip()
+        canonical_id = str(
+            (canonical_by_name.get(name) or {}).get("canonical_taxon_id", "")
+        ).strip()
+        hints = hints_by_canonical_id.get(canonical_id, [])
+        existing = list(updated.get("similar_taxa") or [])
+        existing_names = {
+            str(h.get("name") or h.get("accepted_scientific_name") or "").strip()
+            for h in existing
+        }
+        for h in hints:
+            cname = str(h.get("accepted_scientific_name") or "").strip()
+            if not cname or cname in existing_names:
+                continue
+            existing.append(
+                {
+                    "name": cname,
+                    "accepted_scientific_name": cname,
+                    "id": h.get("external_taxon_id"),
+                    "preferred_common_name": h.get("common_name"),
+                    "relation_type": h.get("relation_type", "visual_lookalike"),
+                }
+            )
+            existing_names.add(cname)
+        updated["similar_taxa"] = existing
+        enriched.append(updated)
+    return enriched
 
 
 def _load_export_bundle(snapshot_id: str, export_base: Path) -> dict[str, Any]:
@@ -388,6 +492,8 @@ def run_generation(
     snapshot_id: str,
     max_neighbors: int = DEFAULT_MAX_NEIGHBORS,
     include_same_order: bool = False,
+    inat_hints_by_canonical_id: dict[str, list[dict[str, Any]]] | None = None,
+    referenced_shell_candidate_count: int = 0,
 ) -> dict[str, Any]:
     """Run candidate generation and return the structured result dict."""
 
@@ -398,6 +504,12 @@ def run_generation(
             "block_reason": f"No taxa found in snapshot dir: {snapshot_dir}",
             "snapshot_id": snapshot_id,
         }
+
+    raw_taxa = _inject_inat_hints_into_raw_taxa(
+        raw_taxa=raw_taxa,
+        canonical_by_name=canonical_by_name,
+        hints_by_canonical_id=inat_hints_by_canonical_id or {},
+    )
 
     # Build lineage indexes
     lineage_by_name: dict[str, dict[str, int | None]] = {}
@@ -556,7 +668,9 @@ def run_generation(
             "targets_with_no_candidates": targets_no_candidates,
             "unresolved_candidate_count": len(unresolved_names),
             "referenced_taxon_shell_needed_count": len(ref_shell_needed),
+            "referenced_taxon_shell_candidate_count": referenced_shell_candidate_count,
             "candidates_missing_french_name": len(missing_fr),
+            "no_emergency_diversity_fallback_generated": True,
         },
         "gaps": {
             "unresolved_candidates": sorted(unresolved_names),
@@ -598,7 +712,9 @@ def _write_markdown(result: dict[str, Any], output_path: Path) -> None:
     no_cand = summary.get("targets_with_no_candidates", 0)
     unresolved = summary.get("unresolved_candidate_count", 0)
     ref_needed = summary.get("referenced_taxon_shell_needed_count", 0)
+    ref_candidate_count = summary.get("referenced_taxon_shell_candidate_count", 0)
     missing_fr = summary.get("candidates_missing_french_name", 0)
+    no_emergency = summary.get("no_emergency_diversity_fallback_generated", True)
 
     lines: list[str] = [
         "---",
@@ -669,7 +785,13 @@ def _write_markdown(result: dict[str, Any], output_path: Path) -> None:
         "",
         f"- Unresolved candidates (no canonical or referenced taxon record): **{unresolved}**",
         f"- Referenced taxon shells needed: **{ref_needed}**",
+        f"- Referenced taxon shell candidates (Phase D): **{ref_candidate_count}**",
         f"- Candidates missing French name: **{missing_fr}**",
+        (
+            "- Emergency diversity fallback generated: **No**"
+            if no_emergency
+            else "- Emergency diversity fallback generated: **Yes**"
+        ),
         "",
     ]
 
@@ -794,6 +916,23 @@ def main() -> None:
         default=False,
         help="Include same-order neighbors when stronger candidates are insufficient",
     )
+    parser.add_argument(
+        "--normalized-path",
+        type=Path,
+        help="Optional explicit normalized JSON path (use Phase C enriched file for Sprint 12)",
+    )
+    parser.add_argument(
+        "--inat-similarity-json",
+        type=Path,
+        default=DEFAULT_INAT_SIMILARITY_JSON,
+        help="Optional Phase B evidence JSON for injecting iNat similar species hints",
+    )
+    parser.add_argument(
+        "--referenced-shell-candidates-json",
+        type=Path,
+        default=DEFAULT_REFERENCED_SHELL_CANDIDATES_JSON,
+        help="Optional Phase D shell candidates JSON to build virtual referenced index",
+    )
     args = parser.parse_args()
 
     snapshot_id = args.snapshot_id
@@ -801,7 +940,9 @@ def main() -> None:
     snapshot_dir = input_base / snapshot_id
 
     # Load normalized index for ref resolution & French name checks
-    normalized_path = _find_normalized_path(snapshot_id, DEFAULT_NORMALIZED_BASE)
+    normalized_path = args.normalized_path or _find_normalized_path(
+        snapshot_id, DEFAULT_NORMALIZED_BASE
+    )
     normalized_by_name = _load_normalized_index(normalized_path)
 
     # Build canonical_by_name from normalized data (primary) or export bundle
@@ -817,6 +958,13 @@ def main() -> None:
         if t.get("scientific_name")
     }
 
+    # Merge Phase D shell candidates as virtual referenced taxa (non-persistent).
+    shell_candidates = _load_referenced_shell_candidates(args.referenced_shell_candidates_json)
+    referenced_by_name.update(_build_referenced_by_name_from_shell_candidates(shell_candidates))
+
+    # Phase B similar-species hints indexed by target canonical taxon ID.
+    inat_hints_by_canonical_id = _load_inat_similarity_by_canonical_id(args.inat_similarity_json)
+
     result = run_generation(
         snapshot_dir=snapshot_dir,
         canonical_by_name=canonical_by_name,
@@ -825,6 +973,13 @@ def main() -> None:
         snapshot_id=snapshot_id,
         max_neighbors=args.max_taxonomic_neighbors_per_target,
         include_same_order=args.include_same_order,
+        inat_hints_by_canonical_id=inat_hints_by_canonical_id,
+        referenced_shell_candidate_count=sum(
+            1
+            for item in shell_candidates
+            if item.get("proposed_mapping_status")
+            in {"auto_referenced_high_confidence", "auto_referenced_low_confidence"}
+        ),
     )
 
     # Write JSON
