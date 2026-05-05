@@ -17,6 +17,18 @@ Gate 4.5 migration framing:
 - keep contracts stable while correcting structural drifts
 - treat `PostgresRepository` decomposition as a dedicated controlled workstream
 
+Golden Pack MVP boundary (2026-05-05):
+
+- `golden_pack.v1` is the active MVP runtime handoff contract.
+- `golden_pack.v1` is a pedagogical product artifact first, with a strict
+  runtime contract inside the exported `pack.json`.
+- `PlayableItem`, `CompiledPackBuild`, `PackMaterialization`,
+  `playable_corpus.v1`, `pack.compiled.v1`, `pack.materialization.v1`, and the
+  planned v2 materialization family remain valid database/domain history and
+  operational context, but they are not the active MVP runtime contract.
+- MVP runtime consumers must use the artifact-only Golden Pack payload and must
+  not choose distractors, resolve labels, map taxa, or complete referenced taxa.
+
 ## CanonicalTaxon
 
 Internal taxon identity. Upstream identifiers are mappings, not product identity.
@@ -118,6 +130,10 @@ Qualification stays explicit. Unknown and review-required are first-class outcom
 
 Derived, queryable runtime-facing item persisted in database (without runtime session logic).
 
+MVP status: non-MVP / legacy context for the Golden Pack handoff. Playable items
+can feed database-side selection and validation, but `playable_corpus.v1` is not
+the runtime payload for the first Golden Pack UI/UX smoke test.
+
 Persistence posture:
 
 - `playable_items` stores durable serving payload rows keyed by `playable_item_id`
@@ -171,6 +187,10 @@ PackCompilationAttempt (deterministic diagnosis):
 
 ## CompiledPackBuild / PackMaterialization (Gate 4)
 
+MVP status: legacy / historical / strategic-later for the Golden Pack handoff.
+This section documents the existing pack materialization lineage. It must not be
+read as the `golden_pack.v1` runtime contract.
+
 CompiledPackBuild (`pack.compiled.v1`, current):
 
 - dynamic build computed from current `playable_items` + one pack revision
@@ -201,6 +221,10 @@ Planned Phase 3 contracts (`pack.compiled.v2`, `pack.materialization.v2`):
 - materialization v2 freezes displayed option labels, scores, sources, and reason codes
 - runtime consumes displayed options and submits `selectedOptionId`; it does not resolve labels, score distractors, or map external similar species
 - v1 remains the legacy compatibility family until consumers no longer require `distractor_playable_item_ids`
+
+For MVP, `pack.materialization.v2` is not promoted to the active handoff. The
+active contract is `golden_pack.v1`, with generic `taxon_ref` options and a
+runtime-sufficient, non-evidence-heavy `pack.json`.
 
 ## EnrichmentRequest / EnrichmentExecution (Gate 6)
 

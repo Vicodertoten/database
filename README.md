@@ -42,12 +42,46 @@ This scope is intentionally narrow and assumes birds-first, image-first, mobile-
 - no live iNaturalist call in the runtime play loop
 - target volume: 50 species / 1,000 qualified images
 
+## Golden Pack MVP handoff
+
+The active MVP runtime handoff contract is `golden_pack.v1`, documented in
+`docs/architecture/MASTER_REFERENCE.md` and `docs/architecture/GOLDEN_PACK_SPEC.md`.
+
+Canonical MVP output:
+
+```text
+data/exports/golden_packs/belgian_birds_mvp_v1/
+  manifest.json
+  pack.json
+  validation_report.json
+  media/
+```
+
+For the first UI/UX smoke test, the runtime consumes only `pack.json` as a local,
+versioned, artifact-only payload produced by `database`. The runtime may display
+questions, shuffle the provided options, record the presented order, and
+orchestrate the experience. It must not invent labels, fetch missing data,
+replace distractors, recalculate difficulty, map taxa, or correct taxonomy.
+
+`manifest.json` and `validation_report.json` are operator/audit files, not
+runtime quiz inputs. Audits and evidence JSON remain in `docs/audits/` and
+`docs/audits/evidence/`, linked from the manifest when relevant.
+
+`playable_corpus.v1`, `pack.compiled.v1`, `pack.materialization.v1`, planned
+`pack.compiled.v2`/`pack.materialization.v2`, and owner-side HTTP read services
+remain existing, historical, or strategic-later surfaces. They are not the
+active MVP Golden Pack runtime contract.
+
 ## Current baseline
 
 The repository is already operational through the current Gate 9 baseline.
 It provides canonical governance, qualification, exports, playable serving data,
 packs, diagnostics, compiled builds, frozen materializations, asynchronous
 enrichment queue persistence, batch confusion ingestion, and operator metrics.
+
+That baseline remains useful database infrastructure, but its playable/compiled/
+materialized serving surfaces are not the active MVP handoff. The MVP path is the
+artifact-only `golden_pack.v1` export described above.
 
 Current structural priorities remain explicit:
 
@@ -74,6 +108,8 @@ That is the main architectural priority before any significant new scope is adde
 ## Boundaries doctrinaux
 
 - runtime never reads `export.bundle.v4`
+- MVP runtime reads only `data/exports/golden_packs/belgian_birds_mvp_v1/pack.json`
+- MVP runtime does not read audit evidence, apply plans, unresolved candidates, or validation blockers as quiz inputs
 - `database` owns canonical, qualification, export, and future playable/pack/materialization/enrichment/confusion aggregates
 - runtime owns session/question serving/answers/score/progression UX
 - pack is a durable specification object; a runtime game session is separate and ephemeral
@@ -81,14 +117,16 @@ That is the main architectural priority before any significant new scope is adde
 
 ## Runtime visible baseline (cross-repo)
 
-Current inter-repo wording is locked as follows:
+For the pre-Golden-Pack owner-side runtime surface family, inter-repo wording was
+locked as follows:
 
 - owner-side runtime read is nominal and real (minimal bounded HTTP read in `database`)
 - runtime sessions are nominal and persisted in `runtime-app`
 - runtime web is a minimal pedagogical player
 - runtime mobile is a minimal real image-first surface (image rendered as primary UI content)
 
-No major README/docs/UI text should describe the visible runtime as an ID-only technical demonstrator.
+This remains historical/strategic-later context. The MVP Golden Pack runtime
+validation is artifact-only and does not require owner-side HTTP read.
 
 ## Strategic positioning
 
@@ -98,7 +136,8 @@ What it is:
 
 - an internal canonical naturalist reference
 - a qualification and traceability engine for reusable pedagogical media
-- a serving-data layer for `playable_corpus.v1`, compiled builds, and frozen materializations
+- a Golden Pack producer for the MVP artifact-only handoff
+- a legacy/strategic-later serving-data layer for `playable_corpus.v1`, compiled builds, and frozen materializations
 - an editorial and operational backbone for packs, review, and governance
 
 What it is not:
@@ -141,7 +180,8 @@ Recommended target architecture around this repository:
 
 Recommended data boundaries:
 
-- runtime reads `playable_corpus.v1`, `pack.compiled.v1`, and `pack.materialization.v1`
+- MVP runtime reads `golden_pack.v1` through the local `pack.json` payload only
+- strategic-later runtime serving may read `playable_corpus.v1`, `pack.compiled.v1`, or `pack.materialization.v1` after an explicit contract decision
 - editorial tooling reads and writes pack/review/governance operations against database-owned contracts
 - institutional systems consume runtime outputs and selected database analytics, not raw pipeline state
 - no consumer should use `export.bundle.v4` as the live quiz surface
@@ -186,7 +226,7 @@ Installed entrypoints mirror the script wrappers:
 - pack layer v1 with immutable revisions (`pack.spec.v1`) and deterministic compilability diagnostics (`pack.diagnostic.v1`)
 - deterministic compiled pack builds persisted as `pack.compiled.v1`
 - frozen pack materializations persisted as `pack.materialization.v1` for `assignment` and `daily_challenge`
-- planned Phase 3 contract family (`pack.compiled.v2`, `pack.materialization.v2`) defines taxon-based `QuestionOption[]` while keeping v1 as legacy compatibility
+- planned Phase 3 contract family (`pack.compiled.v2`, `pack.materialization.v2`) defines taxon-based `QuestionOption[]` while keeping v1 as legacy compatibility; this family is not the active MVP Golden Pack handoff contract
 - pack persistence/compilation/materialization logic extracted in `storage/pack_store.py` and consumed directly by CLI pack/inspect pack entrypoints
 - enrichment queue operations extracted in `storage/enrichment_store.py` (`PostgresEnrichmentStore`)
 - confusion batch ingestion and aggregates extracted in `storage/confusion_store.py` (`PostgresConfusionStore`)
