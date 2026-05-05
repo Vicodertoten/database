@@ -1,6 +1,6 @@
 ---
 owner: database
-status: draft
+status: ready_for_validation
 last_reviewed: 2026-05-05
 source_of_truth: docs/architecture/MASTER_REFERENCE.md
 scope: golden_pack_runtime_handoff
@@ -40,8 +40,8 @@ Current decision state:
 
 Main architectural verdict: the database architecture is strong enough to produce
 the first Golden Pack, but the MVP runtime surface must be narrowed. Older
-runtime-serving contracts remain historical or strategic-later references. They
-must not compete with `golden_pack.v1` as the MVP handoff.
+runtime-serving contracts remain legacy, historical, or strategic-later
+references. They must not compete with `golden_pack.v1` as the MVP handoff.
 
 ## Product And Philosophy
 
@@ -89,6 +89,10 @@ Non-MVP or strategic-later surfaces may continue to exist in the repo, including
 runtime-read HTTP transport, and editorial write transport. For the MVP Golden
 Pack milestone, these are not the primary runtime contract.
 
+`pack.materialization.v2` is now legacy / historical / non-MVP context for the
+MVP runtime handoff. It must not be deleted now, but it must not be treated as
+the active MVP runtime specification.
+
 ## Database Vs Runtime Responsibilities
 
 Database owns:
@@ -106,7 +110,7 @@ Database owns:
 
 Runtime owns:
 
-- Reading a versioned local Golden Pack artifact.
+- Reading `pack.json` from a versioned local Golden Pack artifact.
 - Rendering the image-first quiz experience.
 - Shuffling display order among already-provided options, if desired.
 - Recording the displayed option order.
@@ -124,6 +128,10 @@ Runtime must not:
 - Recalculate difficulty or pedagogical value.
 - Map referenced taxa to canonical taxa.
 - Correct taxonomy.
+
+`manifest.json` and `validation_report.json` are database/operator artifacts.
+They support identity, checksums, warnings, blockers, and traceability. They are
+not required runtime payloads for the MVP quiz flow.
 
 ## Golden Pack V1
 
@@ -146,6 +154,7 @@ data/exports/golden_packs/belgian_birds_mvp_v1/
   manifest.json
   pack.json
   validation_report.json
+  media/
 ```
 
 Documentation and traceability live elsewhere:
@@ -195,6 +204,11 @@ The manifest is the place to state that:
 
 `pack.json` contains the runtime-consumable quiz payload.
 
+It must be runtime-sufficient but not evidence-heavy. It must not contain raw
+audit evidence, apply plans, unresolved candidates, debug traces, or detailed
+blockers. Those belong in `manifest.json`, `validation_report.json`, or
+`docs/audits/evidence/`.
+
 Minimum shape:
 
 ```json
@@ -208,7 +222,7 @@ Minimum shape:
 
 Each question must include:
 
-- stable question id or position
+- stable `question_id` independent from taxon id
 - target taxon reference
 - primary media object
 - four answer options
@@ -216,7 +230,7 @@ Each question must include:
 - three database-selected distractors
 - short feedback
 - media attribution
-- evidence/provenance references sufficient for audit
+- lightweight source/provenance fields needed for display and attribution
 
 Options must use generic taxon references:
 
@@ -227,7 +241,7 @@ Options must use generic taxon references:
     "type": "canonical_taxon",
     "id": "taxon:birds:000001"
   },
-  "label": "Pigeon ramier",
+  "display_label": "Pigeon ramier",
   "is_correct": false,
   "referenced_only": false,
   "source": "distractor_projection",
@@ -249,6 +263,11 @@ If `taxon_ref.type="referenced_taxon"`, then:
   `DistractorRelationship`
 - runtime must not resolve or complete the taxon
 
+Within one question:
+
+- no duplicate `taxon_ref` is allowed
+- no duplicate normalized `display_label` is allowed
+
 ### `validation_report.json`
 
 The validation report records whether the artifact is safe to consume.
@@ -265,6 +284,7 @@ It should contain:
 - feedback coverage result
 - distractor coverage result
 - fallback exclusion result
+- media pack size result
 - warnings
 - blocking errors
 
@@ -308,7 +328,7 @@ Exclude from runtime-facing Golden Pack:
 
 The MVP Golden Pack should contain at least:
 
-- 30 target questions
+- exactly 30 target questions
 - 1 primary quiz image per question
 - 4 options per question
 - 3 usable distractors per question
@@ -323,9 +343,7 @@ The runtime contract is the technical interface inside and around
 
 Runtime reads:
 
-- `manifest.json`
 - `pack.json`
-- optionally `validation_report.json` for local/dev diagnostics
 
 Runtime displays:
 
@@ -346,10 +364,9 @@ Runtime must fail fast or refuse a pack when:
 - question count is below the MVP threshold
 - any question lacks exactly four options
 - any question lacks exactly one correct option
-- any displayed option lacks a label
+- any displayed option lacks a `display_label`
 - any displayed media lacks a runtime URI
 - any displayed media lacks attribution
-- any required validation report status is failing
 
 Runtime must not compensate for invalid data. Missing data is a database artifact
 failure, not a runtime task.
@@ -439,6 +456,9 @@ For the MVP Golden Pack:
 
 - quiz question media must be eligible for quiz/basic-identification usage
 - borderline media must not be used as primary quiz images
+- quiz media must be copied into the pack-local `media/` directory
+- runtime must not depend on remote fetch to display a question
+- target media pack size should stay below 50 MB for local MVP testing
 - species-card, field-observation, habitat, nest, track, audio, and other
   future uses are not MVP blockers
 - visible answer text or UI/screenshot contamination must block quiz media
@@ -467,8 +487,7 @@ Required audit distinctions:
 - runtime handoff readiness is not runtime UI proof
 - database closure requires artifact validation plus runtime smoke evidence
 
-`docs/audits/AUDIT_INDEX.md` should be created in the next documentation pass. It
-should classify:
+`docs/audits/AUDIT_INDEX.md` classifies:
 
 - active audits
 - historical audits
@@ -491,14 +510,14 @@ Initial audits/evidence to index:
 
 ## Documentation Organization
 
-Recommended hierarchy:
+Current recommended hierarchy:
 
 ```text
 docs/
   README.md
   architecture/
     MASTER_REFERENCE.md
-    GOLDEN_PACK_SPEC.md          # optional, create only if needed
+    GOLDEN_PACK_SPEC.md
     RUNTIME_CONTRACT.md          # optional, create only if needed
   foundation/
     ...
@@ -518,14 +537,16 @@ docs/
   archive/
 ```
 
-Do not create every listed file immediately. Create secondary documents only when
-they reduce ambiguity or become operationally useful.
+Do not create every listed file immediately beyond the current architecture
+documents. Create secondary documents only when they reduce ambiguity or become
+operationally useful.
 
 ### Existing Document Migration Table
 
 | Current document | Proposed role |
 |---|---|
 | `docs/architecture/MASTER_REFERENCE.md` | Current canonical MVP direction |
+| `docs/architecture/GOLDEN_PACK_SPEC.md` | Active `golden_pack.v1` artifact contract |
 | `docs/foundation/localized-name-source-policy-v1.md` | Canonical localized-name MVP policy |
 | `docs/foundation/taxon-localized-names-enrichment-v1.md` | Canonical localized-name enrichment workflow |
 | `docs/foundation/distractor-relationships-v1.md` | Canonical distractor domain foundation, with MVP wording to clarify later |
@@ -549,6 +570,8 @@ they reduce ambiguity or become operationally useful.
 - Ensure every primary quiz image is locally stable and policy-eligible.
 - Ensure every question has short database-authored feedback.
 - Add validation checks for all blocking criteria.
+- Keep `pack.json` runtime-sufficient but free of raw audit evidence and debug
+  traces.
 
 ### After Golden Pack
 
@@ -626,11 +649,7 @@ The main remaining decisions are:
 
 - exact `golden_pack.v1` JSON schema
 - exact validation report schema
-- exact media local materialization convention
-- checksum policy
 - final warning severity vocabulary
-- whether `GOLDEN_PACK_SPEC.md` should be split out after this reference
 - whether `RUNTIME_CONTRACT.md` should be split out after implementation starts
 - when `PERSIST_DISTRACTOR_RELATIONSHIPS_V1` can be reconsidered
 - when `DATABASE_PHASE_CLOSED` can become true
-
