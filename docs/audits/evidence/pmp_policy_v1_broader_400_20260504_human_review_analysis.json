@@ -1,0 +1,767 @@
+{
+  "input_file": "docs/audits/human_review/pmp_policy_v1_broader_400_20260504_human_review_sheet.csv",
+  "generated_at": "2026-05-05",
+  "total_rows": 60,
+  "rows_with_review_judgment": 58,
+  "rows_with_notes": 23,
+  "normalized_judgment_distribution": {
+    "too_strict": 5,
+    "blank": 2,
+    "accept": 50,
+    "unclear": 2,
+    "too_permissive": 1
+  },
+  "issue_category_distribution": {
+    "schema_false_negative": 4,
+    "pre_ai_borderline": 1,
+    "same_species_multiple_individuals_ok": 5,
+    "multiple_species_target_unclear": 4,
+    "policy_accept": 41,
+    "field_observation_too_permissive": 1,
+    "text_overlay_or_answer_visible": 1,
+    "rare_model_subject_miss": 1,
+    "species_card_too_permissive": 1,
+    "habitat_too_permissive": 1
+  },
+  "calibration_priority_distribution": {
+    "high": 9,
+    "medium": 23,
+    "low": 28
+  },
+  "review_focus_distribution": {
+    "schema_or_profile_failure": 4,
+    "pre_ai_rejected": 1,
+    "complex_evidence": 10,
+    "indirect_evidence": 13,
+    "general_policy_check": 25,
+    "field_observation_vs_identification": 7
+  },
+  "issue_category_by_review_focus": {
+    "schema_or_profile_failure": {
+      "schema_false_negative": 4
+    },
+    "pre_ai_rejected": {
+      "pre_ai_borderline": 1
+    },
+    "complex_evidence": {
+      "same_species_multiple_individuals_ok": 5,
+      "multiple_species_target_unclear": 4,
+      "policy_accept": 1
+    },
+    "indirect_evidence": {
+      "policy_accept": 12,
+      "habitat_too_permissive": 1
+    },
+    "general_policy_check": {
+      "policy_accept": 23,
+      "text_overlay_or_answer_visible": 1,
+      "rare_model_subject_miss": 1
+    },
+    "field_observation_vs_identification": {
+      "policy_accept": 5,
+      "field_observation_too_permissive": 1,
+      "species_card_too_permissive": 1
+    }
+  },
+  "normalized_judgment_by_review_focus": {
+    "schema_or_profile_failure": {
+      "too_strict": 3,
+      "blank": 1
+    },
+    "pre_ai_rejected": {
+      "blank": 1
+    },
+    "complex_evidence": {
+      "too_strict": 1,
+      "accept": 8,
+      "unclear": 1
+    },
+    "indirect_evidence": {
+      "accept": 13
+    },
+    "general_policy_check": {
+      "accept": 23,
+      "too_permissive": 1,
+      "unclear": 1
+    },
+    "field_observation_vs_identification": {
+      "accept": 6,
+      "too_strict": 1
+    }
+  },
+  "policy_status_distribution": {
+    "profile_failed": 4,
+    "pre_ai_rejected": 1,
+    "profile_valid": 55
+  },
+  "issue_category_by_policy_status": {
+    "profile_failed": {
+      "schema_false_negative": 4
+    },
+    "pre_ai_rejected": {
+      "pre_ai_borderline": 1
+    },
+    "profile_valid": {
+      "same_species_multiple_individuals_ok": 5,
+      "multiple_species_target_unclear": 4,
+      "policy_accept": 41,
+      "field_observation_too_permissive": 1,
+      "text_overlay_or_answer_visible": 1,
+      "rare_model_subject_miss": 1,
+      "species_card_too_permissive": 1,
+      "habitat_too_permissive": 1
+    }
+  },
+  "normalized_judgment_by_policy_status": {
+    "profile_failed": {
+      "too_strict": 3,
+      "blank": 1
+    },
+    "pre_ai_rejected": {
+      "blank": 1
+    },
+    "profile_valid": {
+      "too_strict": 2,
+      "accept": 50,
+      "unclear": 2,
+      "too_permissive": 1
+    }
+  },
+  "evidence_type_distribution": {
+    "": 5,
+    "multiple_organisms": 9,
+    "dead_organism": 6,
+    "whole_organism": 31,
+    "nest": 3,
+    "feather": 2,
+    "habitat": 2,
+    "partial_organism": 1,
+    "unknown": 1
+  },
+  "issue_category_by_evidence_type": {
+    "": {
+      "schema_false_negative": 4,
+      "pre_ai_borderline": 1
+    },
+    "multiple_organisms": {
+      "same_species_multiple_individuals_ok": 5,
+      "multiple_species_target_unclear": 4
+    },
+    "dead_organism": {
+      "policy_accept": 6
+    },
+    "whole_organism": {
+      "policy_accept": 28,
+      "field_observation_too_permissive": 1,
+      "text_overlay_or_answer_visible": 1,
+      "species_card_too_permissive": 1
+    },
+    "nest": {
+      "policy_accept": 3
+    },
+    "feather": {
+      "policy_accept": 2
+    },
+    "habitat": {
+      "policy_accept": 1,
+      "habitat_too_permissive": 1
+    },
+    "partial_organism": {
+      "policy_accept": 1
+    },
+    "unknown": {
+      "rare_model_subject_miss": 1
+    }
+  },
+  "normalized_judgment_by_evidence_type": {
+    "": {
+      "too_strict": 3,
+      "blank": 2
+    },
+    "multiple_organisms": {
+      "too_strict": 1,
+      "accept": 7,
+      "unclear": 1
+    },
+    "dead_organism": {
+      "accept": 6
+    },
+    "whole_organism": {
+      "accept": 29,
+      "too_strict": 1,
+      "too_permissive": 1
+    },
+    "nest": {
+      "accept": 3
+    },
+    "feather": {
+      "accept": 2
+    },
+    "habitat": {
+      "accept": 2
+    },
+    "partial_organism": {
+      "accept": 1
+    },
+    "unknown": {
+      "unclear": 1
+    }
+  },
+  "taxa_count": 35,
+  "top_taxa_by_review_count": [
+    {
+      "scientific_name": "Turdus philomelos",
+      "count": 6
+    },
+    {
+      "scientific_name": "Cygnus olor",
+      "count": 4
+    },
+    {
+      "scientific_name": "Hirundo rustica",
+      "count": 3
+    },
+    {
+      "scientific_name": "Sturnus vulgaris",
+      "count": 3
+    },
+    {
+      "scientific_name": "Columba palumbus",
+      "count": 3
+    },
+    {
+      "scientific_name": "Podiceps cristatus",
+      "count": 2
+    },
+    {
+      "scientific_name": "Larus argentatus",
+      "count": 2
+    },
+    {
+      "scientific_name": "Falco peregrinus",
+      "count": 2
+    },
+    {
+      "scientific_name": "Fulica atra",
+      "count": 2
+    },
+    {
+      "scientific_name": "Phalacrocorax carbo",
+      "count": 2
+    }
+  ],
+  "issue_category_by_scientific_name": {
+    "Podiceps cristatus": {
+      "schema_false_negative": 2
+    },
+    "Larus argentatus": {
+      "schema_false_negative": 1,
+      "policy_accept": 1
+    },
+    "Coccothraustes coccothraustes": {
+      "schema_false_negative": 1
+    },
+    "Phoenicurus ochruros": {
+      "pre_ai_borderline": 1
+    },
+    "Falco peregrinus": {
+      "same_species_multiple_individuals_ok": 1,
+      "rare_model_subject_miss": 1
+    },
+    "Cygnus olor": {
+      "multiple_species_target_unclear": 2,
+      "policy_accept": 2
+    },
+    "Anser anser": {
+      "multiple_species_target_unclear": 1
+    },
+    "Turdus philomelos": {
+      "policy_accept": 6
+    },
+    "Hirundo rustica rustica": {
+      "policy_accept": 1
+    },
+    "Fulica atra": {
+      "policy_accept": 2
+    },
+    "Phalacrocorax carbo": {
+      "policy_accept": 1,
+      "field_observation_too_permissive": 1
+    },
+    "Anas platyrhynchos": {
+      "policy_accept": 1,
+      "same_species_multiple_individuals_ok": 1
+    },
+    "Ardea cinerea": {
+      "policy_accept": 2
+    },
+    "Motacilla alba": {
+      "policy_accept": 2
+    },
+    "Hirundo rustica": {
+      "policy_accept": 3
+    },
+    "Sturnus vulgaris": {
+      "policy_accept": 1,
+      "same_species_multiple_individuals_ok": 1,
+      "habitat_too_permissive": 1
+    },
+    "Cyanistes caeruleus": {
+      "multiple_species_target_unclear": 1,
+      "policy_accept": 1
+    },
+    "Strix aluco": {
+      "text_overlay_or_answer_visible": 1
+    },
+    "Egretta garzetta": {
+      "policy_accept": 1
+    },
+    "Riparia riparia": {
+      "same_species_multiple_individuals_ok": 1
+    },
+    "Turdus merula": {
+      "policy_accept": 1
+    },
+    "Fringilla coelebs": {
+      "policy_accept": 1
+    },
+    "Passer domesticus": {
+      "policy_accept": 2
+    },
+    "Picus viridis": {
+      "policy_accept": 1
+    },
+    "Larus michahellis": {
+      "policy_accept": 1,
+      "same_species_multiple_individuals_ok": 1
+    },
+    "Columba palumbus": {
+      "policy_accept": 3
+    },
+    "Sylvia atricapilla": {
+      "policy_accept": 1
+    },
+    "Dryocopus martius": {
+      "policy_accept": 1
+    },
+    "Parus major": {
+      "policy_accept": 1
+    },
+    "Coloeus monedula": {
+      "species_card_too_permissive": 1
+    },
+    "Pica pica": {
+      "policy_accept": 1
+    },
+    "Dendrocopos major": {
+      "policy_accept": 1
+    },
+    "Accipiter nisus": {
+      "policy_accept": 1
+    },
+    "Athene noctua": {
+      "policy_accept": 1
+    },
+    "Apus apus": {
+      "policy_accept": 1
+    }
+  },
+  "taxa_with_repeated_issues": [
+    {
+      "scientific_name": "Podiceps cristatus",
+      "issues": {
+        "schema_false_negative": 2
+      }
+    },
+    {
+      "scientific_name": "Falco peregrinus",
+      "issues": {
+        "same_species_multiple_individuals_ok": 1,
+        "rare_model_subject_miss": 1
+      }
+    },
+    {
+      "scientific_name": "Cygnus olor",
+      "issues": {
+        "multiple_species_target_unclear": 2
+      }
+    },
+    {
+      "scientific_name": "Sturnus vulgaris",
+      "issues": {
+        "same_species_multiple_individuals_ok": 1,
+        "habitat_too_permissive": 1
+      }
+    },
+    {
+      "scientific_name": "Larus argentatus",
+      "issues": {
+        "schema_false_negative": 1
+      }
+    },
+    {
+      "scientific_name": "Coccothraustes coccothraustes",
+      "issues": {
+        "schema_false_negative": 1
+      }
+    },
+    {
+      "scientific_name": "Phoenicurus ochruros",
+      "issues": {
+        "pre_ai_borderline": 1
+      }
+    },
+    {
+      "scientific_name": "Anser anser",
+      "issues": {
+        "multiple_species_target_unclear": 1
+      }
+    },
+    {
+      "scientific_name": "Anas platyrhynchos",
+      "issues": {
+        "same_species_multiple_individuals_ok": 1
+      }
+    },
+    {
+      "scientific_name": "Phalacrocorax carbo",
+      "issues": {
+        "field_observation_too_permissive": 1
+      }
+    },
+    {
+      "scientific_name": "Cyanistes caeruleus",
+      "issues": {
+        "multiple_species_target_unclear": 1
+      }
+    },
+    {
+      "scientific_name": "Strix aluco",
+      "issues": {
+        "text_overlay_or_answer_visible": 1
+      }
+    },
+    {
+      "scientific_name": "Riparia riparia",
+      "issues": {
+        "same_species_multiple_individuals_ok": 1
+      }
+    },
+    {
+      "scientific_name": "Larus michahellis",
+      "issues": {
+        "same_species_multiple_individuals_ok": 1
+      }
+    },
+    {
+      "scientific_name": "Coloeus monedula",
+      "issues": {
+        "species_card_too_permissive": 1
+      }
+    }
+  ],
+  "schema_false_negative_items": [
+    {
+      "review_item_id": "pmp-policy-review-0138",
+      "local_image_path": "/Users/ryelandt/Documents/database/data/raw/inaturalist/palier1-be-birds-50taxa-run003-pmp-policy-broader-400-20260504/images/14306882.jpg",
+      "scientific_name": "Podiceps cristatus",
+      "common_name_en": "Great Crested Grebe",
+      "evidence_type": "",
+      "policy_status": "profile_failed",
+      "recommended_uses": "",
+      "borderline_uses": "",
+      "blocked_uses": "",
+      "reviewer_overall_judgment_normalized": "too_strict",
+      "reviewer_notes": "bonne image a a travers des jumelles; compliqué/mpas meilleure qualité mais clairement ok",
+      "human_issue_category": "schema_false_negative",
+      "calibration_action_hint": "investigate profile_failed root cause; potential schema fix"
+    },
+    {
+      "review_item_id": "pmp-policy-review-0283",
+      "local_image_path": "/Users/ryelandt/Documents/database/data/raw/inaturalist/palier1-be-birds-50taxa-run003-pmp-policy-broader-400-20260504/images/264553506.jpeg",
+      "scientific_name": "Podiceps cristatus",
+      "common_name_en": "Great Crested Grebe",
+      "evidence_type": "",
+      "policy_status": "profile_failed",
+      "recommended_uses": "",
+      "borderline_uses": "",
+      "blocked_uses": "",
+      "reviewer_overall_judgment_normalized": "too_strict",
+      "reviewer_notes": "bonne image de l'espèce dans son nid en boule donc rare de la voir comme ca et plus compliqué pour identifier mais image a garder. espèce dans son nid",
+      "human_issue_category": "schema_false_negative",
+      "calibration_action_hint": "investigate profile_failed root cause; potential schema fix"
+    },
+    {
+      "review_item_id": "pmp-policy-review-0284",
+      "local_image_path": "/Users/ryelandt/Documents/database/data/raw/inaturalist/palier1-be-birds-50taxa-run003-pmp-policy-broader-400-20260504/images/264553526.jpeg",
+      "scientific_name": "Larus argentatus",
+      "common_name_en": "European Herring Gull",
+      "evidence_type": "",
+      "policy_status": "profile_failed",
+      "recommended_uses": "",
+      "borderline_uses": "",
+      "blocked_uses": "",
+      "reviewer_overall_judgment_normalized": "too_strict",
+      "reviewer_notes": "image moyenne mais clairement utilisable",
+      "human_issue_category": "schema_false_negative",
+      "calibration_action_hint": "investigate profile_failed root cause; potential schema fix"
+    },
+    {
+      "review_item_id": "pmp-policy-review-0213",
+      "local_image_path": "/Users/ryelandt/Documents/database/data/raw/inaturalist/palier1-be-birds-50taxa-run003-pmp-policy-broader-400-20260504/images/197128124.jpg",
+      "scientific_name": "Coccothraustes coccothraustes",
+      "common_name_en": "Hawfinch",
+      "evidence_type": "",
+      "policy_status": "profile_failed",
+      "recommended_uses": "",
+      "borderline_uses": "",
+      "blocked_uses": "",
+      "reviewer_overall_judgment_normalized": "blank",
+      "reviewer_notes": "très bonne image a voir pourquoi elle ne passe pas",
+      "human_issue_category": "schema_false_negative",
+      "calibration_action_hint": "investigate profile_failed root cause; potential schema fix"
+    }
+  ],
+  "pre_ai_borderline_items": [
+    {
+      "review_item_id": "pmp-policy-review-0335",
+      "local_image_path": "/Users/ryelandt/Documents/database/data/raw/inaturalist/palier1-be-birds-50taxa-run003-pmp-policy-broader-400-20260504/images/30487921.jpg",
+      "scientific_name": "Phoenicurus ochruros",
+      "common_name_en": "Black Redstart",
+      "evidence_type": "",
+      "policy_status": "pre_ai_rejected",
+      "recommended_uses": "",
+      "borderline_uses": "",
+      "blocked_uses": "",
+      "reviewer_overall_judgment_normalized": "blank",
+      "reviewer_notes": "probablement une image pas assez large pour passer la pipeline. mais elle est globalement ok. peut etre quand meme plus simple de ne pas l'accepter pour éviter les mises en pages futures bizzares",
+      "human_issue_category": "pre_ai_borderline",
+      "calibration_action_hint": "consider slight relaxation of image size/resolution threshold"
+    }
+  ],
+  "multiple_species_target_unclear_items": [
+    {
+      "review_item_id": "pmp-policy-review-0148",
+      "local_image_path": "/Users/ryelandt/Documents/database/data/raw/inaturalist/palier1-be-birds-50taxa-run003-pmp-policy-broader-400-20260504/images/150308702.jpeg",
+      "scientific_name": "Cygnus olor",
+      "common_name_en": "Mute Swan",
+      "evidence_type": "multiple_organisms",
+      "policy_status": "profile_valid",
+      "recommended_uses": "field_observation|morphology_learning",
+      "borderline_uses": "basic_identification|confusion_learning|indirect_evidence_learning",
+      "blocked_uses": "species_card",
+      "reviewer_overall_judgment_normalized": "accept",
+      "reviewer_notes": "trop de bordel dans la photo pour qu'elle soit bonne. multi espèces, mauvaise qualité, lumière bizzare",
+      "human_issue_category": "multiple_species_target_unclear",
+      "calibration_action_hint": "add target_taxon_visibility field to PMP or policy"
+    },
+    {
+      "review_item_id": "pmp-policy-review-0044",
+      "local_image_path": "/Users/ryelandt/Documents/database/data/raw/inaturalist/palier1-be-birds-50taxa-run003-pmp-policy-broader-400-20260504/images/112697174.jpeg",
+      "scientific_name": "Anser anser",
+      "common_name_en": "Greylag Goose",
+      "evidence_type": "multiple_organisms",
+      "policy_status": "profile_valid",
+      "recommended_uses": "field_observation",
+      "borderline_uses": "basic_identification|confusion_learning|morphology_learning|indirect_evidence_learning",
+      "blocked_uses": "species_card",
+      "reviewer_overall_judgment_normalized": "accept",
+      "reviewer_notes": "plusieurs espèces différentes présentes, qualité bof, on est pas surs de quel individu on parle",
+      "human_issue_category": "multiple_species_target_unclear",
+      "calibration_action_hint": "add target_taxon_visibility field to PMP or policy"
+    },
+    {
+      "review_item_id": "pmp-policy-review-0176",
+      "local_image_path": "/Users/ryelandt/Documents/database/data/raw/inaturalist/palier1-be-birds-50taxa-run003-pmp-policy-broader-400-20260504/images/168655956.jpeg",
+      "scientific_name": "Cygnus olor",
+      "common_name_en": "Mute Swan",
+      "evidence_type": "multiple_organisms",
+      "policy_status": "profile_valid",
+      "recommended_uses": "field_observation",
+      "borderline_uses": "confusion_learning|morphology_learning|indirect_evidence_learning",
+      "blocked_uses": "basic_identification|species_card",
+      "reviewer_overall_judgment_normalized": "accept",
+      "reviewer_notes": "plusieurs espèces sur la meme photo mais ok de définir celle qu'on doit identifier",
+      "human_issue_category": "multiple_species_target_unclear",
+      "calibration_action_hint": "add target_taxon_visibility field to PMP or policy"
+    },
+    {
+      "review_item_id": "pmp-policy-review-0097",
+      "local_image_path": "/Users/ryelandt/Documents/database/data/raw/inaturalist/palier1-be-birds-50taxa-run003-pmp-policy-broader-400-20260504/images/12710696.jpg",
+      "scientific_name": "Cyanistes caeruleus",
+      "common_name_en": "Eurasian Blue Tit",
+      "evidence_type": "multiple_organisms",
+      "policy_status": "profile_valid",
+      "recommended_uses": "field_observation|morphology_learning",
+      "borderline_uses": "basic_identification|confusion_learning|indirect_evidence_learning",
+      "blocked_uses": "species_card",
+      "reviewer_overall_judgment_normalized": "unclear",
+      "reviewer_notes": "on doit préciser le comportement lorsqu'il y a plusieurs individus d'espèces DIFFérentes sur la photo",
+      "human_issue_category": "multiple_species_target_unclear",
+      "calibration_action_hint": "add target_taxon_visibility field to PMP or policy"
+    }
+  ],
+  "same_species_multiple_individuals_ok_items": [
+    {
+      "review_item_id": "pmp-policy-review-0157",
+      "local_image_path": "/Users/ryelandt/Documents/database/data/raw/inaturalist/palier1-be-birds-50taxa-run003-pmp-policy-broader-400-20260504/images/155810806.jpeg",
+      "scientific_name": "Falco peregrinus",
+      "common_name_en": "Peregrine Falcon",
+      "evidence_type": "multiple_organisms",
+      "policy_status": "profile_valid",
+      "recommended_uses": "field_observation",
+      "borderline_uses": "basic_identification|confusion_learning|morphology_learning|indirect_evidence_learning",
+      "blocked_uses": "species_card",
+      "reviewer_overall_judgment_normalized": "too_strict",
+      "reviewer_notes": "très bonne photo avec deux individus, un seul usage recommandé alors que bonne photo et pertinente. probablement car il y a deux individus de la meme espèce sur la photo",
+      "human_issue_category": "same_species_multiple_individuals_ok",
+      "calibration_action_hint": "formalize same-species multi-individual policy rule"
+    },
+    {
+      "review_item_id": "pmp-policy-review-0123",
+      "local_image_path": "/Users/ryelandt/Documents/database/data/raw/inaturalist/palier1-be-birds-50taxa-run003-pmp-policy-broader-400-20260504/images/134613679.jpeg",
+      "scientific_name": "Anas platyrhynchos",
+      "common_name_en": "Mallard",
+      "evidence_type": "multiple_organisms",
+      "policy_status": "profile_valid",
+      "recommended_uses": "field_observation|morphology_learning",
+      "borderline_uses": "basic_identification|confusion_learning|indirect_evidence_learning",
+      "blocked_uses": "species_card",
+      "reviewer_overall_judgment_normalized": "accept",
+      "reviewer_notes": "",
+      "human_issue_category": "same_species_multiple_individuals_ok",
+      "calibration_action_hint": "formalize same-species multi-individual policy rule"
+    },
+    {
+      "review_item_id": "pmp-policy-review-0376",
+      "local_image_path": "/Users/ryelandt/Documents/database/data/raw/inaturalist/palier1-be-birds-50taxa-run003-pmp-policy-broader-400-20260504/images/368841977.jpg",
+      "scientific_name": "Riparia riparia",
+      "common_name_en": "Bank Swallow",
+      "evidence_type": "multiple_organisms",
+      "policy_status": "profile_valid",
+      "recommended_uses": "field_observation|morphology_learning",
+      "borderline_uses": "basic_identification|confusion_learning|indirect_evidence_learning",
+      "blocked_uses": "species_card",
+      "reviewer_overall_judgment_normalized": "accept",
+      "reviewer_notes": "",
+      "human_issue_category": "same_species_multiple_individuals_ok",
+      "calibration_action_hint": "formalize same-species multi-individual policy rule"
+    },
+    {
+      "review_item_id": "pmp-policy-review-0242",
+      "local_image_path": "/Users/ryelandt/Documents/database/data/raw/inaturalist/palier1-be-birds-50taxa-run003-pmp-policy-broader-400-20260504/images/237495251.jpg",
+      "scientific_name": "Sturnus vulgaris",
+      "common_name_en": "European Starling",
+      "evidence_type": "multiple_organisms",
+      "policy_status": "profile_valid",
+      "recommended_uses": "field_observation",
+      "borderline_uses": "confusion_learning|morphology_learning|indirect_evidence_learning",
+      "blocked_uses": "basic_identification|species_card",
+      "reviewer_overall_judgment_normalized": "accept",
+      "reviewer_notes": "",
+      "human_issue_category": "same_species_multiple_individuals_ok",
+      "calibration_action_hint": "formalize same-species multi-individual policy rule"
+    },
+    {
+      "review_item_id": "pmp-policy-review-0195",
+      "local_image_path": "/Users/ryelandt/Documents/database/data/raw/inaturalist/palier1-be-birds-50taxa-run003-pmp-policy-broader-400-20260504/images/18272669.jpg",
+      "scientific_name": "Larus michahellis",
+      "common_name_en": "Yellow-legged Gull",
+      "evidence_type": "multiple_organisms",
+      "policy_status": "profile_valid",
+      "recommended_uses": "field_observation|morphology_learning",
+      "borderline_uses": "basic_identification|confusion_learning|indirect_evidence_learning",
+      "blocked_uses": "species_card",
+      "reviewer_overall_judgment_normalized": "accept",
+      "reviewer_notes": "bon exemple de plusieurs individus mais pas un problème car meme espèce. c'est meme plutot riche",
+      "human_issue_category": "same_species_multiple_individuals_ok",
+      "calibration_action_hint": "formalize same-species multi-individual policy rule"
+    }
+  ],
+  "text_overlay_or_answer_visible_items": [
+    {
+      "review_item_id": "pmp-policy-review-0398",
+      "local_image_path": "/Users/ryelandt/Documents/database/data/raw/inaturalist/palier1-be-birds-50taxa-run003-pmp-policy-broader-400-20260504/images/402891504.png",
+      "scientific_name": "Strix aluco",
+      "common_name_en": "Tawny Owl",
+      "evidence_type": "whole_organism",
+      "policy_status": "profile_valid",
+      "recommended_uses": "basic_identification|field_observation|confusion_learning|morphology_learning|species_card",
+      "borderline_uses": "",
+      "blocked_uses": "",
+      "reviewer_overall_judgment_normalized": "too_permissive",
+      "reviewer_notes": "screenshot d'un écran d'identification par le son avec le nom de l'espèce en clair, on ne doit pas accepter cela",
+      "human_issue_category": "text_overlay_or_answer_visible",
+      "calibration_action_hint": "add detection rule or rejection criterion for text overlay"
+    }
+  ],
+  "habitat_too_permissive_items": [
+    {
+      "review_item_id": "pmp-policy-review-0072",
+      "local_image_path": "/Users/ryelandt/Documents/database/data/raw/inaturalist/palier1-be-birds-50taxa-run003-pmp-policy-broader-400-20260504/images/12159188.jpg",
+      "scientific_name": "Sturnus vulgaris",
+      "common_name_en": "European Starling",
+      "evidence_type": "habitat",
+      "policy_status": "profile_valid",
+      "recommended_uses": "indirect_evidence_learning",
+      "borderline_uses": "",
+      "blocked_uses": "basic_identification|field_observation|confusion_learning|morphology_learning|species_card",
+      "reviewer_overall_judgment_normalized": "accept",
+      "reviewer_notes": "mais score horrible car globalement impossible de savoir de quelle espèce on parle",
+      "human_issue_category": "habitat_too_permissive",
+      "calibration_action_hint": "review habitat evidence thresholds; tighten scoring"
+    }
+  ],
+  "species_card_too_permissive_items": [
+    {
+      "review_item_id": "pmp-policy-review-0340",
+      "local_image_path": "/Users/ryelandt/Documents/database/data/raw/inaturalist/palier1-be-birds-50taxa-run003-pmp-policy-broader-400-20260504/images/31534282.jpg",
+      "scientific_name": "Coloeus monedula",
+      "common_name_en": "Eurasian Jackdaw",
+      "evidence_type": "whole_organism",
+      "policy_status": "profile_valid",
+      "recommended_uses": "field_observation|species_card",
+      "borderline_uses": "basic_identification|confusion_learning|morphology_learning",
+      "blocked_uses": "",
+      "reviewer_overall_judgment_normalized": "accept",
+      "reviewer_notes": "quand meme bizzare de dire oui a species card",
+      "human_issue_category": "species_card_too_permissive",
+      "calibration_action_hint": "tighten species_card threshold or add conditions"
+    }
+  ],
+  "field_observation_too_permissive_items": [
+    {
+      "review_item_id": "pmp-policy-review-0188",
+      "local_image_path": "/Users/ryelandt/Documents/database/data/raw/inaturalist/palier1-be-birds-50taxa-run003-pmp-policy-broader-400-20260504/images/178993834.jpeg",
+      "scientific_name": "Phalacrocorax carbo",
+      "common_name_en": "Great Cormorant",
+      "evidence_type": "whole_organism",
+      "policy_status": "profile_valid",
+      "recommended_uses": "field_observation",
+      "borderline_uses": "confusion_learning|morphology_learning|species_card",
+      "blocked_uses": "basic_identification",
+      "reviewer_overall_judgment_normalized": "too_strict",
+      "reviewer_notes": "un peu trop strict a mon gout",
+      "human_issue_category": "field_observation_too_permissive",
+      "calibration_action_hint": "review field_observation score thresholds"
+    }
+  ],
+  "rare_model_subject_miss_items": [
+    {
+      "review_item_id": "pmp-policy-review-0253",
+      "local_image_path": "/Users/ryelandt/Documents/database/data/raw/inaturalist/palier1-be-birds-50taxa-run003-pmp-policy-broader-400-20260504/images/254172262.jpeg",
+      "scientific_name": "Falco peregrinus",
+      "common_name_en": "Peregrine Falcon",
+      "evidence_type": "unknown",
+      "policy_status": "profile_valid",
+      "recommended_uses": "",
+      "borderline_uses": "",
+      "blocked_uses": "basic_identification|field_observation|confusion_learning|morphology_learning|species_card|indirect_evidence_learning",
+      "reviewer_overall_judgment_normalized": "unclear",
+      "reviewer_notes": "very distant shot of a peregrine falcon. extremly hard but challenging ans possible",
+      "human_issue_category": "rare_model_subject_miss",
+      "calibration_action_hint": "note for second review; low priority new category"
+    }
+  ],
+  "needs_second_review_items": []
+}
