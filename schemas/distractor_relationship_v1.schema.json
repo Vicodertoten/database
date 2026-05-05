@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/database/schemas/distractor_relationship_v1.schema.json",
+  "title": "DistractorRelationshipV1",
+  "description": "A governed pedagogical distractor relationship between a target taxon and a candidate distractor taxon.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "relationship_id",
+    "target_canonical_taxon_id",
+    "target_scientific_name",
+    "candidate_taxon_ref_type",
+    "candidate_scientific_name",
+    "source",
+    "source_rank",
+    "status",
+    "created_at"
+  ],
+  "properties": {
+    "relationship_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "target_canonical_taxon_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "target_scientific_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "candidate_taxon_ref_type": {
+      "type": "string",
+      "enum": ["canonical_taxon", "referenced_taxon", "unresolved_taxon"]
+    },
+    "candidate_taxon_ref_id": {
+      "type": ["string", "null"],
+      "minLength": 1
+    },
+    "candidate_scientific_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "inaturalist_similar_species",
+        "taxonomic_neighbor_same_genus",
+        "taxonomic_neighbor_same_family",
+        "taxonomic_neighbor_same_order",
+        "ai_pedagogical_proposal",
+        "manual_expert",
+        "emergency_diversity_fallback"
+      ]
+    },
+    "source_rank": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "confusion_types": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "visual_similarity",
+          "same_genus",
+          "same_family",
+          "same_order",
+          "same_size",
+          "same_shape",
+          "same_color_pattern",
+          "same_habitat",
+          "same_behavior",
+          "same_season",
+          "same_life_stage",
+          "beginner_common_confusion",
+          "expert_fine_confusion",
+          "local_species_confusion",
+          "name_similarity",
+          "ecological_association"
+        ]
+      }
+    },
+    "pedagogical_value": {
+      "type": "string",
+      "enum": ["high", "medium", "low", "unknown"]
+    },
+    "difficulty_level": {
+      "type": "string",
+      "enum": ["easy", "medium", "hard", "expert"]
+    },
+    "learner_level": {
+      "type": "string",
+      "enum": ["beginner", "intermediate", "advanced", "expert", "mixed"]
+    },
+    "reason": {
+      "type": ["string", "null"]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "candidate",
+        "validated",
+        "needs_review",
+        "rejected",
+        "unavailable_missing_taxon",
+        "unavailable_missing_localized_name",
+        "unavailable_missing_media"
+      ]
+    },
+    "constraints": {
+      "type": "object"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    }
+  }
+}

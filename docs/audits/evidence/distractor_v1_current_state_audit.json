@@ -1,0 +1,945 @@
+{
+  "audit_version": "distractor_relationships_v1_current_state.v1",
+  "run_date": "2026-05-05",
+  "execution_status": "complete",
+  "input_source": "/Users/ryelandt/Documents/database/data/raw/inaturalist/palier1-be-birds-50taxa-run003-v11-baseline",
+  "snapshot_id": "palier1-be-birds-50taxa-run003-v11-baseline",
+  "decision": "NEEDS_TAXON_ENRICHMENT_BEFORE_DISTRACTORS",
+  "target_taxa_count": 50,
+  "active_target_taxa_count": 50,
+  "taxa_with_external_similarity_hints": 0,
+  "taxa_with_inat_similarity_hints": 0,
+  "taxa_with_3_plus_inat_hints": 0,
+  "taxa_with_internal_similar_taxa": 0,
+  "taxa_with_taxonomy_profile": 0,
+  "taxa_with_same_genus_neighbors": 8,
+  "taxa_with_same_family_neighbors": 33,
+  "taxa_with_3_plus_total_potential_candidates": 26,
+  "taxa_without_candidates": 3,
+  "source_coverage": {
+    "inaturalist_hint_count": 0,
+    "internal_similarity_count": 0,
+    "same_genus_candidate_count": 8,
+    "same_family_candidate_count": 66,
+    "same_order_candidate_count": 606
+  },
+  "gaps": {
+    "targets_missing_inat_hints": [
+      "Columba palumbus",
+      "Corvus corone",
+      "Cyanistes caeruleus",
+      "Erithacus rubecula",
+      "Fringilla coelebs",
+      "Garrulus glandarius",
+      "Motacilla alba",
+      "Parus major",
+      "Passer domesticus",
+      "Pica pica",
+      "Sturnus vulgaris",
+      "Sylvia atricapilla",
+      "Troglodytes troglodytes",
+      "Turdus merula",
+      "Turdus philomelos",
+      "Carduelis carduelis",
+      "Chloris chloris",
+      "Acrocephalus scirpaceus",
+      "Coccothraustes coccothraustes",
+      "Phoenicurus ochruros",
+      "Anas platyrhynchos",
+      "Anser anser",
+      "Cygnus olor",
+      "Fulica atra",
+      "Gallinula chloropus",
+      "Larus michahellis",
+      "Larus argentatus",
+      "Phalacrocorax carbo",
+      "Ardea cinerea",
+      "Egretta garzetta",
+      "Buteo buteo",
+      "Accipiter nisus",
+      "Falco tinnunculus",
+      "Falco peregrinus",
+      "Strix aluco",
+      "Asio otus",
+      "Athene noctua",
+      "Picus viridis",
+      "Dendrocopos major",
+      "Dryocopus martius",
+      "Apus apus",
+      "Delichon urbicum",
+      "Hirundo rustica",
+      "Riparia riparia",
+      "Alauda arvensis",
+      "Lanius collurio",
+      "Coloeus monedula",
+      "Corvus frugilegus",
+      "Podiceps cristatus",
+      "Streptopelia decaocto"
+    ],
+    "targets_missing_taxonomy_profile": [
+      "Columba palumbus",
+      "Corvus corone",
+      "Cyanistes caeruleus",
+      "Erithacus rubecula",
+      "Fringilla coelebs",
+      "Garrulus glandarius",
+      "Motacilla alba",
+      "Parus major",
+      "Passer domesticus",
+      "Pica pica",
+      "Sturnus vulgaris",
+      "Sylvia atricapilla",
+      "Troglodytes troglodytes",
+      "Turdus merula",
+      "Turdus philomelos",
+      "Carduelis carduelis",
+      "Chloris chloris",
+      "Acrocephalus scirpaceus",
+      "Coccothraustes coccothraustes",
+      "Phoenicurus ochruros",
+      "Anas platyrhynchos",
+      "Anser anser",
+      "Cygnus olor",
+      "Fulica atra",
+      "Gallinula chloropus",
+      "Larus michahellis",
+      "Larus argentatus",
+      "Phalacrocorax carbo",
+      "Ardea cinerea",
+      "Egretta garzetta",
+      "Buteo buteo",
+      "Accipiter nisus",
+      "Falco tinnunculus",
+      "Falco peregrinus",
+      "Strix aluco",
+      "Asio otus",
+      "Athene noctua",
+      "Picus viridis",
+      "Dendrocopos major",
+      "Dryocopus martius",
+      "Apus apus",
+      "Delichon urbicum",
+      "Hirundo rustica",
+      "Riparia riparia",
+      "Alauda arvensis",
+      "Lanius collurio",
+      "Coloeus monedula",
+      "Corvus frugilegus",
+      "Podiceps cristatus",
+      "Streptopelia decaocto"
+    ],
+    "targets_with_no_candidates": [
+      "Phalacrocorax carbo",
+      "Apus apus",
+      "Podiceps cristatus"
+    ],
+    "targets_with_only_weak_candidates": [
+      "Columba palumbus",
+      "Anas platyrhynchos",
+      "Anser anser",
+      "Cygnus olor",
+      "Fulica atra",
+      "Gallinula chloropus",
+      "Larus michahellis",
+      "Larus argentatus",
+      "Ardea cinerea",
+      "Egretta garzetta",
+      "Buteo buteo",
+      "Accipiter nisus",
+      "Falco tinnunculus",
+      "Falco peregrinus",
+      "Strix aluco",
+      "Asio otus",
+      "Athene noctua",
+      "Picus viridis",
+      "Dendrocopos major",
+      "Dryocopus martius",
+      "Streptopelia decaocto"
+    ],
+    "candidate_taxa_missing_localized_names": [],
+    "referenced_taxon_shell_needed_count": 0,
+    "unresolved_candidate_taxa_count": 0
+  },
+  "first_corpus_readiness_preview": {
+    "ready_for_distractor_v1_count": 0,
+    "insufficient_distractors_count": 21,
+    "needs_taxon_enrichment_count": 29,
+    "needs_referenced_taxon_shells_count": 0
+  },
+  "per_target_summaries": [
+    {
+      "target_canonical_taxon_id": "taxon:birds:003048",
+      "scientific_name": "Columba palumbus",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 0,
+      "same_family_count": 1,
+      "same_order_count": 0,
+      "total_potential_candidates": 1,
+      "readiness_status": "insufficient_distractors",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile",
+        "only_1_candidates"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:204496",
+      "scientific_name": "Corvus corone",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 1,
+      "same_family_count": 3,
+      "same_order_count": 21,
+      "total_potential_candidates": 25,
+      "readiness_status": "inat_missing_but_taxonomic_ok",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:144849",
+      "scientific_name": "Cyanistes caeruleus",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 0,
+      "same_family_count": 1,
+      "same_order_count": 24,
+      "total_potential_candidates": 25,
+      "readiness_status": "inat_missing_but_taxonomic_ok",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:013094",
+      "scientific_name": "Erithacus rubecula",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 0,
+      "same_family_count": 1,
+      "same_order_count": 24,
+      "total_potential_candidates": 25,
+      "readiness_status": "inat_missing_but_taxonomic_ok",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:010070",
+      "scientific_name": "Fringilla coelebs",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 0,
+      "same_family_count": 3,
+      "same_order_count": 22,
+      "total_potential_candidates": 25,
+      "readiness_status": "inat_missing_but_taxonomic_ok",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:008088",
+      "scientific_name": "Garrulus glandarius",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 0,
+      "same_family_count": 4,
+      "same_order_count": 21,
+      "total_potential_candidates": 25,
+      "readiness_status": "inat_missing_but_taxonomic_ok",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:013695",
+      "scientific_name": "Motacilla alba",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 0,
+      "same_family_count": 0,
+      "same_order_count": 25,
+      "total_potential_candidates": 25,
+      "readiness_status": "inat_missing_but_taxonomic_ok",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:203153",
+      "scientific_name": "Parus major",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 0,
+      "same_family_count": 1,
+      "same_order_count": 24,
+      "total_potential_candidates": 25,
+      "readiness_status": "inat_missing_but_taxonomic_ok",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:013858",
+      "scientific_name": "Passer domesticus",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 0,
+      "same_family_count": 0,
+      "same_order_count": 25,
+      "total_potential_candidates": 25,
+      "readiness_status": "inat_missing_but_taxonomic_ok",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:891696",
+      "scientific_name": "Pica pica",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 0,
+      "same_family_count": 4,
+      "same_order_count": 21,
+      "total_potential_candidates": 25,
+      "readiness_status": "inat_missing_but_taxonomic_ok",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:014850",
+      "scientific_name": "Sturnus vulgaris",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 0,
+      "same_family_count": 0,
+      "same_order_count": 25,
+      "total_potential_candidates": 25,
+      "readiness_status": "inat_missing_but_taxonomic_ok",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:015282",
+      "scientific_name": "Sylvia atricapilla",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 0,
+      "same_family_count": 0,
+      "same_order_count": 25,
+      "total_potential_candidates": 25,
+      "readiness_status": "inat_missing_but_taxonomic_ok",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:145363",
+      "scientific_name": "Troglodytes troglodytes",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 0,
+      "same_family_count": 0,
+      "same_order_count": 25,
+      "total_potential_candidates": 25,
+      "readiness_status": "inat_missing_but_taxonomic_ok",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:012716",
+      "scientific_name": "Turdus merula",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 1,
+      "same_family_count": 0,
+      "same_order_count": 24,
+      "total_potential_candidates": 25,
+      "readiness_status": "inat_missing_but_taxonomic_ok",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:012748",
+      "scientific_name": "Turdus philomelos",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 1,
+      "same_family_count": 0,
+      "same_order_count": 24,
+      "total_potential_candidates": 25,
+      "readiness_status": "inat_missing_but_taxonomic_ok",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:009398",
+      "scientific_name": "Carduelis carduelis",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 0,
+      "same_family_count": 3,
+      "same_order_count": 22,
+      "total_potential_candidates": 25,
+      "readiness_status": "inat_missing_but_taxonomic_ok",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:145360",
+      "scientific_name": "Chloris chloris",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 0,
+      "same_family_count": 3,
+      "same_order_count": 22,
+      "total_potential_candidates": 25,
+      "readiness_status": "inat_missing_but_taxonomic_ok",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:204455",
+      "scientific_name": "Acrocephalus scirpaceus",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 0,
+      "same_family_count": 0,
+      "same_order_count": 25,
+      "total_potential_candidates": 25,
+      "readiness_status": "inat_missing_but_taxonomic_ok",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:009801",
+      "scientific_name": "Coccothraustes coccothraustes",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 0,
+      "same_family_count": 3,
+      "same_order_count": 22,
+      "total_potential_candidates": 25,
+      "readiness_status": "inat_missing_but_taxonomic_ok",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:013000",
+      "scientific_name": "Phoenicurus ochruros",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 0,
+      "same_family_count": 1,
+      "same_order_count": 24,
+      "total_potential_candidates": 25,
+      "readiness_status": "inat_missing_but_taxonomic_ok",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:006930",
+      "scientific_name": "Anas platyrhynchos",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 0,
+      "same_family_count": 2,
+      "same_order_count": 0,
+      "total_potential_candidates": 2,
+      "readiness_status": "insufficient_distractors",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile",
+        "only_2_candidates"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:007018",
+      "scientific_name": "Anser anser",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 0,
+      "same_family_count": 2,
+      "same_order_count": 0,
+      "total_potential_candidates": 2,
+      "readiness_status": "insufficient_distractors",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile",
+        "only_2_candidates"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:006921",
+      "scientific_name": "Cygnus olor",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 0,
+      "same_family_count": 2,
+      "same_order_count": 0,
+      "total_potential_candidates": 2,
+      "readiness_status": "insufficient_distractors",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile",
+        "only_2_candidates"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:000482",
+      "scientific_name": "Fulica atra",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 0,
+      "same_family_count": 1,
+      "same_order_count": 0,
+      "total_potential_candidates": 1,
+      "readiness_status": "insufficient_distractors",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile",
+        "only_1_candidates"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:201282",
+      "scientific_name": "Gallinula chloropus",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 0,
+      "same_family_count": 1,
+      "same_order_count": 0,
+      "total_potential_candidates": 1,
+      "readiness_status": "insufficient_distractors",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile",
+        "only_1_candidates"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:059202",
+      "scientific_name": "Larus michahellis",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 1,
+      "same_family_count": 0,
+      "same_order_count": 0,
+      "total_potential_candidates": 1,
+      "readiness_status": "insufficient_distractors",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile",
+        "only_1_candidates"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:204533",
+      "scientific_name": "Larus argentatus",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 1,
+      "same_family_count": 0,
+      "same_order_count": 0,
+      "total_potential_candidates": 1,
+      "readiness_status": "insufficient_distractors",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile",
+        "only_1_candidates"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:004270",
+      "scientific_name": "Phalacrocorax carbo",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 0,
+      "same_family_count": 0,
+      "same_order_count": 0,
+      "total_potential_candidates": 0,
+      "readiness_status": "needs_taxon_enrichment",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile",
+        "no_candidates"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:004954",
+      "scientific_name": "Ardea cinerea",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 0,
+      "same_family_count": 1,
+      "same_order_count": 0,
+      "total_potential_candidates": 1,
+      "readiness_status": "insufficient_distractors",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile",
+        "only_1_candidates"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:004943",
+      "scientific_name": "Egretta garzetta",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 0,
+      "same_family_count": 1,
+      "same_order_count": 0,
+      "total_potential_candidates": 1,
+      "readiness_status": "insufficient_distractors",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile",
+        "only_1_candidates"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:204472",
+      "scientific_name": "Buteo buteo",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 0,
+      "same_family_count": 1,
+      "same_order_count": 0,
+      "total_potential_candidates": 1,
+      "readiness_status": "insufficient_distractors",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile",
+        "only_1_candidates"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:005106",
+      "scientific_name": "Accipiter nisus",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 0,
+      "same_family_count": 1,
+      "same_order_count": 0,
+      "total_potential_candidates": 1,
+      "readiness_status": "insufficient_distractors",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile",
+        "only_1_candidates"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:472766",
+      "scientific_name": "Falco tinnunculus",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 1,
+      "same_family_count": 0,
+      "same_order_count": 0,
+      "total_potential_candidates": 1,
+      "readiness_status": "insufficient_distractors",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile",
+        "only_1_candidates"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:004647",
+      "scientific_name": "Falco peregrinus",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 1,
+      "same_family_count": 0,
+      "same_order_count": 0,
+      "total_potential_candidates": 1,
+      "readiness_status": "insufficient_distractors",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile",
+        "only_1_candidates"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:019898",
+      "scientific_name": "Strix aluco",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 0,
+      "same_family_count": 2,
+      "same_order_count": 0,
+      "total_potential_candidates": 2,
+      "readiness_status": "insufficient_distractors",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile",
+        "only_2_candidates"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:020307",
+      "scientific_name": "Asio otus",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 0,
+      "same_family_count": 2,
+      "same_order_count": 0,
+      "total_potential_candidates": 2,
+      "readiness_status": "insufficient_distractors",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile",
+        "only_2_candidates"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:019998",
+      "scientific_name": "Athene noctua",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 0,
+      "same_family_count": 2,
+      "same_order_count": 0,
+      "total_potential_candidates": 2,
+      "readiness_status": "insufficient_distractors",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile",
+        "only_2_candidates"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:144243",
+      "scientific_name": "Picus viridis",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 0,
+      "same_family_count": 2,
+      "same_order_count": 0,
+      "total_potential_candidates": 2,
+      "readiness_status": "insufficient_distractors",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile",
+        "only_2_candidates"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:017871",
+      "scientific_name": "Dendrocopos major",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 0,
+      "same_family_count": 2,
+      "same_order_count": 0,
+      "total_potential_candidates": 2,
+      "readiness_status": "insufficient_distractors",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile",
+        "only_2_candidates"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:017835",
+      "scientific_name": "Dryocopus martius",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 0,
+      "same_family_count": 2,
+      "same_order_count": 0,
+      "total_potential_candidates": 2,
+      "readiness_status": "insufficient_distractors",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile",
+        "only_2_candidates"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:006638",
+      "scientific_name": "Apus apus",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 0,
+      "same_family_count": 0,
+      "same_order_count": 0,
+      "total_potential_candidates": 0,
+      "readiness_status": "needs_taxon_enrichment",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile",
+        "no_candidates"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:064705",
+      "scientific_name": "Delichon urbicum",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 0,
+      "same_family_count": 2,
+      "same_order_count": 23,
+      "total_potential_candidates": 25,
+      "readiness_status": "inat_missing_but_taxonomic_ok",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:011901",
+      "scientific_name": "Hirundo rustica",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 0,
+      "same_family_count": 2,
+      "same_order_count": 23,
+      "total_potential_candidates": 25,
+      "readiness_status": "inat_missing_but_taxonomic_ok",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:011941",
+      "scientific_name": "Riparia riparia",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 0,
+      "same_family_count": 2,
+      "same_order_count": 23,
+      "total_potential_candidates": 25,
+      "readiness_status": "inat_missing_but_taxonomic_ok",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:007347",
+      "scientific_name": "Alauda arvensis",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 0,
+      "same_family_count": 0,
+      "same_order_count": 25,
+      "total_potential_candidates": 25,
+      "readiness_status": "inat_missing_but_taxonomic_ok",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:012038",
+      "scientific_name": "Lanius collurio",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 0,
+      "same_family_count": 0,
+      "same_order_count": 25,
+      "total_potential_candidates": 25,
+      "readiness_status": "inat_missing_but_taxonomic_ok",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:336399",
+      "scientific_name": "Coloeus monedula",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 0,
+      "same_family_count": 4,
+      "same_order_count": 21,
+      "total_potential_candidates": 25,
+      "readiness_status": "inat_missing_but_taxonomic_ok",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:008029",
+      "scientific_name": "Corvus frugilegus",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 1,
+      "same_family_count": 3,
+      "same_order_count": 21,
+      "total_potential_candidates": 25,
+      "readiness_status": "inat_missing_but_taxonomic_ok",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:004208",
+      "scientific_name": "Podiceps cristatus",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 0,
+      "same_family_count": 0,
+      "same_order_count": 0,
+      "total_potential_candidates": 0,
+      "readiness_status": "needs_taxon_enrichment",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile",
+        "no_candidates"
+      ]
+    },
+    {
+      "target_canonical_taxon_id": "taxon:birds:002969",
+      "scientific_name": "Streptopelia decaocto",
+      "inat_hint_count": 0,
+      "internal_similar_count": 0,
+      "same_genus_count": 0,
+      "same_family_count": 1,
+      "same_order_count": 0,
+      "total_potential_candidates": 1,
+      "readiness_status": "insufficient_distractors",
+      "readiness_reasons": [
+        "no_inat_hints",
+        "no_taxonomy_profile",
+        "only_1_candidates"
+      ]
+    }
+  ]
+}

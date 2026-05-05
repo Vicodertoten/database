@@ -412,8 +412,6 @@ def build_pedagogical_media_profile_prompt_v1(
         "Do NOT use confidence='high' when value is unknown or not_applicable. "
         "If unsure, set value='unknown', confidence='low', visible_basis=null. "
         "If value is neither unknown nor not_applicable, visible_basis must be non-empty. "
-        "If you cannot justify a non-unknown biological value with visible evidence, "
-        "downgrade that field to unknown instead of leaving visible_basis null. "
         # --- Indirect evidence rule ---
         "For indirect evidence types feather, egg, nest, track, scat, burrow, set "
         "observation_profile.subject_presence=indirect. "
@@ -423,9 +421,6 @@ def build_pedagogical_media_profile_prompt_v1(
         "For indirect evidence, use unknown for posture, behavior_visible, and "
         "bird_visible_parts=[unknown]; fill remaining bird profile fields using "
         "whatever can be inferred from the indirect evidence. "
-        "Never use bird_visible_parts='body'; use 'whole_body'. "
-        "Never use bird posture='sitting'; use the closest allowed value such as "
-        "resting, standing, perched, or swimming. "
         "bird_visible_parts can list up to 12 visible parts when clearly visible. "
         "Keep visible_field_marks selective (max 5) and focused on key marks. "
         "Normalize context synonyms to allowed enums: brick wall, wall, building, "

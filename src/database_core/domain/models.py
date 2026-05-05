@@ -7,6 +7,7 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator, model_valida
 
 from database_core.domain.canonical_ids import CANONICAL_TAXON_ID_PATTERN
 from database_core.domain.enums import (
+    CandidateTaxonRefType,
     CanonicalChangeRelationType,
     CanonicalEventType,
     CanonicalGovernanceDecisionStatus,
@@ -16,6 +17,12 @@ from database_core.domain.enums import (
     DiagnosticStrength,
     DifficultyBand,
     DifficultyLevel,
+    DistractorConfusionType,
+    DistractorDifficultyLevel,
+    DistractorLearnerLevel,
+    DistractorPedagogicalValue,
+    DistractorRelationshipSource,
+    DistractorRelationshipStatus,
     EnrichmentExecutionStatus,
     EnrichmentRequestReasonCode,
     EnrichmentRequestStatus,
@@ -1293,3 +1300,100 @@ class CanonicalGovernanceReviewItem(DomainModel):
 
 def _slugify_scientific_name(value: str) -> str:
     return "-".join(part.strip().lower() for part in value.split() if part.strip())
+
+
+class DistractorRelationship(DomainModel):
+    relationship_id: str
+    target_canonical_taxon_id: str
+    target_scientific_name: str
+    candidate_taxon_ref_type: CandidateTaxonRefType
+    candidate_taxon_ref_id: str | None = None
+    candidate_scientific_name: str
+    source: DistractorRelationshipSource
+    source_rank: int = Field(ge=1)
+    confusion_types: list[DistractorConfusionType] = Field(default_factory=list)
+    pedagogical_value: DistractorPedagogicalValue = DistractorPedagogicalValue.UNKNOWN
+    difficulty_level: DistractorDifficultyLevel = DistractorDifficultyLevel.MEDIUM
+    learner_level: DistractorLearnerLevel = DistractorLearnerLevel.MIXED
+    reason: str | None = None
+    status: DistractorRelationshipStatus = DistractorRelationshipStatus.CANDIDATE
+    constraints: dict[str, object] = Field(default_factory=dict)
+    created_at: datetime
+    updated_at: datetime | None = None
+
+    @field_validator("relationship_id", "target_canonical_taxon_id", "target_scientific_name")
+    @classmethod
+    def validate_required_string_fields(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("field must not be blank")
+        return value
+
+    @field_validator("candidate_scientific_name")
+    @classmethod
+    def validate_candidate_scientific_name(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("candidate_scientific_name must not be blank")
+        return value
+
+    @model_validator(mode="after")
+    def validate_distractor_relationship(self) -> Self:
+        # candidate_taxon_ref_id rules
+        if self.candidate_taxon_ref_type in (
+            CandidateTaxonRefType.CANONICAL_TAXON,
+            CandidateTaxonRefType.REFERENCED_TAXON,
+        ):
+            if not self.candidate_taxon_ref_id or not self.candidate_taxon_ref_id.strip():
+                raise ValueError(
+                    f"candidate_taxon_ref_id is required when "
+                    f"candidate_taxon_ref_type={self.candidate_taxon_ref_type}"
+                )
+        if self.candidate_taxon_ref_type == CandidateTaxonRefType.UNRESOLVED_TAXON:
+            if self.candidate_taxon_ref_id is not None:
+                raise ValueError(
+                    "candidate_taxon_ref_id must be null for unresolved_taxon"
+                )
+
+        # unresolved_taxon cannot be validated
+        if (
+            self.candidate_taxon_ref_type == CandidateTaxonRefType.UNRESOLVED_TAXON
+            and self.status == DistractorRelationshipStatus.VALIDATED
+        ):
+            raise ValueError("unresolved_taxon cannot have status=validated")
+
+        # unresolved_taxon must be needs_review or unavailable_missing_taxon
+        if self.candidate_taxon_ref_type == CandidateTaxonRefType.UNRESOLVED_TAXON and (
+            self.status
+            not in (
+                DistractorRelationshipStatus.NEEDS_REVIEW,
+                DistractorRelationshipStatus.UNAVAILABLE_MISSING_TAXON,
+            )
+        ):
+            raise ValueError(
+                "unresolved_taxon status must be needs_review or unavailable_missing_taxon"
+            )
+
+        # emergency_diversity_fallback cannot be validated
+        if (
+            self.source == DistractorRelationshipSource.EMERGENCY_DIVERSITY_FALLBACK
+            and self.status == DistractorRelationshipStatus.VALIDATED
+        ):
+            raise ValueError(
+                "emergency_diversity_fallback relationships cannot be status=validated"
+            )
+
+        # target must not equal candidate (by scientific name)
+        if self.target_scientific_name.strip() == self.candidate_scientific_name.strip():
+            raise ValueError(
+                "target_scientific_name must not equal candidate_scientific_name"
+            )
+
+        # validated relationships should have at least one confusion type
+        if (
+            self.status == DistractorRelationshipStatus.VALIDATED
+            and not self.confusion_types
+        ):
+            raise ValueError(
+                "validated relationships must have at least one confusion_type"
+            )
+
+        return self

@@ -184,6 +184,24 @@ is filled, re-running the script will produce the final decision label.
 
 ---
 
+## Sprint 10 Closure Notes
+
+Post-review decision: **READY_FOR_FIRST_PROFILED_CORPUS_CANDIDATE**
+
+1. **Schema false negatives — cached outputs need reprocessing or exclusion.**
+   The 4 `schema_false_negative` items (all rated `too_strict` in the second review)
+   are cached in `ai_outputs.json` with failing profiles. These items must either be
+   reprocessed through the updated pipeline (so normalization patches apply) or explicitly
+   excluded from the first corpus candidate. They must not enter the corpus as-is.
+
+2. **Visible answer text / screenshot items must be excluded from first corpus candidate
+   unless explicitly cleared.**
+   Any item with `contains_visible_answer_text=true` or `contains_ui_screenshot=true`
+   must be excluded by default from corpus candidacy. They may only be included if a
+   separate human review explicitly clears them for a specific use case.
+
+---
+
 ## What Remains Out of Scope
 
 The following remain explicitly out of scope for Sprint 10:

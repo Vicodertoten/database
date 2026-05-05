@@ -53,15 +53,15 @@ def test_fixture_dry_run_counts_and_decision() -> None:
     assert report["schema_version"] == "pedagogical_media_profile_fixture_dry_run.v1"
     assert report["execution_status"] == "ok"
     assert report["fixture_count"] == 10
-    assert report["valid_count"] == 8
-    assert report["failed_count"] == 2
+    assert report["valid_count"] == 7
+    assert report["failed_count"] == 3
 
-    assert report["schema_validation_failed_count"] == 1
+    assert report["schema_validation_failed_count"] == 2
     assert report["model_output_invalid_count"] == 0
     assert report["feedback_rejection_count"] == 1
-    assert report["biological_basis_rejection_count"] == 0
+    assert report["biological_basis_rejection_count"] == 1
 
-    assert report["failure_reason_distribution"]["schema_validation_failed"] == 1
+    assert report["failure_reason_distribution"]["schema_validation_failed"] == 2
     assert report["failure_reason_distribution"]["media_uninspectable"] == 1
 
     assert report["low_basic_identification_valid_count"] >= 1

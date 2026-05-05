@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/database/schemas/distractor_ai_proposal_v1.schema.json",
+  "title": "DistractorAIProposalV1",
+  "description": "AI-generated pedagogical distractor proposal for a target taxon. Third-priority source after iNaturalist similar species and taxonomic neighbors.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "prompt_version",
+    "target_scientific_name",
+    "ranked_existing_candidates",
+    "proposed_additional_candidates",
+    "confidence"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "distractor_ai_proposal_v1"
+    },
+    "prompt_version": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Version string of the prompt used to generate this proposal (e.g. 'v1.0')."
+    },
+    "target_scientific_name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Accepted scientific name of the target taxon (echoed from input)."
+    },
+    "ranked_existing_candidates": {
+      "type": "array",
+      "description": "Existing candidates from sources 1+2 (iNat / taxonomic), re-ranked by AI.",
+      "items": {
+        "$ref": "#/$defs/CandidateObject"
+      }
+    },
+    "proposed_additional_candidates": {
+      "type": "array",
+      "description": "New candidates proposed by AI not already in existing candidate lists. May include unresolved names — all must pass scientific name validation before use.",
+      "items": {
+        "$ref": "#/$defs/CandidateObject"
+      }
+    },
+    "overall_notes": {
+      "type": ["string", "null"],
+      "description": "Optional free-text notes from the AI about this proposal."
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "description": "Overall confidence in this proposal [0.0, 1.0]."
+    }
+  },
+  "$defs": {
+    "CandidateObject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scientific_name",
+        "rank",
+        "confusion_types",
+        "pedagogical_value",
+        "difficulty_level",
+        "learner_level",
+        "reason",
+        "confidence"
+      ],
+      "properties": {
+        "scientific_name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Scientific name of the candidate distractor. Must be validated against the canonical and referenced taxon pools after receipt."
+        },
+        "source_reference": {
+          "type": ["string", "null"],
+          "description": "Source that originally provided this candidate (e.g. 'inaturalist_similar_species', 'taxonomic_neighbor_same_genus', 'ai_proposal')."
+        },
+        "rank": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Rank within this proposal list (1 = most pedagogically useful)."
+        },
+        "confusion_types": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "enum": [
+              "visual_similarity",
+              "same_genus",
+              "same_family",
+              "same_order",
+              "same_size",
+              "same_shape",
+              "same_color_pattern",
+              "same_habitat",
+              "same_behavior",
+              "same_season",
+              "same_life_stage",
+              "beginner_common_confusion",
+              "expert_fine_confusion",
+              "local_species_confusion",
+              "name_similarity",
+              "ecological_association"
+            ]
+          }
+        },
+        "pedagogical_value": {
+          "type": "string",
+          "enum": ["high", "medium", "low", "unknown"]
+        },
+        "difficulty_level": {
+          "type": "string",
+          "enum": ["easy", "medium", "hard", "expert"]
+        },
+        "learner_level": {
+          "type": "string",
+          "enum": ["beginner", "intermediate", "advanced", "expert", "mixed"]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Pedagogical justification for including this candidate."
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "AI confidence in this specific candidate [0.0, 1.0]."
+        }
+      }
+    }
+  }
+}

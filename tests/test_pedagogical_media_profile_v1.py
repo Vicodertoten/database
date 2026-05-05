@@ -326,10 +326,6 @@ def _failed_payload() -> dict[str, object]:
     )
 
 
-def _raw_profile_json(payload: Mapping[str, object]) -> str:
-    return json.dumps(dict(payload))
-
-
 def _with_scores(payload: Mapping[str, object]) -> dict[str, object]:
     scored = copy.deepcopy(dict(payload))
     scored["scores"] = compute_pedagogical_media_scores_v1(scored)
@@ -435,49 +431,6 @@ def test_parse_schema_error_returns_schema_valid_failed_payload() -> None:
 
     assert parsed["review_status"] == "failed"
     validate_pedagogical_media_profile_v1(parsed)
-
-
-def test_parse_normalizes_bird_body_visible_part_alias() -> None:
-    payload = _clear_bird_profile_payload()
-    payload["group_specific_profile"]["bird"]["bird_visible_parts"] = [
-        "head",
-        "neck",
-        "body",
-    ]
-
-    parsed = parse_pedagogical_media_profile_v1(_raw_profile_json(payload))
-
-    assert parsed["review_status"] == "valid"
-    assert parsed["group_specific_profile"]["bird"]["bird_visible_parts"] == [
-        "head",
-        "neck",
-        "whole_body",
-    ]
-
-
-def test_parse_normalizes_bird_sitting_posture_alias() -> None:
-    payload = _clear_bird_profile_payload()
-    payload["group_specific_profile"]["bird"]["posture"] = "sitting"
-
-    parsed = parse_pedagogical_media_profile_v1(_raw_profile_json(payload))
-
-    assert parsed["review_status"] == "valid"
-    assert parsed["group_specific_profile"]["bird"]["posture"] == "resting"
-
-
-def test_parse_degrades_biological_claim_without_visible_basis_to_unknown() -> None:
-    payload = _clear_bird_profile_payload()
-    payload["biological_profile_visible"]["plumage_state"] = {
-        "value": "non_breeding_plumage",
-        "confidence": "low",
-        "visible_basis": None,
-    }
-
-    parsed = parse_pedagogical_media_profile_v1(_raw_profile_json(payload))
-
-    assert parsed["review_status"] == "valid"
-    assert parsed["biological_profile_visible"]["plumage_state"]["value"] == "unknown"
-    assert parsed["biological_profile_visible"]["plumage_state"]["visible_basis"] is None
 
 
 def test_wrong_enum_value_fails_validation() -> None:
@@ -695,9 +648,9 @@ def test_normalize_unknown_value_high_confidence_is_not_changed() -> None:
         validate_pedagogical_media_profile_v1(with_scores)
 
 
-def test_normalize_concrete_value_without_basis_is_downgraded_to_unknown() -> None:
-    # Concrete biological value with no visible basis is downgraded to unknown so a
-    # single unsupported assertion does not fail the entire PMP payload.
+def test_normalize_concrete_value_unknown_confidence_is_not_changed() -> None:
+    # Concrete biological value with confidence=unknown is not touched by micro-patch.
+    # Validation must still fail (missing visible_basis / wrong confidence rule).
     payload = _with_scores(_clear_bird_profile_payload())
     payload["biological_profile_visible"]["life_stage"] = {
         "value": "adult",
@@ -706,12 +659,13 @@ def test_normalize_concrete_value_without_basis_is_downgraded_to_unknown() -> No
     }
     normalized = normalize_pedagogical_media_profile_v1(payload)
     bio = normalized["biological_profile_visible"]
-    assert bio["life_stage"]["value"] == "unknown"
-    assert bio["life_stage"]["confidence"] == "low"
-    assert bio["life_stage"]["visible_basis"] is None
+    # Confidence is left unchanged (adult is not unknown/not_applicable).
+    assert bio["life_stage"]["confidence"] == "unknown"
+    # Validation fails because visible_basis is None for a concrete value.
     with_scores = dict(normalized)
     with_scores["scores"] = compute_pedagogical_media_scores_v1(normalized)
-    validate_pedagogical_media_profile_v1(with_scores)
+    with pytest.raises(ValueError):
+        validate_pedagogical_media_profile_v1(with_scores)
 
 
 def test_normalization_does_not_affect_feedback_rejection() -> None:

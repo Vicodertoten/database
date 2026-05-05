@@ -302,3 +302,73 @@ class EnrichmentRequestReasonCode(StrEnum):
     INSUFFICIENT_TAXA_SERVED = "insufficient_taxa_served"
     INSUFFICIENT_MEDIA_PER_TAXON = "insufficient_media_per_taxon"
     INSUFFICIENT_TOTAL_QUESTIONS = "insufficient_total_questions"
+
+
+# --- Distractor relationships ---
+
+
+class DistractorRelationshipSource(StrEnum):
+    INATURALIST_SIMILAR_SPECIES = "inaturalist_similar_species"
+    TAXONOMIC_NEIGHBOR_SAME_GENUS = "taxonomic_neighbor_same_genus"
+    TAXONOMIC_NEIGHBOR_SAME_FAMILY = "taxonomic_neighbor_same_family"
+    TAXONOMIC_NEIGHBOR_SAME_ORDER = "taxonomic_neighbor_same_order"
+    AI_PEDAGOGICAL_PROPOSAL = "ai_pedagogical_proposal"
+    MANUAL_EXPERT = "manual_expert"
+    EMERGENCY_DIVERSITY_FALLBACK = "emergency_diversity_fallback"
+
+
+class DistractorRelationshipStatus(StrEnum):
+    CANDIDATE = "candidate"
+    VALIDATED = "validated"
+    NEEDS_REVIEW = "needs_review"
+    REJECTED = "rejected"
+    UNAVAILABLE_MISSING_TAXON = "unavailable_missing_taxon"
+    UNAVAILABLE_MISSING_LOCALIZED_NAME = "unavailable_missing_localized_name"
+    UNAVAILABLE_MISSING_MEDIA = "unavailable_missing_media"
+
+
+class CandidateTaxonRefType(StrEnum):
+    CANONICAL_TAXON = "canonical_taxon"
+    REFERENCED_TAXON = "referenced_taxon"
+    UNRESOLVED_TAXON = "unresolved_taxon"
+
+
+class DistractorConfusionType(StrEnum):
+    VISUAL_SIMILARITY = "visual_similarity"
+    SAME_GENUS = "same_genus"
+    SAME_FAMILY = "same_family"
+    SAME_ORDER = "same_order"
+    SAME_SIZE = "same_size"
+    SAME_SHAPE = "same_shape"
+    SAME_COLOR_PATTERN = "same_color_pattern"
+    SAME_HABITAT = "same_habitat"
+    SAME_BEHAVIOR = "same_behavior"
+    SAME_SEASON = "same_season"
+    SAME_LIFE_STAGE = "same_life_stage"
+    BEGINNER_COMMON_CONFUSION = "beginner_common_confusion"
+    EXPERT_FINE_CONFUSION = "expert_fine_confusion"
+    LOCAL_SPECIES_CONFUSION = "local_species_confusion"
+    NAME_SIMILARITY = "name_similarity"
+    ECOLOGICAL_ASSOCIATION = "ecological_association"
+
+
+class DistractorLearnerLevel(StrEnum):
+    BEGINNER = "beginner"
+    INTERMEDIATE = "intermediate"
+    ADVANCED = "advanced"
+    EXPERT = "expert"
+    MIXED = "mixed"
+
+
+class DistractorPedagogicalValue(StrEnum):
+    HIGH = "high"
+    MEDIUM = "medium"
+    LOW = "low"
+    UNKNOWN = "unknown"
+
+
+class DistractorDifficultyLevel(StrEnum):
+    EASY = "easy"
+    MEDIUM = "medium"
+    HARD = "hard"
+    EXPERT = "expert"
