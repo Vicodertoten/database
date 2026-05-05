@@ -1,0 +1,30 @@
+{
+  "run_date": "2026-05-05",
+  "phase": "Sprint 14B.3",
+  "plan_hash": "8adeed82edfd168cd560740820b45678cca1f362e1ef8d85502d33d98821fbe1",
+  "dry_run_plan_hash": "8adeed82edfd168cd560740820b45678cca1f362e1ef8d85502d33d98821fbe1",
+  "audit_plan_hash": "8adeed82edfd168cd560740820b45678cca1f362e1ef8d85502d33d98821fbe1",
+  "hashes_match": true,
+  "projected_safe_targets_dry_run_count": 32,
+  "audited_safe_targets_after_apply_count": 32,
+  "lost_projected_targets_count": 0,
+  "decision_count_by_type": {
+    "auto_accept": 27,
+    "same_value": 316,
+    "needs_review": 245,
+    "skip_optional_missing": 156
+  },
+  "decision_count_by_reason": {
+    "inaturalist_all_names_empty_field": 27,
+    "same_value": 160,
+    "existing_value_conflict_inaturalist_all_names": 89,
+    "missing_required_locale": 156,
+    "existing_value_retained": 156,
+    "optional_locale_missing": 156
+  },
+  "reconciliation_summary": {
+    "single_decision_engine_used": true,
+    "readiness_derived_from_apply_plan": true,
+    "dry_run_apply_audit_hashes_match": true
+  }
+}

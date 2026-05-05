@@ -1,0 +1,1707 @@
+{
+  "schema_version": "localized_name_optional_coverage_report_v1",
+  "plan_hash": "8adeed82edfd168cd560740820b45678cca1f362e1ef8d85502d33d98821fbe1",
+  "items": [
+    {
+      "taxon_kind": "canonical_taxon",
+      "taxon_id": "taxon:birds:000016",
+      "scientific_name": "Carduelis carduelis",
+      "locale": "nl",
+      "reason": "existing_value_conflict_inaturalist_all_names",
+      "existing_value": "Putter",
+      "candidates": [
+        {
+          "taxon_kind": "canonical_taxon",
+          "taxon_id": "taxon:birds:000016",
+          "scientific_name": "Carduelis carduelis",
+          "locale": "nl",
+          "value": "Putter",
+          "source": "inaturalist",
+          "method": "all_names",
+          "confidence": "medium_high",
+          "source_url": "https://www.inaturalist.org/taxa/9398",
+          "raw_ref": {
+            "artifact": "taxon_birds_000016.json",
+            "source_taxon_id": "9398",
+            "locale": "nl",
+            "position": 7,
+            "lexicon": "dutch"
+          }
+        },
+        {
+          "taxon_kind": "canonical_taxon",
+          "taxon_id": "taxon:birds:000016",
+          "scientific_name": "Carduelis carduelis",
+          "locale": "nl",
+          "value": "Distelvink",
+          "source": "inaturalist",
+          "method": "all_names",
+          "confidence": "medium_high",
+          "source_url": "https://www.inaturalist.org/taxa/9398",
+          "raw_ref": {
+            "artifact": "taxon_birds_000016.json",
+            "source_taxon_id": "9398",
+            "locale": "nl",
+            "position": 8,
+            "lexicon": "dutch"
+          }
+        }
+      ],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "canonical_taxon",
+      "taxon_id": "taxon:birds:000030",
+      "scientific_name": "Egretta garzetta",
+      "locale": "nl",
+      "reason": "existing_value_conflict_inaturalist_all_names",
+      "existing_value": "Kleine Zilverreiger",
+      "candidates": [
+        {
+          "taxon_kind": "canonical_taxon",
+          "taxon_id": "taxon:birds:000030",
+          "scientific_name": "Egretta garzetta",
+          "locale": "nl",
+          "value": "Kleine Zilverreiger",
+          "source": "inaturalist",
+          "method": "all_names",
+          "confidence": "medium_high",
+          "source_url": "https://www.inaturalist.org/taxa/4943",
+          "raw_ref": {
+            "artifact": "taxon_birds_000030.json",
+            "source_taxon_id": "4943",
+            "locale": "nl",
+            "position": 18,
+            "lexicon": "dutch"
+          }
+        },
+        {
+          "taxon_kind": "canonical_taxon",
+          "taxon_id": "taxon:birds:000030",
+          "scientific_name": "Egretta garzetta",
+          "locale": "nl",
+          "value": "Australaziatische kleine zilverreiger",
+          "source": "inaturalist",
+          "method": "all_names",
+          "confidence": "medium_high",
+          "source_url": "https://www.inaturalist.org/taxa/4943",
+          "raw_ref": {
+            "artifact": "taxon_birds_000030.json",
+            "source_taxon_id": "4943",
+            "locale": "nl",
+            "position": 74,
+            "lexicon": "dutch"
+          }
+        }
+      ],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:10069",
+      "scientific_name": "Fringilla montifringilla",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:10325",
+      "scientific_name": "Euphagus cyanocephalus",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:10411",
+      "scientific_name": "Loxia curvirostra",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:116802",
+      "scientific_name": "Acrocephalus palustris",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:116999",
+      "scientific_name": "Pandion haliaetus",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:117016",
+      "scientific_name": "Phylloscopus collybita",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:117028",
+      "scientific_name": "Phylloscopus inornatus",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:117097",
+      "scientific_name": "Regulus ignicapilla",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:12021",
+      "scientific_name": "Lanius cristatus",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:12707",
+      "scientific_name": "Turdus pilaris",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:12727",
+      "scientific_name": "Turdus migratorius",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:12735",
+      "scientific_name": "Turdus viscivorus",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:12749",
+      "scientific_name": "Turdus iliacus",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:12781",
+      "scientific_name": "Turdus fuscater",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:12878",
+      "scientific_name": "Catharus ustulatus",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:12890",
+      "scientific_name": "Catharus guttatus",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:1289470",
+      "scientific_name": "Curruca communis",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:12992",
+      "scientific_name": "Phoenicurus phoenicurus",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:13079",
+      "scientific_name": "Luscinia megarhynchos",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:13632",
+      "scientific_name": "Baeolophus bicolor",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:13633",
+      "scientific_name": "Baeolophus inornatus",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:13688",
+      "scientific_name": "Motacilla cinerea",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:13711",
+      "scientific_name": "Anthus trivialis",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:13729",
+      "scientific_name": "Anthus pratensis",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:13851",
+      "scientific_name": "Passer montanus",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:13988",
+      "scientific_name": "Prunella modularis",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:14076",
+      "scientific_name": "Petronia petronia",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:143853",
+      "scientific_name": "Pica hudsonia",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:144242",
+      "scientific_name": "Picus sharpei",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:144294",
+      "scientific_name": "Stercorarius chilensis",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:144455",
+      "scientific_name": "Ardea alba",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:144508",
+      "scientific_name": "Chroicocephalus cirrocephalus",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:144510",
+      "scientific_name": "Chroicocephalus ridibundus",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:144809",
+      "scientific_name": "Poecile palustris",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:144815",
+      "scientific_name": "Poecile atricapillus",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:144823",
+      "scientific_name": "Periparus ater",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:144830",
+      "scientific_name": "Lophophanes cristatus",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:144882",
+      "scientific_name": "Troglodytes pacificus",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:145303",
+      "scientific_name": "Spinus spinus",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:145310",
+      "scientific_name": "Spinus tristis",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:1454382",
+      "scientific_name": "Nannopterum auritum",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:1455918",
+      "scientific_name": "Spilopelia chinensis",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:14849",
+      "scientific_name": "Sturnus unicolor",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:15302",
+      "scientific_name": "Sylvia borin",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:1579015",
+      "scientific_name": "Astur gentilis",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:1587553",
+      "scientific_name": "Larus smithsonianus × glaucescens",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:1667146",
+      "scientific_name": "Anser caerulescens × Branta canadensis",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:1667148",
+      "scientific_name": "Anser anser × Branta canadensis",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:18204",
+      "scientific_name": "Melanerpes erythrocephalus",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:18205",
+      "scientific_name": "Melanerpes carolinus",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:18236",
+      "scientific_name": "Colaptes auratus",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:18911",
+      "scientific_name": "Psittacula krameri",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:1907",
+      "scientific_name": "Cuculus canorus",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:199913",
+      "scientific_name": "Buteo plagiatus",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:199916",
+      "scientific_name": "Setophaga caerulescens",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:20059",
+      "scientific_name": "Bubo bubo",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:201035",
+      "scientific_name": "Clanga clanga",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:201041",
+      "scientific_name": "Rupornis magnirostris",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:20315",
+      "scientific_name": "Asio flammeus",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:20445",
+      "scientific_name": "Tyto alba",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:204456",
+      "scientific_name": "Acrocephalus arundinaceus",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:204545",
+      "scientific_name": "Motacilla flava",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:204556",
+      "scientific_name": "Oriolus oriolus",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:2599",
+      "scientific_name": "Alcedo atthis",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:2938",
+      "scientific_name": "Streptopelia turtur",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:3017",
+      "scientific_name": "Columba livia",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:3033",
+      "scientific_name": "Columba oenas",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:3108",
+      "scientific_name": "Patagioenas fasciata",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:326092",
+      "scientific_name": "Anas platyrhynchos × Cairina moschata",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:339691",
+      "scientific_name": "Parus cinereus",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:34",
+      "scientific_name": "Grus americana",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:3439",
+      "scientific_name": "Zenaida auriculata",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:3454",
+      "scientific_name": "Zenaida macroura",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:357",
+      "scientific_name": "Gallinula tenebrosa",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:3731",
+      "scientific_name": "Platalea leucorodia",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:41",
+      "scientific_name": "Grus grus",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:410743",
+      "scientific_name": "Anas superciliosa × platyrhynchos",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:411086",
+      "scientific_name": "Ardea ibis",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:4234",
+      "scientific_name": "Aechmophorus clarkii",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:4237",
+      "scientific_name": "Tachybaptus ruficollis",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:4273",
+      "scientific_name": "Phalacrocorax sulcirostris",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:4311",
+      "scientific_name": "Phalacrocorax fuscescens",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:4349",
+      "scientific_name": "Larus hyperboreus",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:4356",
+      "scientific_name": "Larus canus",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:4368",
+      "scientific_name": "Larus marinus",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:4381",
+      "scientific_name": "Larus fuscus",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:4389",
+      "scientific_name": "Larus cachinnans",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:4643",
+      "scientific_name": "Falco subbuteo",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:4658",
+      "scientific_name": "Falco newtoni",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:4672",
+      "scientific_name": "Falco columbarius",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:468988",
+      "scientific_name": "Anas platyrhynchos × acuta",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:472287",
+      "scientific_name": "Anser anser × cygnoides",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:473",
+      "scientific_name": "Fulica americana",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:4733",
+      "scientific_name": "Ciconia ciconia",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:4756",
+      "scientific_name": "Cathartes aura",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:478",
+      "scientific_name": "Fulica alai",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:479",
+      "scientific_name": "Fulica ardesiaca",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:4843",
+      "scientific_name": "Haematopus ostralegus",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:4937",
+      "scientific_name": "Egretta caerulea",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:4951",
+      "scientific_name": "Ardea purpurea",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:4952",
+      "scientific_name": "Ardea cocoi",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:4956",
+      "scientific_name": "Ardea herodias",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:4966",
+      "scientific_name": "Ardea pacifica",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:4972",
+      "scientific_name": "Ardea melanocephala",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:507881",
+      "scientific_name": "Porphyriops melanops",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:510458",
+      "scientific_name": "Anas platyrhynchos × Netta rufina",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:513926",
+      "scientific_name": "Rallus aquaticus",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:5173",
+      "scientific_name": "Circus aeruginosus",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:5200",
+      "scientific_name": "Buteo lagopus",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:5227",
+      "scientific_name": "Buteo platypterus",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:5267",
+      "scientific_name": "Milvus milvus",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:5325",
+      "scientific_name": "Pernis apivorus",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:558426",
+      "scientific_name": "Anser caerulescens",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:558427",
+      "scientific_name": "Anser rossii",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:558429",
+      "scientific_name": "Spatula querquedula",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:558433",
+      "scientific_name": "Spatula discors",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:558438",
+      "scientific_name": "Spatula clypeata",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:558439",
+      "scientific_name": "Mareca strepera",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:558442",
+      "scientific_name": "Mareca sibilatrix",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:6571",
+      "scientific_name": "Chaetura pelagica",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:6916",
+      "scientific_name": "Cygnus cygnus",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:6917",
+      "scientific_name": "Cygnus columbianus",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:6990",
+      "scientific_name": "Bucephala clangula",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:7008",
+      "scientific_name": "Anser indicus",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:7014",
+      "scientific_name": "Anser cygnoides",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:7019",
+      "scientific_name": "Anser albifrons",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:7045",
+      "scientific_name": "Aythya ferina",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:7067",
+      "scientific_name": "Tadorna tadorna",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:7089",
+      "scientific_name": "Branta canadensis",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:7101",
+      "scientific_name": "Branta leucopsis",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:7104",
+      "scientific_name": "Branta sandvicensis",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:7120",
+      "scientific_name": "Cairina moschata",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:7122",
+      "scientific_name": "Netta rufina",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:7123",
+      "scientific_name": "Netta erythrophthalma",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:7192",
+      "scientific_name": "Mergellus albellus",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:72486",
+      "scientific_name": "Alopochen aegyptiaca",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:72502",
+      "scientific_name": "Anas chlorotis",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:72994",
+      "scientific_name": "Lophonetta specularioides",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:73542",
+      "scientific_name": "Turdus flavipes",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:792977",
+      "scientific_name": "Dryobates minor",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:792985",
+      "scientific_name": "Dendrocoptes medius",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:792988",
+      "scientific_name": "Dryobates pubescens",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:793469",
+      "scientific_name": "Regulus regulus",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:8001",
+      "scientific_name": "Corvus ossifragus",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:8010",
+      "scientific_name": "Corvus corax",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:8143",
+      "scientific_name": "Rhipidura leucophrys",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:827372",
+      "scientific_name": "Anas diazi",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:827401",
+      "scientific_name": "Pica serica",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:8423",
+      "scientific_name": "Strepera graculina",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:8575",
+      "scientific_name": "Gymnorhina tibicen",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:9195",
+      "scientific_name": "Emberiza citrinella",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:9236",
+      "scientific_name": "Serinus serinus",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:9246",
+      "scientific_name": "Serinus canaria",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:9398",
+      "scientific_name": "Carduelis carduelis",
+      "locale": "nl",
+      "reason": "existing_value_conflict_inaturalist_all_names",
+      "existing_value": "Putter",
+      "candidates": [
+        {
+          "taxon_kind": "referenced_taxon",
+          "taxon_id": "reftaxon:inaturalist:9398",
+          "scientific_name": "Carduelis carduelis",
+          "locale": "nl",
+          "value": "Putter",
+          "source": "inaturalist",
+          "method": "all_names",
+          "confidence": "medium_high",
+          "source_url": "https://www.inaturalist.org/taxa/9398",
+          "raw_ref": {
+            "artifact": "taxon_birds_000016.json",
+            "source_taxon_id": "9398",
+            "locale": "nl",
+            "position": 7,
+            "lexicon": "dutch"
+          }
+        },
+        {
+          "taxon_kind": "referenced_taxon",
+          "taxon_id": "reftaxon:inaturalist:9398",
+          "scientific_name": "Carduelis carduelis",
+          "locale": "nl",
+          "value": "Distelvink",
+          "source": "inaturalist",
+          "method": "all_names",
+          "confidence": "medium_high",
+          "source_url": "https://www.inaturalist.org/taxa/9398",
+          "raw_ref": {
+            "artifact": "taxon_birds_000016.json",
+            "source_taxon_id": "9398",
+            "locale": "nl",
+            "position": 8,
+            "lexicon": "dutch"
+          }
+        }
+      ],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:9462",
+      "scientific_name": "Pyrrhula pyrrhula",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:979813",
+      "scientific_name": "Microcarbo pygmaeus",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    },
+    {
+      "taxon_kind": "referenced_taxon",
+      "taxon_id": "reftaxon:inaturalist:981",
+      "scientific_name": "Phasianus colchicus",
+      "locale": "nl",
+      "reason": "optional_locale_missing",
+      "existing_value": null,
+      "candidates": [],
+      "recommended_action": "manual_select_or_ignore"
+    }
+  ]
+}

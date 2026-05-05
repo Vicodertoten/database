@@ -1,29 +1,37 @@
 {
   "run_date": "2026-05-05",
-  "phase": "Sprint 14B",
-  "decision": "BLOCKED_NEEDS_NAME_SOURCE_ENRICHMENT",
+  "phase": "Sprint 14B.3",
+  "decision": "READY_FOR_RUNTIME_CONTRACTS_WITH_WARNINGS",
   "localized_name_source_policy": "docs/foundation/localized-name-source-policy-v1.md",
+  "localized_name_apply_plan": "docs/audits/evidence/localized_name_apply_plan_v1.json",
+  "plan_hash": "8adeed82edfd168cd560740820b45678cca1f362e1ef8d85502d33d98821fbe1",
   "source_attested_display_policy_enabled": true,
-  "displayable_source_attested_label_count": 23,
-  "displayable_curated_label_count": 19,
-  "non_human_reviewed_source_attested_label_count": 23,
-  "not_displayable_missing_count": 183,
+  "displayable_source_attested_label_count": 27,
+  "displayable_curated_label_count": 46,
+  "non_human_reviewed_source_attested_label_count": 27,
+  "not_displayable_missing_count": 156,
   "not_displayable_placeholder_count": 0,
-  "not_displayable_scientific_fallback_count": 23,
-  "needs_review_conflict_count": 0,
-  "safe_ready_target_count_after_source_attested_policy": 10,
+  "not_displayable_scientific_fallback_count": 0,
+  "needs_review_conflict_count": 86,
+  "safe_ready_target_count_after_source_attested_policy": 32,
   "first_corpus_minimum_target_count": 30,
-  "first_corpus_target_count_after_source_policy_status": "fail",
+  "first_corpus_target_count_after_source_policy_status": "pass",
   "runtime_display_name_policy_warnings": [
     "Source-attested names not human-reviewed remain warning-level for MVP display.",
-    "Runtime must display only displayable_curated or displayable_source_attested.",
+    "Runtime must display only auto_accept/same_value localized-name apply-plan decisions.",
     "Runtime must not invent/fetch localized names."
   ],
+  "decision_count_by_reason_fr": {
+    "inaturalist_all_names_empty_field": 27,
+    "same_value": 46,
+    "existing_value_conflict_inaturalist_all_names": 19,
+    "missing_required_locale": 156
+  },
   "non_actions": [
     "PERSIST_DISTRACTOR_RELATIONSHIPS_V1 remains false",
     "DATABASE_PHASE_CLOSED remains false",
     "No runtime app code created",
     "No invented names"
   ],
-  "recommended_next_phase": "Add missing source-attested localized names then rerun Sprint 14B"
+  "recommended_next_phase": "14C Robustness and regression tests"
 }

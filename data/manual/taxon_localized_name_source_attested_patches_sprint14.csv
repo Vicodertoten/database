@@ -1,383 +1,344 @@
 taxon_id,taxon_kind,scientific_name,language,common_name,source,source_priority,confidence,display_status,reviewer,notes,apply_status
-taxon:birds:000001,canonical_taxon,Columba palumbus,en,Common Wood-Pigeon,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000001,canonical_taxon,Columba palumbus,nl,Houtduif,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000002,canonical_taxon,Corvus corone,en,Carrion Crow,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000002,canonical_taxon,Corvus corone,nl,Zwarte Kraai,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000003,canonical_taxon,Cyanistes caeruleus,fr,Mésange bleue,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000003,canonical_taxon,Cyanistes caeruleus,en,Eurasian Blue Tit,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000003,canonical_taxon,Cyanistes caeruleus,nl,Pimpelmees,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000004,canonical_taxon,Erithacus rubecula,en,European Robin,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000004,canonical_taxon,Erithacus rubecula,nl,Roodborst,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000005,canonical_taxon,Fringilla coelebs,en,Common Chaffinch,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000005,canonical_taxon,Fringilla coelebs,nl,Vink,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000006,canonical_taxon,Garrulus glandarius,fr,Geai des chênes,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000006,canonical_taxon,Garrulus glandarius,en,Eurasian Jay,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000006,canonical_taxon,Garrulus glandarius,nl,Gaai,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000007,canonical_taxon,Motacilla alba,en,White Wagtail,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000007,canonical_taxon,Motacilla alba,nl,Witte kwikstaart,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000008,canonical_taxon,Parus major,fr,Mésange charbonnière,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000008,canonical_taxon,Parus major,en,Great Tit,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000008,canonical_taxon,Parus major,nl,Koolmees,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000009,canonical_taxon,Passer domesticus,en,House Sparrow,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000009,canonical_taxon,Passer domesticus,nl,Huismus,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000010,canonical_taxon,Pica pica,en,Eurasian Magpie,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000010,canonical_taxon,Pica pica,nl,Ekster,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000011,canonical_taxon,Sturnus vulgaris,fr,Étourneau sansonnet,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000011,canonical_taxon,Sturnus vulgaris,en,European Starling,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000011,canonical_taxon,Sturnus vulgaris,nl,Spreeuw,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000012,canonical_taxon,Sylvia atricapilla,fr,Fauvette à tête noire,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000012,canonical_taxon,Sylvia atricapilla,en,Eurasian Blackcap,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000012,canonical_taxon,Sylvia atricapilla,nl,Zwartkop,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000013,canonical_taxon,Troglodytes troglodytes,en,Eurasian Wren,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000013,canonical_taxon,Troglodytes troglodytes,nl,Winterkoning,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000014,canonical_taxon,Turdus merula,en,Eurasian Blackbird,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000014,canonical_taxon,Turdus merula,nl,Merel,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000015,canonical_taxon,Turdus philomelos,en,Song Thrush,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000015,canonical_taxon,Turdus philomelos,nl,Zanglijster,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000016,canonical_taxon,Carduelis carduelis,fr,Chardonneret élégant,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000016,canonical_taxon,Carduelis carduelis,en,European Goldfinch,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000016,canonical_taxon,Carduelis carduelis,nl,Putter,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000017,canonical_taxon,Chloris chloris,fr,Verdier d'Europe,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000017,canonical_taxon,Chloris chloris,en,European Greenfinch,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000017,canonical_taxon,Chloris chloris,nl,Groenling,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000018,canonical_taxon,Acrocephalus scirpaceus,en,Common Reed Warbler,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000018,canonical_taxon,Acrocephalus scirpaceus,nl,Kleine Karekiet,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000019,canonical_taxon,Coccothraustes coccothraustes,fr,Gros-bec casse-noyaux,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000019,canonical_taxon,Coccothraustes coccothraustes,en,Hawfinch,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000019,canonical_taxon,Coccothraustes coccothraustes,nl,Appelvink,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000020,canonical_taxon,Phoenicurus ochruros,en,Black Redstart,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000020,canonical_taxon,Phoenicurus ochruros,nl,Zwarte Roodstaart,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000021,canonical_taxon,Anas platyrhynchos,en,Mallard,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000021,canonical_taxon,Anas platyrhynchos,nl,Wilde Eend,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000022,canonical_taxon,Anser anser,fr,Oie cendrée,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000022,canonical_taxon,Anser anser,en,Greylag Goose,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000022,canonical_taxon,Anser anser,nl,Grauwe Gans,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000023,canonical_taxon,Cygnus olor,fr,Cygne tuberculé,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000023,canonical_taxon,Cygnus olor,en,Mute Swan,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000023,canonical_taxon,Cygnus olor,nl,Knobbelzwaan,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000024,canonical_taxon,Fulica atra,en,Eurasian Coot,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000024,canonical_taxon,Fulica atra,nl,Meerkoet,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000025,canonical_taxon,Gallinula chloropus,fr,Gallinule poule-d'eau,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000025,canonical_taxon,Gallinula chloropus,en,Common Moorhen,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000025,canonical_taxon,Gallinula chloropus,nl,Waterhoen,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000026,canonical_taxon,Larus michahellis,fr,Goéland leucophée,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000026,canonical_taxon,Larus michahellis,en,Yellow-legged Gull,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000026,canonical_taxon,Larus michahellis,nl,Geelpootmeeuw,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000027,canonical_taxon,Larus argentatus,fr,Goéland argenté,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000027,canonical_taxon,Larus argentatus,en,European Herring Gull,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000027,canonical_taxon,Larus argentatus,nl,Zilvermeeuw,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000028,canonical_taxon,Phalacrocorax carbo,fr,Grand Cormoran,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000028,canonical_taxon,Phalacrocorax carbo,en,Great Cormorant,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000028,canonical_taxon,Phalacrocorax carbo,nl,Aalscholver,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000029,canonical_taxon,Ardea cinerea,fr,Héron cendré,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000029,canonical_taxon,Ardea cinerea,en,Grey Heron,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000029,canonical_taxon,Ardea cinerea,nl,Blauwe Reiger,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000030,canonical_taxon,Egretta garzetta,en,Little Egret,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000030,canonical_taxon,Egretta garzetta,nl,Kleine Zilverreiger,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000031,canonical_taxon,Buteo buteo,en,Common Buzzard,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000031,canonical_taxon,Buteo buteo,nl,Buizerd,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000032,canonical_taxon,Accipiter nisus,fr,Épervier d'Europe,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000032,canonical_taxon,Accipiter nisus,en,Eurasian Sparrowhawk,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000032,canonical_taxon,Accipiter nisus,nl,Sperwer,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000033,canonical_taxon,Falco tinnunculus,fr,Faucon crécerelle,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000033,canonical_taxon,Falco tinnunculus,en,Eurasian Kestrel,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000033,canonical_taxon,Falco tinnunculus,nl,Torenvalk,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000034,canonical_taxon,Falco peregrinus,fr,Faucon pèlerin,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000034,canonical_taxon,Falco peregrinus,en,Peregrine Falcon,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000034,canonical_taxon,Falco peregrinus,nl,Slechtvalk,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000035,canonical_taxon,Strix aluco,en,Tawny Owl,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000035,canonical_taxon,Strix aluco,nl,Bosuil,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000036,canonical_taxon,Asio otus,en,Long-eared Owl,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000036,canonical_taxon,Asio otus,nl,Ransuil,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000037,canonical_taxon,Athene noctua,fr,Chevêche d'Athéna,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000037,canonical_taxon,Athene noctua,en,Little Owl,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000037,canonical_taxon,Athene noctua,nl,Steenuil,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000038,canonical_taxon,Picus viridis,en,Eurasian Green Woodpecker,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000038,canonical_taxon,Picus viridis,nl,Groene specht,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000039,canonical_taxon,Dendrocopos major,fr,Pic épeiche,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000039,canonical_taxon,Dendrocopos major,en,Great Spotted Woodpecker,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000039,canonical_taxon,Dendrocopos major,nl,Grote bonte specht,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000040,canonical_taxon,Dryocopus martius,en,Black Woodpecker,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000040,canonical_taxon,Dryocopus martius,nl,Zwarte Specht,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000041,canonical_taxon,Apus apus,en,Common Swift,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000041,canonical_taxon,Apus apus,nl,Gierzwaluw,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000042,canonical_taxon,Delichon urbicum,fr,Hirondelle de fenêtre,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000042,canonical_taxon,Delichon urbicum,en,Western House Martin,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000042,canonical_taxon,Delichon urbicum,nl,Huiszwaluw,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000043,canonical_taxon,Hirundo rustica,en,Barn Swallow,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000043,canonical_taxon,Hirundo rustica,nl,Boerenzwaluw,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000044,canonical_taxon,Riparia riparia,en,Bank Swallow,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000044,canonical_taxon,Riparia riparia,nl,Oeverzwaluw,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000045,canonical_taxon,Alauda arvensis,en,Eurasian Skylark,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000045,canonical_taxon,Alauda arvensis,nl,Veldleeuwerik,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000047,canonical_taxon,Lanius collurio,fr,Pie-grièche écorcheur,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000047,canonical_taxon,Lanius collurio,en,Red-backed Shrike,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000047,canonical_taxon,Lanius collurio,nl,Grauwe Klauwier,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000048,canonical_taxon,Coloeus monedula,en,Eurasian Jackdaw,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000048,canonical_taxon,Coloeus monedula,nl,Kauw,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000049,canonical_taxon,Corvus frugilegus,en,Rook,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000049,canonical_taxon,Corvus frugilegus,nl,Roek,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000070,canonical_taxon,Podiceps cristatus,fr,Grèbe huppé,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000070,canonical_taxon,Podiceps cristatus,en,Great Crested Grebe,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000070,canonical_taxon,Podiceps cristatus,nl,Fuut,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000079,canonical_taxon,Streptopelia decaocto,en,Eurasian Collared-Dove,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-taxon:birds:000079,canonical_taxon,Streptopelia decaocto,nl,Turkse Tortel,inaturalist,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:10069,referenced_taxon,Fringilla montifringilla,en,Brambling,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:10070,referenced_taxon,Fringilla coelebs,en,Common Chaffinch,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:10070,referenced_taxon,Fringilla coelebs,nl,Vink,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:10325,referenced_taxon,Euphagus cyanocephalus,en,Brewer's Blackbird,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:10411,referenced_taxon,Loxia curvirostra,en,Red Crossbill,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:116802,referenced_taxon,Acrocephalus palustris,en,Marsh Warbler,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:116999,referenced_taxon,Pandion haliaetus,en,Osprey,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:117016,referenced_taxon,Phylloscopus collybita,en,Common Chiffchaff,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:117028,referenced_taxon,Phylloscopus inornatus,en,Yellow-browed Warbler,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:117097,referenced_taxon,Regulus ignicapilla,en,Common Firecrest,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:11901,referenced_taxon,Hirundo rustica,en,Barn Swallow,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:11901,referenced_taxon,Hirundo rustica,nl,Boerenzwaluw,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:11941,referenced_taxon,Riparia riparia,en,Bank Swallow,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:11941,referenced_taxon,Riparia riparia,nl,Oeverzwaluw,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:12021,referenced_taxon,Lanius cristatus,en,Brown Shrike,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:12707,referenced_taxon,Turdus pilaris,en,Fieldfare,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:12716,referenced_taxon,Turdus merula,en,Eurasian Blackbird,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:12716,referenced_taxon,Turdus merula,nl,Merel,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:12727,referenced_taxon,Turdus migratorius,en,American Robin,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:12735,referenced_taxon,Turdus viscivorus,en,Mistle Thrush,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:12748,referenced_taxon,Turdus philomelos,en,Song Thrush,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:12748,referenced_taxon,Turdus philomelos,nl,Zanglijster,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:12749,referenced_taxon,Turdus iliacus,en,Redwing,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:12781,referenced_taxon,Turdus fuscater,en,Great Thrush,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:12878,referenced_taxon,Catharus ustulatus,en,Swainson's Thrush,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:12890,referenced_taxon,Catharus guttatus,en,Hermit Thrush,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:1289470,referenced_taxon,Curruca communis,en,Common Whitethroat,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:12992,referenced_taxon,Phoenicurus phoenicurus,en,Common Redstart,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:13000,referenced_taxon,Phoenicurus ochruros,en,Black Redstart,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:13000,referenced_taxon,Phoenicurus ochruros,nl,Zwarte Roodstaart,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:13079,referenced_taxon,Luscinia megarhynchos,en,Common Nightingale,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:13094,referenced_taxon,Erithacus rubecula,en,European Robin,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:13094,referenced_taxon,Erithacus rubecula,nl,Roodborst,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:13632,referenced_taxon,Baeolophus bicolor,en,Tufted Titmouse,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:13633,referenced_taxon,Baeolophus inornatus,en,Oak Titmouse,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:13688,referenced_taxon,Motacilla cinerea,en,Grey Wagtail,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:13711,referenced_taxon,Anthus trivialis,en,Tree Pipit,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:13729,referenced_taxon,Anthus pratensis,en,Meadow Pipit,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:13851,referenced_taxon,Passer montanus,en,Eurasian Tree Sparrow,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:13858,referenced_taxon,Passer domesticus,en,House Sparrow,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:13858,referenced_taxon,Passer domesticus,nl,Huismus,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:13988,referenced_taxon,Prunella modularis,en,Dunnock,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:14076,referenced_taxon,Petronia petronia,en,Rock Sparrow,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:143853,referenced_taxon,Pica hudsonia,en,Black-billed Magpie,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:144242,referenced_taxon,Picus sharpei,en,Iberian Green Woodpecker,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:144243,referenced_taxon,Picus viridis,en,Eurasian Green Woodpecker,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:144243,referenced_taxon,Picus viridis,nl,Groene specht,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:144294,referenced_taxon,Stercorarius chilensis,en,Chilean Skua,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:144455,referenced_taxon,Ardea alba,en,Great Egret,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:144508,referenced_taxon,Chroicocephalus cirrocephalus,en,Gray-hooded Gull,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:144510,referenced_taxon,Chroicocephalus ridibundus,en,Black-headed Gull,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:144809,referenced_taxon,Poecile palustris,en,Marsh Tit,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:144815,referenced_taxon,Poecile atricapillus,en,Black-capped Chickadee,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:144823,referenced_taxon,Periparus ater,en,Coal Tit,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:144830,referenced_taxon,Lophophanes cristatus,en,Crested Tit,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:144849,referenced_taxon,Cyanistes caeruleus,fr,Mésange bleue,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:144849,referenced_taxon,Cyanistes caeruleus,en,Eurasian Blue Tit,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:144849,referenced_taxon,Cyanistes caeruleus,nl,Pimpelmees,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:144882,referenced_taxon,Troglodytes pacificus,en,Pacific Wren,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:145303,referenced_taxon,Spinus spinus,en,Eurasian Siskin,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:145310,referenced_taxon,Spinus tristis,en,American Goldfinch,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:145360,referenced_taxon,Chloris chloris,fr,Verdier d'Europe,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:145360,referenced_taxon,Chloris chloris,en,European Greenfinch,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:145360,referenced_taxon,Chloris chloris,nl,Groenling,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:145363,referenced_taxon,Troglodytes troglodytes,en,Eurasian Wren,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:145363,referenced_taxon,Troglodytes troglodytes,nl,Winterkoning,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:1454382,referenced_taxon,Nannopterum auritum,en,Double-crested Cormorant,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:1455918,referenced_taxon,Spilopelia chinensis,en,Spotted Dove,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:14849,referenced_taxon,Sturnus unicolor,en,Spotless Starling,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:14850,referenced_taxon,Sturnus vulgaris,fr,Étourneau sansonnet,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:14850,referenced_taxon,Sturnus vulgaris,en,European Starling,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:14850,referenced_taxon,Sturnus vulgaris,nl,Spreeuw,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:15282,referenced_taxon,Sylvia atricapilla,fr,Fauvette à tête noire,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:15282,referenced_taxon,Sylvia atricapilla,en,Eurasian Blackcap,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:15282,referenced_taxon,Sylvia atricapilla,nl,Zwartkop,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:15302,referenced_taxon,Sylvia borin,en,Garden Warbler,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:1579015,referenced_taxon,Astur gentilis,en,Eurasian Goshawk,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:1587553,referenced_taxon,Larus smithsonianus × glaucescens,en,Cook Inlet Gull,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:1667146,referenced_taxon,Anser caerulescens × Branta canadensis,en,Snow × Canada Goose,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:1667148,referenced_taxon,Anser anser × Branta canadensis,en,Greylag × Canada Goose,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:17835,referenced_taxon,Dryocopus martius,en,Black Woodpecker,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:17835,referenced_taxon,Dryocopus martius,nl,Zwarte Specht,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:17871,referenced_taxon,Dendrocopos major,fr,Pic épeiche,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:17871,referenced_taxon,Dendrocopos major,en,Great Spotted Woodpecker,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:17871,referenced_taxon,Dendrocopos major,nl,Grote bonte specht,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:18204,referenced_taxon,Melanerpes erythrocephalus,en,Red-headed Woodpecker,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:18205,referenced_taxon,Melanerpes carolinus,en,Red-bellied Woodpecker,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:18236,referenced_taxon,Colaptes auratus,en,Northern Flicker,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:18911,referenced_taxon,Psittacula krameri,en,Rose-ringed Parakeet,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:1907,referenced_taxon,Cuculus canorus,en,Common Cuckoo,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:19898,referenced_taxon,Strix aluco,en,Tawny Owl,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:19898,referenced_taxon,Strix aluco,nl,Bosuil,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:199913,referenced_taxon,Buteo plagiatus,en,Gray Hawk,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:199916,referenced_taxon,Setophaga caerulescens,en,Black-throated Blue Warbler,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:19998,referenced_taxon,Athene noctua,fr,Chevêche d'Athéna,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:19998,referenced_taxon,Athene noctua,en,Little Owl,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:19998,referenced_taxon,Athene noctua,nl,Steenuil,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:20059,referenced_taxon,Bubo bubo,en,Eurasian Eagle-Owl,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:201035,referenced_taxon,Clanga clanga,en,Greater Spotted Eagle,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:201041,referenced_taxon,Rupornis magnirostris,en,Roadside Hawk,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:201282,referenced_taxon,Gallinula chloropus,fr,Gallinule poule-d'eau,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:201282,referenced_taxon,Gallinula chloropus,en,Common Moorhen,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:201282,referenced_taxon,Gallinula chloropus,nl,Waterhoen,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:20307,referenced_taxon,Asio otus,en,Long-eared Owl,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:20307,referenced_taxon,Asio otus,nl,Ransuil,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:20315,referenced_taxon,Asio flammeus,en,Short-eared Owl,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:203153,referenced_taxon,Parus major,fr,Mésange charbonnière,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:203153,referenced_taxon,Parus major,en,Great Tit,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:203153,referenced_taxon,Parus major,nl,Koolmees,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:20445,referenced_taxon,Tyto alba,en,Western Barn Owl,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:204456,referenced_taxon,Acrocephalus arundinaceus,en,Great Reed Warbler,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:204472,referenced_taxon,Buteo buteo,en,Common Buzzard,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:204472,referenced_taxon,Buteo buteo,nl,Buizerd,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:204496,referenced_taxon,Corvus corone,en,Carrion Crow,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:204496,referenced_taxon,Corvus corone,nl,Zwarte Kraai,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:204533,referenced_taxon,Larus argentatus,fr,Goéland argenté,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:204533,referenced_taxon,Larus argentatus,en,European Herring Gull,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:204533,referenced_taxon,Larus argentatus,nl,Zilvermeeuw,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:204545,referenced_taxon,Motacilla flava,en,Western Yellow Wagtail,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:204556,referenced_taxon,Oriolus oriolus,en,Eurasian Golden Oriole,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:2599,referenced_taxon,Alcedo atthis,en,Common Kingfisher,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:2938,referenced_taxon,Streptopelia turtur,en,European Turtle-Dove,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:2969,referenced_taxon,Streptopelia decaocto,en,Eurasian Collared-Dove,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:2969,referenced_taxon,Streptopelia decaocto,nl,Turkse Tortel,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:3017,referenced_taxon,Columba livia,en,Rock Pigeon,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:3033,referenced_taxon,Columba oenas,en,Stock Dove,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:3048,referenced_taxon,Columba palumbus,en,Common Wood-Pigeon,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:3048,referenced_taxon,Columba palumbus,nl,Houtduif,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:3108,referenced_taxon,Patagioenas fasciata,en,Band-tailed Pigeon,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:326092,referenced_taxon,Anas platyrhynchos × Cairina moschata,en,Mallard × Muscovy Duck,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:336399,referenced_taxon,Coloeus monedula,en,Eurasian Jackdaw,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:336399,referenced_taxon,Coloeus monedula,nl,Kauw,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:339691,referenced_taxon,Parus cinereus,en,Asian Tit,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:34,referenced_taxon,Grus americana,en,Whooping Crane,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:3439,referenced_taxon,Zenaida auriculata,en,Eared Dove,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:3454,referenced_taxon,Zenaida macroura,en,Mourning Dove,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:357,referenced_taxon,Gallinula tenebrosa,en,Dusky Moorhen,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:3731,referenced_taxon,Platalea leucorodia,en,Eurasian Spoonbill,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:41,referenced_taxon,Grus grus,en,Common Crane,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:410743,referenced_taxon,Anas superciliosa × platyrhynchos,en,Pacific Black Duck × Mallard,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:411086,referenced_taxon,Ardea ibis,en,Western Cattle-Egret,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:4234,referenced_taxon,Aechmophorus clarkii,en,Clark's Grebe,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:4237,referenced_taxon,Tachybaptus ruficollis,en,Little Grebe,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:4270,referenced_taxon,Phalacrocorax carbo,fr,Grand Cormoran,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:4270,referenced_taxon,Phalacrocorax carbo,en,Great Cormorant,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:4270,referenced_taxon,Phalacrocorax carbo,nl,Aalscholver,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:4273,referenced_taxon,Phalacrocorax sulcirostris,en,Little Black Cormorant,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:4311,referenced_taxon,Phalacrocorax fuscescens,en,Black-faced Cormorant,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:4349,referenced_taxon,Larus hyperboreus,en,Glaucous Gull,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:4356,referenced_taxon,Larus canus,en,Common Gull,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:4368,referenced_taxon,Larus marinus,en,Great Black-backed Gull,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:4381,referenced_taxon,Larus fuscus,en,Lesser Black-backed Gull,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:4389,referenced_taxon,Larus cachinnans,en,Caspian Gull,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:4643,referenced_taxon,Falco subbuteo,en,Eurasian Hobby,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:4647,referenced_taxon,Falco peregrinus,fr,Faucon pèlerin,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:4647,referenced_taxon,Falco peregrinus,en,Peregrine Falcon,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:4647,referenced_taxon,Falco peregrinus,nl,Slechtvalk,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:4658,referenced_taxon,Falco newtoni,en,Malagasy Kestrel,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:4672,referenced_taxon,Falco columbarius,en,Merlin,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:468988,referenced_taxon,Anas platyrhynchos × acuta,en,Mallard × Northern Pintail,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:472287,referenced_taxon,Anser anser × cygnoides,en,Greylag × Swan Goose,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:472766,referenced_taxon,Falco tinnunculus,fr,Faucon crécerelle,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:472766,referenced_taxon,Falco tinnunculus,en,Eurasian Kestrel,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:472766,referenced_taxon,Falco tinnunculus,nl,Torenvalk,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:473,referenced_taxon,Fulica americana,en,American Coot,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:4733,referenced_taxon,Ciconia ciconia,en,White Stork,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:4756,referenced_taxon,Cathartes aura,en,Turkey Vulture,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:478,referenced_taxon,Fulica alai,en,Hawaiian Coot,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:479,referenced_taxon,Fulica ardesiaca,en,Slate-colored Coot,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:482,referenced_taxon,Fulica atra,en,Eurasian Coot,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:482,referenced_taxon,Fulica atra,nl,Meerkoet,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:4843,referenced_taxon,Haematopus ostralegus,en,Eurasian Oystercatcher,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:4937,referenced_taxon,Egretta caerulea,en,Little Blue Heron,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:4951,referenced_taxon,Ardea purpurea,en,Purple Heron,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:4952,referenced_taxon,Ardea cocoi,en,Cocoi Heron,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:4954,referenced_taxon,Ardea cinerea,fr,Héron cendré,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:4954,referenced_taxon,Ardea cinerea,en,Grey Heron,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:4954,referenced_taxon,Ardea cinerea,nl,Blauwe Reiger,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:4956,referenced_taxon,Ardea herodias,en,Great Blue Heron,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:4966,referenced_taxon,Ardea pacifica,en,White-necked Heron,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:4972,referenced_taxon,Ardea melanocephala,en,Black-headed Heron,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:507881,referenced_taxon,Porphyriops melanops,en,Spot-flanked Gallinule,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:510458,referenced_taxon,Anas platyrhynchos × Netta rufina,en,Mallard × Red-crested Pochard,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:5106,referenced_taxon,Accipiter nisus,fr,Épervier d'Europe,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:5106,referenced_taxon,Accipiter nisus,en,Eurasian Sparrowhawk,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:5106,referenced_taxon,Accipiter nisus,nl,Sperwer,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:513926,referenced_taxon,Rallus aquaticus,en,Water Rail,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:5173,referenced_taxon,Circus aeruginosus,en,Western Marsh Harrier,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:5200,referenced_taxon,Buteo lagopus,en,Rough-legged Hawk,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:5227,referenced_taxon,Buteo platypterus,en,Broad-winged Hawk,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:5267,referenced_taxon,Milvus milvus,en,Red Kite,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:5325,referenced_taxon,Pernis apivorus,en,European Honey-buzzard,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:558426,referenced_taxon,Anser caerulescens,en,Snow Goose,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:558427,referenced_taxon,Anser rossii,en,Ross's Goose,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:558429,referenced_taxon,Spatula querquedula,en,Garganey,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:558433,referenced_taxon,Spatula discors,en,Blue-winged Teal,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:558438,referenced_taxon,Spatula clypeata,en,Northern Shoveler,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:558439,referenced_taxon,Mareca strepera,en,Gadwall,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:558442,referenced_taxon,Mareca sibilatrix,en,Chiloe Wigeon,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:59202,referenced_taxon,Larus michahellis,fr,Goéland leucophée,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:59202,referenced_taxon,Larus michahellis,en,Yellow-legged Gull,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:59202,referenced_taxon,Larus michahellis,nl,Geelpootmeeuw,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:64705,referenced_taxon,Delichon urbicum,fr,Hirondelle de fenêtre,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:64705,referenced_taxon,Delichon urbicum,en,Western House Martin,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:64705,referenced_taxon,Delichon urbicum,nl,Huiszwaluw,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:6571,referenced_taxon,Chaetura pelagica,en,Chimney Swift,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:6638,referenced_taxon,Apus apus,en,Common Swift,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:6638,referenced_taxon,Apus apus,nl,Gierzwaluw,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:6916,referenced_taxon,Cygnus cygnus,en,Whooper Swan,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:6917,referenced_taxon,Cygnus columbianus,en,Tundra Swan,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:6930,referenced_taxon,Anas platyrhynchos,en,Mallard,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:6930,referenced_taxon,Anas platyrhynchos,nl,Wilde Eend,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:6990,referenced_taxon,Bucephala clangula,en,Common Goldeneye,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:7008,referenced_taxon,Anser indicus,en,Bar-headed Goose,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:7014,referenced_taxon,Anser cygnoides,en,Swan Goose,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:7018,referenced_taxon,Anser anser,fr,Oie cendrée,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:7018,referenced_taxon,Anser anser,en,Greylag Goose,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:7018,referenced_taxon,Anser anser,nl,Grauwe Gans,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:7019,referenced_taxon,Anser albifrons,en,Greater White-fronted Goose,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:7045,referenced_taxon,Aythya ferina,en,Common Pochard,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:7067,referenced_taxon,Tadorna tadorna,en,Common Shelduck,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:7089,referenced_taxon,Branta canadensis,en,Canada Goose,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:7101,referenced_taxon,Branta leucopsis,en,Barnacle Goose,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:7104,referenced_taxon,Branta sandvicensis,en,Hawaiian Goose,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:7120,referenced_taxon,Cairina moschata,en,Muscovy Duck,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:7122,referenced_taxon,Netta rufina,en,Red-crested Pochard,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:7123,referenced_taxon,Netta erythrophthalma,en,Southern Pochard,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:7192,referenced_taxon,Mergellus albellus,en,Smew,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:72486,referenced_taxon,Alopochen aegyptiaca,en,Egyptian Goose,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:72502,referenced_taxon,Anas chlorotis,en,Brown Teal,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:72994,referenced_taxon,Lophonetta specularioides,en,Crested Duck,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:73542,referenced_taxon,Turdus flavipes,en,Yellow-legged Thrush,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:792977,referenced_taxon,Dryobates minor,en,Lesser Spotted Woodpecker,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:792985,referenced_taxon,Dendrocoptes medius,en,Middle Spotted Woodpecker,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:792988,referenced_taxon,Dryobates pubescens,en,Downy Woodpecker,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:793469,referenced_taxon,Regulus regulus,en,Goldcrest,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:8001,referenced_taxon,Corvus ossifragus,en,Fish Crow,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:8010,referenced_taxon,Corvus corax,en,Common Raven,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:8029,referenced_taxon,Corvus frugilegus,en,Rook,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:8029,referenced_taxon,Corvus frugilegus,nl,Roek,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:8088,referenced_taxon,Garrulus glandarius,fr,Geai des chênes,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:8088,referenced_taxon,Garrulus glandarius,en,Eurasian Jay,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:8088,referenced_taxon,Garrulus glandarius,nl,Gaai,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:8143,referenced_taxon,Rhipidura leucophrys,en,Willie Wagtail,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:827372,referenced_taxon,Anas diazi,en,Mexican Duck,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:827401,referenced_taxon,Pica serica,en,Oriental Magpie,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:8423,referenced_taxon,Strepera graculina,en,Pied Currawong,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:8575,referenced_taxon,Gymnorhina tibicen,en,Australian Magpie,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:891696,referenced_taxon,Pica pica,en,Eurasian Magpie,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:891696,referenced_taxon,Pica pica,nl,Ekster,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:9195,referenced_taxon,Emberiza citrinella,en,Yellowhammer,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:9236,referenced_taxon,Serinus serinus,en,European Serin,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:9246,referenced_taxon,Serinus canaria,en,Island Canary,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:9398,referenced_taxon,Carduelis carduelis,fr,Chardonneret élégant,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:9398,referenced_taxon,Carduelis carduelis,en,European Goldfinch,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:9398,referenced_taxon,Carduelis carduelis,nl,Putter,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:9462,referenced_taxon,Pyrrhula pyrrhula,en,Eurasian Bullfinch,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:979813,referenced_taxon,Microcarbo pygmaeus,en,Pygmy Cormorant,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
-reftaxon:inaturalist:981,referenced_taxon,Phasianus colchicus,en,Ring-necked Pheasant,manual_or_curated_existing,0,high,displayable_curated,,source-attested by localized-name-source-policy-v1,ready
+taxon:birds:000001,canonical_taxon,Columba palumbus,fr,Palombe,inaturalist:all_names,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000001,canonical_taxon,Columba palumbus,en,Common Wood-Pigeon,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000001,canonical_taxon,Columba palumbus,nl,Houtduif,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000002,canonical_taxon,Corvus corone,fr,Corbeau corneille,inaturalist:all_names,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000002,canonical_taxon,Corvus corone,en,Carrion Crow,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000002,canonical_taxon,Corvus corone,nl,Zwarte Kraai,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000003,canonical_taxon,Cyanistes caeruleus,fr,Mésange bleue,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000003,canonical_taxon,Cyanistes caeruleus,nl,Pimpelmees,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000004,canonical_taxon,Erithacus rubecula,fr,Rouge-gorge familier,inaturalist:all_names,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000004,canonical_taxon,Erithacus rubecula,nl,Roodborst,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000005,canonical_taxon,Fringilla coelebs,fr,Pinson des arbres,inaturalist:all_names,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000005,canonical_taxon,Fringilla coelebs,nl,Vink,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000006,canonical_taxon,Garrulus glandarius,fr,Geai des chênes,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000006,canonical_taxon,Garrulus glandarius,nl,Gaai,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000007,canonical_taxon,Motacilla alba,fr,Bergeronnette grise,inaturalist:all_names,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000007,canonical_taxon,Motacilla alba,nl,Witte kwikstaart,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000008,canonical_taxon,Parus major,fr,Mésange charbonnière,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000008,canonical_taxon,Parus major,nl,Koolmees,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000009,canonical_taxon,Passer domesticus,fr,Moineau domestique,inaturalist:all_names,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000009,canonical_taxon,Passer domesticus,nl,Huismus,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000010,canonical_taxon,Pica pica,fr,Pie bavarde,inaturalist:all_names,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000010,canonical_taxon,Pica pica,nl,Ekster,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000011,canonical_taxon,Sturnus vulgaris,fr,Étourneau sansonnet,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000011,canonical_taxon,Sturnus vulgaris,nl,Spreeuw,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000012,canonical_taxon,Sylvia atricapilla,fr,Fauvette à tête noire,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000012,canonical_taxon,Sylvia atricapilla,nl,Zwartkop,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000013,canonical_taxon,Troglodytes troglodytes,fr,Troglodyte mignon,inaturalist:all_names,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000013,canonical_taxon,Troglodytes troglodytes,nl,Winterkoning,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000014,canonical_taxon,Turdus merula,fr,Merle noir,inaturalist:all_names,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000014,canonical_taxon,Turdus merula,nl,Merel,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000015,canonical_taxon,Turdus philomelos,fr,Grive chanteuse,inaturalist:all_names,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000015,canonical_taxon,Turdus philomelos,nl,Zanglijster,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000016,canonical_taxon,Carduelis carduelis,fr,Chardonneret élégant,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000017,canonical_taxon,Chloris chloris,fr,Verdier d'Europe,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000017,canonical_taxon,Chloris chloris,nl,Groenling,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000018,canonical_taxon,Acrocephalus scirpaceus,fr,Rousserolle africaine,inaturalist:all_names,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000018,canonical_taxon,Acrocephalus scirpaceus,nl,Kleine Karekiet,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000019,canonical_taxon,Coccothraustes coccothraustes,fr,Gros-bec casse-noyaux,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000019,canonical_taxon,Coccothraustes coccothraustes,en,Hawfinch,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000019,canonical_taxon,Coccothraustes coccothraustes,nl,Appelvink,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000020,canonical_taxon,Phoenicurus ochruros,fr,Rougequeue noir,inaturalist:all_names,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000020,canonical_taxon,Phoenicurus ochruros,en,Black Redstart,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000020,canonical_taxon,Phoenicurus ochruros,nl,Zwarte Roodstaart,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000021,canonical_taxon,Anas platyrhynchos,fr,Bourre,inaturalist:all_names,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000021,canonical_taxon,Anas platyrhynchos,nl,Wilde Eend,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000022,canonical_taxon,Anser anser,fr,Oie cendrée,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000022,canonical_taxon,Anser anser,nl,Grauwe Gans,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000023,canonical_taxon,Cygnus olor,en,Mute Swan,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000023,canonical_taxon,Cygnus olor,nl,Knobbelzwaan,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000024,canonical_taxon,Fulica atra,fr,Foulque macroule,inaturalist:all_names,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000024,canonical_taxon,Fulica atra,nl,Meerkoet,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000025,canonical_taxon,Gallinula chloropus,fr,Gallinule poule-d'eau,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000025,canonical_taxon,Gallinula chloropus,nl,Waterhoen,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000026,canonical_taxon,Larus michahellis,en,Yellow-legged Gull,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000026,canonical_taxon,Larus michahellis,nl,Geelpootmeeuw,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000027,canonical_taxon,Larus argentatus,fr,Goéland argenté,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000027,canonical_taxon,Larus argentatus,en,European Herring Gull,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000027,canonical_taxon,Larus argentatus,nl,Zilvermeeuw,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000028,canonical_taxon,Phalacrocorax carbo,fr,Grand Cormoran,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000028,canonical_taxon,Phalacrocorax carbo,nl,Aalscholver,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000029,canonical_taxon,Ardea cinerea,fr,Héron cendré,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000029,canonical_taxon,Ardea cinerea,nl,Blauwe Reiger,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000030,canonical_taxon,Egretta garzetta,fr,Aigrette garzette,inaturalist:all_names,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000030,canonical_taxon,Egretta garzetta,en,Little Egret,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000031,canonical_taxon,Buteo buteo,fr,Buse commune,inaturalist:all_names,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000031,canonical_taxon,Buteo buteo,nl,Buizerd,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000032,canonical_taxon,Accipiter nisus,en,Eurasian Sparrowhawk,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000032,canonical_taxon,Accipiter nisus,nl,Sperwer,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000033,canonical_taxon,Falco tinnunculus,nl,Torenvalk,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000034,canonical_taxon,Falco peregrinus,fr,Faucon pèlerin,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000034,canonical_taxon,Falco peregrinus,nl,Slechtvalk,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000035,canonical_taxon,Strix aluco,fr,Chat-huant,inaturalist:all_names,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000035,canonical_taxon,Strix aluco,en,Tawny Owl,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000035,canonical_taxon,Strix aluco,nl,Bosuil,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000036,canonical_taxon,Asio otus,fr,Hibou moyen-duc,inaturalist:all_names,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000036,canonical_taxon,Asio otus,nl,Ransuil,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000037,canonical_taxon,Athene noctua,fr,Chevêche d'Athéna,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000037,canonical_taxon,Athene noctua,nl,Steenuil,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000038,canonical_taxon,Picus viridis,fr,Pic vert,inaturalist:all_names,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000038,canonical_taxon,Picus viridis,en,Eurasian Green Woodpecker,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000038,canonical_taxon,Picus viridis,nl,Groene specht,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000039,canonical_taxon,Dendrocopos major,nl,Grote bonte specht,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000040,canonical_taxon,Dryocopus martius,fr,Pic noir,inaturalist:all_names,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000040,canonical_taxon,Dryocopus martius,en,Black Woodpecker,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000040,canonical_taxon,Dryocopus martius,nl,Zwarte Specht,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000041,canonical_taxon,Apus apus,fr,Martinet noir,inaturalist:all_names,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000041,canonical_taxon,Apus apus,en,Common Swift,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000041,canonical_taxon,Apus apus,nl,Gierzwaluw,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000042,canonical_taxon,Delichon urbicum,nl,Huiszwaluw,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000043,canonical_taxon,Hirundo rustica,fr,Hirondelle de cheminée,inaturalist:all_names,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000043,canonical_taxon,Hirundo rustica,nl,Boerenzwaluw,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000044,canonical_taxon,Riparia riparia,fr,Hirondelle de rivage,inaturalist:all_names,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000044,canonical_taxon,Riparia riparia,nl,Oeverzwaluw,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000045,canonical_taxon,Alauda arvensis,fr,Alouette des champs,inaturalist:all_names,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000045,canonical_taxon,Alauda arvensis,nl,Veldleeuwerik,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000047,canonical_taxon,Lanius collurio,fr,Pie-grièche écorcheur,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000047,canonical_taxon,Lanius collurio,nl,Grauwe Klauwier,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000048,canonical_taxon,Coloeus monedula,fr,Choucas des tours,inaturalist:all_names,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000048,canonical_taxon,Coloeus monedula,nl,Kauw,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000049,canonical_taxon,Corvus frugilegus,fr,Corbeau freux,inaturalist:all_names,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000049,canonical_taxon,Corvus frugilegus,en,Rook,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000049,canonical_taxon,Corvus frugilegus,nl,Roek,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000070,canonical_taxon,Podiceps cristatus,fr,Grèbe huppé,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000070,canonical_taxon,Podiceps cristatus,nl,Fuut,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000079,canonical_taxon,Streptopelia decaocto,fr,Tourterelle turque,inaturalist:all_names,1,source_attested,displayable_source_attested,system/source_policy,source-attested by localized-name-apply-plan-v1,ready
+taxon:birds:000079,canonical_taxon,Streptopelia decaocto,nl,Turkse Tortel,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:10069,referenced_taxon,Fringilla montifringilla,en,Brambling,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:10070,referenced_taxon,Fringilla coelebs,fr,Pinson des arbres,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:10070,referenced_taxon,Fringilla coelebs,nl,Vink,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:10325,referenced_taxon,Euphagus cyanocephalus,en,Brewer's Blackbird,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:10411,referenced_taxon,Loxia curvirostra,en,Red Crossbill,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:116802,referenced_taxon,Acrocephalus palustris,en,Marsh Warbler,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:116999,referenced_taxon,Pandion haliaetus,en,Osprey,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:117016,referenced_taxon,Phylloscopus collybita,en,Common Chiffchaff,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:117028,referenced_taxon,Phylloscopus inornatus,en,Yellow-browed Warbler,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:117097,referenced_taxon,Regulus ignicapilla,en,Common Firecrest,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:11901,referenced_taxon,Hirundo rustica,nl,Boerenzwaluw,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:11941,referenced_taxon,Riparia riparia,fr,Hirondelle de rivage,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:11941,referenced_taxon,Riparia riparia,nl,Oeverzwaluw,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:12021,referenced_taxon,Lanius cristatus,en,Brown Shrike,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:12707,referenced_taxon,Turdus pilaris,en,Fieldfare,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:12716,referenced_taxon,Turdus merula,fr,Merle noir,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:12716,referenced_taxon,Turdus merula,nl,Merel,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:12727,referenced_taxon,Turdus migratorius,en,American Robin,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:12735,referenced_taxon,Turdus viscivorus,en,Mistle Thrush,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:12748,referenced_taxon,Turdus philomelos,nl,Zanglijster,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:12749,referenced_taxon,Turdus iliacus,en,Redwing,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:12781,referenced_taxon,Turdus fuscater,en,Great Thrush,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:12878,referenced_taxon,Catharus ustulatus,en,Swainson's Thrush,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:12890,referenced_taxon,Catharus guttatus,en,Hermit Thrush,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:1289470,referenced_taxon,Curruca communis,en,Common Whitethroat,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:12992,referenced_taxon,Phoenicurus phoenicurus,en,Common Redstart,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:13000,referenced_taxon,Phoenicurus ochruros,fr,Rougequeue noir,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:13000,referenced_taxon,Phoenicurus ochruros,en,Black Redstart,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:13000,referenced_taxon,Phoenicurus ochruros,nl,Zwarte Roodstaart,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:13079,referenced_taxon,Luscinia megarhynchos,en,Common Nightingale,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:13094,referenced_taxon,Erithacus rubecula,nl,Roodborst,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:13632,referenced_taxon,Baeolophus bicolor,en,Tufted Titmouse,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:13633,referenced_taxon,Baeolophus inornatus,en,Oak Titmouse,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:13688,referenced_taxon,Motacilla cinerea,en,Grey Wagtail,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:13711,referenced_taxon,Anthus trivialis,en,Tree Pipit,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:13729,referenced_taxon,Anthus pratensis,en,Meadow Pipit,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:13851,referenced_taxon,Passer montanus,en,Eurasian Tree Sparrow,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:13858,referenced_taxon,Passer domesticus,fr,Moineau domestique,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:13858,referenced_taxon,Passer domesticus,nl,Huismus,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:13988,referenced_taxon,Prunella modularis,en,Dunnock,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:14076,referenced_taxon,Petronia petronia,en,Rock Sparrow,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:143853,referenced_taxon,Pica hudsonia,en,Black-billed Magpie,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:144242,referenced_taxon,Picus sharpei,en,Iberian Green Woodpecker,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:144243,referenced_taxon,Picus viridis,fr,Pic vert,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:144243,referenced_taxon,Picus viridis,en,Eurasian Green Woodpecker,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:144243,referenced_taxon,Picus viridis,nl,Groene specht,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:144294,referenced_taxon,Stercorarius chilensis,en,Chilean Skua,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:144455,referenced_taxon,Ardea alba,en,Great Egret,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:144508,referenced_taxon,Chroicocephalus cirrocephalus,en,Gray-hooded Gull,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:144510,referenced_taxon,Chroicocephalus ridibundus,en,Black-headed Gull,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:144809,referenced_taxon,Poecile palustris,en,Marsh Tit,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:144815,referenced_taxon,Poecile atricapillus,en,Black-capped Chickadee,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:144823,referenced_taxon,Periparus ater,en,Coal Tit,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:144830,referenced_taxon,Lophophanes cristatus,en,Crested Tit,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:144849,referenced_taxon,Cyanistes caeruleus,fr,Mésange bleue,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:144849,referenced_taxon,Cyanistes caeruleus,nl,Pimpelmees,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:144882,referenced_taxon,Troglodytes pacificus,en,Pacific Wren,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:145303,referenced_taxon,Spinus spinus,en,Eurasian Siskin,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:145310,referenced_taxon,Spinus tristis,en,American Goldfinch,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:145360,referenced_taxon,Chloris chloris,fr,Verdier d'Europe,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:145360,referenced_taxon,Chloris chloris,nl,Groenling,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:145363,referenced_taxon,Troglodytes troglodytes,fr,Troglodyte mignon,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:145363,referenced_taxon,Troglodytes troglodytes,nl,Winterkoning,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:1454382,referenced_taxon,Nannopterum auritum,en,Double-crested Cormorant,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:1455918,referenced_taxon,Spilopelia chinensis,en,Spotted Dove,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:14849,referenced_taxon,Sturnus unicolor,en,Spotless Starling,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:14850,referenced_taxon,Sturnus vulgaris,fr,Étourneau sansonnet,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:14850,referenced_taxon,Sturnus vulgaris,nl,Spreeuw,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:15282,referenced_taxon,Sylvia atricapilla,fr,Fauvette à tête noire,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:15282,referenced_taxon,Sylvia atricapilla,nl,Zwartkop,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:15302,referenced_taxon,Sylvia borin,en,Garden Warbler,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:1579015,referenced_taxon,Astur gentilis,en,Eurasian Goshawk,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:1587553,referenced_taxon,Larus smithsonianus × glaucescens,en,Cook Inlet Gull,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:1667146,referenced_taxon,Anser caerulescens × Branta canadensis,en,Snow × Canada Goose,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:1667148,referenced_taxon,Anser anser × Branta canadensis,en,Greylag × Canada Goose,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:17835,referenced_taxon,Dryocopus martius,fr,Pic noir,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:17835,referenced_taxon,Dryocopus martius,en,Black Woodpecker,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:17835,referenced_taxon,Dryocopus martius,nl,Zwarte Specht,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:17871,referenced_taxon,Dendrocopos major,nl,Grote bonte specht,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:18204,referenced_taxon,Melanerpes erythrocephalus,en,Red-headed Woodpecker,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:18205,referenced_taxon,Melanerpes carolinus,en,Red-bellied Woodpecker,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:18236,referenced_taxon,Colaptes auratus,en,Northern Flicker,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:18911,referenced_taxon,Psittacula krameri,en,Rose-ringed Parakeet,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:1907,referenced_taxon,Cuculus canorus,en,Common Cuckoo,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:19898,referenced_taxon,Strix aluco,en,Tawny Owl,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:19898,referenced_taxon,Strix aluco,nl,Bosuil,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:199913,referenced_taxon,Buteo plagiatus,en,Gray Hawk,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:199916,referenced_taxon,Setophaga caerulescens,en,Black-throated Blue Warbler,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:19998,referenced_taxon,Athene noctua,fr,Chevêche d'Athéna,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:19998,referenced_taxon,Athene noctua,nl,Steenuil,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:20059,referenced_taxon,Bubo bubo,en,Eurasian Eagle-Owl,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:201035,referenced_taxon,Clanga clanga,en,Greater Spotted Eagle,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:201041,referenced_taxon,Rupornis magnirostris,en,Roadside Hawk,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:201282,referenced_taxon,Gallinula chloropus,fr,Gallinule poule-d'eau,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:201282,referenced_taxon,Gallinula chloropus,nl,Waterhoen,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:20307,referenced_taxon,Asio otus,fr,Hibou moyen-duc,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:20307,referenced_taxon,Asio otus,nl,Ransuil,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:20315,referenced_taxon,Asio flammeus,en,Short-eared Owl,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:203153,referenced_taxon,Parus major,fr,Mésange charbonnière,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:203153,referenced_taxon,Parus major,nl,Koolmees,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:20445,referenced_taxon,Tyto alba,en,Western Barn Owl,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:204456,referenced_taxon,Acrocephalus arundinaceus,en,Great Reed Warbler,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:204472,referenced_taxon,Buteo buteo,nl,Buizerd,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:204496,referenced_taxon,Corvus corone,en,Carrion Crow,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:204496,referenced_taxon,Corvus corone,nl,Zwarte Kraai,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:204533,referenced_taxon,Larus argentatus,fr,Goéland argenté,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:204533,referenced_taxon,Larus argentatus,en,European Herring Gull,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:204533,referenced_taxon,Larus argentatus,nl,Zilvermeeuw,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:204545,referenced_taxon,Motacilla flava,en,Western Yellow Wagtail,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:204556,referenced_taxon,Oriolus oriolus,en,Eurasian Golden Oriole,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:2599,referenced_taxon,Alcedo atthis,en,Common Kingfisher,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:2938,referenced_taxon,Streptopelia turtur,en,European Turtle-Dove,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:2969,referenced_taxon,Streptopelia decaocto,fr,Tourterelle turque,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:2969,referenced_taxon,Streptopelia decaocto,nl,Turkse Tortel,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:3017,referenced_taxon,Columba livia,en,Rock Pigeon,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:3033,referenced_taxon,Columba oenas,en,Stock Dove,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:3048,referenced_taxon,Columba palumbus,en,Common Wood-Pigeon,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:3048,referenced_taxon,Columba palumbus,nl,Houtduif,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:3108,referenced_taxon,Patagioenas fasciata,en,Band-tailed Pigeon,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:326092,referenced_taxon,Anas platyrhynchos × Cairina moschata,en,Mallard × Muscovy Duck,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:336399,referenced_taxon,Coloeus monedula,fr,Choucas des tours,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:336399,referenced_taxon,Coloeus monedula,nl,Kauw,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:339691,referenced_taxon,Parus cinereus,en,Asian Tit,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:34,referenced_taxon,Grus americana,en,Whooping Crane,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:3439,referenced_taxon,Zenaida auriculata,en,Eared Dove,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:3454,referenced_taxon,Zenaida macroura,en,Mourning Dove,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:357,referenced_taxon,Gallinula tenebrosa,en,Dusky Moorhen,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:3731,referenced_taxon,Platalea leucorodia,en,Eurasian Spoonbill,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:41,referenced_taxon,Grus grus,en,Common Crane,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:410743,referenced_taxon,Anas superciliosa × platyrhynchos,en,Pacific Black Duck × Mallard,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:411086,referenced_taxon,Ardea ibis,en,Western Cattle-Egret,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:4234,referenced_taxon,Aechmophorus clarkii,en,Clark's Grebe,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:4237,referenced_taxon,Tachybaptus ruficollis,en,Little Grebe,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:4270,referenced_taxon,Phalacrocorax carbo,fr,Grand Cormoran,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:4270,referenced_taxon,Phalacrocorax carbo,nl,Aalscholver,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:4273,referenced_taxon,Phalacrocorax sulcirostris,en,Little Black Cormorant,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:4311,referenced_taxon,Phalacrocorax fuscescens,en,Black-faced Cormorant,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:4349,referenced_taxon,Larus hyperboreus,en,Glaucous Gull,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:4356,referenced_taxon,Larus canus,en,Common Gull,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:4368,referenced_taxon,Larus marinus,en,Great Black-backed Gull,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:4381,referenced_taxon,Larus fuscus,en,Lesser Black-backed Gull,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:4389,referenced_taxon,Larus cachinnans,en,Caspian Gull,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:4643,referenced_taxon,Falco subbuteo,en,Eurasian Hobby,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:4647,referenced_taxon,Falco peregrinus,fr,Faucon pèlerin,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:4647,referenced_taxon,Falco peregrinus,nl,Slechtvalk,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:4658,referenced_taxon,Falco newtoni,en,Malagasy Kestrel,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:4672,referenced_taxon,Falco columbarius,en,Merlin,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:468988,referenced_taxon,Anas platyrhynchos × acuta,en,Mallard × Northern Pintail,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:472287,referenced_taxon,Anser anser × cygnoides,en,Greylag × Swan Goose,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:472766,referenced_taxon,Falco tinnunculus,nl,Torenvalk,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:473,referenced_taxon,Fulica americana,en,American Coot,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:4733,referenced_taxon,Ciconia ciconia,en,White Stork,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:4756,referenced_taxon,Cathartes aura,en,Turkey Vulture,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:478,referenced_taxon,Fulica alai,en,Hawaiian Coot,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:479,referenced_taxon,Fulica ardesiaca,en,Slate-colored Coot,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:482,referenced_taxon,Fulica atra,fr,Foulque macroule,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:482,referenced_taxon,Fulica atra,nl,Meerkoet,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:4843,referenced_taxon,Haematopus ostralegus,en,Eurasian Oystercatcher,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:4937,referenced_taxon,Egretta caerulea,en,Little Blue Heron,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:4951,referenced_taxon,Ardea purpurea,en,Purple Heron,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:4952,referenced_taxon,Ardea cocoi,en,Cocoi Heron,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:4954,referenced_taxon,Ardea cinerea,fr,Héron cendré,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:4954,referenced_taxon,Ardea cinerea,nl,Blauwe Reiger,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:4956,referenced_taxon,Ardea herodias,en,Great Blue Heron,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:4966,referenced_taxon,Ardea pacifica,en,White-necked Heron,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:4972,referenced_taxon,Ardea melanocephala,en,Black-headed Heron,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:507881,referenced_taxon,Porphyriops melanops,en,Spot-flanked Gallinule,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:510458,referenced_taxon,Anas platyrhynchos × Netta rufina,en,Mallard × Red-crested Pochard,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:5106,referenced_taxon,Accipiter nisus,en,Eurasian Sparrowhawk,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:5106,referenced_taxon,Accipiter nisus,nl,Sperwer,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:513926,referenced_taxon,Rallus aquaticus,en,Water Rail,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:5173,referenced_taxon,Circus aeruginosus,en,Western Marsh Harrier,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:5200,referenced_taxon,Buteo lagopus,en,Rough-legged Hawk,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:5227,referenced_taxon,Buteo platypterus,en,Broad-winged Hawk,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:5267,referenced_taxon,Milvus milvus,en,Red Kite,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:5325,referenced_taxon,Pernis apivorus,en,European Honey-buzzard,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:558426,referenced_taxon,Anser caerulescens,en,Snow Goose,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:558427,referenced_taxon,Anser rossii,en,Ross's Goose,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:558429,referenced_taxon,Spatula querquedula,en,Garganey,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:558433,referenced_taxon,Spatula discors,en,Blue-winged Teal,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:558438,referenced_taxon,Spatula clypeata,en,Northern Shoveler,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:558439,referenced_taxon,Mareca strepera,en,Gadwall,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:558442,referenced_taxon,Mareca sibilatrix,en,Chiloe Wigeon,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:59202,referenced_taxon,Larus michahellis,en,Yellow-legged Gull,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:59202,referenced_taxon,Larus michahellis,nl,Geelpootmeeuw,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:64705,referenced_taxon,Delichon urbicum,nl,Huiszwaluw,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:6571,referenced_taxon,Chaetura pelagica,en,Chimney Swift,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:6638,referenced_taxon,Apus apus,fr,Martinet noir,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:6638,referenced_taxon,Apus apus,en,Common Swift,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:6638,referenced_taxon,Apus apus,nl,Gierzwaluw,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:6916,referenced_taxon,Cygnus cygnus,en,Whooper Swan,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:6917,referenced_taxon,Cygnus columbianus,en,Tundra Swan,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:6930,referenced_taxon,Anas platyrhynchos,nl,Wilde Eend,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:6990,referenced_taxon,Bucephala clangula,en,Common Goldeneye,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:7008,referenced_taxon,Anser indicus,en,Bar-headed Goose,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:7014,referenced_taxon,Anser cygnoides,en,Swan Goose,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:7018,referenced_taxon,Anser anser,fr,Oie cendrée,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:7018,referenced_taxon,Anser anser,nl,Grauwe Gans,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:7019,referenced_taxon,Anser albifrons,en,Greater White-fronted Goose,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:7045,referenced_taxon,Aythya ferina,en,Common Pochard,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:7067,referenced_taxon,Tadorna tadorna,en,Common Shelduck,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:7089,referenced_taxon,Branta canadensis,en,Canada Goose,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:7101,referenced_taxon,Branta leucopsis,en,Barnacle Goose,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:7104,referenced_taxon,Branta sandvicensis,en,Hawaiian Goose,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:7120,referenced_taxon,Cairina moschata,en,Muscovy Duck,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:7122,referenced_taxon,Netta rufina,en,Red-crested Pochard,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:7123,referenced_taxon,Netta erythrophthalma,en,Southern Pochard,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:7192,referenced_taxon,Mergellus albellus,en,Smew,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:72486,referenced_taxon,Alopochen aegyptiaca,en,Egyptian Goose,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:72502,referenced_taxon,Anas chlorotis,en,Brown Teal,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:72994,referenced_taxon,Lophonetta specularioides,en,Crested Duck,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:73542,referenced_taxon,Turdus flavipes,en,Yellow-legged Thrush,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:792977,referenced_taxon,Dryobates minor,en,Lesser Spotted Woodpecker,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:792985,referenced_taxon,Dendrocoptes medius,en,Middle Spotted Woodpecker,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:792988,referenced_taxon,Dryobates pubescens,en,Downy Woodpecker,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:793469,referenced_taxon,Regulus regulus,en,Goldcrest,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:8001,referenced_taxon,Corvus ossifragus,en,Fish Crow,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:8010,referenced_taxon,Corvus corax,en,Common Raven,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:8029,referenced_taxon,Corvus frugilegus,fr,Corbeau freux,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:8029,referenced_taxon,Corvus frugilegus,en,Rook,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:8029,referenced_taxon,Corvus frugilegus,nl,Roek,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:8088,referenced_taxon,Garrulus glandarius,fr,Geai des chênes,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:8088,referenced_taxon,Garrulus glandarius,nl,Gaai,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:8143,referenced_taxon,Rhipidura leucophrys,en,Willie Wagtail,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:827372,referenced_taxon,Anas diazi,en,Mexican Duck,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:827401,referenced_taxon,Pica serica,en,Oriental Magpie,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:8423,referenced_taxon,Strepera graculina,en,Pied Currawong,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:8575,referenced_taxon,Gymnorhina tibicen,en,Australian Magpie,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:891696,referenced_taxon,Pica pica,fr,Pie bavarde,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:891696,referenced_taxon,Pica pica,nl,Ekster,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:9195,referenced_taxon,Emberiza citrinella,en,Yellowhammer,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:9236,referenced_taxon,Serinus serinus,en,European Serin,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:9246,referenced_taxon,Serinus canaria,en,Island Canary,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:9398,referenced_taxon,Carduelis carduelis,fr,Chardonneret élégant,inaturalist:all_names,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:9462,referenced_taxon,Pyrrhula pyrrhula,en,Eurasian Bullfinch,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:979813,referenced_taxon,Microcarbo pygmaeus,en,Pygmy Cormorant,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready
+reftaxon:inaturalist:981,referenced_taxon,Phasianus colchicus,en,Ring-necked Pheasant,manual_or_curated_existing,1,high,displayable_curated,,source-attested by localized-name-apply-plan-v1,ready

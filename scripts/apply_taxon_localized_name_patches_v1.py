@@ -8,12 +8,22 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from collections import Counter, defaultdict
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
 from jsonschema import Draft202012Validator
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(REPO_ROOT / "src"))
+
+from database_core.enrichment.localized_names import (  # noqa: E402
+    apply_plan_to_taxa,
+    build_localized_name_apply_plan,
+    write_plan_artifacts,
+)
 
 DEFAULT_PATCH_SCHEMA_PATH = Path("schemas/taxon_localized_name_patch_v1.schema.json")
 DEFAULT_PATCH_FILE = Path("data/manual/taxon_localized_name_patches_v1.json")
@@ -34,6 +44,12 @@ DEFAULT_OUTPUT_EVIDENCE_JSON = Path(
     "docs/audits/evidence/taxon_localized_names_sprint13_apply.json"
 )
 DEFAULT_OUTPUT_EVIDENCE_MD = Path("docs/audits/taxon-localized-names-sprint13-apply.md")
+DEFAULT_PLAN_CANONICAL_PATH = Path(
+    "data/enriched/taxon_localized_names_v1/canonical_taxa_patched.json"
+)
+DEFAULT_PLAN_REFERENCED_PATH = Path(
+    "data/enriched/taxon_localized_names_v1/referenced_taxa_patched.json"
+)
 
 LANGS = ("fr", "en", "nl")
 CONFIDENCE_LEVELS = {"high", "medium", "low"}
@@ -222,11 +238,11 @@ def apply_patches(
     }
     by_cscientific: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for item in canonical_work:
-        sci = str(
-            item.get("scientific_name")
-            or item.get("accepted_scientific_name")
-            or ""
-        ).strip().lower()
+        sci = (
+            str(item.get("scientific_name") or item.get("accepted_scientific_name") or "")
+            .strip()
+            .lower()
+        )
         if sci:
             by_cscientific[sci].append(item)
 
@@ -291,9 +307,7 @@ def apply_patches(
         confidence = str(patch.get("confidence", "")).strip().lower()
         reviewer = str(patch.get("reviewer", "")).strip()
         can_manual_override = (
-            source == "manual_override"
-            and reviewer
-            and confidence in CONFIDENCE_LEVELS
+            source == "manual_override" and reviewer and confidence in CONFIDENCE_LEVELS
         )
 
         lang_updates = 0
@@ -480,6 +494,76 @@ def run_apply(
     return evidence
 
 
+def run_apply_plan(
+    *,
+    dry_run: bool,
+    apply: bool,
+    output_canonical: Path,
+    output_referenced: Path,
+    output_evidence_json: Path,
+    output_evidence_md: Path,
+    canonical_path: Path = DEFAULT_PLAN_CANONICAL_PATH,
+    referenced_path: Path = DEFAULT_PLAN_REFERENCED_PATH,
+) -> dict[str, Any]:
+    plan = build_localized_name_apply_plan(Path.cwd())
+    write_plan_artifacts(plan, Path.cwd())
+
+    canonical_payload = load_json(canonical_path)
+    referenced_payload = load_json(referenced_path)
+    result = apply_plan_to_taxa(
+        plan,
+        canonical_payload.get("canonical_taxa", []),
+        referenced_payload.get("referenced_taxa", []),
+    )
+
+    mode = "dry_run" if (dry_run and not apply) else "apply"
+    evidence = {
+        "execution_status": "complete",
+        "run_date": datetime.now(UTC).isoformat(),
+        "mode": mode,
+        "source": "localized_name_apply_plan_v1",
+        "plan_hash": plan.plan_hash,
+        "applied_count": len(result["applied"]),
+        "skipped_count": len(result["skipped"]),
+        "conflict_count": 0,
+        "unresolved_count": 0,
+        "invalid_patch_count": 0,
+        "applied": result["applied"],
+        "skipped": result["skipped"],
+        "outputs": {"canonical": None, "referenced": None},
+    }
+
+    if apply and not dry_run:
+        dump_json(output_canonical, {"canonical_taxa": result["canonical_taxa"]})
+        dump_json(output_referenced, {"referenced_taxa": result["referenced_taxa"]})
+        evidence["outputs"] = {
+            "canonical": str(output_canonical),
+            "referenced": str(output_referenced),
+        }
+
+    dump_json(output_evidence_json, evidence)
+    lines = [
+        "---",
+        "owner: database",
+        "status: ready_for_validation",
+        f"last_reviewed: {evidence['run_date'][:10]}",
+        "source_of_truth: docs/audits/taxon-localized-names-source-attested-sprint14-apply.md",
+        "scope: sprint14b_localized_names",
+        "---",
+        "",
+        "# Taxon Localized Names Apply Plan",
+        "",
+        f"- mode: {mode}",
+        f"- plan_hash: {plan.plan_hash}",
+        f"- applied_count: {evidence['applied_count']}",
+        f"- skipped_count: {evidence['skipped_count']}",
+    ]
+    output_evidence_md.parent.mkdir(parents=True, exist_ok=True)
+    output_evidence_md.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    evidence["decision"] = "LOCALIZED_NAMES_SYSTEM_READY"
+    return evidence
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(
         description="Apply localized name patches (dry-run by default)"
@@ -499,6 +583,12 @@ def main() -> None:
     )
     parser.add_argument("--dry-run", action="store_true", default=True)
     parser.add_argument("--apply", action="store_true", default=False)
+    parser.add_argument(
+        "--use-localized-name-plan",
+        action="store_true",
+        default=False,
+        help="Apply/dry-run the unified localized_name_apply_plan_v1 instead of patch JSON.",
+    )
     parser.add_argument("--output-canonical", type=Path, default=DEFAULT_OUTPUT_CANONICAL)
     parser.add_argument("--output-referenced", type=Path, default=DEFAULT_OUTPUT_REFERENCED)
     parser.add_argument("--output-evidence-json", type=Path, default=DEFAULT_OUTPUT_EVIDENCE_JSON)
@@ -506,19 +596,29 @@ def main() -> None:
     args = parser.parse_args()
 
     effective_dry_run = args.dry_run and not args.apply
-    result = run_apply(
-        patch_file=args.patch_file,
-        patch_schema_path=args.patch_schema,
-        canonical_path=args.canonical_path,
-        referenced_candidates_path=args.referenced_candidates_path,
-        referenced_snapshot_path=args.referenced_snapshot_path,
-        dry_run=effective_dry_run,
-        apply=args.apply,
-        output_canonical=args.output_canonical,
-        output_referenced=args.output_referenced,
-        output_evidence_json=args.output_evidence_json,
-        output_evidence_md=args.output_evidence_md,
-    )
+    if args.use_localized_name_plan:
+        result = run_apply_plan(
+            dry_run=effective_dry_run,
+            apply=args.apply,
+            output_canonical=args.output_canonical,
+            output_referenced=args.output_referenced,
+            output_evidence_json=args.output_evidence_json,
+            output_evidence_md=args.output_evidence_md,
+        )
+    else:
+        result = run_apply(
+            patch_file=args.patch_file,
+            patch_schema_path=args.patch_schema,
+            canonical_path=args.canonical_path,
+            referenced_candidates_path=args.referenced_candidates_path,
+            referenced_snapshot_path=args.referenced_snapshot_path,
+            dry_run=effective_dry_run,
+            apply=args.apply,
+            output_canonical=args.output_canonical,
+            output_referenced=args.output_referenced,
+            output_evidence_json=args.output_evidence_json,
+            output_evidence_md=args.output_evidence_md,
+        )
 
     print(f"Decision: {result['decision']}")
     print(f"Mode: {result['mode']}")
