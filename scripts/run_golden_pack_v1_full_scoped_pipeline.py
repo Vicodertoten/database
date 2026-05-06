@@ -534,6 +534,88 @@ def _evaluate_policy_rows(ai_outputs: dict[str, Any]) -> tuple[list[dict[str, An
     return rows, eligible_count, borderline_count
 
 
+def _run_scoped_localized_names(run_dir: Path) -> dict[str, Any]:
+    plan = _load_json(mat.PLAN_PATH)
+    safe_targets = set(mat._safe_ready_targets_from_plan(plan))
+    filtered_items: list[dict[str, Any]] = []
+    fr_safe_count = 0
+    for item in plan.get("items", []):
+        if not isinstance(item, dict):
+            continue
+        tid = str(item.get("taxon_id") or "").strip()
+        locale = str(item.get("locale") or "").strip()
+        decision = str(item.get("decision") or "").strip()
+        chosen_value = str(item.get("chosen_value") or "").strip()
+        if tid not in safe_targets:
+            continue
+        filtered_items.append(item)
+        if locale == "fr" and decision in {"auto_accept", "same_value"} and chosen_value:
+            fr_safe_count += 1
+
+    apply_plan_payload = {
+        "schema_version": "golden_pack_scoped_localized_names_apply_plan.v1",
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "source_path": str(mat.PLAN_PATH.relative_to(REPO_ROOT)),
+        "safe_ready_targets_from_plan": sorted(safe_targets),
+        "items": filtered_items,
+        "non_actions": ["no_runtime_business_logic_shift"],
+    }
+    coverage_payload = {
+        "schema_version": "golden_pack_scoped_localized_names_coverage_report.v1",
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "safe_ready_target_count": len(safe_targets),
+        "fr_runtime_safe_label_count": fr_safe_count,
+        "fr_runtime_safe_complete": fr_safe_count >= 30,
+        "manual_overrides_path": "localized_names/manual_overrides.json",
+    }
+    _write_json(run_dir / "localized_names" / "apply_plan.json", apply_plan_payload)
+    _write_json(run_dir / "localized_names" / "coverage_report.json", coverage_payload)
+    return coverage_payload
+
+
+def _run_scoped_distractors(run_dir: Path) -> dict[str, Any]:
+    plan = _load_json(mat.PLAN_PATH)
+    distractor = _load_json(mat.DISTRACTOR_PATH)
+    safe_targets = set(mat._safe_ready_targets_from_plan(plan))
+
+    candidates = [
+        row
+        for row in distractor.get("projected_records", [])
+        if isinstance(row, dict) and str(row.get("target_canonical_taxon_id") or "").strip() in safe_targets
+    ]
+    projection = {
+        "schema_version": "golden_pack_scoped_distractor_projection.v1",
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "safe_ready_targets_from_plan": sorted(safe_targets),
+        "projected_records": candidates,
+        "non_actions": ["no_distractor_relationship_persistence"],
+    }
+    readiness_rows = []
+    by_target: dict[str, int] = {}
+    for row in candidates:
+        tid = str(row.get("target_canonical_taxon_id") or "").strip()
+        by_target[tid] = by_target.get(tid, 0) + 1
+    for tid in sorted(safe_targets):
+        cnt = by_target.get(tid, 0)
+        readiness_rows.append(
+            {
+                "taxon_ref": tid,
+                "candidate_count": cnt,
+                "label_safe_minimum_met": cnt >= 3,
+            }
+        )
+    readiness = {
+        "schema_version": "golden_pack_scoped_distractor_readiness.v1",
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "rows": readiness_rows,
+        "non_actions": ["no_distractor_relationship_persistence"],
+    }
+    _write_json(run_dir / "distractors" / "candidates.json", {"schema_version": "golden_pack_scoped_distractor_candidates.v1", "generated_at": datetime.now(timezone.utc).isoformat(), "rows": candidates})
+    _write_json(run_dir / "distractors" / "projection.json", projection)
+    _write_json(run_dir / "distractors" / "readiness.json", readiness)
+    return readiness
+
+
 def _run_local_stage(stage: str, run_dir: Path, state: dict[str, Any]) -> None:
     if stage == "scope_resolution":
         return
@@ -560,38 +642,36 @@ def _run_local_stage(stage: str, run_dir: Path, state: dict[str, Any]) -> None:
         return
 
     if stage == "localized_names":
-        plan = _load_json(mat.PLAN_PATH)
-        _write_json(
-            run_dir / "localized_names" / "localized_names_snapshot.json",
-            {
-                "schema_version": "golden_pack_scoped_localized_names_snapshot.v1",
-                "generated_at": datetime.now(timezone.utc).isoformat(),
-                "flags": FLAGS,
-                "source_path": str(mat.PLAN_PATH.relative_to(REPO_ROOT)),
-                "safe_ready_targets_from_plan": mat._safe_ready_targets_from_plan(plan),
-            },
-        )
+        coverage = _run_scoped_localized_names(run_dir)
+        state["metrics"]["fr_runtime_safe_label_count"] = int(coverage.get("fr_runtime_safe_label_count", 0))
         return
 
     if stage == "distractors_projection":
-        distractors = _load_json(mat.DISTRACTOR_PATH)
-        _write_json(
-            run_dir / "distractors" / "distractor_projection_snapshot.json",
-            {
-                "schema_version": "golden_pack_scoped_distractor_projection_snapshot.v1",
-                "generated_at": datetime.now(timezone.utc).isoformat(),
-                "flags": FLAGS,
-                "source_path": str(mat.DISTRACTOR_PATH.relative_to(REPO_ROOT)),
-                "projected_records_count": len(distractors.get("projected_records", [])),
-            },
-        )
+        readiness = _run_scoped_distractors(run_dir)
+        met = sum(1 for row in readiness["rows"] if row["label_safe_minimum_met"])
+        state["metrics"]["distractor_ready_count"] = met
         return
 
     if stage == "candidate_readiness":
+        required_inputs = [
+            run_dir / "policy" / "pmp_policy_projection.json",
+            run_dir / "localized_names" / "apply_plan.json",
+            run_dir / "localized_names" / "coverage_report.json",
+            run_dir / "distractors" / "candidates.json",
+            run_dir / "distractors" / "projection.json",
+            run_dir / "distractors" / "readiness.json",
+        ]
+        missing = [str(path.relative_to(run_dir)) for path in required_inputs if not path.exists()]
+        if missing:
+            raise RuntimeError("candidate_readiness_missing_inputs:" + ",".join(missing))
+
         candidate = local_canonical._build_candidate_readiness()
+        candidate["run_scoped_inputs"] = [str(path.relative_to(run_dir)) for path in required_inputs]
         _write_json(run_dir / "readiness" / "candidate_readiness.json", candidate)
 
         diagnosis = diagnose.build_diagnosis()
+        diagnosis["run_scoped_inputs"] = [str(path.relative_to(run_dir)) for path in required_inputs]
+        diagnosis["non_actions"] = ["no_distractor_relationship_persistence"]
         _write_json(run_dir / "reports" / "blocker_diagnosis.json", diagnosis)
 
         state["metrics"]["ready_count"] = int(candidate.get("summary", {}).get("golden_pack_ready_targets", 0))
@@ -821,9 +901,17 @@ def run_pipeline(
                 _persist_state(run_dir, manifest, stage_states, inventory, expected)
                 break
         else:
-            _run_local_stage(stage, run_dir, manifest)
-            row["status"] = "completed"
-            row["message"] = "completed"
+            try:
+                _run_local_stage(stage, run_dir, manifest)
+                row["status"] = "completed"
+                row["message"] = "completed"
+            except RuntimeError as exc:
+                row["status"] = "blocked_external"
+                row["message"] = str(exc)
+                manifest["status"] = "blocked_external"
+                manifest["updated_at"] = datetime.now(timezone.utc).isoformat()
+                _persist_state(run_dir, manifest, stage_states, inventory, expected)
+                break
 
         manifest["updated_at"] = datetime.now(timezone.utc).isoformat()
         _persist_state(run_dir, manifest, stage_states, inventory, expected)

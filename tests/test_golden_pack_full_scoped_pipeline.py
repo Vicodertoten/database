@@ -29,6 +29,11 @@ def test_full_scoped_pipeline_dry_run_and_apply_safety(tmp_path: Path) -> None:
     assert (apply_dir / "run_manifest.json").exists()
     assert (apply_dir / "reports" / "final_report.json").exists()
     assert (apply_dir / "policy" / "pmp_policy_projection.json").exists()
+    assert (apply_dir / "localized_names" / "apply_plan.json").exists()
+    assert (apply_dir / "localized_names" / "coverage_report.json").exists()
+    assert (apply_dir / "distractors" / "candidates.json").exists()
+    assert (apply_dir / "distractors" / "projection.json").exists()
+    assert (apply_dir / "distractors" / "readiness.json").exists()
     assert not (apply_dir / "golden_pack" / "pack.json").exists()
 
     manifest = _load(apply_dir / "run_manifest.json")
@@ -45,6 +50,14 @@ def test_full_scoped_pipeline_dry_run_and_apply_safety(tmp_path: Path) -> None:
     by_step = {row["step"]: row["status"] for row in stage_states}
     assert by_step["source_inat_refresh"] == "skipped"
     assert by_step["pmp_policy_projection"] == "completed"
+    assert by_step["candidate_readiness"] == "completed"
+
+    coverage = _load(apply_dir / "localized_names" / "coverage_report.json")
+    assert coverage["fr_runtime_safe_label_count"] >= 1
+    assert isinstance(coverage["fr_runtime_safe_complete"], bool)
+
+    projection = _load(apply_dir / "distractors" / "projection.json")
+    assert "no_distractor_relationship_persistence" in projection["non_actions"]
 
     after = evidence_path.read_text(encoding="utf-8")
     assert before == after
@@ -321,3 +334,28 @@ def test_full_scoped_pipeline_pmp_failure_then_resume_success(tmp_path: Path, mo
     resumed_steps = _load(run_dir / "pipeline_plan.json")["steps"]
     by_step_resumed = {row["step"]: row for row in resumed_steps}
     assert by_step_resumed["pmp_profile_generation"]["status"] == "completed"
+
+
+def test_full_scoped_pipeline_candidate_readiness_blocks_when_scoped_inputs_missing(tmp_path: Path) -> None:
+    run_dir = orchestrator.run_pipeline(
+        mode="apply",
+        output_root=tmp_path,
+        skip_external=True,
+        stop_after="distractors_projection",
+    )
+    missing = run_dir / "distractors" / "readiness.json"
+    missing.unlink()
+
+    resumed = orchestrator.run_pipeline(
+        mode="apply",
+        output_root=tmp_path,
+        resume_run_id=_load(run_dir / "run_manifest.json")["run_id"],
+        skip_external=True,
+    )
+    assert resumed == run_dir
+    manifest = _load(run_dir / "run_manifest.json")
+    assert manifest["status"] == "blocked_external"
+    steps = _load(run_dir / "pipeline_plan.json")["steps"]
+    by_step = {row["step"]: row for row in steps}
+    assert by_step["candidate_readiness"]["status"] == "blocked_external"
+    assert "candidate_readiness_missing_inputs" in by_step["candidate_readiness"]["message"]
