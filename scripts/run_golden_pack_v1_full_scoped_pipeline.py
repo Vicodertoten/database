@@ -3,6 +3,8 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import shlex
+import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -31,6 +33,11 @@ EXTERNAL_STAGES = {
 FLAGS = {
     "DATABASE_PHASE_CLOSED": False,
     "PERSIST_DISTRACTOR_RELATIONSHIPS_V1": False,
+}
+
+TARGET_SCOPE_PILOT_TAXA = {
+    "50-baseline": REPO_ROOT / "data" / "fixtures" / "inaturalist_pilot_taxa_palier1_be_50_run003_v11_baseline.json",
+    "32-safe-ready": REPO_ROOT / "data" / "fixtures" / "inaturalist_pilot_taxa_palier1_be_50_run003_v11_selected.json",
 }
 
 
@@ -165,6 +172,105 @@ def _expected_outputs() -> dict[str, Any]:
             "golden_pack/pack.json only if strict 30/30 and validation_report.status=passed",
         ],
     }
+
+
+def _source_inat_refresh_context(
+    *,
+    run_id: str,
+    target_scope: str,
+    max_observations_per_taxon: int = 8,
+    timeout_seconds: int = 30,
+    country_code: str = "BE",
+) -> dict[str, Any]:
+    pilot_taxa_path = TARGET_SCOPE_PILOT_TAXA[target_scope]
+    snapshot_id = f"{run_id}_inat"
+    snapshot_root = REPO_ROOT / "data" / "raw" / "inaturalist"
+    snapshot_dir = snapshot_root / snapshot_id
+    return {
+        "snapshot_id": snapshot_id,
+        "snapshot_root": str(snapshot_root),
+        "snapshot_dir": str(snapshot_dir),
+        "pilot_taxa_path": str(pilot_taxa_path),
+        "max_observations_per_taxon": max_observations_per_taxon,
+        "timeout_seconds": timeout_seconds,
+        "country_code": country_code,
+    }
+
+
+def _source_inat_refresh_command(context: dict[str, Any]) -> list[str]:
+    return [
+        sys.executable,
+        "scripts/fetch_inat_snapshot.py",
+        "--snapshot-id",
+        str(context["snapshot_id"]),
+        "--snapshot-root",
+        str(context["snapshot_root"]),
+        "--pilot-taxa-path",
+        str(context["pilot_taxa_path"]),
+        "--max-observations-per-taxon",
+        str(context["max_observations_per_taxon"]),
+        "--timeout-seconds",
+        str(context["timeout_seconds"]),
+        "--country-code",
+        str(context["country_code"]),
+    ]
+
+
+def _set_source_stage_command(stage_states: list[dict[str, Any]], context: dict[str, Any]) -> None:
+    command = _source_inat_refresh_command(context)
+    command_str = " ".join(shlex.quote(part) for part in command)
+    for row in stage_states:
+        if row.get("step") == "source_inat_refresh":
+            row["next_command"] = command_str
+            return
+
+
+def _run_source_inat_refresh(run_dir: Path, context: dict[str, Any]) -> tuple[bool, str]:
+    command = _source_inat_refresh_command(context)
+    result = subprocess.run(
+        command,
+        cwd=REPO_ROOT,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    manifest_path = Path(context["snapshot_dir"]) / "manifest.json"
+    responses_dir = Path(context["snapshot_dir"]) / "responses"
+    taxa_dir = Path(context["snapshot_dir"]) / "taxa"
+    images_dir = Path(context["snapshot_dir"]) / "images"
+
+    report = {
+        "schema_version": "golden_pack_scoped_source_inat_refresh.v1",
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "context": context,
+        "command": command,
+        "returncode": int(result.returncode),
+        "stdout_tail": result.stdout[-4000:],
+        "stderr_tail": result.stderr[-4000:],
+        "snapshot_manifest_exists": manifest_path.exists(),
+        "responses_dir_exists": responses_dir.exists(),
+        "taxa_dir_exists": taxa_dir.exists(),
+        "images_dir_exists": images_dir.exists(),
+    }
+    _write_json(run_dir / "source_fetch" / "source_inat_refresh.json", report)
+
+    if result.returncode != 0:
+        return False, f"source_inat_refresh_command_failed_exit_{result.returncode}"
+
+    required_ok = manifest_path.exists() and responses_dir.exists() and taxa_dir.exists() and images_dir.exists()
+    if not required_ok:
+        return False, "source_inat_refresh_missing_expected_snapshot_artifacts"
+
+    _write_json(
+        run_dir / "raw" / "snapshot_link.json",
+        {
+            "schema_version": "golden_pack_scoped_snapshot_link.v1",
+            "snapshot_id": context["snapshot_id"],
+            "snapshot_dir": context["snapshot_dir"],
+            "manifest_path": str(manifest_path),
+        },
+    )
+    return True, "completed"
 
 
 def _evaluate_policy_rows(ai_outputs: dict[str, Any]) -> tuple[list[dict[str, Any]], int, int]:
@@ -362,6 +468,15 @@ def run_pipeline(
             ],
         }
 
+    scope = manifest.get("scope") if isinstance(manifest.get("scope"), dict) else {}
+    effective_scope = str(scope.get("target_scope") or target_scope)
+    source_refresh_context = _source_inat_refresh_context(
+        run_id=run_id,
+        target_scope=effective_scope,
+    )
+    manifest["source_inat_refresh"] = source_refresh_context
+    _set_source_stage_command(stage_states, source_refresh_context)
+
     _persist_state(run_dir, manifest, stage_states, inventory, expected)
 
     if mode == "dry-run":
@@ -395,6 +510,18 @@ def run_pipeline(
             if skip_external:
                 row["status"] = "skipped"
                 row["message"] = "skipped_external_by_flag"
+            elif stage == "source_inat_refresh":
+                ok, message = _run_source_inat_refresh(run_dir, source_refresh_context)
+                if ok:
+                    row["status"] = "completed"
+                    row["message"] = message
+                else:
+                    row["status"] = "blocked_external"
+                    row["message"] = message
+                    manifest["status"] = "blocked_external"
+                    manifest["updated_at"] = datetime.now(timezone.utc).isoformat()
+                    _persist_state(run_dir, manifest, stage_states, inventory, expected)
+                    break
             else:
                 row["status"] = "blocked_external"
                 row["message"] = "requires_external_execution"
