@@ -1,0 +1,9 @@
+{
+  "flags": {
+    "DATABASE_PHASE_CLOSED": false,
+    "PERSIST_DISTRACTOR_RELATIONSHIPS_V1": false
+  },
+  "generated_at": "2026-05-06T19:31:48.202779+00:00",
+  "items": [],
+  "schema_version": "golden_pack_v1_pmp_evaluation_queue.v1"
+}

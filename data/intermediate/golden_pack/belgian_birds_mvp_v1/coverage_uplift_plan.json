@@ -1,0 +1,1096 @@
+{
+  "distractor_uplift_plan": [
+    {
+      "candidates_total": 3,
+      "current_label_safe_distractor_count": 2,
+      "expected_unlock_impact": 1,
+      "priority": "high",
+      "reason": "insufficient_label_safe_distractors",
+      "recommended_action": "rerun_distractor_projection_against_current_name_policy",
+      "rejected_candidates_count": 1,
+      "taxon_ref": "taxon:birds:000003"
+    },
+    {
+      "candidates_total": 3,
+      "current_label_safe_distractor_count": 2,
+      "expected_unlock_impact": 1,
+      "priority": "high",
+      "reason": "insufficient_label_safe_distractors",
+      "recommended_action": "rerun_distractor_projection_against_current_name_policy",
+      "rejected_candidates_count": 1,
+      "taxon_ref": "taxon:birds:000023"
+    },
+    {
+      "candidates_total": 3,
+      "current_label_safe_distractor_count": 2,
+      "expected_unlock_impact": 1,
+      "priority": "high",
+      "reason": "insufficient_label_safe_distractors",
+      "recommended_action": "rerun_distractor_projection_against_current_name_policy",
+      "rejected_candidates_count": 1,
+      "taxon_ref": "taxon:birds:000024"
+    },
+    {
+      "candidates_total": 3,
+      "current_label_safe_distractor_count": 2,
+      "expected_unlock_impact": 1,
+      "priority": "high",
+      "reason": "insufficient_label_safe_distractors",
+      "recommended_action": "rerun_distractor_projection_against_current_name_policy",
+      "rejected_candidates_count": 1,
+      "taxon_ref": "taxon:birds:000025"
+    },
+    {
+      "candidates_total": 3,
+      "current_label_safe_distractor_count": 2,
+      "expected_unlock_impact": 1,
+      "priority": "high",
+      "reason": "insufficient_label_safe_distractors",
+      "recommended_action": "rerun_distractor_projection_against_current_name_policy",
+      "rejected_candidates_count": 1,
+      "taxon_ref": "taxon:birds:000036"
+    },
+    {
+      "candidates_total": 3,
+      "current_label_safe_distractor_count": 2,
+      "expected_unlock_impact": 1,
+      "priority": "high",
+      "reason": "insufficient_label_safe_distractors",
+      "recommended_action": "rerun_distractor_projection_against_current_name_policy",
+      "rejected_candidates_count": 1,
+      "taxon_ref": "taxon:birds:000037"
+    },
+    {
+      "candidates_total": 4,
+      "current_label_safe_distractor_count": 2,
+      "expected_unlock_impact": 1,
+      "priority": "high",
+      "reason": "insufficient_label_safe_distractors",
+      "recommended_action": "rerun_distractor_projection_against_current_name_policy",
+      "rejected_candidates_count": 2,
+      "taxon_ref": "taxon:birds:000079"
+    }
+  ],
+  "flags": {
+    "DATABASE_PHASE_CLOSED": false,
+    "PERSIST_DISTRACTOR_RELATIONSHIPS_V1": false
+  },
+  "generated_at": "2026-05-06T18:55:40.070062+00:00",
+  "localized_name_uplift_plan": [
+    {
+      "current_label_state": "missing_fr_runtime_safe_label",
+      "expected_unlock_impact": 1,
+      "priority": "high",
+      "recommended_action": "rerun_localized_name_resolver",
+      "source_candidates": [],
+      "taxon_ref": "taxon:birds:000023"
+    },
+    {
+      "current_label_state": "missing_fr_runtime_safe_label",
+      "expected_unlock_impact": 1,
+      "priority": "high",
+      "recommended_action": "rerun_localized_name_resolver",
+      "source_candidates": [],
+      "taxon_ref": "taxon:birds:000033"
+    },
+    {
+      "current_label_state": "missing_fr_runtime_safe_label",
+      "expected_unlock_impact": 1,
+      "priority": "high",
+      "recommended_action": "rerun_localized_name_resolver",
+      "source_candidates": [],
+      "taxon_ref": "taxon:birds:000039"
+    },
+    {
+      "current_label_state": "missing_fr_runtime_safe_label",
+      "expected_unlock_impact": 1,
+      "priority": "high",
+      "recommended_action": "rerun_localized_name_resolver",
+      "source_candidates": [],
+      "taxon_ref": "taxon:birds:000042"
+    }
+  ],
+  "media_uplift_plan": [
+    {
+      "current_best_media_candidates": [
+        "100909260"
+      ],
+      "current_eligible_media_count": 0,
+      "current_local_media_count": 1,
+      "current_pmp_profile_count": 1,
+      "expected_unlock_impact": 1,
+      "priority": "high",
+      "reason": "policy_projection_exists_but_not_eligible",
+      "recommended_action": "inspect_policy_rejection_reasons",
+      "taxon_ref": "taxon:birds:000001"
+    },
+    {
+      "current_best_media_candidates": [
+        "109294921"
+      ],
+      "current_eligible_media_count": 0,
+      "current_local_media_count": 1,
+      "current_pmp_profile_count": 1,
+      "expected_unlock_impact": 1,
+      "priority": "high",
+      "reason": "policy_projection_exists_but_not_eligible",
+      "recommended_action": "inspect_policy_rejection_reasons",
+      "taxon_ref": "taxon:birds:000002"
+    },
+    {
+      "current_best_media_candidates": [
+        "101911464"
+      ],
+      "current_eligible_media_count": 0,
+      "current_local_media_count": 1,
+      "current_pmp_profile_count": 1,
+      "expected_unlock_impact": 1,
+      "priority": "high",
+      "reason": "policy_projection_exists_but_not_eligible",
+      "recommended_action": "inspect_policy_rejection_reasons",
+      "taxon_ref": "taxon:birds:000005"
+    },
+    {
+      "current_best_media_candidates": [
+        "109294786"
+      ],
+      "current_eligible_media_count": 0,
+      "current_local_media_count": 1,
+      "current_pmp_profile_count": 1,
+      "expected_unlock_impact": 1,
+      "priority": "high",
+      "reason": "policy_projection_exists_but_not_eligible",
+      "recommended_action": "inspect_policy_rejection_reasons",
+      "taxon_ref": "taxon:birds:000006"
+    },
+    {
+      "current_best_media_candidates": [
+        "108990786"
+      ],
+      "current_eligible_media_count": 0,
+      "current_local_media_count": 1,
+      "current_pmp_profile_count": 1,
+      "expected_unlock_impact": 1,
+      "priority": "high",
+      "reason": "policy_projection_exists_but_not_eligible",
+      "recommended_action": "inspect_policy_rejection_reasons",
+      "taxon_ref": "taxon:birds:000008"
+    },
+    {
+      "current_best_media_candidates": [
+        "12159188"
+      ],
+      "current_eligible_media_count": 0,
+      "current_local_media_count": 1,
+      "current_pmp_profile_count": 1,
+      "expected_unlock_impact": 1,
+      "priority": "high",
+      "reason": "policy_projection_exists_but_not_eligible",
+      "recommended_action": "inspect_policy_rejection_reasons",
+      "taxon_ref": "taxon:birds:000011"
+    },
+    {
+      "current_best_media_candidates": [
+        "101912004"
+      ],
+      "current_eligible_media_count": 0,
+      "current_local_media_count": 1,
+      "current_pmp_profile_count": 1,
+      "expected_unlock_impact": 1,
+      "priority": "high",
+      "reason": "policy_projection_exists_but_not_eligible",
+      "recommended_action": "inspect_policy_rejection_reasons",
+      "taxon_ref": "taxon:birds:000013"
+    },
+    {
+      "current_best_media_candidates": [
+        "106685027"
+      ],
+      "current_eligible_media_count": 0,
+      "current_local_media_count": 1,
+      "current_pmp_profile_count": 1,
+      "expected_unlock_impact": 1,
+      "priority": "high",
+      "reason": "policy_projection_exists_but_not_eligible",
+      "recommended_action": "inspect_policy_rejection_reasons",
+      "taxon_ref": "taxon:birds:000014"
+    },
+    {
+      "current_best_media_candidates": [
+        "111276293"
+      ],
+      "current_eligible_media_count": 0,
+      "current_local_media_count": 1,
+      "current_pmp_profile_count": 1,
+      "expected_unlock_impact": 1,
+      "priority": "high",
+      "reason": "policy_projection_exists_but_not_eligible",
+      "recommended_action": "inspect_policy_rejection_reasons",
+      "taxon_ref": "taxon:birds:000016"
+    },
+    {
+      "current_best_media_candidates": [
+        "112996341"
+      ],
+      "current_eligible_media_count": 0,
+      "current_local_media_count": 1,
+      "current_pmp_profile_count": 1,
+      "expected_unlock_impact": 1,
+      "priority": "high",
+      "reason": "policy_projection_exists_but_not_eligible",
+      "recommended_action": "inspect_policy_rejection_reasons",
+      "taxon_ref": "taxon:birds:000017"
+    },
+    {
+      "current_best_media_candidates": [
+        "113362223"
+      ],
+      "current_eligible_media_count": 0,
+      "current_local_media_count": 1,
+      "current_pmp_profile_count": 1,
+      "expected_unlock_impact": 1,
+      "priority": "high",
+      "reason": "policy_projection_exists_but_not_eligible",
+      "recommended_action": "inspect_policy_rejection_reasons",
+      "taxon_ref": "taxon:birds:000019"
+    },
+    {
+      "current_best_media_candidates": [
+        "103441671"
+      ],
+      "current_eligible_media_count": 0,
+      "current_local_media_count": 1,
+      "current_pmp_profile_count": 1,
+      "expected_unlock_impact": 1,
+      "priority": "high",
+      "reason": "policy_projection_exists_but_not_eligible",
+      "recommended_action": "inspect_policy_rejection_reasons",
+      "taxon_ref": "taxon:birds:000033"
+    },
+    {
+      "current_best_media_candidates": [
+        "219382150"
+      ],
+      "current_eligible_media_count": 0,
+      "current_local_media_count": 1,
+      "current_pmp_profile_count": 1,
+      "expected_unlock_impact": 1,
+      "priority": "high",
+      "reason": "policy_projection_exists_but_not_eligible",
+      "recommended_action": "inspect_policy_rejection_reasons",
+      "taxon_ref": "taxon:birds:000035"
+    },
+    {
+      "current_best_media_candidates": [
+        "108991122"
+      ],
+      "current_eligible_media_count": 0,
+      "current_local_media_count": 1,
+      "current_pmp_profile_count": 1,
+      "expected_unlock_impact": 1,
+      "priority": "high",
+      "reason": "policy_projection_exists_but_not_eligible",
+      "recommended_action": "inspect_policy_rejection_reasons",
+      "taxon_ref": "taxon:birds:000039"
+    },
+    {
+      "current_best_media_candidates": [
+        "131285019"
+      ],
+      "current_eligible_media_count": 0,
+      "current_local_media_count": 1,
+      "current_pmp_profile_count": 1,
+      "expected_unlock_impact": 1,
+      "priority": "high",
+      "reason": "policy_projection_exists_but_not_eligible",
+      "recommended_action": "inspect_policy_rejection_reasons",
+      "taxon_ref": "taxon:birds:000042"
+    },
+    {
+      "current_best_media_candidates": [
+        "120221697"
+      ],
+      "current_eligible_media_count": 0,
+      "current_local_media_count": 1,
+      "current_pmp_profile_count": 1,
+      "expected_unlock_impact": 1,
+      "priority": "high",
+      "reason": "policy_projection_exists_but_not_eligible",
+      "recommended_action": "inspect_policy_rejection_reasons",
+      "taxon_ref": "taxon:birds:000043"
+    },
+    {
+      "current_best_media_candidates": [
+        "518180607"
+      ],
+      "current_eligible_media_count": 0,
+      "current_local_media_count": 0,
+      "current_pmp_profile_count": 0,
+      "expected_unlock_impact": 1,
+      "priority": "high",
+      "reason": "no_pmp_profile",
+      "recommended_action": "add_or_materialize_local_media",
+      "taxon_ref": "taxon:birds:000047"
+    },
+    {
+      "current_best_media_candidates": [
+        "106017436"
+      ],
+      "current_eligible_media_count": 0,
+      "current_local_media_count": 1,
+      "current_pmp_profile_count": 1,
+      "expected_unlock_impact": 1,
+      "priority": "high",
+      "reason": "policy_projection_exists_but_not_eligible",
+      "recommended_action": "inspect_policy_rejection_reasons",
+      "taxon_ref": "taxon:birds:000048"
+    },
+    {
+      "current_best_media_candidates": [
+        "115183713"
+      ],
+      "current_eligible_media_count": 0,
+      "current_local_media_count": 1,
+      "current_pmp_profile_count": 1,
+      "expected_unlock_impact": 1,
+      "priority": "high",
+      "reason": "policy_projection_exists_but_not_eligible",
+      "recommended_action": "inspect_policy_rejection_reasons",
+      "taxon_ref": "taxon:birds:000079"
+    }
+  ],
+  "minimal_path_to_30": [
+    {
+      "action": "targeted_media_policy_uplift",
+      "expected_ready_count_after_step": 22,
+      "remaining_blockers": [
+        "insufficient_label_safe_distractors",
+        "missing_fr_runtime_safe_label"
+      ],
+      "step": 1
+    },
+    {
+      "action": "targeted_distractor_label_safe_uplift",
+      "expected_ready_count_after_step": 28,
+      "remaining_blockers": [
+        "missing_fr_runtime_safe_label"
+      ],
+      "step": 2
+    },
+    {
+      "action": "targeted_localized_name_fr_uplift",
+      "expected_ready_count_after_step": 32,
+      "remaining_blockers": [],
+      "step": 3
+    }
+  ],
+  "non_actions": [
+    "no_borderline_media_as_primary_quiz_image",
+    "no_emergency_fallback_distractors",
+    "no_runtime_generated_names",
+    "no_runtime_selected_distractors",
+    "no_distractorrelationship_persistence",
+    "no_database_closure_yet"
+  ],
+  "schema_version": "golden_pack_v1_coverage_uplift_plan.v1",
+  "source_candidate_readiness_path": "data/intermediate/golden_pack/belgian_birds_mvp_v1/local_canonical_run/golden_pack_belgian_birds_mvp_v1_local_20260506_184944/candidate_readiness.json",
+  "summary": {
+    "current_ready_targets": 7,
+    "overlapping_reason_counts": {
+      "insufficient_label_safe_distractors+missing_fr_runtime_safe_label": 1,
+      "insufficient_label_safe_distractors+no_basic_identification_eligible_media": 1,
+      "missing_fr_runtime_safe_label+no_basic_identification_eligible_media": 3,
+      "no_local_media_file+no_pmp_profile": 1
+    },
+    "readiness_gap": 23,
+    "reason_counts": {
+      "insufficient_label_safe_distractors": 7,
+      "missing_fr_runtime_safe_label": 4,
+      "no_basic_identification_eligible_media": 18,
+      "no_local_media_file": 1,
+      "no_pmp_profile": 1
+    },
+    "recommended_strategy": "TARGETED_PMP_POLICY_PLUS_DISTRACTOR_PLUS_LOCALIZED_NAME_UPLIFT",
+    "required_ready_targets": 30,
+    "safe_ready_targets": 32
+  },
+  "target_matrix": [
+    {
+      "currently_golden_pack_ready": false,
+      "display_label_fr": "Palombe",
+      "eligible_media_count": 0,
+      "has_fr_runtime_safe_label": true,
+      "label_safe_distractor_count": 3,
+      "local_media_count": 1,
+      "minimal_unlock_actions": [
+        "rerun_pmp_policy_on_existing_media",
+        "inspect_policy_rejection_reasons"
+      ],
+      "missing_requirements": [
+        "eligible_primary_media"
+      ],
+      "pmp_profile_count": 1,
+      "policy_projection_count": 1,
+      "rejection_reasons": [
+        "no_basic_identification_eligible_media"
+      ],
+      "scientific_name": "Columba palumbus",
+      "taxon_ref": "taxon:birds:000001"
+    },
+    {
+      "currently_golden_pack_ready": false,
+      "display_label_fr": "Corbeau corneille",
+      "eligible_media_count": 0,
+      "has_fr_runtime_safe_label": true,
+      "label_safe_distractor_count": 3,
+      "local_media_count": 1,
+      "minimal_unlock_actions": [
+        "rerun_pmp_policy_on_existing_media",
+        "inspect_policy_rejection_reasons"
+      ],
+      "missing_requirements": [
+        "eligible_primary_media"
+      ],
+      "pmp_profile_count": 1,
+      "policy_projection_count": 1,
+      "rejection_reasons": [
+        "no_basic_identification_eligible_media"
+      ],
+      "scientific_name": "Corvus corone",
+      "taxon_ref": "taxon:birds:000002"
+    },
+    {
+      "currently_golden_pack_ready": false,
+      "display_label_fr": "Mésange bleue",
+      "eligible_media_count": 1,
+      "has_fr_runtime_safe_label": true,
+      "label_safe_distractor_count": 2,
+      "local_media_count": 1,
+      "minimal_unlock_actions": [
+        "rerun_distractor_projection_against_current_name_policy"
+      ],
+      "missing_requirements": [
+        "3_label_safe_distractors"
+      ],
+      "pmp_profile_count": 1,
+      "policy_projection_count": 1,
+      "rejection_reasons": [
+        "insufficient_label_safe_distractors"
+      ],
+      "scientific_name": "Cyanistes caeruleus",
+      "taxon_ref": "taxon:birds:000003"
+    },
+    {
+      "currently_golden_pack_ready": true,
+      "display_label_fr": "Rouge-gorge familier",
+      "eligible_media_count": 1,
+      "has_fr_runtime_safe_label": true,
+      "label_safe_distractor_count": 3,
+      "local_media_count": 1,
+      "minimal_unlock_actions": [],
+      "missing_requirements": [],
+      "pmp_profile_count": 1,
+      "policy_projection_count": 1,
+      "rejection_reasons": [],
+      "scientific_name": "Erithacus rubecula",
+      "taxon_ref": "taxon:birds:000004"
+    },
+    {
+      "currently_golden_pack_ready": false,
+      "display_label_fr": "Pinson des arbres",
+      "eligible_media_count": 0,
+      "has_fr_runtime_safe_label": true,
+      "label_safe_distractor_count": 3,
+      "local_media_count": 1,
+      "minimal_unlock_actions": [
+        "rerun_pmp_policy_on_existing_media",
+        "inspect_policy_rejection_reasons"
+      ],
+      "missing_requirements": [
+        "eligible_primary_media"
+      ],
+      "pmp_profile_count": 1,
+      "policy_projection_count": 1,
+      "rejection_reasons": [
+        "no_basic_identification_eligible_media"
+      ],
+      "scientific_name": "Fringilla coelebs",
+      "taxon_ref": "taxon:birds:000005"
+    },
+    {
+      "currently_golden_pack_ready": false,
+      "display_label_fr": "Geai des chênes",
+      "eligible_media_count": 0,
+      "has_fr_runtime_safe_label": true,
+      "label_safe_distractor_count": 3,
+      "local_media_count": 1,
+      "minimal_unlock_actions": [
+        "rerun_pmp_policy_on_existing_media",
+        "inspect_policy_rejection_reasons"
+      ],
+      "missing_requirements": [
+        "eligible_primary_media"
+      ],
+      "pmp_profile_count": 1,
+      "policy_projection_count": 1,
+      "rejection_reasons": [
+        "no_basic_identification_eligible_media"
+      ],
+      "scientific_name": "Garrulus glandarius",
+      "taxon_ref": "taxon:birds:000006"
+    },
+    {
+      "currently_golden_pack_ready": false,
+      "display_label_fr": "Mésange charbonnière",
+      "eligible_media_count": 0,
+      "has_fr_runtime_safe_label": true,
+      "label_safe_distractor_count": 3,
+      "local_media_count": 1,
+      "minimal_unlock_actions": [
+        "rerun_pmp_policy_on_existing_media",
+        "inspect_policy_rejection_reasons"
+      ],
+      "missing_requirements": [
+        "eligible_primary_media"
+      ],
+      "pmp_profile_count": 1,
+      "policy_projection_count": 1,
+      "rejection_reasons": [
+        "no_basic_identification_eligible_media"
+      ],
+      "scientific_name": "Parus major",
+      "taxon_ref": "taxon:birds:000008"
+    },
+    {
+      "currently_golden_pack_ready": true,
+      "display_label_fr": "Moineau domestique",
+      "eligible_media_count": 1,
+      "has_fr_runtime_safe_label": true,
+      "label_safe_distractor_count": 3,
+      "local_media_count": 1,
+      "minimal_unlock_actions": [],
+      "missing_requirements": [],
+      "pmp_profile_count": 1,
+      "policy_projection_count": 1,
+      "rejection_reasons": [],
+      "scientific_name": "Passer domesticus",
+      "taxon_ref": "taxon:birds:000009"
+    },
+    {
+      "currently_golden_pack_ready": true,
+      "display_label_fr": "Pie bavarde",
+      "eligible_media_count": 1,
+      "has_fr_runtime_safe_label": true,
+      "label_safe_distractor_count": 3,
+      "local_media_count": 1,
+      "minimal_unlock_actions": [],
+      "missing_requirements": [],
+      "pmp_profile_count": 1,
+      "policy_projection_count": 1,
+      "rejection_reasons": [],
+      "scientific_name": "Pica pica",
+      "taxon_ref": "taxon:birds:000010"
+    },
+    {
+      "currently_golden_pack_ready": false,
+      "display_label_fr": "Étourneau sansonnet",
+      "eligible_media_count": 0,
+      "has_fr_runtime_safe_label": true,
+      "label_safe_distractor_count": 3,
+      "local_media_count": 1,
+      "minimal_unlock_actions": [
+        "rerun_pmp_policy_on_existing_media",
+        "inspect_policy_rejection_reasons"
+      ],
+      "missing_requirements": [
+        "eligible_primary_media"
+      ],
+      "pmp_profile_count": 1,
+      "policy_projection_count": 1,
+      "rejection_reasons": [
+        "no_basic_identification_eligible_media"
+      ],
+      "scientific_name": "Sturnus vulgaris",
+      "taxon_ref": "taxon:birds:000011"
+    },
+    {
+      "currently_golden_pack_ready": true,
+      "display_label_fr": "Fauvette à tête noire",
+      "eligible_media_count": 1,
+      "has_fr_runtime_safe_label": true,
+      "label_safe_distractor_count": 3,
+      "local_media_count": 1,
+      "minimal_unlock_actions": [],
+      "missing_requirements": [],
+      "pmp_profile_count": 1,
+      "policy_projection_count": 1,
+      "rejection_reasons": [],
+      "scientific_name": "Sylvia atricapilla",
+      "taxon_ref": "taxon:birds:000012"
+    },
+    {
+      "currently_golden_pack_ready": false,
+      "display_label_fr": "Troglodyte mignon",
+      "eligible_media_count": 0,
+      "has_fr_runtime_safe_label": true,
+      "label_safe_distractor_count": 3,
+      "local_media_count": 1,
+      "minimal_unlock_actions": [
+        "rerun_pmp_policy_on_existing_media",
+        "inspect_policy_rejection_reasons"
+      ],
+      "missing_requirements": [
+        "eligible_primary_media"
+      ],
+      "pmp_profile_count": 1,
+      "policy_projection_count": 1,
+      "rejection_reasons": [
+        "no_basic_identification_eligible_media"
+      ],
+      "scientific_name": "Troglodytes troglodytes",
+      "taxon_ref": "taxon:birds:000013"
+    },
+    {
+      "currently_golden_pack_ready": false,
+      "display_label_fr": "Merle noir",
+      "eligible_media_count": 0,
+      "has_fr_runtime_safe_label": true,
+      "label_safe_distractor_count": 3,
+      "local_media_count": 1,
+      "minimal_unlock_actions": [
+        "rerun_pmp_policy_on_existing_media",
+        "inspect_policy_rejection_reasons"
+      ],
+      "missing_requirements": [
+        "eligible_primary_media"
+      ],
+      "pmp_profile_count": 1,
+      "policy_projection_count": 1,
+      "rejection_reasons": [
+        "no_basic_identification_eligible_media"
+      ],
+      "scientific_name": "Turdus merula",
+      "taxon_ref": "taxon:birds:000014"
+    },
+    {
+      "currently_golden_pack_ready": true,
+      "display_label_fr": "Grive chanteuse",
+      "eligible_media_count": 1,
+      "has_fr_runtime_safe_label": true,
+      "label_safe_distractor_count": 3,
+      "local_media_count": 1,
+      "minimal_unlock_actions": [],
+      "missing_requirements": [],
+      "pmp_profile_count": 1,
+      "policy_projection_count": 1,
+      "rejection_reasons": [],
+      "scientific_name": "Turdus philomelos",
+      "taxon_ref": "taxon:birds:000015"
+    },
+    {
+      "currently_golden_pack_ready": false,
+      "display_label_fr": "Chardonneret élégant",
+      "eligible_media_count": 0,
+      "has_fr_runtime_safe_label": true,
+      "label_safe_distractor_count": 3,
+      "local_media_count": 1,
+      "minimal_unlock_actions": [
+        "rerun_pmp_policy_on_existing_media",
+        "inspect_policy_rejection_reasons"
+      ],
+      "missing_requirements": [
+        "eligible_primary_media"
+      ],
+      "pmp_profile_count": 1,
+      "policy_projection_count": 1,
+      "rejection_reasons": [
+        "no_basic_identification_eligible_media"
+      ],
+      "scientific_name": "Carduelis carduelis",
+      "taxon_ref": "taxon:birds:000016"
+    },
+    {
+      "currently_golden_pack_ready": false,
+      "display_label_fr": "Verdier d'Europe",
+      "eligible_media_count": 0,
+      "has_fr_runtime_safe_label": true,
+      "label_safe_distractor_count": 3,
+      "local_media_count": 1,
+      "minimal_unlock_actions": [
+        "rerun_pmp_policy_on_existing_media",
+        "inspect_policy_rejection_reasons"
+      ],
+      "missing_requirements": [
+        "eligible_primary_media"
+      ],
+      "pmp_profile_count": 1,
+      "policy_projection_count": 1,
+      "rejection_reasons": [
+        "no_basic_identification_eligible_media"
+      ],
+      "scientific_name": "Chloris chloris",
+      "taxon_ref": "taxon:birds:000017"
+    },
+    {
+      "currently_golden_pack_ready": false,
+      "display_label_fr": "Gros-bec casse-noyaux",
+      "eligible_media_count": 0,
+      "has_fr_runtime_safe_label": true,
+      "label_safe_distractor_count": 3,
+      "local_media_count": 1,
+      "minimal_unlock_actions": [
+        "rerun_pmp_policy_on_existing_media",
+        "inspect_policy_rejection_reasons"
+      ],
+      "missing_requirements": [
+        "eligible_primary_media"
+      ],
+      "pmp_profile_count": 1,
+      "policy_projection_count": 1,
+      "rejection_reasons": [
+        "no_basic_identification_eligible_media"
+      ],
+      "scientific_name": "Coccothraustes coccothraustes",
+      "taxon_ref": "taxon:birds:000019"
+    },
+    {
+      "currently_golden_pack_ready": true,
+      "display_label_fr": "Bourre",
+      "eligible_media_count": 1,
+      "has_fr_runtime_safe_label": true,
+      "label_safe_distractor_count": 3,
+      "local_media_count": 1,
+      "minimal_unlock_actions": [],
+      "missing_requirements": [],
+      "pmp_profile_count": 1,
+      "policy_projection_count": 1,
+      "rejection_reasons": [],
+      "scientific_name": "Anas platyrhynchos",
+      "taxon_ref": "taxon:birds:000021"
+    },
+    {
+      "currently_golden_pack_ready": false,
+      "display_label_fr": null,
+      "eligible_media_count": 1,
+      "has_fr_runtime_safe_label": false,
+      "label_safe_distractor_count": 2,
+      "local_media_count": 1,
+      "minimal_unlock_actions": [
+        "rerun_distractor_projection_against_current_name_policy",
+        "rerun_localized_name_resolver"
+      ],
+      "missing_requirements": [
+        "fr_runtime_safe_label",
+        "3_label_safe_distractors"
+      ],
+      "pmp_profile_count": 1,
+      "policy_projection_count": 1,
+      "rejection_reasons": [
+        "insufficient_label_safe_distractors",
+        "missing_fr_runtime_safe_label"
+      ],
+      "scientific_name": "Cygnus olor",
+      "taxon_ref": "taxon:birds:000023"
+    },
+    {
+      "currently_golden_pack_ready": false,
+      "display_label_fr": "Foulque macroule",
+      "eligible_media_count": 1,
+      "has_fr_runtime_safe_label": true,
+      "label_safe_distractor_count": 2,
+      "local_media_count": 1,
+      "minimal_unlock_actions": [
+        "rerun_distractor_projection_against_current_name_policy"
+      ],
+      "missing_requirements": [
+        "3_label_safe_distractors"
+      ],
+      "pmp_profile_count": 1,
+      "policy_projection_count": 1,
+      "rejection_reasons": [
+        "insufficient_label_safe_distractors"
+      ],
+      "scientific_name": "Fulica atra",
+      "taxon_ref": "taxon:birds:000024"
+    },
+    {
+      "currently_golden_pack_ready": false,
+      "display_label_fr": "Gallinule poule-d'eau",
+      "eligible_media_count": 1,
+      "has_fr_runtime_safe_label": true,
+      "label_safe_distractor_count": 2,
+      "local_media_count": 1,
+      "minimal_unlock_actions": [
+        "rerun_distractor_projection_against_current_name_policy"
+      ],
+      "missing_requirements": [
+        "3_label_safe_distractors"
+      ],
+      "pmp_profile_count": 1,
+      "policy_projection_count": 1,
+      "rejection_reasons": [
+        "insufficient_label_safe_distractors"
+      ],
+      "scientific_name": "Gallinula chloropus",
+      "taxon_ref": "taxon:birds:000025"
+    },
+    {
+      "currently_golden_pack_ready": false,
+      "display_label_fr": null,
+      "eligible_media_count": 0,
+      "has_fr_runtime_safe_label": false,
+      "label_safe_distractor_count": 3,
+      "local_media_count": 1,
+      "minimal_unlock_actions": [
+        "rerun_pmp_policy_on_existing_media",
+        "inspect_policy_rejection_reasons",
+        "rerun_localized_name_resolver"
+      ],
+      "missing_requirements": [
+        "fr_runtime_safe_label",
+        "eligible_primary_media"
+      ],
+      "pmp_profile_count": 1,
+      "policy_projection_count": 1,
+      "rejection_reasons": [
+        "missing_fr_runtime_safe_label",
+        "no_basic_identification_eligible_media"
+      ],
+      "scientific_name": "Falco tinnunculus",
+      "taxon_ref": "taxon:birds:000033"
+    },
+    {
+      "currently_golden_pack_ready": false,
+      "display_label_fr": "Chat-huant",
+      "eligible_media_count": 0,
+      "has_fr_runtime_safe_label": true,
+      "label_safe_distractor_count": 3,
+      "local_media_count": 1,
+      "minimal_unlock_actions": [
+        "rerun_pmp_policy_on_existing_media",
+        "inspect_policy_rejection_reasons"
+      ],
+      "missing_requirements": [
+        "eligible_primary_media"
+      ],
+      "pmp_profile_count": 1,
+      "policy_projection_count": 1,
+      "rejection_reasons": [
+        "no_basic_identification_eligible_media"
+      ],
+      "scientific_name": "Strix aluco",
+      "taxon_ref": "taxon:birds:000035"
+    },
+    {
+      "currently_golden_pack_ready": false,
+      "display_label_fr": "Hibou moyen-duc",
+      "eligible_media_count": 1,
+      "has_fr_runtime_safe_label": true,
+      "label_safe_distractor_count": 2,
+      "local_media_count": 1,
+      "minimal_unlock_actions": [
+        "rerun_distractor_projection_against_current_name_policy"
+      ],
+      "missing_requirements": [
+        "3_label_safe_distractors"
+      ],
+      "pmp_profile_count": 1,
+      "policy_projection_count": 1,
+      "rejection_reasons": [
+        "insufficient_label_safe_distractors"
+      ],
+      "scientific_name": "Asio otus",
+      "taxon_ref": "taxon:birds:000036"
+    },
+    {
+      "currently_golden_pack_ready": false,
+      "display_label_fr": "Chevêche d'Athéna",
+      "eligible_media_count": 1,
+      "has_fr_runtime_safe_label": true,
+      "label_safe_distractor_count": 2,
+      "local_media_count": 1,
+      "minimal_unlock_actions": [
+        "rerun_distractor_projection_against_current_name_policy"
+      ],
+      "missing_requirements": [
+        "3_label_safe_distractors"
+      ],
+      "pmp_profile_count": 1,
+      "policy_projection_count": 1,
+      "rejection_reasons": [
+        "insufficient_label_safe_distractors"
+      ],
+      "scientific_name": "Athene noctua",
+      "taxon_ref": "taxon:birds:000037"
+    },
+    {
+      "currently_golden_pack_ready": false,
+      "display_label_fr": null,
+      "eligible_media_count": 0,
+      "has_fr_runtime_safe_label": false,
+      "label_safe_distractor_count": 3,
+      "local_media_count": 1,
+      "minimal_unlock_actions": [
+        "rerun_pmp_policy_on_existing_media",
+        "inspect_policy_rejection_reasons",
+        "rerun_localized_name_resolver"
+      ],
+      "missing_requirements": [
+        "fr_runtime_safe_label",
+        "eligible_primary_media"
+      ],
+      "pmp_profile_count": 1,
+      "policy_projection_count": 1,
+      "rejection_reasons": [
+        "missing_fr_runtime_safe_label",
+        "no_basic_identification_eligible_media"
+      ],
+      "scientific_name": "Dendrocopos major",
+      "taxon_ref": "taxon:birds:000039"
+    },
+    {
+      "currently_golden_pack_ready": false,
+      "display_label_fr": null,
+      "eligible_media_count": 0,
+      "has_fr_runtime_safe_label": false,
+      "label_safe_distractor_count": 3,
+      "local_media_count": 1,
+      "minimal_unlock_actions": [
+        "rerun_pmp_policy_on_existing_media",
+        "inspect_policy_rejection_reasons",
+        "rerun_localized_name_resolver"
+      ],
+      "missing_requirements": [
+        "fr_runtime_safe_label",
+        "eligible_primary_media"
+      ],
+      "pmp_profile_count": 1,
+      "policy_projection_count": 1,
+      "rejection_reasons": [
+        "missing_fr_runtime_safe_label",
+        "no_basic_identification_eligible_media"
+      ],
+      "scientific_name": "Delichon urbicum",
+      "taxon_ref": "taxon:birds:000042"
+    },
+    {
+      "currently_golden_pack_ready": false,
+      "display_label_fr": "Hirondelle de cheminée",
+      "eligible_media_count": 0,
+      "has_fr_runtime_safe_label": true,
+      "label_safe_distractor_count": 3,
+      "local_media_count": 1,
+      "minimal_unlock_actions": [
+        "rerun_pmp_policy_on_existing_media",
+        "inspect_policy_rejection_reasons"
+      ],
+      "missing_requirements": [
+        "eligible_primary_media"
+      ],
+      "pmp_profile_count": 1,
+      "policy_projection_count": 1,
+      "rejection_reasons": [
+        "no_basic_identification_eligible_media"
+      ],
+      "scientific_name": "Hirundo rustica",
+      "taxon_ref": "taxon:birds:000043"
+    },
+    {
+      "currently_golden_pack_ready": false,
+      "display_label_fr": "Pie-grièche écorcheur",
+      "eligible_media_count": 0,
+      "has_fr_runtime_safe_label": true,
+      "label_safe_distractor_count": 3,
+      "local_media_count": 0,
+      "minimal_unlock_actions": [
+        "rerun_or_materialize_pmp_profile_for_source_media",
+        "add_or_materialize_local_media"
+      ],
+      "missing_requirements": [
+        "eligible_primary_media",
+        "diagnose:no_local_media_file",
+        "diagnose:no_pmp_profile"
+      ],
+      "pmp_profile_count": 0,
+      "policy_projection_count": 0,
+      "rejection_reasons": [
+        "no_local_media_file",
+        "no_pmp_profile"
+      ],
+      "scientific_name": "Lanius collurio",
+      "taxon_ref": "taxon:birds:000047"
+    },
+    {
+      "currently_golden_pack_ready": false,
+      "display_label_fr": "Choucas des tours",
+      "eligible_media_count": 0,
+      "has_fr_runtime_safe_label": true,
+      "label_safe_distractor_count": 3,
+      "local_media_count": 1,
+      "minimal_unlock_actions": [
+        "rerun_pmp_policy_on_existing_media",
+        "inspect_policy_rejection_reasons"
+      ],
+      "missing_requirements": [
+        "eligible_primary_media"
+      ],
+      "pmp_profile_count": 1,
+      "policy_projection_count": 1,
+      "rejection_reasons": [
+        "no_basic_identification_eligible_media"
+      ],
+      "scientific_name": "Coloeus monedula",
+      "taxon_ref": "taxon:birds:000048"
+    },
+    {
+      "currently_golden_pack_ready": true,
+      "display_label_fr": "Corbeau freux",
+      "eligible_media_count": 1,
+      "has_fr_runtime_safe_label": true,
+      "label_safe_distractor_count": 3,
+      "local_media_count": 1,
+      "minimal_unlock_actions": [],
+      "missing_requirements": [],
+      "pmp_profile_count": 1,
+      "policy_projection_count": 1,
+      "rejection_reasons": [],
+      "scientific_name": "Corvus frugilegus",
+      "taxon_ref": "taxon:birds:000049"
+    },
+    {
+      "currently_golden_pack_ready": false,
+      "display_label_fr": "Tourterelle turque",
+      "eligible_media_count": 0,
+      "has_fr_runtime_safe_label": true,
+      "label_safe_distractor_count": 2,
+      "local_media_count": 1,
+      "minimal_unlock_actions": [
+        "rerun_pmp_policy_on_existing_media",
+        "inspect_policy_rejection_reasons",
+        "rerun_distractor_projection_against_current_name_policy"
+      ],
+      "missing_requirements": [
+        "eligible_primary_media",
+        "3_label_safe_distractors"
+      ],
+      "pmp_profile_count": 1,
+      "policy_projection_count": 1,
+      "rejection_reasons": [
+        "insufficient_label_safe_distractors",
+        "no_basic_identification_eligible_media"
+      ],
+      "scientific_name": "Streptopelia decaocto",
+      "taxon_ref": "taxon:birds:000079"
+    }
+  ],
+  "unlock_simulation": {
+    "current_ready_count": 7,
+    "ready_count_if_all_known_issues_fixed": 32,
+    "ready_count_if_distractors_fixed_only": 12,
+    "ready_count_if_distractors_plus_labels_fixed": 13,
+    "ready_count_if_labels_fixed_only": 7,
+    "ready_count_if_media_fixed_only": 22,
+    "ready_count_if_media_plus_distractors_fixed": 28,
+    "ready_count_if_media_plus_labels_fixed": 25
+  }
+}

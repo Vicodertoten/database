@@ -1,0 +1,22 @@
+{
+  "flags": {
+    "DATABASE_PHASE_CLOSED": false,
+    "PERSIST_DISTRACTOR_RELATIONSHIPS_V1": false
+  },
+  "generated_at": "2026-05-06T19:31:27.249410+00:00",
+  "inputs": {
+    "ai_outputs": "data/raw/inaturalist/palier1-be-birds-50taxa-run003-pmp-policy-broader-400-20260504/ai_outputs.json",
+    "inaturalist_manifest": "data/raw/inaturalist/palier1-be-birds-50taxa-run003-pmp-policy-broader-400-20260504/manifest.json",
+    "qualified_export": "data/exports/palier1_be_birds_50taxa_run003_v11_baseline.export.json",
+    "targeted_media_uplift_plan": "data/intermediate/golden_pack/belgian_birds_mvp_v1/targeted_media_uplift_plan.json"
+  },
+  "mode": "dry-run",
+  "non_actions": [
+    "no_pack_generation",
+    "no_forced_eligibility",
+    "no_borderline_eligible",
+    "no_runtime_decision"
+  ],
+  "run_id": "targeted_pmp_policy_refresh_20260506_193127",
+  "schema_version": "golden_pack_v1_targeted_pmp_policy_refresh_run_manifest.v1"
+}
