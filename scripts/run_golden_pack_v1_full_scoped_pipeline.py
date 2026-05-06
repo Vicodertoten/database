@@ -216,11 +216,78 @@ def _source_inat_refresh_command(context: dict[str, Any]) -> list[str]:
     ]
 
 
+def _normalization_qualification_context(*, run_dir: Path, source_context: dict[str, Any]) -> dict[str, Any]:
+    normalized_path = run_dir / "normalized" / "normalized_snapshot.json"
+    qualified_path = run_dir / "qualified" / "qualified_snapshot.json"
+    export_path = run_dir / "qualified" / "export_bundle.json"
+    return {
+        "snapshot_id": source_context["snapshot_id"],
+        "snapshot_root": source_context["snapshot_root"],
+        "normalized_path": str(normalized_path),
+        "qualified_path": str(qualified_path),
+        "export_path": str(export_path),
+    }
+
+
+def _normalization_command(context: dict[str, Any]) -> list[str]:
+    return [
+        sys.executable,
+        "scripts/run_pipeline.py",
+        "--source-mode",
+        "inat_snapshot",
+        "--snapshot-id",
+        str(context["snapshot_id"]),
+        "--snapshot-root",
+        str(context["snapshot_root"]),
+        "--normalized-path",
+        str(context["normalized_path"]),
+        "--qualified-path",
+        str(context["qualified_path"]),
+        "--export-path",
+        str(context["export_path"]),
+        "--qualifier-mode",
+        "rules",
+        "--qualification-policy",
+        "v1",
+    ]
+
+
+def _qualification_command(context: dict[str, Any]) -> list[str]:
+    return [
+        sys.executable,
+        "scripts/run_pipeline.py",
+        "--source-mode",
+        "inat_snapshot",
+        "--snapshot-id",
+        str(context["snapshot_id"]),
+        "--snapshot-root",
+        str(context["snapshot_root"]),
+        "--normalized-path",
+        str(context["normalized_path"]),
+        "--qualified-path",
+        str(context["qualified_path"]),
+        "--export-path",
+        str(context["export_path"]),
+        "--qualifier-mode",
+        "cached",
+        "--qualification-policy",
+        "v1",
+    ]
+
+
 def _set_source_stage_command(stage_states: list[dict[str, Any]], context: dict[str, Any]) -> None:
     command = _source_inat_refresh_command(context)
     command_str = " ".join(shlex.quote(part) for part in command)
     for row in stage_states:
         if row.get("step") == "source_inat_refresh":
+            row["next_command"] = command_str
+            return
+
+
+def _set_stage_command(stage_states: list[dict[str, Any]], stage_name: str, command: list[str]) -> None:
+    command_str = " ".join(shlex.quote(part) for part in command)
+    for row in stage_states:
+        if row.get("step") == stage_name:
             row["next_command"] = command_str
             return
 
@@ -268,6 +335,85 @@ def _run_source_inat_refresh(run_dir: Path, context: dict[str, Any]) -> tuple[bo
             "snapshot_id": context["snapshot_id"],
             "snapshot_dir": context["snapshot_dir"],
             "manifest_path": str(manifest_path),
+        },
+    )
+    return True, "completed"
+
+
+def _run_normalization_stage(run_dir: Path, context: dict[str, Any]) -> tuple[bool, str]:
+    command = _normalization_command(context)
+    result = subprocess.run(
+        command,
+        cwd=REPO_ROOT,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    normalized_path = Path(context["normalized_path"])
+    report = {
+        "schema_version": "golden_pack_scoped_normalization_stage.v1",
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "context": context,
+        "command": command,
+        "returncode": int(result.returncode),
+        "stdout_tail": result.stdout[-4000:],
+        "stderr_tail": result.stderr[-4000:],
+        "normalized_output_exists": normalized_path.exists(),
+    }
+    _write_json(run_dir / "normalized" / "normalization_stage_report.json", report)
+    if result.returncode != 0:
+        return False, f"normalization_command_failed_exit_{result.returncode}"
+    if not normalized_path.exists():
+        return False, "normalization_missing_normalized_output"
+    return True, "completed"
+
+
+def _run_qualification_stage(run_dir: Path, context: dict[str, Any]) -> tuple[bool, str]:
+    command = _qualification_command(context)
+    result = subprocess.run(
+        command,
+        cwd=REPO_ROOT,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    normalized_path = Path(context["normalized_path"])
+    qualified_path = Path(context["qualified_path"])
+    export_path = Path(context["export_path"])
+    report = {
+        "schema_version": "golden_pack_scoped_qualification_stage.v1",
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "context": context,
+        "command": command,
+        "returncode": int(result.returncode),
+        "stdout_tail": result.stdout[-4000:],
+        "stderr_tail": result.stderr[-4000:],
+        "normalized_output_exists": normalized_path.exists(),
+        "qualified_output_exists": qualified_path.exists(),
+        "export_output_exists": export_path.exists(),
+    }
+    _write_json(run_dir / "qualified" / "qualification_stage_report.json", report)
+    if result.returncode != 0:
+        return False, f"qualification_command_failed_exit_{result.returncode}"
+    if not qualified_path.exists() or not export_path.exists():
+        return False, "qualification_missing_qualified_or_export_output"
+
+    _write_json(
+        run_dir / "qualified" / "lineage.json",
+        {
+            "schema_version": "golden_pack_scoped_lineage.v1",
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+            "run_id": run_dir.name,
+            "snapshot_id": context["snapshot_id"],
+            "artifacts": {
+                "normalized_path": str(normalized_path),
+                "qualified_path": str(qualified_path),
+                "export_path": str(export_path),
+            },
+            "commands": {
+                "normalization": _normalization_command(context),
+                "qualification": command,
+            },
         },
     )
     return True, "completed"
@@ -474,8 +620,12 @@ def run_pipeline(
         run_id=run_id,
         target_scope=effective_scope,
     )
+    norm_qual_context = _normalization_qualification_context(run_dir=run_dir, source_context=source_refresh_context)
     manifest["source_inat_refresh"] = source_refresh_context
+    manifest["normalization_qualification"] = norm_qual_context
     _set_source_stage_command(stage_states, source_refresh_context)
+    _set_stage_command(stage_states, "normalization", _normalization_command(norm_qual_context))
+    _set_stage_command(stage_states, "qualification", _qualification_command(norm_qual_context))
 
     _persist_state(run_dir, manifest, stage_states, inventory, expected)
 
@@ -512,6 +662,30 @@ def run_pipeline(
                 row["message"] = "skipped_external_by_flag"
             elif stage == "source_inat_refresh":
                 ok, message = _run_source_inat_refresh(run_dir, source_refresh_context)
+                if ok:
+                    row["status"] = "completed"
+                    row["message"] = message
+                else:
+                    row["status"] = "blocked_external"
+                    row["message"] = message
+                    manifest["status"] = "blocked_external"
+                    manifest["updated_at"] = datetime.now(timezone.utc).isoformat()
+                    _persist_state(run_dir, manifest, stage_states, inventory, expected)
+                    break
+            elif stage == "normalization":
+                ok, message = _run_normalization_stage(run_dir, norm_qual_context)
+                if ok:
+                    row["status"] = "completed"
+                    row["message"] = message
+                else:
+                    row["status"] = "blocked_external"
+                    row["message"] = message
+                    manifest["status"] = "blocked_external"
+                    manifest["updated_at"] = datetime.now(timezone.utc).isoformat()
+                    _persist_state(run_dir, manifest, stage_states, inventory, expected)
+                    break
+            elif stage == "qualification":
+                ok, message = _run_qualification_stage(run_dir, norm_qual_context)
                 if ok:
                     row["status"] = "completed"
                     row["message"] = message

@@ -127,3 +127,91 @@ def test_full_scoped_pipeline_source_inat_refresh_success_then_blocks_next_exter
     assert (run_dir / "source_fetch" / "source_inat_refresh.json").exists()
     assert (run_dir / "raw" / "snapshot_link.json").exists()
     assert _load(run_dir / "raw" / "snapshot_link.json")["snapshot_id"] == manifest["source_inat_refresh"]["snapshot_id"]
+
+
+def test_full_scoped_pipeline_normalization_and_qualification_success(tmp_path: Path, monkeypatch) -> None:
+    def fake_run(cmd, cwd, check, capture_output, text):  # type: ignore[no-untyped-def]
+        if cmd[1] == "scripts/fetch_inat_snapshot.py":
+            snapshot_id = cmd[cmd.index("--snapshot-id") + 1]
+            snapshot_root = Path(cmd[cmd.index("--snapshot-root") + 1])
+            snapshot_dir = snapshot_root / snapshot_id
+            (snapshot_dir / "responses").mkdir(parents=True, exist_ok=True)
+            (snapshot_dir / "taxa").mkdir(parents=True, exist_ok=True)
+            (snapshot_dir / "images").mkdir(parents=True, exist_ok=True)
+            (snapshot_dir / "manifest.json").write_text('{"manifest_version":"v1"}\n', encoding="utf-8")
+            return subprocess.CompletedProcess(args=cmd, returncode=0, stdout="fetch-ok", stderr="")
+
+        if cmd[1] == "scripts/run_pipeline.py":
+            normalized = Path(cmd[cmd.index("--normalized-path") + 1])
+            qualified = Path(cmd[cmd.index("--qualified-path") + 1])
+            export = Path(cmd[cmd.index("--export-path") + 1])
+            normalized.parent.mkdir(parents=True, exist_ok=True)
+            qualified.parent.mkdir(parents=True, exist_ok=True)
+            export.parent.mkdir(parents=True, exist_ok=True)
+            normalized.write_text('{"normalized":true}\n', encoding="utf-8")
+            qualified.write_text('{"qualified":true}\n', encoding="utf-8")
+            export.write_text('{"export":true}\n', encoding="utf-8")
+            return subprocess.CompletedProcess(args=cmd, returncode=0, stdout="pipeline-ok", stderr="")
+
+        return subprocess.CompletedProcess(args=cmd, returncode=1, stdout="", stderr="unexpected command")
+
+    monkeypatch.setattr(orchestrator.subprocess, "run", fake_run)
+    run_dir = orchestrator.run_pipeline(mode="apply", output_root=tmp_path, skip_external=False)
+
+    steps = _load(run_dir / "pipeline_plan.json")["steps"]
+    by_step = {row["step"]: row for row in steps}
+    assert by_step["source_inat_refresh"]["status"] == "completed"
+    assert by_step["normalization"]["status"] == "completed"
+    assert by_step["qualification"]["status"] == "completed"
+    assert by_step["pmp_profile_generation"]["status"] == "blocked_external"
+
+    assert (run_dir / "normalized" / "normalization_stage_report.json").exists()
+    assert (run_dir / "qualified" / "qualification_stage_report.json").exists()
+    assert (run_dir / "qualified" / "lineage.json").exists()
+
+    norm_cmd = by_step["normalization"]["next_command"]
+    qual_cmd = by_step["qualification"]["next_command"]
+    manifest = _load(run_dir / "run_manifest.json")
+    snapshot_id = manifest["source_inat_refresh"]["snapshot_id"]
+    assert f"--snapshot-id {snapshot_id}" in norm_cmd
+    assert f"--snapshot-id {snapshot_id}" in qual_cmd
+
+
+def test_full_scoped_pipeline_blocks_when_qualification_fails(tmp_path: Path, monkeypatch) -> None:
+    def fake_run(cmd, cwd, check, capture_output, text):  # type: ignore[no-untyped-def]
+        if cmd[1] == "scripts/fetch_inat_snapshot.py":
+            snapshot_id = cmd[cmd.index("--snapshot-id") + 1]
+            snapshot_root = Path(cmd[cmd.index("--snapshot-root") + 1])
+            snapshot_dir = snapshot_root / snapshot_id
+            (snapshot_dir / "responses").mkdir(parents=True, exist_ok=True)
+            (snapshot_dir / "taxa").mkdir(parents=True, exist_ok=True)
+            (snapshot_dir / "images").mkdir(parents=True, exist_ok=True)
+            (snapshot_dir / "manifest.json").write_text('{"manifest_version":"v1"}\n', encoding="utf-8")
+            return subprocess.CompletedProcess(args=cmd, returncode=0, stdout="fetch-ok", stderr="")
+        if cmd[1] == "scripts/run_pipeline.py":
+            qualifier_mode = cmd[cmd.index("--qualifier-mode") + 1]
+            normalized = Path(cmd[cmd.index("--normalized-path") + 1])
+            normalized.parent.mkdir(parents=True, exist_ok=True)
+            normalized.write_text('{"normalized":true}\n', encoding="utf-8")
+            if qualifier_mode == "cached":
+                return subprocess.CompletedProcess(args=cmd, returncode=7, stdout="", stderr="qualification failed")
+            qualified = Path(cmd[cmd.index("--qualified-path") + 1])
+            export = Path(cmd[cmd.index("--export-path") + 1])
+            qualified.parent.mkdir(parents=True, exist_ok=True)
+            export.parent.mkdir(parents=True, exist_ok=True)
+            qualified.write_text('{"qualified":true}\n', encoding="utf-8")
+            export.write_text('{"export":true}\n', encoding="utf-8")
+            return subprocess.CompletedProcess(args=cmd, returncode=0, stdout="normalization-ok", stderr="")
+        return subprocess.CompletedProcess(args=cmd, returncode=1, stdout="", stderr="unexpected command")
+
+    monkeypatch.setattr(orchestrator.subprocess, "run", fake_run)
+    run_dir = orchestrator.run_pipeline(mode="apply", output_root=tmp_path, skip_external=False)
+
+    manifest = _load(run_dir / "run_manifest.json")
+    assert manifest["status"] == "blocked_external"
+    steps = _load(run_dir / "pipeline_plan.json")["steps"]
+    by_step = {row["step"]: row for row in steps}
+    assert by_step["normalization"]["status"] == "completed"
+    assert by_step["qualification"]["status"] == "blocked_external"
+    assert by_step["pmp_profile_generation"]["status"] == "planned"
+    assert not (run_dir / "qualified" / "lineage.json").exists()
