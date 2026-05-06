@@ -309,6 +309,54 @@ def _pmp_generation_command(context: dict[str, Any]) -> list[str]:
     ]
 
 
+def _materialization_context(
+    *,
+    run_dir: Path,
+    source_context: dict[str, Any],
+    norm_qual_context: dict[str, Any],
+    pmp_context: dict[str, Any],
+) -> dict[str, Any]:
+    return {
+        "plan_path": str(run_dir / "localized_names" / "apply_plan.json"),
+        "distractor_path": str(run_dir / "distractors" / "projection.json"),
+        "qualified_export_path": str(norm_qual_context["export_path"]),
+        "inat_manifest_path": str(Path(source_context["snapshot_dir"]) / "manifest.json"),
+        "inat_ai_outputs_path": str(pmp_context["ai_outputs_path"]),
+        "materialization_source_path": str(mat.MATERIALIZATION_SOURCE_PATH),
+        "output_dir": str(run_dir / "golden_pack"),
+        "pack_id": "belgian_birds_mvp_v1",
+        "locale": "fr",
+        "target_count": 30,
+    }
+
+
+def _materialization_command(context: dict[str, Any]) -> list[str]:
+    return [
+        sys.executable,
+        "scripts/materialize_golden_pack_belgian_birds_mvp_v1.py",
+        "--plan-path",
+        str(context["plan_path"]),
+        "--distractor-path",
+        str(context["distractor_path"]),
+        "--qualified-export-path",
+        str(context["qualified_export_path"]),
+        "--inat-manifest-path",
+        str(context["inat_manifest_path"]),
+        "--inat-ai-outputs-path",
+        str(context["inat_ai_outputs_path"]),
+        "--materialization-source-path",
+        str(context["materialization_source_path"]),
+        "--output-dir",
+        str(context["output_dir"]),
+        "--pack-id",
+        str(context["pack_id"]),
+        "--locale",
+        str(context["locale"]),
+        "--target-count",
+        str(context["target_count"]),
+    ]
+
+
 def _set_source_stage_command(stage_states: list[dict[str, Any]], context: dict[str, Any]) -> None:
     command = _source_inat_refresh_command(context)
     command_str = " ".join(shlex.quote(part) for part in command)
@@ -501,6 +549,49 @@ def _run_pmp_profile_generation(run_dir: Path, context: dict[str, Any]) -> tuple
     return True, "completed"
 
 
+def _run_materialization_stage(run_dir: Path, context: dict[str, Any]) -> tuple[bool, str]:
+    command = _materialization_command(context)
+    result = subprocess.run(
+        command,
+        cwd=REPO_ROOT,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    output_dir = Path(context["output_dir"])
+    validation_report_path = output_dir / "validation_report.json"
+    validation_status = None
+    if validation_report_path.exists():
+        try:
+            validation = _load_json(validation_report_path)
+            validation_status = str(validation.get("status") or "")
+        except Exception:
+            validation_status = "invalid"
+
+    report = {
+        "schema_version": "golden_pack_scoped_materialization_stage_report.v1",
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "context": context,
+        "command": command,
+        "returncode": int(result.returncode),
+        "stdout_tail": result.stdout[-4000:],
+        "stderr_tail": result.stderr[-4000:],
+        "validation_report_exists": validation_report_path.exists(),
+        "validation_report_status": validation_status,
+        "runtime_pack_present": (output_dir / "pack.json").exists(),
+        "partial_pack_present": (output_dir / "failed_build" / "partial_pack.json").exists(),
+    }
+    _write_json(run_dir / "golden_pack" / "materialization_stage_report.json", report)
+
+    if validation_status == "passed":
+        return True, "completed"
+    if validation_status == "failed":
+        return True, "completed_with_fail_report"
+    if result.returncode != 0:
+        return False, f"materialization_command_failed_exit_{result.returncode}"
+    return False, "materialization_validation_report_missing_or_invalid"
+
+
 def _evaluate_policy_rows(ai_outputs: dict[str, Any]) -> tuple[list[dict[str, Any]], int, int]:
     rows: list[dict[str, Any]] = []
     eligible_count = 0
@@ -680,16 +771,31 @@ def _run_local_stage(stage: str, run_dir: Path, state: dict[str, Any]) -> None:
 
     if stage == "promotion_check":
         ready = int(state["metrics"].get("ready_count") or 0)
+        materialization_report_path = run_dir / "golden_pack" / "validation_report.json"
+        validation_status = None
+        if materialization_report_path.exists():
+            try:
+                validation_status = str(_load_json(materialization_report_path).get("status") or "")
+            except Exception:
+                validation_status = "invalid"
+        promotable = validation_status == "passed"
         report = {
             "ready_count": ready,
             "blockers": state["metrics"].get("blockers", {}),
             "media_eligible_count": int(state["metrics"].get("media_eligible_count") or 0),
             "policy_borderline_count": int(state["metrics"].get("policy_borderline_count") or 0),
-            "golden_pack_generated": False,
-            "blocked_step": "golden_pack_materialization_run_scoped",
-            "reason": "scoped materialization output not yet implemented and current readiness < 30",
-            "required_manual_or_external_action": "implement scoped materializer output override and rerun after upstream refresh",
-            "next_command": "python scripts/materialize_golden_pack_belgian_birds_mvp_v1.py",
+            "golden_pack_generated": promotable,
+            "materialization_status": validation_status or "missing",
+            "validation_report_status": validation_status or "missing",
+            "runtime_pack_present": (run_dir / "golden_pack" / "pack.json").exists(),
+            "blocked_step": "promotion_apply" if promotable else "golden_pack_materialization_run_scoped",
+            "reason": "materialization passed; manual promotion required"
+            if promotable
+            else "materialization failed or missing validation report",
+            "required_manual_or_external_action": "run explicit promotion command"
+            if promotable
+            else "inspect golden_pack/validation_report.json and rerun upstream stages",
+            "next_command": "python scripts/promote_golden_pack_v1_run_output.py --run-output-dir <run_dir>/golden_pack",
         }
         _write_json(run_dir / "reports" / "final_report.json", report)
         return
@@ -796,10 +902,18 @@ def run_pipeline(
     manifest["source_inat_refresh"] = source_refresh_context
     manifest["normalization_qualification"] = norm_qual_context
     manifest["pmp_generation"] = pmp_context
+    materialization_ctx = _materialization_context(
+        run_dir=run_dir,
+        source_context=source_refresh_context,
+        norm_qual_context=norm_qual_context,
+        pmp_context=pmp_context,
+    )
+    manifest["materialization"] = materialization_ctx
     _set_source_stage_command(stage_states, source_refresh_context)
     _set_stage_command(stage_states, "normalization", _normalization_command(norm_qual_context))
     _set_stage_command(stage_states, "qualification", _qualification_command(norm_qual_context))
     _set_stage_command(stage_states, "pmp_profile_generation", _pmp_generation_command(pmp_context))
+    _set_stage_command(stage_states, "golden_pack_materialization_run_scoped", _materialization_command(materialization_ctx))
 
     _persist_state(run_dir, manifest, stage_states, inventory, expected)
 
@@ -883,6 +997,18 @@ def run_pipeline(
                     break
             elif stage == "pmp_profile_generation":
                 ok, message = _run_pmp_profile_generation(run_dir, pmp_context)
+                if ok:
+                    row["status"] = "completed"
+                    row["message"] = message
+                else:
+                    row["status"] = "blocked_external"
+                    row["message"] = message
+                    manifest["status"] = "blocked_external"
+                    manifest["updated_at"] = datetime.now(timezone.utc).isoformat()
+                    _persist_state(run_dir, manifest, stage_states, inventory, expected)
+                    break
+            elif stage == "golden_pack_materialization_run_scoped":
+                ok, message = _run_materialization_stage(run_dir, materialization_ctx)
                 if ok:
                     row["status"] = "completed"
                     row["message"] = message

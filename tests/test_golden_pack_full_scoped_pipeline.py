@@ -359,3 +359,104 @@ def test_full_scoped_pipeline_candidate_readiness_blocks_when_scoped_inputs_miss
     by_step = {row["step"]: row for row in steps}
     assert by_step["candidate_readiness"]["status"] == "blocked_external"
     assert "candidate_readiness_missing_inputs" in by_step["candidate_readiness"]["message"]
+
+
+def test_full_scoped_pipeline_materialization_passed_run_scoped(tmp_path: Path, monkeypatch) -> None:
+    def fake_run(cmd, cwd, check, capture_output, text):  # type: ignore[no-untyped-def]
+        if cmd[1] == "scripts/fetch_inat_snapshot.py":
+            snapshot_id = cmd[cmd.index("--snapshot-id") + 1]
+            snapshot_root = Path(cmd[cmd.index("--snapshot-root") + 1])
+            snapshot_dir = snapshot_root / snapshot_id
+            (snapshot_dir / "responses").mkdir(parents=True, exist_ok=True)
+            (snapshot_dir / "taxa").mkdir(parents=True, exist_ok=True)
+            (snapshot_dir / "images").mkdir(parents=True, exist_ok=True)
+            (snapshot_dir / "manifest.json").write_text('{"manifest_version":"v1"}\n', encoding="utf-8")
+            return subprocess.CompletedProcess(args=cmd, returncode=0, stdout="fetch-ok", stderr="")
+        if cmd[1] == "scripts/run_pipeline.py":
+            normalized = Path(cmd[cmd.index("--normalized-path") + 1])
+            qualified = Path(cmd[cmd.index("--qualified-path") + 1])
+            export = Path(cmd[cmd.index("--export-path") + 1])
+            normalized.parent.mkdir(parents=True, exist_ok=True)
+            qualified.parent.mkdir(parents=True, exist_ok=True)
+            export.parent.mkdir(parents=True, exist_ok=True)
+            normalized.write_text('{"normalized":true}\n', encoding="utf-8")
+            qualified.write_text('{"qualified":true}\n', encoding="utf-8")
+            export.write_text('{"export":true}\n', encoding="utf-8")
+            return subprocess.CompletedProcess(args=cmd, returncode=0, stdout="pipeline-ok", stderr="")
+        if cmd[1] == "scripts/qualify_inat_snapshot.py":
+            snapshot_id = cmd[cmd.index("--snapshot-id") + 1]
+            snapshot_root = Path(cmd[cmd.index("--snapshot-root") + 1])
+            ai_outputs_path = snapshot_root / snapshot_id / "ai_outputs.json"
+            ai_outputs_path.parent.mkdir(parents=True, exist_ok=True)
+            ai_outputs_path.write_text('{"inaturalist::1":{"pedagogical_media_profile":{"quality":"ok"}}}\n', encoding="utf-8")
+            return subprocess.CompletedProcess(args=cmd, returncode=0, stdout="pmp-ok", stderr="")
+        if cmd[1] == "scripts/materialize_golden_pack_belgian_birds_mvp_v1.py":
+            out_dir = Path(cmd[cmd.index("--output-dir") + 1])
+            out_dir.mkdir(parents=True, exist_ok=True)
+            (out_dir / "validation_report.json").write_text('{"status":"passed"}\n', encoding="utf-8")
+            (out_dir / "pack.json").write_text('{"schema_version":"golden_pack.v1"}\n', encoding="utf-8")
+            (out_dir / "manifest.json").write_text('{"schema_version":"golden_pack_manifest.v1"}\n', encoding="utf-8")
+            return subprocess.CompletedProcess(args=cmd, returncode=0, stdout="mat-ok", stderr="")
+        return subprocess.CompletedProcess(args=cmd, returncode=1, stdout="", stderr="unexpected")
+
+    monkeypatch.setattr(orchestrator.subprocess, "run", fake_run)
+    run_dir = orchestrator.run_pipeline(mode="apply", output_root=tmp_path, skip_external=False)
+    steps = _load(run_dir / "pipeline_plan.json")["steps"]
+    by_step = {row["step"]: row for row in steps}
+    assert by_step["golden_pack_materialization_run_scoped"]["status"] == "completed"
+    assert by_step["promotion_check"]["status"] == "completed"
+    assert by_step["promotion_apply"]["status"] == "blocked_external"
+    final_report = _load(run_dir / "reports" / "final_report.json")
+    assert final_report["validation_report_status"] == "passed"
+    assert final_report["runtime_pack_present"] is True
+
+
+def test_full_scoped_pipeline_materialization_failed_no_runtime_pack(tmp_path: Path, monkeypatch) -> None:
+    def fake_run(cmd, cwd, check, capture_output, text):  # type: ignore[no-untyped-def]
+        if cmd[1] == "scripts/fetch_inat_snapshot.py":
+            snapshot_id = cmd[cmd.index("--snapshot-id") + 1]
+            snapshot_root = Path(cmd[cmd.index("--snapshot-root") + 1])
+            snapshot_dir = snapshot_root / snapshot_id
+            (snapshot_dir / "responses").mkdir(parents=True, exist_ok=True)
+            (snapshot_dir / "taxa").mkdir(parents=True, exist_ok=True)
+            (snapshot_dir / "images").mkdir(parents=True, exist_ok=True)
+            (snapshot_dir / "manifest.json").write_text('{"manifest_version":"v1"}\n', encoding="utf-8")
+            return subprocess.CompletedProcess(args=cmd, returncode=0, stdout="fetch-ok", stderr="")
+        if cmd[1] == "scripts/run_pipeline.py":
+            normalized = Path(cmd[cmd.index("--normalized-path") + 1])
+            qualified = Path(cmd[cmd.index("--qualified-path") + 1])
+            export = Path(cmd[cmd.index("--export-path") + 1])
+            normalized.parent.mkdir(parents=True, exist_ok=True)
+            qualified.parent.mkdir(parents=True, exist_ok=True)
+            export.parent.mkdir(parents=True, exist_ok=True)
+            normalized.write_text('{"normalized":true}\n', encoding="utf-8")
+            qualified.write_text('{"qualified":true}\n', encoding="utf-8")
+            export.write_text('{"export":true}\n', encoding="utf-8")
+            return subprocess.CompletedProcess(args=cmd, returncode=0, stdout="pipeline-ok", stderr="")
+        if cmd[1] == "scripts/qualify_inat_snapshot.py":
+            snapshot_id = cmd[cmd.index("--snapshot-id") + 1]
+            snapshot_root = Path(cmd[cmd.index("--snapshot-root") + 1])
+            ai_outputs_path = snapshot_root / snapshot_id / "ai_outputs.json"
+            ai_outputs_path.parent.mkdir(parents=True, exist_ok=True)
+            ai_outputs_path.write_text('{"inaturalist::1":{"pedagogical_media_profile":{"quality":"ok"}}}\n', encoding="utf-8")
+            return subprocess.CompletedProcess(args=cmd, returncode=0, stdout="pmp-ok", stderr="")
+        if cmd[1] == "scripts/materialize_golden_pack_belgian_birds_mvp_v1.py":
+            out_dir = Path(cmd[cmd.index("--output-dir") + 1])
+            out_dir.mkdir(parents=True, exist_ok=True)
+            (out_dir / "validation_report.json").write_text('{"status":"failed"}\n', encoding="utf-8")
+            (out_dir / "failed_build").mkdir(parents=True, exist_ok=True)
+            (out_dir / "failed_build" / "partial_pack.json").write_text('{"schema_version":"golden_pack.v1"}\n', encoding="utf-8")
+            return subprocess.CompletedProcess(args=cmd, returncode=1, stdout="", stderr="mat-failed")
+        return subprocess.CompletedProcess(args=cmd, returncode=1, stdout="", stderr="unexpected")
+
+    monkeypatch.setattr(orchestrator.subprocess, "run", fake_run)
+    run_dir = orchestrator.run_pipeline(mode="apply", output_root=tmp_path, skip_external=False)
+    steps = _load(run_dir / "pipeline_plan.json")["steps"]
+    by_step = {row["step"]: row for row in steps}
+    assert by_step["golden_pack_materialization_run_scoped"]["status"] == "completed"
+    assert by_step["golden_pack_materialization_run_scoped"]["message"] == "completed_with_fail_report"
+    assert by_step["promotion_check"]["status"] == "completed"
+    final_report = _load(run_dir / "reports" / "final_report.json")
+    assert final_report["validation_report_status"] == "failed"
+    assert final_report["runtime_pack_present"] is False
+    assert (run_dir / "golden_pack" / "failed_build" / "partial_pack.json").exists()
