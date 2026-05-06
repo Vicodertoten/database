@@ -1,0 +1,609 @@
+{
+  "generated_at": "2026-05-06T18:35:50.901211+00:00",
+  "rejection_reason_counts": {
+    "insufficient_label_safe_distractors": 7,
+    "no_basic_identification_eligible_media": 19,
+    "no_local_media_file": 1,
+    "unknown_or_needs_manual_review": 4
+  },
+  "schema_version": "golden_pack_v1_blocker_diagnosis.v1",
+  "summary": {
+    "rejected_targets": 25,
+    "safe_ready_targets": 32,
+    "selected_targets": 7
+  },
+  "targets": [
+    {
+      "attribution_complete": true,
+      "distractor_count_label_safe": 3,
+      "eligible_media_count": 0,
+      "fr_label": "Palombe",
+      "has_local_media": true,
+      "local_media_count": 1,
+      "pmp_policy_status": "basic_identification_not_eligible",
+      "rejection_reason_buckets": [
+        "no_basic_identification_eligible_media"
+      ],
+      "rejection_reasons": [
+        "no_basic_identification_eligible_media"
+      ],
+      "scientific_name": "Columba palumbus",
+      "source_media_id": "100909260",
+      "suggested_fix": "consolidate_pmp_policy_inputs_or_select_alternate_eligible_media",
+      "taxon_ref": "taxon:birds:000001"
+    },
+    {
+      "attribution_complete": true,
+      "distractor_count_label_safe": 3,
+      "eligible_media_count": 0,
+      "fr_label": "Corbeau corneille",
+      "has_local_media": true,
+      "local_media_count": 1,
+      "pmp_policy_status": "basic_identification_not_eligible",
+      "rejection_reason_buckets": [
+        "no_basic_identification_eligible_media"
+      ],
+      "rejection_reasons": [
+        "no_basic_identification_eligible_media"
+      ],
+      "scientific_name": "Corvus corone",
+      "source_media_id": "109294921",
+      "suggested_fix": "consolidate_pmp_policy_inputs_or_select_alternate_eligible_media",
+      "taxon_ref": "taxon:birds:000002"
+    },
+    {
+      "attribution_complete": true,
+      "distractor_count_label_safe": 2,
+      "eligible_media_count": 1,
+      "fr_label": "Mésange bleue",
+      "has_local_media": true,
+      "local_media_count": 1,
+      "pmp_policy_status": "basic_identification_eligible",
+      "rejection_reason_buckets": [
+        "insufficient_label_safe_distractors"
+      ],
+      "rejection_reasons": [
+        "insufficient_label_safe_distractors"
+      ],
+      "scientific_name": "Cyanistes caeruleus",
+      "source_media_id": "11889278",
+      "suggested_fix": "extend_projected_distractor_coverage_with_label_safe_candidates",
+      "taxon_ref": "taxon:birds:000003"
+    },
+    {
+      "attribution_complete": true,
+      "distractor_count_label_safe": 3,
+      "eligible_media_count": 1,
+      "fr_label": "Rouge-gorge familier",
+      "has_local_media": true,
+      "local_media_count": 1,
+      "pmp_policy_status": "basic_identification_eligible",
+      "rejection_reason_buckets": [],
+      "rejection_reasons": [],
+      "scientific_name": "Erithacus rubecula",
+      "source_media_id": "108990173",
+      "suggested_fix": "none",
+      "taxon_ref": "taxon:birds:000004"
+    },
+    {
+      "attribution_complete": true,
+      "distractor_count_label_safe": 3,
+      "eligible_media_count": 0,
+      "fr_label": "Pinson des arbres",
+      "has_local_media": true,
+      "local_media_count": 1,
+      "pmp_policy_status": "basic_identification_not_eligible",
+      "rejection_reason_buckets": [
+        "no_basic_identification_eligible_media"
+      ],
+      "rejection_reasons": [
+        "no_basic_identification_eligible_media"
+      ],
+      "scientific_name": "Fringilla coelebs",
+      "source_media_id": "101911464",
+      "suggested_fix": "consolidate_pmp_policy_inputs_or_select_alternate_eligible_media",
+      "taxon_ref": "taxon:birds:000005"
+    },
+    {
+      "attribution_complete": true,
+      "distractor_count_label_safe": 3,
+      "eligible_media_count": 0,
+      "fr_label": "Geai des chênes",
+      "has_local_media": true,
+      "local_media_count": 1,
+      "pmp_policy_status": "basic_identification_not_eligible",
+      "rejection_reason_buckets": [
+        "no_basic_identification_eligible_media"
+      ],
+      "rejection_reasons": [
+        "no_basic_identification_eligible_media"
+      ],
+      "scientific_name": "Garrulus glandarius",
+      "source_media_id": "109294786",
+      "suggested_fix": "consolidate_pmp_policy_inputs_or_select_alternate_eligible_media",
+      "taxon_ref": "taxon:birds:000006"
+    },
+    {
+      "attribution_complete": true,
+      "distractor_count_label_safe": 3,
+      "eligible_media_count": 0,
+      "fr_label": "Mésange charbonnière",
+      "has_local_media": true,
+      "local_media_count": 1,
+      "pmp_policy_status": "basic_identification_not_eligible",
+      "rejection_reason_buckets": [
+        "no_basic_identification_eligible_media"
+      ],
+      "rejection_reasons": [
+        "no_basic_identification_eligible_media"
+      ],
+      "scientific_name": "Parus major",
+      "source_media_id": "108990786",
+      "suggested_fix": "consolidate_pmp_policy_inputs_or_select_alternate_eligible_media",
+      "taxon_ref": "taxon:birds:000008"
+    },
+    {
+      "attribution_complete": true,
+      "distractor_count_label_safe": 3,
+      "eligible_media_count": 1,
+      "fr_label": "Moineau domestique",
+      "has_local_media": true,
+      "local_media_count": 1,
+      "pmp_policy_status": "basic_identification_eligible",
+      "rejection_reason_buckets": [],
+      "rejection_reasons": [],
+      "scientific_name": "Passer domesticus",
+      "source_media_id": "113198384",
+      "suggested_fix": "none",
+      "taxon_ref": "taxon:birds:000009"
+    },
+    {
+      "attribution_complete": true,
+      "distractor_count_label_safe": 3,
+      "eligible_media_count": 1,
+      "fr_label": "Pie bavarde",
+      "has_local_media": true,
+      "local_media_count": 1,
+      "pmp_policy_status": "basic_identification_eligible",
+      "rejection_reason_buckets": [],
+      "rejection_reasons": [],
+      "scientific_name": "Pica pica",
+      "source_media_id": "108293198",
+      "suggested_fix": "none",
+      "taxon_ref": "taxon:birds:000010"
+    },
+    {
+      "attribution_complete": true,
+      "distractor_count_label_safe": 3,
+      "eligible_media_count": 0,
+      "fr_label": "Étourneau sansonnet",
+      "has_local_media": true,
+      "local_media_count": 1,
+      "pmp_policy_status": "basic_identification_not_eligible",
+      "rejection_reason_buckets": [
+        "no_basic_identification_eligible_media"
+      ],
+      "rejection_reasons": [
+        "no_basic_identification_eligible_media"
+      ],
+      "scientific_name": "Sturnus vulgaris",
+      "source_media_id": "12159188",
+      "suggested_fix": "consolidate_pmp_policy_inputs_or_select_alternate_eligible_media",
+      "taxon_ref": "taxon:birds:000011"
+    },
+    {
+      "attribution_complete": true,
+      "distractor_count_label_safe": 3,
+      "eligible_media_count": 1,
+      "fr_label": "Fauvette à tête noire",
+      "has_local_media": true,
+      "local_media_count": 1,
+      "pmp_policy_status": "basic_identification_eligible",
+      "rejection_reason_buckets": [],
+      "rejection_reasons": [],
+      "scientific_name": "Sylvia atricapilla",
+      "source_media_id": "124138505",
+      "suggested_fix": "none",
+      "taxon_ref": "taxon:birds:000012"
+    },
+    {
+      "attribution_complete": true,
+      "distractor_count_label_safe": 3,
+      "eligible_media_count": 0,
+      "fr_label": "Troglodyte mignon",
+      "has_local_media": true,
+      "local_media_count": 1,
+      "pmp_policy_status": "basic_identification_not_eligible",
+      "rejection_reason_buckets": [
+        "no_basic_identification_eligible_media"
+      ],
+      "rejection_reasons": [
+        "no_basic_identification_eligible_media"
+      ],
+      "scientific_name": "Troglodytes troglodytes",
+      "source_media_id": "101912004",
+      "suggested_fix": "consolidate_pmp_policy_inputs_or_select_alternate_eligible_media",
+      "taxon_ref": "taxon:birds:000013"
+    },
+    {
+      "attribution_complete": true,
+      "distractor_count_label_safe": 3,
+      "eligible_media_count": 0,
+      "fr_label": "Merle noir",
+      "has_local_media": true,
+      "local_media_count": 1,
+      "pmp_policy_status": "basic_identification_not_eligible",
+      "rejection_reason_buckets": [
+        "no_basic_identification_eligible_media"
+      ],
+      "rejection_reasons": [
+        "no_basic_identification_eligible_media"
+      ],
+      "scientific_name": "Turdus merula",
+      "source_media_id": "106685027",
+      "suggested_fix": "consolidate_pmp_policy_inputs_or_select_alternate_eligible_media",
+      "taxon_ref": "taxon:birds:000014"
+    },
+    {
+      "attribution_complete": true,
+      "distractor_count_label_safe": 3,
+      "eligible_media_count": 1,
+      "fr_label": "Grive chanteuse",
+      "has_local_media": true,
+      "local_media_count": 1,
+      "pmp_policy_status": "basic_identification_eligible",
+      "rejection_reason_buckets": [],
+      "rejection_reasons": [],
+      "scientific_name": "Turdus philomelos",
+      "source_media_id": "108788210",
+      "suggested_fix": "none",
+      "taxon_ref": "taxon:birds:000015"
+    },
+    {
+      "attribution_complete": true,
+      "distractor_count_label_safe": 3,
+      "eligible_media_count": 0,
+      "fr_label": "Chardonneret élégant",
+      "has_local_media": true,
+      "local_media_count": 1,
+      "pmp_policy_status": "basic_identification_not_eligible",
+      "rejection_reason_buckets": [
+        "no_basic_identification_eligible_media"
+      ],
+      "rejection_reasons": [
+        "no_basic_identification_eligible_media"
+      ],
+      "scientific_name": "Carduelis carduelis",
+      "source_media_id": "111276293",
+      "suggested_fix": "consolidate_pmp_policy_inputs_or_select_alternate_eligible_media",
+      "taxon_ref": "taxon:birds:000016"
+    },
+    {
+      "attribution_complete": true,
+      "distractor_count_label_safe": 3,
+      "eligible_media_count": 0,
+      "fr_label": "Verdier d'Europe",
+      "has_local_media": true,
+      "local_media_count": 1,
+      "pmp_policy_status": "basic_identification_not_eligible",
+      "rejection_reason_buckets": [
+        "no_basic_identification_eligible_media"
+      ],
+      "rejection_reasons": [
+        "no_basic_identification_eligible_media"
+      ],
+      "scientific_name": "Chloris chloris",
+      "source_media_id": "112996341",
+      "suggested_fix": "consolidate_pmp_policy_inputs_or_select_alternate_eligible_media",
+      "taxon_ref": "taxon:birds:000017"
+    },
+    {
+      "attribution_complete": true,
+      "distractor_count_label_safe": 3,
+      "eligible_media_count": 0,
+      "fr_label": "Gros-bec casse-noyaux",
+      "has_local_media": true,
+      "local_media_count": 1,
+      "pmp_policy_status": "basic_identification_not_eligible",
+      "rejection_reason_buckets": [
+        "no_basic_identification_eligible_media"
+      ],
+      "rejection_reasons": [
+        "no_basic_identification_eligible_media"
+      ],
+      "scientific_name": "Coccothraustes coccothraustes",
+      "source_media_id": "113362223",
+      "suggested_fix": "consolidate_pmp_policy_inputs_or_select_alternate_eligible_media",
+      "taxon_ref": "taxon:birds:000019"
+    },
+    {
+      "attribution_complete": true,
+      "distractor_count_label_safe": 3,
+      "eligible_media_count": 1,
+      "fr_label": "Bourre",
+      "has_local_media": true,
+      "local_media_count": 1,
+      "pmp_policy_status": "basic_identification_eligible",
+      "rejection_reason_buckets": [],
+      "rejection_reasons": [],
+      "scientific_name": "Anas platyrhynchos",
+      "source_media_id": "113273957",
+      "suggested_fix": "none",
+      "taxon_ref": "taxon:birds:000021"
+    },
+    {
+      "attribution_complete": true,
+      "distractor_count_label_safe": 2,
+      "eligible_media_count": 1,
+      "fr_label": null,
+      "has_local_media": true,
+      "local_media_count": 1,
+      "pmp_policy_status": "basic_identification_eligible",
+      "rejection_reason_buckets": [
+        "insufficient_label_safe_distractors",
+        "unknown_or_needs_manual_review"
+      ],
+      "rejection_reasons": [
+        "insufficient_label_safe_distractors",
+        "missing_fr_runtime_safe_label"
+      ],
+      "scientific_name": "Cygnus olor",
+      "source_media_id": "108344756",
+      "suggested_fix": "extend_projected_distractor_coverage_with_label_safe_candidates",
+      "taxon_ref": "taxon:birds:000023"
+    },
+    {
+      "attribution_complete": true,
+      "distractor_count_label_safe": 2,
+      "eligible_media_count": 1,
+      "fr_label": "Foulque macroule",
+      "has_local_media": true,
+      "local_media_count": 1,
+      "pmp_policy_status": "basic_identification_eligible",
+      "rejection_reason_buckets": [
+        "insufficient_label_safe_distractors"
+      ],
+      "rejection_reasons": [
+        "insufficient_label_safe_distractors"
+      ],
+      "scientific_name": "Fulica atra",
+      "source_media_id": "100906257",
+      "suggested_fix": "extend_projected_distractor_coverage_with_label_safe_candidates",
+      "taxon_ref": "taxon:birds:000024"
+    },
+    {
+      "attribution_complete": true,
+      "distractor_count_label_safe": 2,
+      "eligible_media_count": 1,
+      "fr_label": "Gallinule poule-d'eau",
+      "has_local_media": true,
+      "local_media_count": 1,
+      "pmp_policy_status": "basic_identification_eligible",
+      "rejection_reason_buckets": [
+        "insufficient_label_safe_distractors"
+      ],
+      "rejection_reasons": [
+        "insufficient_label_safe_distractors"
+      ],
+      "scientific_name": "Gallinula chloropus",
+      "source_media_id": "11908352",
+      "suggested_fix": "extend_projected_distractor_coverage_with_label_safe_candidates",
+      "taxon_ref": "taxon:birds:000025"
+    },
+    {
+      "attribution_complete": true,
+      "distractor_count_label_safe": 3,
+      "eligible_media_count": 0,
+      "fr_label": null,
+      "has_local_media": true,
+      "local_media_count": 1,
+      "pmp_policy_status": "basic_identification_not_eligible",
+      "rejection_reason_buckets": [
+        "no_basic_identification_eligible_media",
+        "unknown_or_needs_manual_review"
+      ],
+      "rejection_reasons": [
+        "missing_fr_runtime_safe_label",
+        "no_basic_identification_eligible_media"
+      ],
+      "scientific_name": "Falco tinnunculus",
+      "source_media_id": "103441671",
+      "suggested_fix": "consolidate_pmp_policy_inputs_or_select_alternate_eligible_media",
+      "taxon_ref": "taxon:birds:000033"
+    },
+    {
+      "attribution_complete": true,
+      "distractor_count_label_safe": 3,
+      "eligible_media_count": 0,
+      "fr_label": "Chat-huant",
+      "has_local_media": true,
+      "local_media_count": 1,
+      "pmp_policy_status": "basic_identification_not_eligible",
+      "rejection_reason_buckets": [
+        "no_basic_identification_eligible_media"
+      ],
+      "rejection_reasons": [
+        "no_basic_identification_eligible_media"
+      ],
+      "scientific_name": "Strix aluco",
+      "source_media_id": "219382150",
+      "suggested_fix": "consolidate_pmp_policy_inputs_or_select_alternate_eligible_media",
+      "taxon_ref": "taxon:birds:000035"
+    },
+    {
+      "attribution_complete": true,
+      "distractor_count_label_safe": 2,
+      "eligible_media_count": 1,
+      "fr_label": "Hibou moyen-duc",
+      "has_local_media": true,
+      "local_media_count": 1,
+      "pmp_policy_status": "basic_identification_eligible",
+      "rejection_reason_buckets": [
+        "insufficient_label_safe_distractors"
+      ],
+      "rejection_reasons": [
+        "insufficient_label_safe_distractors"
+      ],
+      "scientific_name": "Asio otus",
+      "source_media_id": "109106813",
+      "suggested_fix": "extend_projected_distractor_coverage_with_label_safe_candidates",
+      "taxon_ref": "taxon:birds:000036"
+    },
+    {
+      "attribution_complete": true,
+      "distractor_count_label_safe": 2,
+      "eligible_media_count": 1,
+      "fr_label": "Chevêche d'Athéna",
+      "has_local_media": true,
+      "local_media_count": 1,
+      "pmp_policy_status": "basic_identification_eligible",
+      "rejection_reason_buckets": [
+        "insufficient_label_safe_distractors"
+      ],
+      "rejection_reasons": [
+        "insufficient_label_safe_distractors"
+      ],
+      "scientific_name": "Athene noctua",
+      "source_media_id": "153104665",
+      "suggested_fix": "extend_projected_distractor_coverage_with_label_safe_candidates",
+      "taxon_ref": "taxon:birds:000037"
+    },
+    {
+      "attribution_complete": true,
+      "distractor_count_label_safe": 3,
+      "eligible_media_count": 0,
+      "fr_label": null,
+      "has_local_media": true,
+      "local_media_count": 1,
+      "pmp_policy_status": "basic_identification_not_eligible",
+      "rejection_reason_buckets": [
+        "no_basic_identification_eligible_media",
+        "unknown_or_needs_manual_review"
+      ],
+      "rejection_reasons": [
+        "missing_fr_runtime_safe_label",
+        "no_basic_identification_eligible_media"
+      ],
+      "scientific_name": "Dendrocopos major",
+      "source_media_id": "108991122",
+      "suggested_fix": "consolidate_pmp_policy_inputs_or_select_alternate_eligible_media",
+      "taxon_ref": "taxon:birds:000039"
+    },
+    {
+      "attribution_complete": true,
+      "distractor_count_label_safe": 3,
+      "eligible_media_count": 0,
+      "fr_label": null,
+      "has_local_media": true,
+      "local_media_count": 1,
+      "pmp_policy_status": "basic_identification_not_eligible",
+      "rejection_reason_buckets": [
+        "no_basic_identification_eligible_media",
+        "unknown_or_needs_manual_review"
+      ],
+      "rejection_reasons": [
+        "missing_fr_runtime_safe_label",
+        "no_basic_identification_eligible_media"
+      ],
+      "scientific_name": "Delichon urbicum",
+      "source_media_id": "131285019",
+      "suggested_fix": "consolidate_pmp_policy_inputs_or_select_alternate_eligible_media",
+      "taxon_ref": "taxon:birds:000042"
+    },
+    {
+      "attribution_complete": true,
+      "distractor_count_label_safe": 3,
+      "eligible_media_count": 0,
+      "fr_label": "Hirondelle de cheminée",
+      "has_local_media": true,
+      "local_media_count": 1,
+      "pmp_policy_status": "basic_identification_not_eligible",
+      "rejection_reason_buckets": [
+        "no_basic_identification_eligible_media"
+      ],
+      "rejection_reasons": [
+        "no_basic_identification_eligible_media"
+      ],
+      "scientific_name": "Hirundo rustica",
+      "source_media_id": "120221697",
+      "suggested_fix": "consolidate_pmp_policy_inputs_or_select_alternate_eligible_media",
+      "taxon_ref": "taxon:birds:000043"
+    },
+    {
+      "attribution_complete": true,
+      "distractor_count_label_safe": 3,
+      "eligible_media_count": 0,
+      "fr_label": "Pie-grièche écorcheur",
+      "has_local_media": false,
+      "local_media_count": 0,
+      "pmp_policy_status": "basic_identification_not_eligible",
+      "rejection_reason_buckets": [
+        "no_basic_identification_eligible_media",
+        "no_local_media_file"
+      ],
+      "rejection_reasons": [
+        "no_basic_identification_eligible_media",
+        "no_local_media_file"
+      ],
+      "scientific_name": "Lanius collurio",
+      "source_media_id": "518180607",
+      "suggested_fix": "consolidate_pmp_policy_inputs_or_select_alternate_eligible_media",
+      "taxon_ref": "taxon:birds:000047"
+    },
+    {
+      "attribution_complete": true,
+      "distractor_count_label_safe": 3,
+      "eligible_media_count": 0,
+      "fr_label": "Choucas des tours",
+      "has_local_media": true,
+      "local_media_count": 1,
+      "pmp_policy_status": "basic_identification_not_eligible",
+      "rejection_reason_buckets": [
+        "no_basic_identification_eligible_media"
+      ],
+      "rejection_reasons": [
+        "no_basic_identification_eligible_media"
+      ],
+      "scientific_name": "Coloeus monedula",
+      "source_media_id": "106017436",
+      "suggested_fix": "consolidate_pmp_policy_inputs_or_select_alternate_eligible_media",
+      "taxon_ref": "taxon:birds:000048"
+    },
+    {
+      "attribution_complete": true,
+      "distractor_count_label_safe": 3,
+      "eligible_media_count": 1,
+      "fr_label": "Corbeau freux",
+      "has_local_media": true,
+      "local_media_count": 1,
+      "pmp_policy_status": "basic_identification_eligible",
+      "rejection_reason_buckets": [],
+      "rejection_reasons": [],
+      "scientific_name": "Corvus frugilegus",
+      "source_media_id": "143943080",
+      "suggested_fix": "none",
+      "taxon_ref": "taxon:birds:000049"
+    },
+    {
+      "attribution_complete": true,
+      "distractor_count_label_safe": 2,
+      "eligible_media_count": 0,
+      "fr_label": "Tourterelle turque",
+      "has_local_media": true,
+      "local_media_count": 1,
+      "pmp_policy_status": "basic_identification_not_eligible",
+      "rejection_reason_buckets": [
+        "insufficient_label_safe_distractors",
+        "no_basic_identification_eligible_media"
+      ],
+      "rejection_reasons": [
+        "insufficient_label_safe_distractors",
+        "no_basic_identification_eligible_media"
+      ],
+      "scientific_name": "Streptopelia decaocto",
+      "source_media_id": "115183713",
+      "suggested_fix": "consolidate_pmp_policy_inputs_or_select_alternate_eligible_media",
+      "taxon_ref": "taxon:birds:000079"
+    }
+  ]
+}

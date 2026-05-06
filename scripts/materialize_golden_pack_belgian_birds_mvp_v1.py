@@ -36,6 +36,7 @@ SCHEMA_VALIDATION_REPORT_PATH = REPO_ROOT / "schemas" / "golden_pack_validation_
 OUTPUT_DIR = REPO_ROOT / "data" / "exports" / "golden_packs" / "belgian_birds_mvp_v1"
 OUTPUT_MEDIA_DIR = OUTPUT_DIR / "media"
 OUTPUT_PACK_PATH = OUTPUT_DIR / "pack.json"
+OUTPUT_FAILED_PARTIAL_PACK_PATH = OUTPUT_DIR / "failed_build" / "partial_pack.json"
 OUTPUT_MANIFEST_PATH = OUTPUT_DIR / "manifest.json"
 OUTPUT_VALIDATION_REPORT_PATH = OUTPUT_DIR / "validation_report.json"
 
@@ -721,15 +722,22 @@ def build_golden_pack() -> dict[str, Any]:
 def write_outputs() -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
     pack_payload, manifest_payload, validation_report, _, blockers = _build_golden_pack_artifact()
 
-    _write_json(OUTPUT_PACK_PATH, pack_payload)
     _write_json(OUTPUT_VALIDATION_REPORT_PATH, validation_report)
     _write_json(OUTPUT_MANIFEST_PATH, manifest_payload)
 
     if blockers:
+        # Failed builds must not be confused with runtime-ready canonical packs.
+        if OUTPUT_PACK_PATH.exists():
+            OUTPUT_PACK_PATH.unlink()
+        _write_json(OUTPUT_FAILED_PARTIAL_PACK_PATH, pack_payload)
         raise ContractError(
             "Materialization failed with blockers; see validation_report.json: "
             + "; ".join(blockers)
         )
+
+    _write_json(OUTPUT_PACK_PATH, pack_payload)
+    if OUTPUT_FAILED_PARTIAL_PACK_PATH.exists():
+        OUTPUT_FAILED_PARTIAL_PACK_PATH.unlink()
 
     _json_schema_validate(pack_payload, SCHEMA_PACK_PATH, "pack")
     _json_schema_validate(manifest_payload, SCHEMA_MANIFEST_PATH, "manifest")
