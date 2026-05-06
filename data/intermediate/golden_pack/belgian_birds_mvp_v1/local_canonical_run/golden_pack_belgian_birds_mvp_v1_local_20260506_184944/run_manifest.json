@@ -1,0 +1,23 @@
+{
+  "artifacts": {
+    "candidate_readiness": "candidate_readiness.json",
+    "input_inventory": "input_inventory.json",
+    "lineage_checks": "lineage_checks.json",
+    "run_manifest": "run_manifest.json"
+  },
+  "flags": {
+    "DATABASE_PHASE_CLOSED": false,
+    "PERSIST_DISTRACTOR_RELATIONSHIPS_V1": false
+  },
+  "generated_at": "2026-05-06T18:49:45.003000+00:00",
+  "non_actions": [
+    "no_runtime_canonical_pack_generation",
+    "PERSIST_DISTRACTOR_RELATIONSHIPS_V1 remains false",
+    "DATABASE_PHASE_CLOSED remains false",
+    "no_historical_evidence_rewrite"
+  ],
+  "output_dir": "data/intermediate/golden_pack/belgian_birds_mvp_v1/local_canonical_run/golden_pack_belgian_birds_mvp_v1_local_20260506_184944",
+  "purpose": "prepare_coherent_local_canonical_rerun_inputs_for_golden_pack_v1",
+  "run_id": "golden_pack_belgian_birds_mvp_v1_local_20260506_184944",
+  "schema_version": "golden_pack_local_canonical_run_manifest.v1"
+}

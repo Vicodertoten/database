@@ -1,0 +1,58 @@
+{
+  "artifact_lineage_meta": {
+    "distractor_projection_run_date": "2026-05-05T12:25:35.697275+00:00",
+    "localized_name_apply_plan_generated_at": "2026-05-05T16:58:38.047796+00:00",
+    "localized_plan_hash": "8adeed82edfd168cd560740820b45678cca1f362e1ef8d85502d33d98821fbe1",
+    "pmp_ai_outputs_path": "data/raw/inaturalist/palier1-be-birds-50taxa-run003-pmp-policy-broader-400-20260504/ai_outputs.json",
+    "pmp_snapshot_id": "palier1-be-birds-50taxa-run003-pmp-policy-broader-400-20260504",
+    "qualified_export_generated_at": "2026-05-02T16:08:33.846134+00:00"
+  },
+  "artifacts_with_missing_lineage_fields": [],
+  "overlaps": {
+    "canonical_taxa_localized_plan_vs_qualified_export": {
+      "intersection_count": 32,
+      "localized_plan_count": 50,
+      "qualified_export_count": 32
+    },
+    "pmp_media_ids_vs_policy_media_ids": {
+      "intersection_count": 400,
+      "pmp_media_count": 400,
+      "policy_media_count": 400
+    },
+    "qualified_media_ids_vs_pmp_media_ids": {
+      "intersection_count": 377,
+      "pmp_media_count": 400,
+      "qualified_media_count": 1351
+    },
+    "safe_ready_targets_vs_distractor_projection_targets": {
+      "distractor_target_count": 50,
+      "intersection_count": 32,
+      "safe_ready_count": 32
+    }
+  },
+  "target_level_gaps": {
+    "targets_rejected_by_media_but_with_local_and_pmp_present": [
+      "taxon:birds:000001",
+      "taxon:birds:000002",
+      "taxon:birds:000005",
+      "taxon:birds:000006",
+      "taxon:birds:000008",
+      "taxon:birds:000011",
+      "taxon:birds:000013",
+      "taxon:birds:000014",
+      "taxon:birds:000016",
+      "taxon:birds:000017",
+      "taxon:birds:000019",
+      "taxon:birds:000033",
+      "taxon:birds:000035",
+      "taxon:birds:000039",
+      "taxon:birds:000042",
+      "taxon:birds:000043",
+      "taxon:birds:000048",
+      "taxon:birds:000079"
+    ],
+    "targets_with_local_media_but_without_pmp": [],
+    "targets_with_pmp_but_without_policy_projection": [],
+    "targets_with_policy_eligible_media_but_local_file_absent": []
+  }
+}

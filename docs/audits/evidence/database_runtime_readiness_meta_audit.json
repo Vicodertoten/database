@@ -1,0 +1,76 @@
+{
+  "schema_version": "database_runtime_readiness_meta_audit.v1",
+  "generated_at": "2026-05-06T00:00:00Z",
+  "verdict": {
+    "golden_pack_30_30_ready": false,
+    "classification": "data_pipeline_coherence_gap",
+    "materializer_bug_primary_cause": false
+  },
+  "current_state": {
+    "safe_ready_targets": 32,
+    "selected_targets": 7,
+    "rejected_targets": 25,
+    "rejection_buckets": {
+      "no_basic_identification_eligible_media": 19,
+      "no_local_media_file": 1,
+      "insufficient_label_safe_distractors": 7,
+      "unknown_or_needs_manual_review": 4
+    }
+  },
+  "active_contracts": {
+    "golden_pack_v1": "active",
+    "golden_pack_manifest_v1": "active",
+    "golden_pack_validation_report_v1": "active",
+    "localized_name_source_policy_v1": "active",
+    "pmp_qualification_policy_v1": "active",
+    "distractor_projection_sprint13": "active_supporting_but_older",
+    "pack_materialization_v2": "legacy_non_mvp"
+  },
+  "pipeline_coherence_risks": [
+    "localized_name readiness uses sprint14b.3 plan while distractor projection is sprint13",
+    "golden materializer consumes run003_v11 export plus broader_400_20260504 PMP snapshot",
+    "primary media selection trace may not represent latest eligible media alternatives for each target",
+    "runtime readiness audit with warnings is not equivalent to strict 30/30 golden pass"
+  ],
+  "rerun_recommendation": "LOCAL_CANONICAL_RERUN_RECOMMENDED",
+  "recommendation_rationale": [
+    "need aligned lineage for names, distractors, qualified export, PMP policy, and golden selection",
+    "targeted single-layer rerun likely leaves cross-layer drift unresolved",
+    "current tests validate contract behavior but not real-data coherence"
+  ],
+  "next_minimal_commits": [
+    "coherence lineage audit script for golden inputs",
+    "aligned local canonical rerun across qualified+pmp+distractor layers",
+    "rerun blocker diagnosis and compare rejection deltas",
+    "golden regeneration only when 30/30 passed",
+    "runtime smoke test on passed canonical pack"
+  ],
+  "non_actions": [
+    "do not relax basic_identification eligible gate",
+    "do not accept borderline media as primary quiz images",
+    "do not ship 7/30 as MVP",
+    "do not consume failed_build partial pack in runtime",
+    "do not persist distractor relationships",
+    "do not set DATABASE_PHASE_CLOSED true",
+    "do not set PERSIST_DISTRACTOR_RELATIONSHIPS_V1 true",
+    "do not move business logic into runtime"
+  ],
+  "sources": [
+    "docs/architecture/MASTER_REFERENCE.md",
+    "docs/architecture/GOLDEN_PACK_SPEC.md",
+    "docs/foundation/localized-name-source-policy-v1.md",
+    "docs/foundation/pmp-qualification-policy-v1.md",
+    "docs/audits/database-phase-closure-inventory.md",
+    "docs/audits/database-integrity-runtime-handoff-audit.md",
+    "docs/audits/evidence/database_integrity_runtime_handoff_audit.json",
+    "docs/audits/evidence/localized_name_apply_plan_v1.json",
+    "docs/audits/evidence/localized_name_projection_vs_14b_audit_reconciliation.json",
+    "docs/audits/evidence/distractor_relationships_v1_projected_sprint13.json",
+    "docs/audits/evidence/golden_pack_v1_blocker_diagnosis.json",
+    "scripts/materialize_golden_pack_belgian_birds_mvp_v1.py",
+    "scripts/diagnose_golden_pack_belgian_birds_mvp_v1_blockers.py",
+    "tests/test_golden_pack_v1.py",
+    "tests/test_golden_pack_v1_schemas.py",
+    "tests/test_sprint14c_runtime_handoff.py"
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "generated_at": "2026-05-06T18:49:44.846973+00:00",
+  "inputs": [
+    {
+      "exists": true,
+      "generated_at": "2026-05-05T16:58:38.047796+00:00",
+      "path": "docs/audits/evidence/localized_name_apply_plan_v1.json",
+      "plan_hash": "8adeed82edfd168cd560740820b45678cca1f362e1ef8d85502d33d98821fbe1",
+      "record_count": 744,
+      "role": "source",
+      "schema_version": "localized_name_apply_plan_v1",
+      "sha256": "30429dfdc41e56fe5719872595d618769c1ec178bd33ee88ad43b53280aad191"
+    },
+    {
+      "exists": true,
+      "path": "docs/audits/evidence/localized_name_projection_vs_14b_audit_reconciliation.json",
+      "plan_hash": "8adeed82edfd168cd560740820b45678cca1f362e1ef8d85502d33d98821fbe1",
+      "role": "evidence",
+      "run_date": "2026-05-05",
+      "sha256": "8ea4415c7da880d80ea2bbeddb414635acfae78583b27db68d1f1b074909ea0b"
+    },
+    {
+      "decision": "READY_FOR_REFERENCED_TAXON_SHELL_APPLY_PATH",
+      "exists": true,
+      "path": "docs/audits/evidence/distractor_relationships_v1_projected_sprint13.json",
+      "record_count": 407,
+      "role": "intermediate",
+      "run_date": "2026-05-05T12:25:35.697275+00:00",
+      "sha256": "2ad028c30ca66f2ab169b9d88afed5268731ede5b553e6e975a4cc09be9a5888"
+    },
+    {
+      "exists": true,
+      "generated_at": "2026-05-02T16:08:33.846134+00:00",
+      "path": "data/exports/palier1_be_birds_50taxa_run003_v11_baseline.export.json",
+      "record_count": 1351,
+      "role": "intermediate",
+      "schema_version": "database.schema.v16",
+      "sha256": "5ffddcffe09ff8be8de5a046bd111877ead3a65f23852d20f838c3d6d3909543"
+    },
+    {
+      "exists": true,
+      "path": "data/normalized/palier1_be_birds_50taxa_run003_v11_baseline.normalized.json",
+      "role": "intermediate",
+      "schema_version": "database.schema.v16",
+      "sha256": "0934b40f5b72ccf81561f7345a5eb276ba7a889573261531c5bb658e665f43c2"
+    },
+    {
+      "exists": true,
+      "path": "data/raw/inaturalist/palier1-be-birds-50taxa-run003-pmp-policy-broader-400-20260504/ai_outputs.json",
+      "role": "source",
+      "sha256": "a8a7709cddcd8190c5844b3ec6eff44089fa7b9b894ce2e9280de93b7b4ba153"
+    },
+    {
+      "decision": "READY_FOR_BROADER_PROFILED_CORPUS_WITH_POLICY",
+      "exists": true,
+      "path": "docs/audits/evidence/pmp_policy_v1_broader_400_20260504_snapshot_audit.json",
+      "role": "evidence",
+      "sha256": "4b7a12ca0efcf62405ddc82ffe628ead8a3d16a3c9ea776521fbbba7199e8e0e",
+      "snapshot_id": "palier1-be-birds-50taxa-run003-pmp-policy-broader-400-20260504"
+    },
+    {
+      "decision": "READY_FOR_RUNTIME_CONTRACTS_WITH_WARNINGS",
+      "exists": true,
+      "path": "docs/audits/evidence/database_integrity_runtime_handoff_audit.json",
+      "plan_hash": "8adeed82edfd168cd560740820b45678cca1f362e1ef8d85502d33d98821fbe1",
+      "role": "evidence",
+      "run_date": "2026-05-05",
+      "sha256": "23eb30e3f7dabeef480a0abaf30db9712d56bcddd88823c326be9f4e3eba4796"
+    },
+    {
+      "exists": true,
+      "path": "schemas/golden_pack_v1.schema.json",
+      "role": "runtime-support",
+      "sha256": "59e26c453b840c30baffbfdde282136e0e487edeceab919399042a58f6fc09ea"
+    },
+    {
+      "exists": true,
+      "path": "schemas/golden_pack_manifest_v1.schema.json",
+      "role": "runtime-support",
+      "sha256": "5fe63231aae2cc18db02bf51a66a4a052ad228f1838242f5eeea49a681b8f2db"
+    },
+    {
+      "exists": true,
+      "path": "schemas/golden_pack_validation_report_v1.schema.json",
+      "role": "runtime-support",
+      "sha256": "bd15ff43c8fd99383f32050325041eb5934338f0c51bd03c58bbea5d95fad2a0"
+    },
+    {
+      "exists": true,
+      "path": "scripts/materialize_golden_pack_belgian_birds_mvp_v1.py",
+      "role": "runtime-support",
+      "sha256": "092a1f69ca029cf96981f775f7a3f09db240353a593eaa8579655a4dfed9c9c2"
+    },
+    {
+      "exists": true,
+      "path": "scripts/diagnose_golden_pack_belgian_birds_mvp_v1_blockers.py",
+      "role": "runtime-support",
+      "sha256": "4b943a4cebd11939dbeeb6e983d30755c429e4962c2eea91c568a8389940f15a"
+    }
+  ],
+  "run_id": "golden_pack_belgian_birds_mvp_v1_local_20260506_184944"
+}
