@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import argparse
 import hashlib
 import json
 import re
@@ -49,6 +50,62 @@ class ContractError(RuntimeError):
 
 
 @dataclass(frozen=True)
+class MaterializerConfig:
+    plan_path: Path
+    materialization_source_path: Path
+    distractor_path: Path
+    qualified_export_path: Path
+    inat_manifest_path: Path
+    inat_ai_outputs_path: Path
+    schema_pack_path: Path
+    schema_manifest_path: Path
+    schema_validation_report_path: Path
+    output_dir: Path
+    pack_id: str = "belgian_birds_mvp_v1"
+    locale: str = "fr"
+    target_count: int = 30
+
+    @property
+    def inat_snapshot_path(self) -> Path:
+        return self.inat_manifest_path.parent
+
+    @property
+    def output_media_dir(self) -> Path:
+        return self.output_dir / "media"
+
+    @property
+    def output_pack_path(self) -> Path:
+        return self.output_dir / "pack.json"
+
+    @property
+    def output_failed_partial_pack_path(self) -> Path:
+        return self.output_dir / "failed_build" / "partial_pack.json"
+
+    @property
+    def output_manifest_path(self) -> Path:
+        return self.output_dir / "manifest.json"
+
+    @property
+    def output_validation_report_path(self) -> Path:
+        return self.output_dir / "validation_report.json"
+
+
+def _default_config() -> MaterializerConfig:
+    return MaterializerConfig(
+        plan_path=PLAN_PATH,
+        materialization_source_path=MATERIALIZATION_SOURCE_PATH,
+        distractor_path=DISTRACTOR_PATH,
+        qualified_export_path=QUALIFIED_EXPORT_PATH,
+        inat_manifest_path=INAT_MANIFEST_PATH,
+        inat_ai_outputs_path=INAT_AI_OUTPUTS_PATH,
+        schema_pack_path=SCHEMA_PACK_PATH,
+        schema_manifest_path=SCHEMA_MANIFEST_PATH,
+        schema_validation_report_path=SCHEMA_VALIDATION_REPORT_PATH,
+        output_dir=OUTPUT_DIR,
+    )
+
+
+@dataclass(frozen=True)
 class CandidateDistractor:
     ref_type: str
     ref_id: str
@@ -80,6 +137,13 @@ def _load_json(path: Path) -> dict[str, Any]:
 def _write_json(path: Path, payload: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2, ensure_ascii=False, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def _repo_rel(path: Path) -> str:
+    try:
+        return str(path.relative_to(REPO_ROOT))
+    except ValueError:
+        return str(path)
 
 
 def _sha256_file(path: Path) -> str:
@@ -215,6 +279,7 @@ def _find_media_choice(
     source_media_id: str,
     media_manifest_map: dict[str, dict[str, Any]],
     qualified_map: dict[str, dict[str, Any]],
+    inat_snapshot_path: Path,
 ) -> MediaChoice:
     manifest_row = media_manifest_map.get(source_media_id)
     if manifest_row is None:
@@ -225,7 +290,7 @@ def _find_media_choice(
     if not image_rel_path or not source_url:
         raise ContractError(f"Incomplete media manifest metadata for source_media_id={source_media_id}")
 
-    image_abs_path = INAT_SNAPSHOT_PATH / image_rel_path
+    image_abs_path = inat_snapshot_path / image_rel_path
     if not image_abs_path.exists():
         raise ContractError(f"Missing local image file for source_media_id={source_media_id}: {image_abs_path}")
 
@@ -304,13 +369,15 @@ def _collect_heavy_field_violations(pack: dict[str, Any]) -> list[str]:
     return found
 
 
-def _build_golden_pack_artifact() -> tuple[dict[str, Any], dict[str, Any], dict[str, Any], list[str], list[str]]:
-    plan = _load_json(PLAN_PATH)
-    materialization_source = _load_json(MATERIALIZATION_SOURCE_PATH)
-    distractor = _load_json(DISTRACTOR_PATH)
-    qualified_export = _load_json(QUALIFIED_EXPORT_PATH)
-    inat_manifest = _load_json(INAT_MANIFEST_PATH)
-    ai_outputs = _load_json(INAT_AI_OUTPUTS_PATH)
+def _build_golden_pack_artifact(
+    config: MaterializerConfig,
+) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any], list[str], list[str]]:
+    plan = _load_json(config.plan_path)
+    materialization_source = _load_json(config.materialization_source_path)
+    distractor = _load_json(config.distractor_path)
+    qualified_export = _load_json(config.qualified_export_path)
+    inat_manifest = _load_json(config.inat_manifest_path)
+    ai_outputs = _load_json(config.inat_ai_outputs_path)
 
     target_labels = _target_label_safe_fr_map(plan)
     option_labels = _option_label_safe_fr_map(plan)
@@ -390,7 +457,12 @@ def _build_golden_pack_artifact() -> tuple[dict[str, Any], dict[str, Any], dict[
         media_choice: MediaChoice | None = None
         if source_media_id and not reasons:
             try:
-                media_choice = _find_media_choice(source_media_id, media_manifest_map, qualified_map)
+                media_choice = _find_media_choice(
+                    source_media_id,
+                    media_manifest_map,
+                    qualified_map,
+                    inat_snapshot_path=config.inat_snapshot_path,
+                )
             except ContractError as exc:
                 reasons.append(str(exc))
 
@@ -403,13 +475,13 @@ def _build_golden_pack_artifact() -> tuple[dict[str, Any], dict[str, Any], dict[
         target_to_media_choice[target_id] = media_choice
         selected_targets.append(target_id)
 
-    selected_targets = sorted(selected_targets)[:30]
-    if len(selected_targets) < 30:
+    selected_targets = sorted(selected_targets)[: config.target_count]
+    if len(selected_targets) < config.target_count:
         blockers.append(
-            f"unable_to_select_30_targets:selected={len(selected_targets)} considered={len(safe_targets)}"
+            f"unable_to_select_{config.target_count}_targets:selected={len(selected_targets)} considered={len(safe_targets)}"
         )
 
-    OUTPUT_MEDIA_DIR.mkdir(parents=True, exist_ok=True)
+    config.output_media_dir.mkdir(parents=True, exist_ok=True)
 
     media_entries: list[dict[str, Any]] = []
     question_entries: list[dict[str, Any]] = []
@@ -426,7 +498,7 @@ def _build_golden_pack_artifact() -> tuple[dict[str, Any], dict[str, Any], dict[
         source_ext = media_choice.image_abs_path.suffix.lower() or ".jpg"
         media_filename = f"{target_id.replace(':', '_')}_{media_choice.source_media_id}{source_ext}"
         runtime_rel = f"media/{media_filename}"
-        runtime_abs = OUTPUT_DIR / runtime_rel
+        runtime_abs = config.output_dir / runtime_rel
         runtime_abs.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(media_choice.image_abs_path, runtime_abs)
         if not runtime_abs.exists():
@@ -503,8 +575,8 @@ def _build_golden_pack_artifact() -> tuple[dict[str, Any], dict[str, Any], dict[
 
     pack_payload = {
         "schema_version": "golden_pack.v1",
-        "pack_id": "belgian_birds_mvp_v1",
-        "locale": "fr",
+        "pack_id": config.pack_id,
+        "locale": config.locale,
         "questions": question_entries,
         "media": media_entries,
     }
@@ -517,8 +589,8 @@ def _build_golden_pack_artifact() -> tuple[dict[str, Any], dict[str, Any], dict[
     media_ids = {m["media_id"] for m in media_entries}
     media_runtime_paths = {m["runtime_uri"] for m in media_entries}
 
-    if len(question_entries) != 30:
-        cross_check_errors.append(f"question_count_expected_30_actual_{len(question_entries)}")
+    if len(question_entries) != config.target_count:
+        cross_check_errors.append(f"question_count_expected_{config.target_count}_actual_{len(question_entries)}")
 
     for q in question_entries:
         options = q["options"]
@@ -563,7 +635,7 @@ def _build_golden_pack_artifact() -> tuple[dict[str, Any], dict[str, Any], dict[
     checksum_errors = False
     for media_entry in media_entries:
         runtime_uri = media_entry["runtime_uri"]
-        runtime_abs = OUTPUT_DIR / runtime_uri
+        runtime_abs = config.output_dir / runtime_uri
         if not runtime_abs.exists():
             checksum_errors = True
             missing_runtime_media_paths.append(runtime_uri)
@@ -574,7 +646,11 @@ def _build_golden_pack_artifact() -> tuple[dict[str, Any], dict[str, Any], dict[
             checksum_errors = True
             cross_check_errors.append(f"checksum_mismatch:{runtime_uri}")
 
-    media_total_bytes = sum((OUTPUT_DIR / p["path"]).stat().st_size for p in copied_media_checksums if (OUTPUT_DIR / p["path"]).exists())
+    media_total_bytes = sum(
+        (config.output_dir / p["path"]).stat().st_size
+        for p in copied_media_checksums
+        if (config.output_dir / p["path"]).exists()
+    )
     media_within_limit = media_total_bytes <= MEDIA_MAX_BYTES
     if not media_within_limit:
         warnings.append(f"media_pack_size_exceeds_limit:{media_total_bytes}>{MEDIA_MAX_BYTES}")
@@ -600,12 +676,12 @@ def _build_golden_pack_artifact() -> tuple[dict[str, Any], dict[str, Any], dict[
             "validation_report_schema_valid": False,
         },
         "count_checks": {
-            "expected_questions": 30,
+            "expected_questions": config.target_count,
             "actual_questions": len(question_entries),
             "expected_options_per_question": 4,
             "expected_correct_options_per_question": 1,
             "expected_distractors_per_question": 3,
-            "status": "passed" if len(question_entries) == 30 and not cross_check_errors else "failed",
+            "status": "passed" if len(question_entries) == config.target_count and not cross_check_errors else "failed",
         },
         "target_candidates_considered": len(safe_targets),
         "selected_targets": selected_targets,
@@ -664,14 +740,14 @@ def _build_golden_pack_artifact() -> tuple[dict[str, Any], dict[str, Any], dict[
 
     manifest_payload = {
         "schema_version": "golden_pack_manifest.v1",
-        "pack_id": "belgian_birds_mvp_v1",
+        "pack_id": config.pack_id,
         "contract_version": "golden_pack.v1",
         "build_timestamp": datetime.now(timezone.utc).isoformat(),
         "scope": "sprint14c_commit3_materializer_refactor",
         "runtime_surface": "artifact_only",
         "contract_status": "before_mvp_candidate",
         "gates": [
-            {"gate_id": "target_selection", "status": "passed" if len(selected_targets) == 30 else "failed"},
+            {"gate_id": "target_selection", "status": "passed" if len(selected_targets) == config.target_count else "failed"},
             {
                 "gate_id": "media_basic_identification_policy",
                 "status": "passed" if not blockers else "failed",
@@ -690,11 +766,11 @@ def _build_golden_pack_artifact() -> tuple[dict[str, Any], dict[str, Any], dict[
             "no_runtime_http_owner_side_dependency",
         ],
         "evidence_links": [
-            {"path": str(PLAN_PATH.relative_to(REPO_ROOT))},
-            {"path": str(DISTRACTOR_PATH.relative_to(REPO_ROOT))},
-            {"path": str(MATERIALIZATION_SOURCE_PATH.relative_to(REPO_ROOT))},
-            {"path": str(INAT_MANIFEST_PATH.relative_to(REPO_ROOT))},
-            {"path": str(INAT_AI_OUTPUTS_PATH.relative_to(REPO_ROOT))},
+            {"path": _repo_rel(config.plan_path)},
+            {"path": _repo_rel(config.distractor_path)},
+            {"path": _repo_rel(config.materialization_source_path)},
+            {"path": _repo_rel(config.inat_manifest_path)},
+            {"path": _repo_rel(config.inat_ai_outputs_path)},
         ],
         "audit_links": [
             {"path": "docs/architecture/GOLDEN_PACK_SPEC.md"},
@@ -712,50 +788,84 @@ def _build_golden_pack_artifact() -> tuple[dict[str, Any], dict[str, Any], dict[
     return pack_payload, manifest_payload, validation_report, warnings, blockers
 
 
-def build_golden_pack() -> dict[str, Any]:
-    pack_payload, _, _, _, blockers = _build_golden_pack_artifact()
+def build_golden_pack(config: MaterializerConfig | None = None) -> dict[str, Any]:
+    effective = config or _default_config()
+    pack_payload, _, _, _, blockers = _build_golden_pack_artifact(effective)
     if blockers:
         raise ContractError(f"Golden pack blockers: {'; '.join(blockers)}")
     return pack_payload
 
 
-def write_outputs() -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
-    pack_payload, manifest_payload, validation_report, _, blockers = _build_golden_pack_artifact()
+def write_outputs(config: MaterializerConfig | None = None) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
+    effective = config or _default_config()
+    pack_payload, manifest_payload, validation_report, _, blockers = _build_golden_pack_artifact(effective)
 
-    _write_json(OUTPUT_VALIDATION_REPORT_PATH, validation_report)
-    _write_json(OUTPUT_MANIFEST_PATH, manifest_payload)
+    _write_json(effective.output_validation_report_path, validation_report)
+    _write_json(effective.output_manifest_path, manifest_payload)
 
     if blockers:
         # Failed builds must not be confused with runtime-ready canonical packs.
-        if OUTPUT_PACK_PATH.exists():
-            OUTPUT_PACK_PATH.unlink()
-        _write_json(OUTPUT_FAILED_PARTIAL_PACK_PATH, pack_payload)
+        if effective.output_pack_path.exists():
+            effective.output_pack_path.unlink()
+        _write_json(effective.output_failed_partial_pack_path, pack_payload)
         raise ContractError(
             "Materialization failed with blockers; see validation_report.json: "
             + "; ".join(blockers)
         )
 
-    _write_json(OUTPUT_PACK_PATH, pack_payload)
-    if OUTPUT_FAILED_PARTIAL_PACK_PATH.exists():
-        OUTPUT_FAILED_PARTIAL_PACK_PATH.unlink()
+    _write_json(effective.output_pack_path, pack_payload)
+    if effective.output_failed_partial_pack_path.exists():
+        effective.output_failed_partial_pack_path.unlink()
 
-    _json_schema_validate(pack_payload, SCHEMA_PACK_PATH, "pack")
-    _json_schema_validate(manifest_payload, SCHEMA_MANIFEST_PATH, "manifest")
-    _json_schema_validate(validation_report, SCHEMA_VALIDATION_REPORT_PATH, "validation_report")
+    _json_schema_validate(pack_payload, effective.schema_pack_path, "pack")
+    _json_schema_validate(manifest_payload, effective.schema_manifest_path, "manifest")
+    _json_schema_validate(validation_report, effective.schema_validation_report_path, "validation_report")
 
     validation_report["schema_validity"] = {
         "manifest_schema_valid": True,
         "pack_schema_valid": True,
         "validation_report_schema_valid": True,
     }
-    _write_json(OUTPUT_VALIDATION_REPORT_PATH, validation_report)
+    _write_json(effective.output_validation_report_path, validation_report)
 
     return pack_payload, manifest_payload, validation_report
 
 
 def main() -> None:
-    pack_payload, manifest_payload, validation_report = write_outputs()
-    print(f"Output directory: {OUTPUT_DIR}")
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--plan-path", type=Path, default=PLAN_PATH)
+    parser.add_argument("--distractor-path", type=Path, default=DISTRACTOR_PATH)
+    parser.add_argument("--qualified-export-path", type=Path, default=QUALIFIED_EXPORT_PATH)
+    parser.add_argument("--inat-manifest-path", type=Path, default=INAT_MANIFEST_PATH)
+    parser.add_argument("--inat-ai-outputs-path", type=Path, default=INAT_AI_OUTPUTS_PATH)
+    parser.add_argument("--materialization-source-path", type=Path, default=MATERIALIZATION_SOURCE_PATH)
+    parser.add_argument("--output-dir", type=Path, default=OUTPUT_DIR)
+    parser.add_argument("--pack-id", default="belgian_birds_mvp_v1")
+    parser.add_argument("--locale", default="fr")
+    parser.add_argument("--target-count", type=int, default=30)
+    parser.add_argument("--schema-pack-path", type=Path, default=SCHEMA_PACK_PATH)
+    parser.add_argument("--schema-manifest-path", type=Path, default=SCHEMA_MANIFEST_PATH)
+    parser.add_argument("--schema-validation-report-path", type=Path, default=SCHEMA_VALIDATION_REPORT_PATH)
+    args = parser.parse_args()
+
+    config = MaterializerConfig(
+        plan_path=args.plan_path,
+        materialization_source_path=args.materialization_source_path,
+        distractor_path=args.distractor_path,
+        qualified_export_path=args.qualified_export_path,
+        inat_manifest_path=args.inat_manifest_path,
+        inat_ai_outputs_path=args.inat_ai_outputs_path,
+        schema_pack_path=args.schema_pack_path,
+        schema_manifest_path=args.schema_manifest_path,
+        schema_validation_report_path=args.schema_validation_report_path,
+        output_dir=args.output_dir,
+        pack_id=args.pack_id,
+        locale=args.locale,
+        target_count=args.target_count,
+    )
+
+    pack_payload, manifest_payload, validation_report = write_outputs(config=config)
+    print(f"Output directory: {config.output_dir}")
     print(f"Contract: {pack_payload['schema_version']}")
     print(f"Questions: {len(pack_payload['questions'])}")
     print(f"Media entries: {len(pack_payload['media'])}")
