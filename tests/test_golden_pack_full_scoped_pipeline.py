@@ -215,3 +215,109 @@ def test_full_scoped_pipeline_blocks_when_qualification_fails(tmp_path: Path, mo
     assert by_step["qualification"]["status"] == "blocked_external"
     assert by_step["pmp_profile_generation"]["status"] == "planned"
     assert not (run_dir / "qualified" / "lineage.json").exists()
+
+
+def test_full_scoped_pipeline_pmp_skip_external_writes_queue(tmp_path: Path) -> None:
+    run_dir = orchestrator.run_pipeline(mode="apply", output_root=tmp_path, skip_external=True)
+    steps = _load(run_dir / "pipeline_plan.json")["steps"]
+    by_step = {row["step"]: row for row in steps}
+    assert by_step["pmp_profile_generation"]["status"] == "skipped"
+    assert (run_dir / "pmp" / "pmp_profile_generation_report.json").exists()
+    assert (run_dir / "pmp" / "pmp_evaluation_queue.json").exists()
+
+
+def test_full_scoped_pipeline_pmp_success(tmp_path: Path, monkeypatch) -> None:
+    def fake_run(cmd, cwd, check, capture_output, text):  # type: ignore[no-untyped-def]
+        if cmd[1] == "scripts/fetch_inat_snapshot.py":
+            snapshot_id = cmd[cmd.index("--snapshot-id") + 1]
+            snapshot_root = Path(cmd[cmd.index("--snapshot-root") + 1])
+            snapshot_dir = snapshot_root / snapshot_id
+            (snapshot_dir / "responses").mkdir(parents=True, exist_ok=True)
+            (snapshot_dir / "taxa").mkdir(parents=True, exist_ok=True)
+            (snapshot_dir / "images").mkdir(parents=True, exist_ok=True)
+            (snapshot_dir / "manifest.json").write_text('{"manifest_version":"v1"}\n', encoding="utf-8")
+            return subprocess.CompletedProcess(args=cmd, returncode=0, stdout="fetch-ok", stderr="")
+        if cmd[1] == "scripts/run_pipeline.py":
+            normalized = Path(cmd[cmd.index("--normalized-path") + 1])
+            qualified = Path(cmd[cmd.index("--qualified-path") + 1])
+            export = Path(cmd[cmd.index("--export-path") + 1])
+            normalized.parent.mkdir(parents=True, exist_ok=True)
+            qualified.parent.mkdir(parents=True, exist_ok=True)
+            export.parent.mkdir(parents=True, exist_ok=True)
+            normalized.write_text('{"normalized":true}\n', encoding="utf-8")
+            qualified.write_text('{"qualified":true}\n', encoding="utf-8")
+            export.write_text('{"export":true}\n', encoding="utf-8")
+            return subprocess.CompletedProcess(args=cmd, returncode=0, stdout="pipeline-ok", stderr="")
+        if cmd[1] == "scripts/qualify_inat_snapshot.py":
+            snapshot_id = cmd[cmd.index("--snapshot-id") + 1]
+            snapshot_root = Path(cmd[cmd.index("--snapshot-root") + 1])
+            ai_outputs_path = snapshot_root / snapshot_id / "ai_outputs.json"
+            ai_outputs_path.parent.mkdir(parents=True, exist_ok=True)
+            ai_outputs_path.write_text('{"inaturalist::1":{"pedagogical_media_profile":{"quality":"ok"}}}\n', encoding="utf-8")
+            return subprocess.CompletedProcess(args=cmd, returncode=0, stdout="pmp-ok", stderr="")
+        return subprocess.CompletedProcess(args=cmd, returncode=1, stdout="", stderr="unexpected")
+
+    monkeypatch.setattr(orchestrator.subprocess, "run", fake_run)
+    run_dir = orchestrator.run_pipeline(mode="apply", output_root=tmp_path, skip_external=False)
+    steps = _load(run_dir / "pipeline_plan.json")["steps"]
+    by_step = {row["step"]: row for row in steps}
+    assert by_step["pmp_profile_generation"]["status"] == "completed"
+    assert "--snapshot-id " in by_step["pmp_profile_generation"]["next_command"]
+    assert (run_dir / "pmp" / "pmp_profile_generation_report.json").exists()
+    assert not (run_dir / "pmp" / "pmp_evaluation_queue.json").exists()
+    assert by_step["golden_pack_materialization_run_scoped"]["status"] == "blocked_external"
+
+
+def test_full_scoped_pipeline_pmp_failure_then_resume_success(tmp_path: Path, monkeypatch) -> None:
+    state = {"pmp_calls": 0}
+
+    def fake_run(cmd, cwd, check, capture_output, text):  # type: ignore[no-untyped-def]
+        if cmd[1] == "scripts/fetch_inat_snapshot.py":
+            snapshot_id = cmd[cmd.index("--snapshot-id") + 1]
+            snapshot_root = Path(cmd[cmd.index("--snapshot-root") + 1])
+            snapshot_dir = snapshot_root / snapshot_id
+            (snapshot_dir / "responses").mkdir(parents=True, exist_ok=True)
+            (snapshot_dir / "taxa").mkdir(parents=True, exist_ok=True)
+            (snapshot_dir / "images").mkdir(parents=True, exist_ok=True)
+            (snapshot_dir / "manifest.json").write_text('{"manifest_version":"v1"}\n', encoding="utf-8")
+            return subprocess.CompletedProcess(args=cmd, returncode=0, stdout="fetch-ok", stderr="")
+        if cmd[1] == "scripts/run_pipeline.py":
+            normalized = Path(cmd[cmd.index("--normalized-path") + 1])
+            qualified = Path(cmd[cmd.index("--qualified-path") + 1])
+            export = Path(cmd[cmd.index("--export-path") + 1])
+            normalized.parent.mkdir(parents=True, exist_ok=True)
+            qualified.parent.mkdir(parents=True, exist_ok=True)
+            export.parent.mkdir(parents=True, exist_ok=True)
+            normalized.write_text('{"normalized":true}\n', encoding="utf-8")
+            qualified.write_text('{"qualified":true}\n', encoding="utf-8")
+            export.write_text('{"export":true}\n', encoding="utf-8")
+            return subprocess.CompletedProcess(args=cmd, returncode=0, stdout="pipeline-ok", stderr="")
+        if cmd[1] == "scripts/qualify_inat_snapshot.py":
+            state["pmp_calls"] += 1
+            snapshot_id = cmd[cmd.index("--snapshot-id") + 1]
+            snapshot_root = Path(cmd[cmd.index("--snapshot-root") + 1])
+            ai_outputs_path = snapshot_root / snapshot_id / "ai_outputs.json"
+            ai_outputs_path.parent.mkdir(parents=True, exist_ok=True)
+            if state["pmp_calls"] == 1:
+                return subprocess.CompletedProcess(args=cmd, returncode=6, stdout="", stderr="pmp failure")
+            ai_outputs_path.write_text('{"inaturalist::1":{"pedagogical_media_profile":{"quality":"ok"}}}\n', encoding="utf-8")
+            return subprocess.CompletedProcess(args=cmd, returncode=0, stdout="pmp-ok", stderr="")
+        return subprocess.CompletedProcess(args=cmd, returncode=1, stdout="", stderr="unexpected")
+
+    monkeypatch.setattr(orchestrator.subprocess, "run", fake_run)
+    run_dir = orchestrator.run_pipeline(mode="apply", output_root=tmp_path, skip_external=False)
+    first_steps = _load(run_dir / "pipeline_plan.json")["steps"]
+    by_step_first = {row["step"]: row for row in first_steps}
+    assert by_step_first["pmp_profile_generation"]["status"] == "blocked_external"
+    assert (run_dir / "pmp" / "pmp_evaluation_queue.json").exists()
+
+    resumed_dir = orchestrator.run_pipeline(
+        mode="apply",
+        output_root=tmp_path,
+        resume_run_id=_load(run_dir / "run_manifest.json")["run_id"],
+        skip_external=False,
+    )
+    assert resumed_dir == run_dir
+    resumed_steps = _load(run_dir / "pipeline_plan.json")["steps"]
+    by_step_resumed = {row["step"]: row for row in resumed_steps}
+    assert by_step_resumed["pmp_profile_generation"]["status"] == "completed"

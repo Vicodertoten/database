@@ -275,6 +275,40 @@ def _qualification_command(context: dict[str, Any]) -> list[str]:
     ]
 
 
+def _pmp_generation_context(*, run_dir: Path, source_context: dict[str, Any], max_media_per_taxon: int | None) -> dict[str, Any]:
+    snapshot_dir = Path(source_context["snapshot_dir"])
+    ai_outputs_path = snapshot_dir / "ai_outputs.json"
+    return {
+        "snapshot_id": source_context["snapshot_id"],
+        "snapshot_root": source_context["snapshot_root"],
+        "snapshot_dir": str(snapshot_dir),
+        "ai_outputs_path": str(ai_outputs_path),
+        "gemini_concurrency": 4,
+        "max_retries": 2,
+        "request_interval_seconds": 0.0,
+        "max_media_per_taxon": max_media_per_taxon if max_media_per_taxon is not None else 3,
+        "max_total": 150,
+        "ai_role": "signal_only",
+    }
+
+
+def _pmp_generation_command(context: dict[str, Any]) -> list[str]:
+    return [
+        sys.executable,
+        "scripts/qualify_inat_snapshot.py",
+        "--snapshot-id",
+        str(context["snapshot_id"]),
+        "--snapshot-root",
+        str(context["snapshot_root"]),
+        "--gemini-concurrency",
+        str(context["gemini_concurrency"]),
+        "--max-retries",
+        str(context["max_retries"]),
+        "--request-interval-seconds",
+        str(context["request_interval_seconds"]),
+    ]
+
+
 def _set_source_stage_command(stage_states: list[dict[str, Any]], context: dict[str, Any]) -> None:
     command = _source_inat_refresh_command(context)
     command_str = " ".join(shlex.quote(part) for part in command)
@@ -419,6 +453,54 @@ def _run_qualification_stage(run_dir: Path, context: dict[str, Any]) -> tuple[bo
     return True, "completed"
 
 
+def _write_pmp_queue(run_dir: Path, context: dict[str, Any], *, reason: str) -> None:
+    _write_json(
+        run_dir / "pmp" / "pmp_evaluation_queue.json",
+        {
+            "schema_version": "golden_pack_scoped_pmp_evaluation_queue.v1",
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+            "reason": reason,
+            "snapshot_id": context["snapshot_id"],
+            "snapshot_dir": context["snapshot_dir"],
+            "ai_outputs_path": context["ai_outputs_path"],
+            "max_media_per_taxon": context["max_media_per_taxon"],
+            "max_total": context["max_total"],
+            "resume_instruction": "run apply --resume <run_id> without --skip-external",
+        },
+    )
+
+
+def _run_pmp_profile_generation(run_dir: Path, context: dict[str, Any]) -> tuple[bool, str]:
+    command = _pmp_generation_command(context)
+    result = subprocess.run(
+        command,
+        cwd=REPO_ROOT,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    ai_outputs_path = Path(context["ai_outputs_path"])
+    report = {
+        "schema_version": "golden_pack_scoped_pmp_profile_generation_report.v1",
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "context": context,
+        "command": command,
+        "returncode": int(result.returncode),
+        "stdout_tail": result.stdout[-4000:],
+        "stderr_tail": result.stderr[-4000:],
+        "ai_outputs_exists": ai_outputs_path.exists(),
+        "status": "completed" if result.returncode == 0 and ai_outputs_path.exists() else "failed",
+    }
+    _write_json(run_dir / "pmp" / "pmp_profile_generation_report.json", report)
+    if result.returncode != 0:
+        _write_pmp_queue(run_dir, context, reason=f"pmp_command_failed_exit_{result.returncode}")
+        return False, f"pmp_profile_generation_command_failed_exit_{result.returncode}"
+    if not ai_outputs_path.exists():
+        _write_pmp_queue(run_dir, context, reason="pmp_ai_outputs_missing_after_success")
+        return False, "pmp_profile_generation_missing_ai_outputs"
+    return True, "completed"
+
+
 def _evaluate_policy_rows(ai_outputs: dict[str, Any]) -> tuple[list[dict[str, Any]], int, int]:
     rows: list[dict[str, Any]] = []
     eligible_count = 0
@@ -457,7 +539,12 @@ def _run_local_stage(stage: str, run_dir: Path, state: dict[str, Any]) -> None:
         return
 
     if stage == "pmp_policy_projection":
-        ai_outputs = _load_json(mat.INAT_AI_OUTPUTS_PATH)
+        pmp_ctx = state.get("pmp_generation") if isinstance(state.get("pmp_generation"), dict) else {}
+        ai_outputs_path = Path(str(pmp_ctx.get("ai_outputs_path") or mat.INAT_AI_OUTPUTS_PATH))
+        if ai_outputs_path.exists():
+            ai_outputs = _load_json(ai_outputs_path)
+        else:
+            ai_outputs = _load_json(mat.INAT_AI_OUTPUTS_PATH)
         rows, eligible_count, borderline_count = _evaluate_policy_rows(ai_outputs)
         _write_json(
             run_dir / "policy" / "pmp_policy_projection.json",
@@ -621,11 +708,18 @@ def run_pipeline(
         target_scope=effective_scope,
     )
     norm_qual_context = _normalization_qualification_context(run_dir=run_dir, source_context=source_refresh_context)
+    pmp_context = _pmp_generation_context(
+        run_dir=run_dir,
+        source_context=source_refresh_context,
+        max_media_per_taxon=max_media_per_taxon,
+    )
     manifest["source_inat_refresh"] = source_refresh_context
     manifest["normalization_qualification"] = norm_qual_context
+    manifest["pmp_generation"] = pmp_context
     _set_source_stage_command(stage_states, source_refresh_context)
     _set_stage_command(stage_states, "normalization", _normalization_command(norm_qual_context))
     _set_stage_command(stage_states, "qualification", _qualification_command(norm_qual_context))
+    _set_stage_command(stage_states, "pmp_profile_generation", _pmp_generation_command(pmp_context))
 
     _persist_state(run_dir, manifest, stage_states, inventory, expected)
 
@@ -660,6 +754,17 @@ def run_pipeline(
             if skip_external:
                 row["status"] = "skipped"
                 row["message"] = "skipped_external_by_flag"
+                if stage == "pmp_profile_generation":
+                    _write_json(
+                        run_dir / "pmp" / "pmp_profile_generation_report.json",
+                        {
+                            "schema_version": "golden_pack_scoped_pmp_profile_generation_report.v1",
+                            "generated_at": datetime.now(timezone.utc).isoformat(),
+                            "context": pmp_context,
+                            "status": "skipped_external_by_flag",
+                        },
+                    )
+                    _write_pmp_queue(run_dir, pmp_context, reason="skipped_external_by_flag")
             elif stage == "source_inat_refresh":
                 ok, message = _run_source_inat_refresh(run_dir, source_refresh_context)
                 if ok:
@@ -686,6 +791,18 @@ def run_pipeline(
                     break
             elif stage == "qualification":
                 ok, message = _run_qualification_stage(run_dir, norm_qual_context)
+                if ok:
+                    row["status"] = "completed"
+                    row["message"] = message
+                else:
+                    row["status"] = "blocked_external"
+                    row["message"] = message
+                    manifest["status"] = "blocked_external"
+                    manifest["updated_at"] = datetime.now(timezone.utc).isoformat()
+                    _persist_state(run_dir, manifest, stage_states, inventory, expected)
+                    break
+            elif stage == "pmp_profile_generation":
+                ok, message = _run_pmp_profile_generation(run_dir, pmp_context)
                 if ok:
                     row["status"] = "completed"
                     row["message"] = message
