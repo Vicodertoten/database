@@ -27,3 +27,6 @@ data/review_overrides/*
 
 # macOS metadata
 .DS_Store
+
+# Generated pipeline run artifacts
+data/runs/
