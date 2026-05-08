@@ -48,6 +48,7 @@ class PilotTaxonSeed(SnapshotModel):
     display_slug: str | None = None
     synonyms: list[str] = Field(default_factory=list)
     common_names: list[str] = Field(default_factory=list)
+    selection_note: str | None = None
     source_taxon_id: str
 
     @field_validator("source_taxon_id")

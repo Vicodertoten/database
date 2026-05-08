@@ -32,7 +32,15 @@ def _make_run_output(root: Path, status: str = "passed", with_pack: bool = True)
         pack = {"schema_version": "golden_pack.v1", "pack_id": "belgian_birds_mvp_v1", "questions": [], "media": []}
         _write_json(run_output / "pack.json", pack)
 
-    validation_report = {"schema_version": "golden_pack_validation_report.v1", "status": status}
+    validation_report = {
+        "schema_version": "golden_pack_validation_report.v1",
+        "status": status,
+        "schema_validity": {
+            "manifest_schema_valid": True,
+            "pack_schema_valid": True,
+            "validation_report_schema_valid": True,
+        },
+    }
     _write_json(run_output / "validation_report.json", validation_report)
 
     checksums = {
@@ -128,6 +136,27 @@ def test_rejects_checksum_mismatch(tmp_path: Path) -> None:
 
     dest = tmp_path / "canonical"
     with pytest.raises(promote.PromotionError, match="Checksum mismatch"):
+        promote.promote_run_output(
+            promote.PromotionConfig(
+                run_output_dir=run_output,
+                canonical_export_dir=dest,
+            )
+        )
+
+    assert not dest.exists()
+
+
+def test_rejects_schema_invalid_passed_report(tmp_path: Path) -> None:
+    run_output = _make_run_output(tmp_path, status="passed", with_pack=True)
+    report = json.loads((run_output / "validation_report.json").read_text(encoding="utf-8"))
+    report["schema_validity"]["pack_schema_valid"] = False
+    _write_json(run_output / "validation_report.json", report)
+    manifest = json.loads((run_output / "manifest.json").read_text(encoding="utf-8"))
+    manifest["checksums"]["validation_report.json"]["sha256"] = _sha256(run_output / "validation_report.json")
+    _write_json(run_output / "manifest.json", manifest)
+
+    dest = tmp_path / "canonical"
+    with pytest.raises(promote.PromotionError, match="schema_validity"):
         promote.promote_run_output(
             promote.PromotionConfig(
                 run_output_dir=run_output,

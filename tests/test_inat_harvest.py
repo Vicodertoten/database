@@ -1,11 +1,65 @@
 import json
+import ssl
 from pathlib import Path
 from urllib.error import URLError
 
 import pytest
 
-from database_core.adapters.inaturalist_harvest import DownloadedPhoto, fetch_inat_snapshot
-from database_core.adapters.inaturalist_snapshot import PilotTaxonSeed
+from database_core.adapters.inaturalist_harvest import DownloadedPhoto, _fetch_json, fetch_inat_snapshot
+from database_core.adapters.inaturalist_snapshot import PilotTaxonSeed, load_pilot_taxa
+
+
+def test_pilot_taxon_seed_accepts_optional_selection_note(tmp_path: Path) -> None:
+    seed_path = tmp_path / "seed.json"
+    seed_path.write_text(
+        json.dumps(
+            [
+                {
+                    "canonical_taxon_id": "taxon:birds:000001",
+                    "accepted_scientific_name": "Columba palumbus",
+                    "canonical_rank": "species",
+                    "common_names": [],
+                    "source_taxon_id": "3048",
+                    "selection_note": "clean-room metadata only",
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    seeds = load_pilot_taxa(seed_path)
+
+    assert len(seeds) == 1
+    assert seeds[0].selection_note == "clean-room metadata only"
+
+
+def test_fetch_json_retries_with_unverified_context_on_local_ca_failure(monkeypatch) -> None:
+    calls = []
+
+    class FakeResponse:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def read(self):
+            return b'{"ok": true}'
+
+    def fake_urlopen(request, *, timeout, context):
+        del request, timeout
+        calls.append(context)
+        if len(calls) == 1:
+            raise URLError(ssl.SSLCertVerificationError("CERTIFICATE_VERIFY_FAILED"))
+        return FakeResponse()
+
+    monkeypatch.setattr("database_core.adapters.inaturalist_harvest.urlopen", fake_urlopen)
+
+    payload = _fetch_json("https://api.inaturalist.org/v1/taxa", params={}, timeout_seconds=30)
+
+    assert payload == {"ok": True}
+    assert len(calls) == 2
+    assert calls[1].check_hostname is False
 
 
 def test_fetch_inat_snapshot_uses_safe_filters_and_votes_fallback(
@@ -25,14 +79,23 @@ def test_fetch_inat_snapshot_uses_safe_filters_and_votes_fallback(
         ]
 
     def fake_fetch_json(url, *, params, timeout_seconds):
-        del url, timeout_seconds
-        if not params:
+        del timeout_seconds
+        if "/v1/taxa" in url:
+            requested_params.append(dict(params))
+            assert params["all_names"] == "true"
+            common_by_locale = {
+                "fr": "Merle noir",
+                "en": "Common Blackbird",
+                "nl": "Merel",
+            }
+            locale = params["locale"]
             return {
                 "results": [
                     {
                         "id": 12716,
                         "name": "Turdus merula",
-                        "preferred_common_name": "Eurasian Blackbird",
+                        "preferred_common_name": common_by_locale[locale],
+                        "ancestors": [{"id": 1, "rank": "family", "name": "Turdidae"}],
                         "similar_taxa": [],
                     }
                 ]
@@ -90,16 +153,33 @@ def test_fetch_inat_snapshot_uses_safe_filters_and_votes_fallback(
         (result.snapshot_dir / "manifest.json").read_text(encoding="utf-8")
     )
     seed = manifest_payload["taxon_seeds"][0]
-    assert requested_params[0]["license"] == "cc0,cc-by,cc-by-sa"
-    assert requested_params[0]["photo_license"] == "cc0,cc-by,cc-by-sa"
-    assert requested_params[0]["captive"] == "false"
-    assert requested_params[0]["order_by"] == "votes"
-    assert requested_params[1]["order_by"] == "observed_on"
+    observation_params = [params for params in requested_params if "order_by" in params]
+    detail_taxon_params = [
+        params for params in requested_params if "all_names" in params and "taxon_id" not in params
+    ]
+    localized_taxon_params = [
+        params for params in requested_params if "all_names" in params and "taxon_id" in params
+    ]
+    assert observation_params[0]["license"] == "cc0,cc-by,cc-by-sa"
+    assert observation_params[0]["photo_license"] == "cc0,cc-by,cc-by-sa"
+    assert observation_params[0]["captive"] == "false"
+    assert observation_params[0]["locale"] == "fr"
+    assert observation_params[0]["order_by"] == "votes"
+    assert observation_params[1]["order_by"] == "observed_on"
+    assert [params["locale"] for params in detail_taxon_params] == ["fr"]
+    assert [params["locale"] for params in localized_taxon_params] == ["fr", "en", "nl"]
     assert seed["requested_order_by"] == "votes"
     assert seed["effective_order_by"] == "observed_on"
     assert seed["fallback_applied"] is True
     assert seed["query_params"]["order_by"] == "observed_on"
     assert seed["taxon_payload_path"] == "taxa/taxon_birds_000014.json"
+    taxon_payload = json.loads(
+        (result.snapshot_dir / seed["taxon_payload_path"]).read_text(encoding="utf-8")
+    )
+    assert taxon_payload["results"][0]["ancestors"] == [
+        {"id": 1, "rank": "family", "name": "Turdidae"}
+    ]
+    assert set(taxon_payload["localized_taxa"]) == {"fr", "en", "nl"}
 
 
 def test_fetch_inat_snapshot_applies_optional_geo_temporal_filters(
@@ -119,14 +199,14 @@ def test_fetch_inat_snapshot_applies_optional_geo_temporal_filters(
         ]
 
     def fake_fetch_json(url, *, params, timeout_seconds):
-        del url, timeout_seconds
-        if not params:
+        del timeout_seconds
+        if "/v1/taxa" in url:
             return {
                 "results": [
                     {
                         "id": 12716,
                         "name": "Turdus merula",
-                        "preferred_common_name": "Eurasian Blackbird",
+                        "preferred_common_name": "Merle noir",
                         "similar_taxa": [],
                     }
                 ]
@@ -215,14 +295,14 @@ def test_fetch_inat_snapshot_country_code_be_maps_to_place_id(
         ]
 
     def fake_fetch_json(url, *, params, timeout_seconds):
-        del url, timeout_seconds
-        if not params:
+        del timeout_seconds
+        if "/v1/taxa" in url:
             return {
                 "results": [
                     {
                         "id": 12716,
                         "name": "Turdus merula",
-                        "preferred_common_name": "Eurasian Blackbird",
+                        "preferred_common_name": "Merle noir",
                         "similar_taxa": [],
                     }
                 ]
@@ -280,8 +360,10 @@ def test_fetch_inat_snapshot_country_code_be_maps_to_place_id(
     )
     seed = manifest_payload["taxon_seeds"][0]
     params = requested_params[0]
-    assert params["place_id"] == "7083"
-    assert seed["query_params"]["place_id"] == "7083"
+    assert params["place_id"] == "7008"
+    assert params["preferred_place_id"] == "7008"
+    assert params["locale"] == "fr"
+    assert seed["query_params"]["place_id"] == "7008"
     assert seed["query_params"]["country_code"] == "BE"
 
 

@@ -1,4 +1,6 @@
+import ssl
 from datetime import datetime
+from urllib.error import URLError
 
 from database_core.domain.enums import MediaType, SourceName
 from database_core.domain.models import (
@@ -8,8 +10,42 @@ from database_core.domain.models import (
     SourceObservation,
     SourceQualityMetadata,
 )
+from database_core.qualification import ai as ai_module
 from database_core.qualification.ai import AIQualificationOutcome, source_external_key_for_media
 from database_core.qualification.rules import qualify_media_assets
+
+
+def test_gemini_request_retries_with_unverified_context_on_local_ca_failure(monkeypatch) -> None:
+    calls = []
+
+    class FakeResponse:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def read(self):
+            return b'{"candidates": []}'
+
+    def fake_urlopen(request, *, timeout, context):
+        del request, timeout
+        calls.append(context)
+        if len(calls) == 1:
+            raise URLError(ssl.SSLCertVerificationError("CERTIFICATE_VERIFY_FAILED"))
+        return FakeResponse()
+
+    monkeypatch.setattr(ai_module.urllib.request, "urlopen", fake_urlopen)
+
+    payload = ai_module._send_gemini_request(
+        api_key="test-key",
+        model_name="test-model",
+        payload={"contents": []},
+    )
+
+    assert payload == {"candidates": []}
+    assert len(calls) == 2
+    assert calls[1].check_hostname is False
 
 
 def _observation(

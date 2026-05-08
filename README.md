@@ -46,6 +46,8 @@ This scope is intentionally narrow and assumes birds-first, image-first, mobile-
 
 The active MVP runtime handoff contract is `golden_pack.v1`, documented in
 `docs/architecture/MASTER_REFERENCE.md` and `docs/architecture/GOLDEN_PACK_SPEC.md`.
+The operational handoff runbook is
+`docs/runbooks/golden-pack-v1-runtime-handoff.md`.
 
 Canonical MVP output:
 

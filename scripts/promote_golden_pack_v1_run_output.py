@@ -53,6 +53,16 @@ def _assert_passed(validation_report: dict[str, Any], run_output_dir: Path) -> N
         raise PromotionError(
             f"Refusing promotion: validation_report.status={status!r} (expected 'passed') for {run_output_dir}"
         )
+    schema_validity = validation_report.get("schema_validity")
+    if not isinstance(schema_validity, dict) or not all(
+        schema_validity.get(key) is True
+        for key in (
+            "manifest_schema_valid",
+            "pack_schema_valid",
+            "validation_report_schema_valid",
+        )
+    ):
+        raise PromotionError("Refusing promotion: schema_validity is not fully true")
 
 
 def _assert_no_partial_only(run_output_dir: Path) -> None:

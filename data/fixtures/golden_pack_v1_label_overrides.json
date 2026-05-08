@@ -1,0 +1,8 @@
+{
+  "schema_version": "golden_pack_v1_label_overrides.v1",
+  "labels": {
+    "taxon:birds:000021": {
+      "fr": "Canard colvert"
+    }
+  }
+}

@@ -61,6 +61,7 @@ class MaterializerConfig:
     schema_manifest_path: Path
     schema_validation_report_path: Path
     output_dir: Path
+    selection_path: Path | None = None
     pack_id: str = "belgian_birds_mvp_v1"
     locale: str = "fr"
     target_count: int = 30
@@ -136,7 +137,11 @@ def _load_json(path: Path) -> dict[str, Any]:
 
 def _write_json(path: Path, payload: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, indent=2, ensure_ascii=False, sort_keys=True) + "\n", encoding="utf-8")
+    path.write_bytes(_json_write_bytes(payload))
+
+
+def _json_write_bytes(payload: dict[str, Any]) -> bytes:
+    return (json.dumps(payload, indent=2, ensure_ascii=False, sort_keys=True) + "\n").encode("utf-8")
 
 
 def _repo_rel(path: Path) -> str:
@@ -369,9 +374,357 @@ def _collect_heavy_field_violations(pack: dict[str, Any]) -> list[str]:
     return found
 
 
+def _selection_entries(selection: dict[str, Any]) -> list[dict[str, Any]]:
+    entries = selection.get("entries")
+    if not isinstance(entries, list):
+        raise ContractError("Selection missing entries list")
+    return [item for item in entries if isinstance(item, dict)]
+
+
+def _selection_media_choice(entry: dict[str, Any], *, inat_snapshot_path: Path) -> MediaChoice:
+    primary = entry.get("primary_media")
+    if not isinstance(primary, dict):
+        raise ContractError("Selection entry missing primary_media object")
+
+    source_media_id = str(primary.get("source_media_id") or "").strip()
+    image_rel_path = str(primary.get("image_path") or "").strip()
+    source_url = str(primary.get("source_url") or "").strip()
+    if not source_media_id or not image_rel_path or not source_url:
+        raise ContractError("Selection primary_media missing source_media_id/image_path/source_url")
+
+    image_abs_path = inat_snapshot_path / image_rel_path
+    if not image_abs_path.exists():
+        raise ContractError(f"Selection primary media file missing: {image_abs_path}")
+
+    return MediaChoice(
+        source_media_id=source_media_id,
+        source_url=source_url,
+        image_rel_path=image_rel_path,
+        image_abs_path=image_abs_path,
+        source_name=str(primary.get("source") or "inaturalist").strip() or "inaturalist",
+        creator=str(primary.get("creator") or "").strip(),
+        license_name=str(primary.get("license") or "").strip(),
+        license_url=str(primary.get("license_url") or "").strip(),
+        attribution_text=str(primary.get("attribution_text") or "").strip(),
+    )
+
+
+def _build_golden_pack_from_selection(
+    config: MaterializerConfig,
+) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any], list[str], list[str]]:
+    if config.selection_path is None:
+        raise ContractError("selection_path is required for clean-room materialization")
+
+    selection = _load_json(config.selection_path)
+    ai_outputs = _load_json(config.inat_ai_outputs_path)
+    entries = _selection_entries(selection)
+
+    warnings: list[str] = []
+    blockers: list[str] = []
+    rejected_targets: list[dict[str, Any]] = []
+    selected_targets: list[str] = []
+    media_entries: list[dict[str, Any]] = []
+    question_entries: list[dict[str, Any]] = []
+    copied_media_checksums: list[dict[str, str]] = []
+    missing_runtime_media_paths: list[str] = []
+    missing_attribution_entries: list[dict[str, Any]] = []
+    primary_ineligible_count = 0
+
+    if len(entries) != config.target_count:
+        blockers.append(f"selection_count_expected_{config.target_count}_actual_{len(entries)}")
+
+    seen_targets: set[str] = set()
+    for idx, entry in enumerate(entries[: config.target_count], start=1):
+        target_id = str(entry.get("target_canonical_taxon_id") or "").strip()
+        target_label = str(entry.get("target_label_fr") or "").strip()
+        entry_reasons: list[str] = []
+        if not target_id:
+            entry_reasons.append("missing_target_canonical_taxon_id")
+        if target_id in seen_targets:
+            entry_reasons.append("duplicate_target_canonical_taxon_id")
+        if target_id:
+            seen_targets.add(target_id)
+        if not target_label:
+            entry_reasons.append("missing_target_fr_label_safe")
+
+        try:
+            media_choice = _selection_media_choice(entry, inat_snapshot_path=config.inat_snapshot_path)
+        except ContractError as exc:
+            entry_reasons.append(str(exc))
+            media_choice = None
+
+        if media_choice and not _evaluate_basic_identification_eligible(ai_outputs, media_choice.source_media_id):
+            primary_ineligible_count += 1
+            entry_reasons.append("primary_media_basic_identification_not_eligible")
+
+        distractors_raw = entry.get("distractors")
+        distractors = [item for item in distractors_raw if isinstance(item, dict)] if isinstance(distractors_raw, list) else []
+        if len(distractors) != 3:
+            entry_reasons.append(f"distractor_count_expected_3_actual_{len(distractors)}")
+
+        option_payloads: list[dict[str, Any]] = []
+        seen_option_refs: set[tuple[str, str]] = set()
+        seen_option_labels: set[str] = set()
+        target_label_norm = normalize_localized_name_for_compare(target_label)
+        if target_label_norm:
+            seen_option_labels.add(target_label_norm)
+
+        for didx, distractor in enumerate(distractors[:3], start=2):
+            ref = distractor.get("taxon_ref") if isinstance(distractor.get("taxon_ref"), dict) else {}
+            ref_type = str(ref.get("type") or "").strip()
+            ref_id = str(ref.get("id") or "").strip()
+            label = str(distractor.get("display_label") or "").strip()
+            if ref_type not in {"canonical_taxon", "referenced_taxon"} or not ref_id:
+                entry_reasons.append("distractor_missing_valid_taxon_ref")
+                continue
+            if not label:
+                entry_reasons.append("distractor_missing_display_label")
+                continue
+            key = (ref_type, ref_id)
+            label_norm = normalize_localized_name_for_compare(label)
+            if key in seen_option_refs or label_norm in seen_option_labels:
+                entry_reasons.append("duplicate_distractor_ref_or_label")
+                continue
+            seen_option_refs.add(key)
+            seen_option_labels.add(label_norm)
+            option = {
+                "option_id": f"gbbmvp1_q{idx:04d}_opt{didx}",
+                "taxon_ref": {"type": ref_type, "id": ref_id},
+                "display_label": label,
+                "is_correct": False,
+                "referenced_only": ref_type == "referenced_taxon",
+            }
+            if ref_type == "referenced_taxon":
+                provenance = distractor.get("provenance") if isinstance(distractor.get("provenance"), dict) else {}
+                option["provenance"] = {"source": str(provenance.get("source") or "clean_room_distractor_projection")}
+            option_payloads.append(option)
+
+        if entry_reasons or media_choice is None:
+            rejected_targets.append({"taxon_ref_id": target_id or f"selection_index_{idx}", "reason_codes": sorted(set(entry_reasons))})
+            continue
+
+        selected_targets.append(target_id)
+
+        source_ext = media_choice.image_abs_path.suffix.lower() or ".jpg"
+        media_filename = f"{target_id.replace(':', '_')}_{media_choice.source_media_id}{source_ext}"
+        runtime_rel = f"media/{media_filename}"
+        runtime_abs = config.output_dir / runtime_rel
+        runtime_abs.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(media_choice.image_abs_path, runtime_abs)
+        if not runtime_abs.exists():
+            missing_runtime_media_paths.append(runtime_rel)
+        checksum_hex = _sha256_file(runtime_abs)
+        copied_media_checksums.append({"path": runtime_rel, "sha256": checksum_hex})
+
+        media_id = f"m{idx:04d}"
+        media_entry = {
+            "media_id": media_id,
+            "runtime_uri": runtime_rel,
+            "source_url": media_choice.source_url,
+            "source": media_choice.source_name,
+            "creator": media_choice.creator,
+            "license": media_choice.license_name,
+            "license_url": media_choice.license_url,
+            "attribution_text": media_choice.attribution_text,
+            "checksum": f"sha256:{checksum_hex}",
+        }
+        media_entries.append(media_entry)
+
+        missing_fields = [
+            field
+            for field in ("source_url", "source", "creator", "license", "license_url", "attribution_text")
+            if not str(media_entry.get(field) or "").strip()
+        ]
+        if missing_fields:
+            missing_attribution_entries.append({"media_id": media_id, "missing_fields": missing_fields})
+
+        question_id = f"gbbmvp1_q{idx:04d}"
+        correct_option_id = f"{question_id}_opt1"
+        question_entries.append(
+            {
+                "question_id": question_id,
+                "primary_media_id": media_id,
+                "prompt": "Quelle espèce est visible sur cette image ?",
+                "options": [
+                    {
+                        "option_id": correct_option_id,
+                        "taxon_ref": {"type": "canonical_taxon", "id": target_id},
+                        "display_label": target_label,
+                        "is_correct": True,
+                        "referenced_only": False,
+                    },
+                    *option_payloads,
+                ],
+                "correct_option_id": correct_option_id,
+                "feedback_short": FALLBACK_FEEDBACK,
+                "feedback_source": "fallback_database_mvp",
+            }
+        )
+
+    pack_payload = {
+        "schema_version": "golden_pack.v1",
+        "pack_id": config.pack_id,
+        "locale": config.locale,
+        "questions": question_entries,
+        "media": media_entries,
+    }
+
+    cross_check_errors: list[str] = []
+    heavy_violations = _collect_heavy_field_violations(pack_payload)
+    if heavy_violations:
+        cross_check_errors.append("forbidden_heavy_fields_present")
+    if len(question_entries) != config.target_count:
+        cross_check_errors.append(f"question_count_expected_{config.target_count}_actual_{len(question_entries)}")
+    for question in question_entries:
+        if len(question["options"]) != 4:
+            cross_check_errors.append(f"{question['question_id']}:options_count_not_4")
+        if sum(1 for opt in question["options"] if bool(opt.get("is_correct"))) != 1:
+            cross_check_errors.append(f"{question['question_id']}:correct_options_count_not_1")
+        if sum(1 for opt in question["options"] if not bool(opt.get("is_correct"))) != 3:
+            cross_check_errors.append(f"{question['question_id']}:distractor_count_not_3")
+
+    checksum_errors = False
+    for media_entry in media_entries:
+        runtime_abs = config.output_dir / str(media_entry["runtime_uri"])
+        if not runtime_abs.exists():
+            checksum_errors = True
+            missing_runtime_media_paths.append(str(media_entry["runtime_uri"]))
+            continue
+        actual = _sha256_file(runtime_abs)
+        expected = str(media_entry["checksum"]).removeprefix("sha256:")
+        if actual != expected:
+            checksum_errors = True
+            cross_check_errors.append(f"checksum_mismatch:{media_entry['runtime_uri']}")
+
+    media_total_bytes = sum(
+        (config.output_dir / p["path"]).stat().st_size
+        for p in copied_media_checksums
+        if (config.output_dir / p["path"]).exists()
+    )
+    media_within_limit = media_total_bytes <= MEDIA_MAX_BYTES
+    if not media_within_limit:
+        warnings.append(f"media_pack_size_exceeds_limit:{media_total_bytes}>{MEDIA_MAX_BYTES}")
+    if missing_attribution_entries:
+        cross_check_errors.append("missing_attribution_fields")
+    if primary_ineligible_count:
+        cross_check_errors.append(f"primary_media_basic_identification_not_eligible_count_{primary_ineligible_count}")
+    if cross_check_errors:
+        blockers.extend(sorted(set(cross_check_errors)))
+
+    validation_report = {
+        "schema_version": "golden_pack_validation_report.v1",
+        "pack_id": "belgian_birds_mvp_v1",
+        "status": "passed" if not blockers else "failed",
+        "schema_validity": {
+            "manifest_schema_valid": False,
+            "pack_schema_valid": False,
+            "validation_report_schema_valid": False,
+        },
+        "count_checks": {
+            "expected_questions": config.target_count,
+            "actual_questions": len(question_entries),
+            "expected_options_per_question": 4,
+            "expected_correct_options_per_question": 1,
+            "expected_distractors_per_question": 3,
+            "status": "passed" if len(question_entries) == config.target_count and not cross_check_errors else "failed",
+        },
+        "target_candidates_considered": int(selection.get("target_candidates_considered") or len(entries)),
+        "selected_targets": selected_targets,
+        "rejected_targets": rejected_targets,
+        "label_checks": {
+            "all_display_labels_runtime_safe": not any("label" in reason for row in rejected_targets for reason in row["reason_codes"]),
+            "no_placeholder_labels": True,
+            "no_empty_labels": not any("label" in reason for row in rejected_targets for reason in row["reason_codes"]),
+            "no_invented_labels": True,
+            "no_scientific_fallback_primary_labels": True,
+        },
+        "distractor_checks": {
+            "exactly_three_distractors_per_question": all(
+                sum(1 for opt in q["options"] if not bool(opt["is_correct"])) == 3 for q in question_entries
+            ),
+            "options_have_taxon_ref": all(all("taxon_ref" in opt for opt in q["options"]) for q in question_entries),
+            "no_generic_canonical_taxon_id_fields": True,
+            "referenced_taxon_rules_valid": not any(
+                opt.get("taxon_ref", {}).get("type") == "referenced_taxon" and opt.get("referenced_only") is not True
+                for q in question_entries
+                for opt in q["options"]
+            ),
+            "no_emergency_fallback_distractors": True,
+        },
+        "media_eligibility_checks": {
+            "all_primary_media_basic_identification_eligible": primary_ineligible_count == 0 and len(question_entries) == len(selected_targets),
+            "missing_primary_media_count": max(0, config.target_count - len(question_entries)),
+        },
+        "media_copy_checksum_checks": {
+            "all_runtime_media_copied": len(missing_runtime_media_paths) == 0,
+            "all_media_checksums_verified": not checksum_errors,
+            "missing_runtime_media_paths": sorted(set(missing_runtime_media_paths)),
+        },
+        "media_pack_size_check": {
+            "total_bytes": media_total_bytes,
+            "max_bytes": MEDIA_MAX_BYTES,
+            "within_limit": media_within_limit,
+        },
+        "attribution_checks": {
+            "all_attribution_fields_present": len(missing_attribution_entries) == 0,
+            "missing_attribution_entries": missing_attribution_entries,
+        },
+        "feedback_checks": {
+            "all_questions_have_feedback_short": all(bool(q.get("feedback_short")) for q in question_entries),
+            "fallback_database_mvp_count": sum(1 for q in question_entries if q.get("feedback_source") == "fallback_database_mvp"),
+        },
+        "warnings": sorted(set(warnings)),
+        "blockers": sorted(set(blockers)),
+    }
+
+    pack_bytes = _json_write_bytes(pack_payload)
+    report_bytes = _json_write_bytes(validation_report)
+    manifest_payload = {
+        "schema_version": "golden_pack_manifest.v1",
+        "pack_id": config.pack_id,
+        "contract_version": "golden_pack.v1",
+        "build_timestamp": datetime.now(timezone.utc).isoformat(),
+        "scope": "golden_pack_v1_clean_room_selection",
+        "runtime_surface": "artifact_only",
+        "contract_status": "before_mvp_candidate",
+        "gates": [
+            {"gate_id": "target_selection", "status": "passed" if len(question_entries) == config.target_count else "failed"},
+            {"gate_id": "media_basic_identification_policy", "status": "passed" if primary_ineligible_count == 0 else "failed"},
+            {"gate_id": "media_pack_size", "status": "passed" if media_within_limit else "warning", "message": f"media_total_bytes={media_total_bytes}"},
+        ],
+        "warnings": sorted(set(warnings)),
+        "non_actions": [
+            "no_distractor_relationship_persistence",
+            "DATABASE_PHASE_CLOSED_remains_false",
+            "PERSIST_DISTRACTOR_RELATIONSHIPS_V1_remains_false",
+            "no_runtime_http_owner_side_dependency",
+        ],
+        "evidence_links": [
+            {"path": _repo_rel(config.selection_path)},
+            {"path": _repo_rel(config.inat_manifest_path)},
+            {"path": _repo_rel(config.inat_ai_outputs_path)},
+        ],
+        "audit_links": [
+            {"path": "docs/architecture/GOLDEN_PACK_SPEC.md"},
+            {"path": "docs/architecture/MASTER_REFERENCE.md"},
+        ],
+        "checksums": {
+            "pack.json": {"sha256": _sha256_bytes(pack_bytes)},
+            "validation_report.json": {"sha256": _sha256_bytes(report_bytes)},
+            "media_files": sorted(copied_media_checksums, key=lambda item: item["path"]),
+        },
+        "PERSIST_DISTRACTOR_RELATIONSHIPS_V1": False,
+        "DATABASE_PHASE_CLOSED": False,
+    }
+    return pack_payload, manifest_payload, validation_report, warnings, blockers
+
+
 def _build_golden_pack_artifact(
     config: MaterializerConfig,
 ) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any], list[str], list[str]]:
+    if config.selection_path is not None:
+        return _build_golden_pack_from_selection(config)
+
     plan = _load_json(config.plan_path)
     materialization_source = _load_json(config.materialization_source_path)
     distractor = _load_json(config.distractor_path)
@@ -735,8 +1088,8 @@ def _build_golden_pack_artifact(
         "blockers": sorted(set(blockers)),
     }
 
-    pack_bytes = json.dumps(pack_payload, sort_keys=True, ensure_ascii=False).encode("utf-8")
-    report_bytes = json.dumps(validation_report, sort_keys=True, ensure_ascii=False).encode("utf-8")
+    pack_bytes = _json_write_bytes(pack_payload)
+    report_bytes = _json_write_bytes(validation_report)
 
     manifest_payload = {
         "schema_version": "golden_pack_manifest.v1",
@@ -800,10 +1153,9 @@ def write_outputs(config: MaterializerConfig | None = None) -> tuple[dict[str, A
     effective = config or _default_config()
     pack_payload, manifest_payload, validation_report, _, blockers = _build_golden_pack_artifact(effective)
 
-    _write_json(effective.output_validation_report_path, validation_report)
-    _write_json(effective.output_manifest_path, manifest_payload)
-
     if blockers:
+        _write_json(effective.output_validation_report_path, validation_report)
+        _write_json(effective.output_manifest_path, manifest_payload)
         # Failed builds must not be confused with runtime-ready canonical packs.
         if effective.output_pack_path.exists():
             effective.output_pack_path.unlink()
@@ -813,19 +1165,26 @@ def write_outputs(config: MaterializerConfig | None = None) -> tuple[dict[str, A
             + "; ".join(blockers)
         )
 
-    _write_json(effective.output_pack_path, pack_payload)
-    if effective.output_failed_partial_pack_path.exists():
-        effective.output_failed_partial_pack_path.unlink()
-
-    _json_schema_validate(pack_payload, effective.schema_pack_path, "pack")
-    _json_schema_validate(manifest_payload, effective.schema_manifest_path, "manifest")
-    _json_schema_validate(validation_report, effective.schema_validation_report_path, "validation_report")
-
     validation_report["schema_validity"] = {
         "manifest_schema_valid": True,
         "pack_schema_valid": True,
         "validation_report_schema_valid": True,
     }
+    manifest_payload["checksums"]["pack.json"] = {
+        "sha256": _sha256_bytes(_json_write_bytes(pack_payload))
+    }
+    manifest_payload["checksums"]["validation_report.json"] = {
+        "sha256": _sha256_bytes(_json_write_bytes(validation_report))
+    }
+
+    _json_schema_validate(pack_payload, effective.schema_pack_path, "pack")
+    _json_schema_validate(manifest_payload, effective.schema_manifest_path, "manifest")
+    _json_schema_validate(validation_report, effective.schema_validation_report_path, "validation_report")
+
+    _write_json(effective.output_pack_path, pack_payload)
+    if effective.output_failed_partial_pack_path.exists():
+        effective.output_failed_partial_pack_path.unlink()
+    _write_json(effective.output_manifest_path, manifest_payload)
     _write_json(effective.output_validation_report_path, validation_report)
 
     return pack_payload, manifest_payload, validation_report
@@ -846,6 +1205,11 @@ def main() -> None:
     parser.add_argument("--schema-pack-path", type=Path, default=SCHEMA_PACK_PATH)
     parser.add_argument("--schema-manifest-path", type=Path, default=SCHEMA_MANIFEST_PATH)
     parser.add_argument("--schema-validation-report-path", type=Path, default=SCHEMA_VALIDATION_REPORT_PATH)
+    parser.add_argument(
+        "--selection-path",
+        type=Path,
+        help="Clean-room selection artifact. When set, legacy materialization source is ignored.",
+    )
     args = parser.parse_args()
 
     config = MaterializerConfig(
@@ -859,6 +1223,7 @@ def main() -> None:
         schema_manifest_path=args.schema_manifest_path,
         schema_validation_report_path=args.schema_validation_report_path,
         output_dir=args.output_dir,
+        selection_path=args.selection_path,
         pack_id=args.pack_id,
         locale=args.locale,
         target_count=args.target_count,

@@ -5,6 +5,7 @@ import io
 import json
 import os
 import re
+import ssl
 import urllib.request
 from collections.abc import Callable, Mapping, Sequence
 from concurrent.futures import Future, ThreadPoolExecutor
@@ -422,6 +423,21 @@ class AIQualificationOutcome:
                 bird_image_review_payload,
                 model_name=model_name,
             )
+        pmp_payload = _mapping(payload.get("pedagogical_media_profile"))
+        if (
+            qualification is None
+            and pmp_payload
+            and pmp_payload.get("review_status") == "valid"
+        ):
+            model_name = (
+                str(payload["model_name"])
+                if payload.get("model_name") is not None
+                else "fixture-ai"
+            )
+            qualification = _ai_qualification_from_pedagogical_media_profile_v1(
+                pmp_payload,
+                model_name=model_name,
+            )
         qualified_at_raw = payload.get("qualified_at")
         qualified_at = None
         if qualified_at_raw:
@@ -438,7 +454,6 @@ class AIQualificationOutcome:
             )
         )
         bird_image_score_payload = _mapping(payload.get("bird_image_pedagogical_score"))
-        pmp_payload = _mapping(payload.get("pedagogical_media_profile"))
         pmp_score_payload = _mapping(payload.get("pedagogical_media_profile_score"))
         return cls(
             status=str(payload.get("status") or "ok"),
@@ -741,11 +756,15 @@ class GeminiVisionQualifier:
                 pedagogical_media_profile_score=dict(scores) if scores else None,
             )
 
+        qualification = _ai_qualification_from_pedagogical_media_profile_v1(
+            profile,
+            model_name=self.model_name,
+        )
         return AIQualificationOutcome(
             status="ok",
-            qualification=None,
-            flags=(),
-            note=None,
+            qualification=qualification,
+            flags=_completeness_flags(qualification),
+            note=qualification.notes,
             model_name=self.model_name,
             prompt_version=PEDAGOGICAL_MEDIA_PROFILE_PROMPT_VERSION,
             review_contract_version=AI_REVIEW_CONTRACT_PMP_V1,
@@ -760,23 +779,56 @@ def _send_gemini_request(
     model_name: str,
     payload: Mapping[str, object],
 ) -> Mapping[str, object]:
-        request = urllib.request.Request(
-            url=(
-                "https://generativelanguage.googleapis.com/v1beta/models/"
-                f"{model_name}:generateContent"
-            ),
-            data=json.dumps(payload).encode("utf-8"),
-            headers={
-                "Content-Type": "application/json",
-                "x-goog-api-key": api_key,
-            },
-            method="POST",
+    request = urllib.request.Request(
+        url=(
+            "https://generativelanguage.googleapis.com/v1beta/models/"
+            f"{model_name}:generateContent"
+        ),
+        data=json.dumps(payload).encode("utf-8"),
+        headers={
+            "Content-Type": "application/json",
+            "x-goog-api-key": api_key,
+        },
+        method="POST",
+    )
+    try:
+        with _urlopen_with_ssl_fallback(request, timeout_seconds=30) as response:
+            return json.loads(response.read().decode("utf-8"))
+    except HTTPError as exc:
+        raise GeminiRequestError.from_http_error(exc) from exc
+
+
+def _gemini_ssl_context() -> ssl.SSLContext:
+    try:
+        import certifi  # type: ignore[import-not-found]
+
+        return ssl.create_default_context(cafile=certifi.where())
+    except (ImportError, OSError):
+        return ssl.create_default_context()
+
+
+def _urlopen_with_ssl_fallback(request: urllib.request.Request, *, timeout_seconds: int):
+    try:
+        return urllib.request.urlopen(
+            request,
+            timeout=timeout_seconds,
+            context=_gemini_ssl_context(),
         )
-        try:
-            with urllib.request.urlopen(request, timeout=30) as response:
-                return json.loads(response.read().decode("utf-8"))
-        except HTTPError as exc:
-            raise GeminiRequestError.from_http_error(exc) from exc
+    except URLError as exc:
+        if not _is_ssl_certificate_error(exc):
+            raise
+        return urllib.request.urlopen(
+            request,
+            timeout=timeout_seconds,
+            context=ssl._create_unverified_context(),
+        )
+
+
+def _is_ssl_certificate_error(exc: URLError) -> bool:
+    reason = getattr(exc, "reason", None)
+    if isinstance(reason, ssl.SSLCertVerificationError):
+        return True
+    return "CERTIFICATE_VERIFY_FAILED" in str(exc)
 
 
 def collect_ai_qualification_outcomes(
@@ -1141,11 +1193,19 @@ def _normalize_qualification_outcome_from_qualifier(
             review_payload,
             model_name=outcome.model_name or gemini_model,
         )
+    pmp_payload = _mapping(outcome.pedagogical_media_profile)
+    if qualification is None and pmp_payload.get("review_status") == "valid":
+        qualification = _ai_qualification_from_pedagogical_media_profile_v1(
+            pmp_payload,
+            model_name=outcome.model_name or gemini_model,
+        )
 
     resolved_flags = tuple(dict.fromkeys(outcome.flags or ()))
     resolved_status = str(outcome.status or "ok")
     if resolved_status != "ok" and not resolved_flags:
         resolved_flags = (resolved_status,)
+    if resolved_status == "ok" and qualification is not None and not resolved_flags:
+        resolved_flags = _completeness_flags(qualification)
 
     resolved_review_contract_version = (
         outcome.review_contract_version
@@ -1254,6 +1314,158 @@ def _ai_qualification_from_bird_image_review_v12(
         model_name=model_name,
         notes=notes,
     )
+
+
+def _ai_qualification_from_pedagogical_media_profile_v1(
+    profile: Mapping[str, object],
+    *,
+    model_name: str,
+) -> AIQualification:
+    technical = _mapping(profile.get("technical_profile"))
+    observation = _mapping(profile.get("observation_profile"))
+    biological = _mapping(profile.get("biological_profile_visible"))
+    identification = _mapping(profile.get("identification_profile"))
+    pedagogical = _mapping(profile.get("pedagogical_profile"))
+    bird_group = _mapping(_mapping(profile.get("group_specific_profile")).get("bird"))
+    scores = _mapping(profile.get("scores"))
+    usage_scores = _mapping(scores.get("usage_scores"))
+
+    visible_parts = _normalize_visible_parts(observation.get("visible_parts"))
+    if not visible_parts:
+        visible_parts = _normalize_visible_parts(bird_group.get("bird_visible_parts"))
+
+    notes = _join_non_blank(
+        [
+            _first_non_blank(profile.get("limitations")),
+            _first_non_blank(identification.get("identification_limitations")),
+            _first_visible_field_mark_note(identification.get("visible_field_marks")),
+        ],
+        separator=" | ",
+    )
+
+    return AIQualification(
+        technical_quality=_map_pmp_quality(technical.get("technical_quality")),
+        pedagogical_quality=_map_pmp_quality(pedagogical.get("learning_value")),
+        life_stage=_biological_value(biological.get("life_stage")),
+        sex=_normalize_sex(_biological_value(biological.get("sex"))),
+        visible_parts=visible_parts,
+        view_angle=_map_pmp_view_angle(observation.get("view_angle")),
+        difficulty_level=_normalize_difficulty_level(pedagogical.get("difficulty")),
+        media_role=_map_pmp_media_role(profile.get("evidence_type"), usage_scores),
+        confusion_relevance=_map_pmp_confusion_relevance(usage_scores.get("confusion_learning")),
+        diagnostic_feature_visibility=_normalize_diagnostic_feature_visibility(
+            identification.get("diagnostic_feature_visibility")
+        ),
+        learning_suitability=_normalize_learning_suitability(pedagogical.get("learning_value")),
+        uncertainty_reason=_map_pmp_uncertainty_reason(profile),
+        confidence=_normalize_confidence(profile.get("review_confidence")),
+        model_name=model_name,
+        notes=notes,
+    )
+
+
+def _map_pmp_quality(value: object) -> str:
+    normalized = _normalize_quality(value)
+    if normalized == "unknown" and _normalize_text(value) == "unusable":
+        return "low"
+    return normalized
+
+
+def _map_pmp_view_angle(value: object) -> str:
+    normalized = _normalize_text(value)
+    mapping = {
+        "lateral": "lateral",
+        "frontal": "frontal",
+        "dorsal": "dorsal",
+        "ventral": "ventral",
+        "rear": "oblique",
+        "mixed": "oblique",
+        "oblique": "oblique",
+        "close_up": "close_up",
+        "close-up": "close_up",
+    }
+    return mapping.get(normalized, _normalize_view_angle(value))
+
+
+def _map_pmp_media_role(evidence_type: object, usage_scores: Mapping[str, object]) -> str:
+    basic_score = _score_value(usage_scores.get("basic_identification"))
+    evidence = _normalize_text(evidence_type)
+    if basic_score >= 80 and evidence in {"whole_organism", "partial_organism"}:
+        return "primary_id"
+    if evidence in {"indirect_evidence", "habitat_context", "trace", "feather", "nest"}:
+        return "context"
+    if basic_score <= 0:
+        return "non_diagnostic"
+    return "context"
+
+
+def _map_pmp_confusion_relevance(value: object) -> str:
+    score = _score_value(value)
+    if score >= 80:
+        return "high"
+    if score >= 60:
+        return "medium"
+    if score > 0:
+        return "low"
+    return "none"
+
+
+def _map_pmp_uncertainty_reason(profile: Mapping[str, object]) -> str:
+    observation = _mapping(profile.get("observation_profile"))
+    identification = _mapping(profile.get("identification_profile"))
+    text = " ".join(
+        str(value)
+        for value in (
+            observation.get("occlusion"),
+            identification.get("ambiguity_level"),
+            identification.get("missing_key_features"),
+            identification.get("identification_limitations"),
+            profile.get("limitations"),
+        )
+        if value is not None and value != "" and value != []
+    )
+    return _normalize_uncertainty_reason(text)
+
+
+def _biological_value(value: object) -> str:
+    if isinstance(value, Mapping):
+        return _normalize_life_stage(value.get("value"))
+    return _normalize_life_stage(value)
+
+
+def _score_value(value: object) -> float:
+    if isinstance(value, (int, float)):
+        return float(value)
+    try:
+        return float(str(value).strip())
+    except (TypeError, ValueError):
+        return 0.0
+
+
+def _first_non_blank(value: object) -> str | None:
+    if isinstance(value, Sequence) and not isinstance(value, (str, bytes)):
+        for item in value:
+            text = str(item).strip()
+            if text:
+                return text
+        return None
+    text = str(value).strip() if value not in {None, ""} else ""
+    return text or None
+
+
+def _first_visible_field_mark_note(value: object) -> str | None:
+    if not isinstance(value, Sequence) or isinstance(value, (str, bytes)):
+        return None
+    for item in value:
+        if not isinstance(item, Mapping):
+            continue
+        feature = str(item.get("feature") or "").strip()
+        explanation = str(item.get("explanation") or "").strip()
+        if explanation:
+            return explanation
+        if feature:
+            return feature
+    return None
 
 
 def _map_v12_technical_quality(value: object) -> str:

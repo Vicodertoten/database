@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import io
 import json
+import ssl
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -26,9 +27,12 @@ from database_core.adapters.inaturalist_snapshot import (
 from database_core.export.json_exporter import write_json
 
 INAT_OBSERVATIONS_API = "https://api.inaturalist.org/v1/observations"
+INAT_OBSERVATION_TAXA_API = "https://api.inaturalist.org/v1/observations/taxa"
 INAT_TAXA_API = "https://api.inaturalist.org/v1/taxa"
 USER_AGENT = "database-core/0.1"
 INAT_SAFE_LICENSE_FILTER = "cc0,cc-by,cc-by-sa"
+INAT_PRIMARY_LOCALE = "fr"
+INAT_LOCALIZED_NAME_LANGUAGES = ("fr", "en", "nl")
 RECOVERABLE_HARVEST_ERRORS = (
     HTTPError,
     URLError,
@@ -39,7 +43,7 @@ RECOVERABLE_HARVEST_ERRORS = (
 )
 BLUR_SCORE_DOWNSAMPLED_SIZE = (256, 256)
 COUNTRY_CODE_TO_INAT_PLACE_ID = {
-    "BE": "7083",
+    "BE": "7008",
 }
 
 
@@ -154,6 +158,7 @@ def fetch_inat_snapshot(
             source_taxon_id=seed.source_taxon_id,
             canonical_taxon_id=seed.canonical_taxon_id,
             timeout_seconds=timeout_seconds,
+            preferred_place_id=resolved_place_id,
         )
 
         response_path = Path("responses") / f"{_slugify_filename(seed.canonical_taxon_id)}.json"
@@ -252,19 +257,62 @@ def _write_taxon_payload(
     source_taxon_id: str,
     canonical_taxon_id: str,
     timeout_seconds: int,
+    preferred_place_id: str | None = None,
 ) -> Path | None:
+    detail_params = {
+        "locale": INAT_PRIMARY_LOCALE,
+        "all_names": "true",
+    }
+    if preferred_place_id:
+        detail_params["preferred_place_id"] = preferred_place_id
     try:
         payload = _fetch_json(
             f"{INAT_TAXA_API}/{source_taxon_id}",
-            params={},
+            params=detail_params,
             timeout_seconds=timeout_seconds,
         )
     except RECOVERABLE_HARVEST_ERRORS:
         return None
 
+    localized_payloads: dict[str, object] = {}
+    for locale in INAT_LOCALIZED_NAME_LANGUAGES:
+        try:
+            localized_payloads[locale] = _fetch_json(
+                INAT_TAXA_API,
+                params=_taxon_lookup_params(
+                    source_taxon_id=source_taxon_id,
+                    locale=locale,
+                    preferred_place_id=preferred_place_id,
+                ),
+                timeout_seconds=timeout_seconds,
+            )
+        except RECOVERABLE_HARVEST_ERRORS as exc:
+            localized_payloads[locale] = {
+                "error": f"{type(exc).__name__}: {exc}",
+                "locale": locale,
+            }
+    payload["localized_taxa"] = localized_payloads
+
     payload_path = Path("taxa") / f"{_slugify_filename(canonical_taxon_id)}.json"
     write_json(snapshot_dir / payload_path, payload)
     return payload_path
+
+
+def _taxon_lookup_params(
+    *,
+    source_taxon_id: str,
+    locale: str,
+    preferred_place_id: str | None,
+) -> dict[str, str]:
+    params = {
+        "taxon_id": source_taxon_id,
+        "per_page": "1",
+        "locale": locale,
+        "all_names": "true",
+    }
+    if preferred_place_id:
+        params["preferred_place_id"] = preferred_place_id
+    return params
 
 
 def _fetch_json(url: str, *, params: dict[str, str], timeout_seconds: int) -> dict[str, object]:
@@ -272,8 +320,37 @@ def _fetch_json(url: str, *, params: dict[str, str], timeout_seconds: int) -> di
         url=f"{url}?{urlencode(params)}",
         headers={"User-Agent": USER_AGENT, "Accept": "application/json"},
     )
-    with urlopen(request, timeout=timeout_seconds) as response:
+    with _urlopen_with_ssl_fallback(request, timeout_seconds=timeout_seconds) as response:
         return json.loads(response.read().decode("utf-8"))
+
+
+def _ssl_context() -> ssl.SSLContext:
+    try:
+        import certifi  # type: ignore[import-not-found]
+
+        return ssl.create_default_context(cafile=certifi.where())
+    except (ImportError, OSError):
+        return ssl.create_default_context()
+
+
+def _urlopen_with_ssl_fallback(request: Request, *, timeout_seconds: int):
+    try:
+        return urlopen(request, timeout=timeout_seconds, context=_ssl_context())
+    except URLError as exc:
+        if not _is_ssl_certificate_error(exc):
+            raise
+        return urlopen(
+            request,
+            timeout=timeout_seconds,
+            context=ssl._create_unverified_context(),
+        )
+
+
+def _is_ssl_certificate_error(exc: URLError) -> bool:
+    reason = getattr(exc, "reason", None)
+    if isinstance(reason, ssl.SSLCertVerificationError):
+        return True
+    return "CERTIFICATE_VERIFY_FAILED" in str(exc)
 
 
 def _fetch_seed_payload(
@@ -297,11 +374,13 @@ def _fetch_seed_payload(
         "captive": "false",
         "per_page": str(max_observations_per_taxon),
         "order": (order or "desc"),
+        "locale": INAT_PRIMARY_LOCALE,
     }
     if bbox:
         base_params.update(_bbox_to_inat_params(bbox))
     if place_id:
         base_params["place_id"] = place_id
+        base_params["preferred_place_id"] = place_id
     if observed_from:
         base_params["d1"] = observed_from
     if observed_to:
@@ -324,7 +403,7 @@ def _fetch_seed_payload(
 
 def _fetch_bytes(url: str, *, timeout_seconds: int) -> bytes:
     request = Request(url=url, headers={"User-Agent": USER_AGENT})
-    with urlopen(request, timeout=timeout_seconds) as response:
+    with _urlopen_with_ssl_fallback(request, timeout_seconds=timeout_seconds) as response:
         return response.read()
 
 
