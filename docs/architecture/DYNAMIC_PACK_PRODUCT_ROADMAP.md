@@ -25,6 +25,9 @@ This document is a product/architecture roadmap. It does not replace:
 Phase 0 execution is tracked in
 `docs/runbooks/dynamic-pack-phase-0-plan.md`.
 
+Phase 2B execution is tracked in
+`docs/runbooks/dynamic-pack-phase-2b-runtime-session-contract.md`.
+
 ## Locked Decisions
 
 ### Short-Term Corpus Target
@@ -44,14 +47,14 @@ Phase 0 execution is tracked in
 
 ### Dynamic Pack Model
 
-The first strategic dynamic pack candidate is:
+The first strategic dynamic pack product name is:
 
 ```text
-BE+FR Birds
+Common birds Belgium/France
 ```
 
-The final product-facing name remains to be decided. `Belgian Birds` is now too
-narrow if the first pack uses France as part of the target corpus scope.
+`Belgian Birds` is too narrow because the first pack uses Belgium and France as
+the target corpus scope.
 
 It is not a fixed list of 20 questions. It is a pack definition over a broad
 qualified pool.
@@ -71,7 +74,10 @@ Initial policy:
 
 - target count: 20 questions per session;
 - random media selection from the qualified pool;
-- anti-abuse limits against excessive repetition of the same species or image;
+- no duplicate image/media item inside one generated session;
+- repeated species/taxa are allowed in the first dynamic implementation;
+- anti-abuse limits against excessive repetition of the same species are later
+  personalization/selection-policy work, not a Phase 2B blocker;
 - beginner learning mode may allow repeated species, but limited;
 - evaluation mode should avoid or tightly control repeated species;
 - a generated session must be immutable once started.
@@ -84,6 +90,17 @@ randomized, not naive-random
 
 The system should avoid letting highly covered taxa dominate the session simply
 because they have more images.
+
+For normal dynamic sessions, immutability applies after generation only. The
+same species or image candidate must not be bound permanently to the same
+distractors across all future sessions. The selector should use controlled
+randomness before snapshotting, then freeze the exact displayed media, options,
+labels, order, and feedback for that one attempt.
+
+The first playable dynamic session contract is `session_snapshot.v2`.
+`session_snapshot.v1` is retained as the Phase 2A target-only proof surface and
+is not considered a playable runtime contract because it intentionally defers
+option generation.
 
 ### Fixed Modes
 
@@ -193,9 +210,20 @@ In product terms:
 Policy:
 
 - acceptable in MVP and dynamic packs with guardrails;
+- in normal dynamic sessions, `referenced_only` distractors are allowed with a
+  maximum of `2` per question;
+- in institutional assignment modes, `referenced_only` should be disabled by
+  default unless a future assignment policy explicitly enables it;
 - selected `referenced_only` answers should still be logged as confusion signals;
 - sensitive institutional modes may later disable `referenced_only` by default
   until human validation is stronger.
+
+Referenced-only taxa require their own readiness audit before Phase 2B runtime
+handoff. Scientific name and provenance are mandatory. Locale common names
+(`fr`, `en`, `nl`) should be harvested or repaired when available. Internal
+fixtures may use scientific-name-only referenced distractors, but public release
+must not use referenced-only distractors without a locale common name unless a
+specific editorial exception is recorded.
 
 ### Locale Policy
 
@@ -209,6 +237,17 @@ Initial supported locales:
 
 Runtime must not switch labels or feedback language mid-session. This keeps
 questions auditable and makes user-performance signals interpretable.
+
+The Phase 2A audit reported FR/NL scientific-name fallback usage. Because the
+project expects FR/EN/NL names to exist for the initial corpus, Phase 2B must
+treat that fallback as a likely data selection or propagation defect until
+proven otherwise. Phase 2B validation is blocked until the FR/NL label source is
+diagnosed and corrected or the remaining fallback cases are explicitly justified.
+
+Runtime option display should receive both common and scientific names from
+`database`. The runtime may render the common name as the primary option label
+and the scientific name beneath it in smaller, italic, lower-emphasis text. The
+runtime must not derive or repair these labels locally.
 
 ## Target Architecture
 
@@ -458,9 +497,15 @@ Exit criteria:
 - corpus is large enough to support fresh 20-question sessions;
 - operator can explain why images/options are accepted or rejected.
 
-### Phase 2 - Dynamic Pack Pool
+### Phase 2 - Dynamic Pack Pool And Runtime Session Contract
 
-Goal: create a serving-ready pool for `Belgian Birds`.
+Goal: create a serving-ready pool and a playable dynamic session contract for
+`Common birds Belgium/France`.
+
+Phase 2 is split into:
+
+- Phase 2A: `pack_pool.v1` and `session_snapshot.v1` target-only fixtures.
+- Phase 2B: `session_snapshot.v2` playable runtime contract with options.
 
 Actions:
 
@@ -469,13 +514,26 @@ Actions:
 - persist locale readiness;
 - persist distractor candidate readiness;
 - implement pool diagnostics;
-- define first randomized selection policy.
+- define first randomized selection policy;
+- repair or explicitly justify FR/NL locale fallbacks before runtime handoff;
+- audit referenced-only distractor locale readiness;
+- define `session_snapshot.v2` with snapshot-ready options;
+- generate at least three deterministic seeds per locale (`fr`, `en`, `nl`) to
+  prove controlled random variation.
 
 Exit criteria:
 
 - a dynamic 20-question session can be generated from the pool without live
   external calls;
-- generated sessions are auditable and reproducible from stored inputs.
+- generated sessions are auditable and reproducible from stored inputs;
+- every generated session contains no duplicate media item;
+- every generated question contains exactly four snapshotted options, exactly
+  one correct option, and exactly three distractors;
+- distractors are selected by deterministic scoring plus weighted randomness,
+  using iNaturalist similar-species signals and taxonomic proximity with
+  traceable fallback when needed;
+- public/runtime handoff receives a complete contract owned by `database`, not
+  locally redefined runtime logic.
 
 ### Phase 3 - Runtime Dynamic Sessions
 
@@ -485,7 +543,7 @@ Actions:
 
 - extend runtime session modes;
 - snapshot generated questions at session start;
-- store locale and generated pool/materialization id;
+- store locale, generated pool id, and `session_snapshot_id`;
 - record selected taxon ref type;
 - preserve existing scoring model;
 - keep `golden_pack.v1` compatibility until dynamic mode is validated.

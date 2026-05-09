@@ -40,6 +40,8 @@ This repository now uses a four-zone documentation architecture:
 - Pre-scale ingestion roadmap: `docs/runbooks/pre-scale-ingestion-roadmap.md`
 - Dynamic pack product roadmap: `docs/architecture/DYNAMIC_PACK_PRODUCT_ROADMAP.md`
 - Dynamic pack Phase 0 alignment plan: `docs/runbooks/dynamic-pack-phase-0-plan.md`
+- Dynamic pack Phase 2B runtime session contract:
+  `docs/runbooks/dynamic-pack-phase-2b-runtime-session-contract.md`
 - Ingestion quality gates: `docs/runbooks/ingestion-quality-gates.md`
 - Ingestion code-to-gate map: `docs/runbooks/ingestion-code-to-gate-map.md`
 - Phase 2 implementation runbook: `docs/runbooks/phase2-playable-corpus-v0.1.md`
