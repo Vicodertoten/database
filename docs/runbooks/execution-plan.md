@@ -25,7 +25,13 @@ en conservant:
 - separation stricte avec le runtime
 
 Le runtime ne lit jamais `export.bundle.v4`.
-Le runtime lit des surfaces dediees (`playable_corpus.v1`, builds compiles, materializations).
+Le runtime MVP actuel lit `golden_pack.v1` en mode artifact-only. Les anciennes
+surfaces dediees (`playable_corpus.v1`, builds compiles, materializations)
+restent legacy / strategic-later et ne sont pas la cible runtime actuelle.
+
+Direction post-MVP: dynamic pack pool + session snapshot, avec materialisations
+figees pour daily challenge et assignments. Cette direction est documentee dans
+`docs/architecture/DYNAMIC_PACK_PRODUCT_ROADMAP.md`.
 
 ## 1.1 Cadrage court terme verrouille (v0.1)
 

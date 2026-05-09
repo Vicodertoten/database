@@ -29,6 +29,11 @@ This is not a database perfection milestone. It is the first audited,
 runtime-safe, pedagogically usable artifact sufficient to test the real product
 experience.
 
+Post-MVP dynamic pack direction is tracked separately in
+`docs/architecture/DYNAMIC_PACK_PRODUCT_ROADMAP.md`, with Phase 0 alignment in
+`docs/runbooks/dynamic-pack-phase-0-plan.md`. This document remains the MVP
+Golden Pack reference.
+
 Current decision state:
 
 | Decision | Status |

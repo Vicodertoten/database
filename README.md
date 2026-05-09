@@ -97,6 +97,8 @@ That is the main architectural priority before any significant new scope is adde
 ## Reference docs
 
 - Documentation index: `docs/README.md`
+- Post-MVP dynamic pack roadmap: `docs/architecture/DYNAMIC_PACK_PRODUCT_ROADMAP.md`
+- Dynamic pack Phase 0 alignment plan: `docs/runbooks/dynamic-pack-phase-0-plan.md`
 - Active audits index: `docs/audits/`
 - Living audit reference: `docs/runbooks/audit-reference.md`
 - Codex execution plan (sequential gates): `docs/runbooks/execution-plan.md`

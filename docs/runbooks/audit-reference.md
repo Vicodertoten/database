@@ -87,12 +87,15 @@ La cible recommandee reste:
 
 - une database specialisee de connaissance et de qualification naturaliste
 - un playable corpus cumulatif incremental avec invalidation explicite
-- des surfaces stables pour le runtime (`playable_corpus.v1`, `pack.compiled.v1`, `pack.materialization.v1`)
+- `golden_pack.v1` comme surface runtime MVP actuelle
+- des surfaces historiques / strategic-later (`playable_corpus.v1`, `pack.compiled.v1`, `pack.materialization.v1`) conservees comme infrastructure utile, mais pas cible runtime actuelle
+- une direction post-MVP dynamic pack pool + session snapshot documentee dans `docs/architecture/DYNAMIC_PACK_PRODUCT_ROADMAP.md`
 - une separation stricte entre data/core et runtime/session/scoring
 - une extension progressive vers multi-source, multi-taxa, et meilleure qualite editoriale
 
 Le runtime ne doit jamais lire `export.bundle.v4` comme surface de jeu.
-Le runtime lit des surfaces dediees derivees de la database.
+Le runtime lit uniquement des surfaces dediees derivees de la database et
+explicitement verrouillees pour la phase concernee.
 
 ## 4. Forces confirmees
 

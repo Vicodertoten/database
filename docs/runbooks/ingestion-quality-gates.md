@@ -575,16 +575,18 @@ Blocking palier 1:
 
 Question:
 
-L'artefact final est-il traçable, exportable et consommable par les surfaces runtime officielles?
+L'artefact final est-il traçable, exportable et consommable par la surface
+runtime verrouillee pour la phase concernee?
 
 Accepted:
 
 - source lineage complet;
 - licence et attribution complètes;
 - qualification trace complète;
-- playable item actif;
-- pack compiled valide;
-- materialization valide;
+- MVP: `golden_pack.v1` valide et runtime-consumable;
+- legacy / strategic-later: playable item actif, pack compiled valide, et
+  materialization valide quand cette famille de surfaces est explicitement dans
+  le scope du run;
 - runtime E2E vérifié avec `selectedOptionId` pour v2.
 
 Rejected:

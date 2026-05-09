@@ -30,6 +30,19 @@ Pack. Pour les decisions Golden Pack et runtime artifact-only, la reference
 canonique est `docs/architecture/MASTER_REFERENCE.md`, avec le contrat detaille
 dans `docs/architecture/GOLDEN_PACK_SPEC.md`.
 
+## Note Post-MVP Dynamic Pack (2026-05-09)
+
+Apres le MVP `golden_pack.v1`, la cible strategique n'est pas une reprise
+directe des anciennes surfaces owner-side. La direction est un pool dynamique
+serving-ready, des sessions snapshottees au demarrage, des challenges/devoirs
+figes, et des batchs de signaux runtime vers `database`.
+
+Les noms `pack_pool.v1`, `session_snapshot.v1`, `fixed_challenge.v1`,
+`assignment_materialization.v1`, et `runtime_signal_batch.v1` sont des noms
+candidats non verrouilles jusqu'a la phase d'implementation. La reference de
+vision est `docs/architecture/DYNAMIC_PACK_PRODUCT_ROADMAP.md`; le plan
+d'alignement Phase 0 est `docs/runbooks/dynamic-pack-phase-0-plan.md`.
+
 ## Etat de transport actuel
 
 Hors MVP Golden Pack, le transport inter-repos existant suit la sequence
@@ -103,10 +116,11 @@ Pour le deploiement cible Fly.io:
   - variable owner-side: `OWNER_SERVICE_TOKEN`
   - variable consumer-side (`runtime-api`): `DATABASE_OWNER_SERVICE_TOKEN`
 
-## Surfaces officiellement consommables
+## Surfaces owner-side historiques / strategic-later
 
 Hors MVP Golden Pack artifact-only, `runtime-app` peut consommer les surfaces
-suivantes comme surfaces runtime officielles:
+suivantes quand cette famille owner-side est explicitement dans le scope. Elles
+restent legacy / strategic-later et ne sont pas la cible runtime actuelle:
 
 - `playable_corpus.v1`
 - `pack.compiled.v1`

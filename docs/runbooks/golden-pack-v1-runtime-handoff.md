@@ -1,3 +1,11 @@
+---
+owner: database
+status: stable
+last_reviewed: 2026-05-09
+source_of_truth: docs/runbooks/golden-pack-v1-runtime-handoff.md
+scope: golden_pack_runtime_handoff
+---
+
 # Golden Pack v1 Runtime Handoff
 
 This runbook defines the database-owned handoff for the MVP runtime app.
