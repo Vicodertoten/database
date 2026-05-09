@@ -15,6 +15,9 @@ DEFAULT_SESSION_SNAPSHOT_SCHEMA_PATH = (
 DEFAULT_SESSION_SNAPSHOT_V2_SCHEMA_PATH = (
     Path(__file__).resolve().parents[3] / "schemas" / "session_snapshot_v2.schema.json"
 )
+DEFAULT_SERVING_BUNDLE_SCHEMA_PATH = (
+    Path(__file__).resolve().parents[3] / "schemas" / "serving_bundle_v1.schema.json"
+)
 
 
 def validate_pack_pool(
@@ -53,6 +56,25 @@ def validate_session_snapshot(
         ) from exc
 
 
+def validate_serving_bundle(
+    payload: dict[str, object],
+    *,
+    schema_path: Path | None = None,
+) -> None:
+    resolved_schema_path = schema_path or DEFAULT_SERVING_BUNDLE_SCHEMA_PATH
+    try:
+        validate(
+            instance=payload,
+            schema=_load_schema(resolved_schema_path),
+            format_checker=FormatChecker(),
+        )
+    except ValidationError as exc:
+        location = ".".join(str(item) for item in exc.absolute_path) or "<root>"
+        raise ValueError(
+            f"Serving bundle validation failed at {location}: {exc.message}"
+        ) from exc
+
+
 def _session_snapshot_schema_path(payload: dict[str, object]) -> Path:
     version = payload.get("session_snapshot_version")
     if version == "session_snapshot.v2":
@@ -60,6 +82,6 @@ def _session_snapshot_schema_path(payload: dict[str, object]) -> Path:
     return DEFAULT_SESSION_SNAPSHOT_SCHEMA_PATH
 
 
-@lru_cache(maxsize=6)
+@lru_cache(maxsize=8)
 def _load_schema(schema_path: Path) -> dict[str, object]:
     return json.loads(schema_path.read_text(encoding="utf-8"))

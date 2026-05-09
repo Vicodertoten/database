@@ -1,0 +1,231 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "serving_bundle_v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "serving_bundle_version",
+    "bundle_id",
+    "pool_id",
+    "source_run_id",
+    "generated_at",
+    "question_count",
+    "selector_policy",
+    "distractor_policy",
+    "source_scores",
+    "pack_pool",
+    "relationships",
+    "taxonomy_profiles",
+    "metrics"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": { "type": "string", "minLength": 1 },
+    "serving_bundle_version": { "type": "string", "const": "serving_bundle.v1" },
+    "bundle_id": { "type": "string", "minLength": 1 },
+    "pool_id": { "type": "string", "minLength": 1 },
+    "source_run_id": { "type": "string", "minLength": 1 },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "question_count": { "type": "integer", "const": 20 },
+    "selector_policy": {
+      "type": "object",
+      "required": ["version", "max_questions_per_taxon", "unique_media_per_session"],
+      "additionalProperties": false,
+      "properties": {
+        "version": { "type": "string", "const": "phase2b.selector.v2" },
+        "max_questions_per_taxon": { "type": "integer", "const": 1 },
+        "unique_media_per_session": { "type": "boolean", "const": true }
+      }
+    },
+    "distractor_policy": {
+      "type": "object",
+      "required": [
+        "version",
+        "referenced_only_allowed",
+        "max_referenced_only_per_question",
+        "fallback_source"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "version": { "type": "string", "const": "phase2b.distractors.palier_a.v1" },
+        "referenced_only_allowed": { "type": "boolean", "const": false },
+        "max_referenced_only_per_question": { "type": "integer", "const": 0 },
+        "fallback_source": { "type": "string", "const": "taxonomic_fallback_db" }
+      }
+    },
+    "source_scores": {
+      "type": "object",
+      "required": [
+        "inaturalist_similar_species",
+        "taxonomic_neighbor_same_genus",
+        "taxonomic_neighbor_same_family",
+        "taxonomic_neighbor_same_order",
+        "taxonomic_fallback_db"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "inaturalist_similar_species": { "type": "number", "minimum": 0 },
+        "taxonomic_neighbor_same_genus": { "type": "number", "minimum": 0 },
+        "taxonomic_neighbor_same_family": { "type": "number", "minimum": 0 },
+        "taxonomic_neighbor_same_order": { "type": "number", "minimum": 0 },
+        "taxonomic_fallback_db": { "type": "number", "minimum": 0 }
+      }
+    },
+    "pack_pool": {
+      "type": "object",
+      "required": ["pack_pool_version", "pool_id", "source_run_id", "items"],
+      "additionalProperties": true,
+      "properties": {
+        "pack_pool_version": { "type": "string", "const": "pack_pool.v1" },
+        "pool_id": { "type": "string", "minLength": 1 },
+        "source_run_id": { "type": "string", "minLength": 1 },
+        "items": {
+          "type": "array",
+          "minItems": 20,
+          "items": { "$ref": "#/$defs/pool_item" }
+        }
+      }
+    },
+    "relationships": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/relationship" }
+    },
+    "taxonomy_profiles": {
+      "type": "object",
+      "minProperties": 20,
+      "additionalProperties": { "$ref": "#/$defs/taxonomy_profile" }
+    },
+    "metrics": {
+      "type": "object",
+      "required": [
+        "item_count",
+        "taxon_count",
+        "media_asset_count",
+        "relationship_count",
+        "taxonomy_profile_count",
+        "fallback_ready_taxon_count"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "item_count": { "type": "integer", "minimum": 20 },
+        "taxon_count": { "type": "integer", "minimum": 20 },
+        "media_asset_count": { "type": "integer", "minimum": 20 },
+        "relationship_count": { "type": "integer", "minimum": 0 },
+        "taxonomy_profile_count": { "type": "integer", "minimum": 20 },
+        "fallback_ready_taxon_count": { "type": "integer", "minimum": 20 }
+      }
+    }
+  },
+  "$defs": {
+    "pool_item": {
+      "type": "object",
+      "required": [
+        "playable_item_id",
+        "canonical_taxon_id",
+        "media_asset_id",
+        "scientific_name",
+        "labels",
+        "label_sources",
+        "media",
+        "country_code"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "playable_item_id": { "type": "string", "minLength": 1 },
+        "canonical_taxon_id": { "type": "string", "minLength": 1 },
+        "media_asset_id": { "type": "string", "minLength": 1 },
+        "scientific_name": { "type": "string", "minLength": 1 },
+        "labels": { "$ref": "#/$defs/locale_labels" },
+        "label_sources": { "$ref": "#/$defs/locale_label_sources" },
+        "feedback_short": { "type": ["string", "null"] },
+        "media": { "$ref": "#/$defs/media" },
+        "country_code": { "type": "string", "enum": ["BE", "FR"] }
+      }
+    },
+    "locale_labels": {
+      "type": "object",
+      "required": ["fr", "en", "nl"],
+      "additionalProperties": true,
+      "properties": {
+        "fr": { "type": "string", "minLength": 1 },
+        "en": { "type": "string", "minLength": 1 },
+        "nl": { "type": "string", "minLength": 1 }
+      }
+    },
+    "locale_label_sources": {
+      "type": "object",
+      "required": ["fr", "en", "nl"],
+      "additionalProperties": true,
+      "properties": {
+        "fr": { "type": "string", "enum": ["common_name", "scientific_name"] },
+        "en": { "type": "string", "enum": ["common_name", "scientific_name"] },
+        "nl": { "type": "string", "enum": ["common_name", "scientific_name"] }
+      }
+    },
+    "media": {
+      "type": "object",
+      "required": ["render_url", "attribution", "license"],
+      "additionalProperties": false,
+      "properties": {
+        "render_url": { "type": "string", "minLength": 1 },
+        "attribution": { "type": "string", "minLength": 1 },
+        "license": { "type": ["string", "null"] }
+      }
+    },
+    "relationship": {
+      "type": "object",
+      "required": [
+        "relationship_id",
+        "target_canonical_taxon_id",
+        "target_scientific_name",
+        "candidate_taxon_ref_type",
+        "candidate_taxon_ref_id",
+        "candidate_scientific_name",
+        "source",
+        "source_rank",
+        "status"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "relationship_id": { "type": "string", "minLength": 1 },
+        "target_canonical_taxon_id": { "type": "string", "minLength": 1 },
+        "target_scientific_name": { "type": "string", "minLength": 1 },
+        "candidate_taxon_ref_type": { "type": "string", "const": "canonical_taxon" },
+        "candidate_taxon_ref_id": { "type": "string", "minLength": 1 },
+        "candidate_scientific_name": { "type": "string", "minLength": 1 },
+        "source": {
+          "type": "string",
+          "enum": [
+            "inaturalist_similar_species",
+            "taxonomic_neighbor_same_genus",
+            "taxonomic_neighbor_same_family",
+            "taxonomic_neighbor_same_order"
+          ]
+        },
+        "source_rank": { "type": "integer", "minimum": 1 },
+        "status": { "type": "string", "const": "validated" },
+        "confusion_types": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "pedagogical_value": { "type": "string", "minLength": 1 },
+        "difficulty_level": { "type": "string", "minLength": 1 },
+        "learner_level": { "type": "string", "minLength": 1 },
+        "reason": { "type": ["string", "null"] }
+      }
+    },
+    "taxonomy_profile": {
+      "type": "object",
+      "required": ["canonical_taxon_id", "parent_id", "ancestor_ids"],
+      "additionalProperties": true,
+      "properties": {
+        "canonical_taxon_id": { "type": "string", "minLength": 1 },
+        "parent_id": { "type": ["string", "null"] },
+        "ancestor_ids": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

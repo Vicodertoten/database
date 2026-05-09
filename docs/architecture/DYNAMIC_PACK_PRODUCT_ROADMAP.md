@@ -572,7 +572,31 @@ Exit criteria:
 - dynamic sessions work end-to-end;
 - static Golden Pack remains available as fallback/reference.
 
-### Phase 4 - Fixed Challenges And Assignments
+### Phase 4 - Dynamic Pack Generator V1 And Runtime Signals
+
+Goal: move runtime dynamic sessions from frozen fixture replay to local
+generation from a serving-ready bundle.
+
+Actions:
+
+- export `serving_bundle.v1` with eligible pool items, labels, media,
+  validated canonical distractor relationships, and taxonomy fallback profiles;
+- copy the validated serving bundle into `runtime-app`;
+- generate a fresh `session_snapshot.v2` per runtime start from `{poolId,
+  locale, seed}`;
+- keep the 9 Phase 2B snapshots as regression presets;
+- keep `golden_pack.v1` as disabled/unavailable fallback;
+- persist answer signals with expected/selected canonical taxa and option
+  source metadata.
+
+Exit criteria:
+
+- random Dynamic Pack sessions vary by generated seed;
+- the same `{poolId, locale, seed}` reproduces the same snapshot;
+- answer submission writes one non-idempotent runtime signal;
+- bundle audit is `GO` or `GO_WITH_WARNINGS` with fallback explicitly traced.
+
+### Phase 5 - Fixed Challenges And Assignments
 
 Goal: support shared fixed quiz experiences.
 
@@ -589,7 +613,7 @@ Exit criteria:
 - daily challenge can be generated and served;
 - assignment materialization can be reproduced and audited.
 
-### Phase 5 - User Metrics And Adaptation
+### Phase 6 - User Metrics And Adaptation
 
 Goal: introduce simple personalization without corrupting corpus ownership.
 
@@ -606,7 +630,7 @@ Exit criteria:
 - runtime can adapt question selection using user metrics;
 - `database` receives batch signals and updates aggregate insights.
 
-### Phase 6 - Revision Mode
+### Phase 7 - Revision Mode
 
 Goal: introduce spaced repetition.
 

@@ -1,0 +1,41 @@
+{
+  "blockers": [],
+  "fallback_blocked_taxa": [],
+  "generated_at": "2026-05-09T19:09:20.810746+00:00",
+  "metrics": {
+    "fallback_ready_taxon_count": 50,
+    "item_count": 2313,
+    "media_asset_count": 2313,
+    "relationship_count": 203,
+    "relationship_counts_by_source": {
+      "inaturalist_similar_species": 119,
+      "taxonomic_neighbor_same_family": 66,
+      "taxonomic_neighbor_same_genus": 8,
+      "taxonomic_neighbor_same_order": 10
+    },
+    "taxon_count": 50,
+    "taxonomy_profile_count": 50
+  },
+  "missing_label_item_count": 0,
+  "missing_media_item_count": 0,
+  "pool_id": "pack-pool:be-fr-birds-50:v1",
+  "report_type": "serving_bundle_v1_audit",
+  "schema_version": "phase2b.serving_bundle_v1.audit.v1",
+  "status": "GO_WITH_WARNINGS",
+  "targets_below_3_validated_relationships": [
+    "taxon:birds:000007",
+    "taxon:birds:000018",
+    "taxon:birds:000020",
+    "taxon:birds:000026",
+    "taxon:birds:000027",
+    "taxon:birds:000028",
+    "taxon:birds:000029",
+    "taxon:birds:000030",
+    "taxon:birds:000041",
+    "taxon:birds:000045",
+    "taxon:birds:000070"
+  ],
+  "warnings": [
+    "taxonomic_fallback_db_required"
+  ]
+}
