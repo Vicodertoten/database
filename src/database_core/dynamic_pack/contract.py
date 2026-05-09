@@ -12,6 +12,9 @@ DEFAULT_PACK_POOL_SCHEMA_PATH = (
 DEFAULT_SESSION_SNAPSHOT_SCHEMA_PATH = (
     Path(__file__).resolve().parents[3] / "schemas" / "session_snapshot_v1.schema.json"
 )
+DEFAULT_SESSION_SNAPSHOT_V2_SCHEMA_PATH = (
+    Path(__file__).resolve().parents[3] / "schemas" / "session_snapshot_v2.schema.json"
+)
 
 
 def validate_pack_pool(
@@ -36,7 +39,7 @@ def validate_session_snapshot(
     *,
     schema_path: Path | None = None,
 ) -> None:
-    resolved_schema_path = schema_path or DEFAULT_SESSION_SNAPSHOT_SCHEMA_PATH
+    resolved_schema_path = schema_path or _session_snapshot_schema_path(payload)
     try:
         validate(
             instance=payload,
@@ -50,6 +53,13 @@ def validate_session_snapshot(
         ) from exc
 
 
-@lru_cache(maxsize=4)
+def _session_snapshot_schema_path(payload: dict[str, object]) -> Path:
+    version = payload.get("session_snapshot_version")
+    if version == "session_snapshot.v2":
+        return DEFAULT_SESSION_SNAPSHOT_V2_SCHEMA_PATH
+    return DEFAULT_SESSION_SNAPSHOT_SCHEMA_PATH
+
+
+@lru_cache(maxsize=6)
 def _load_schema(schema_path: Path) -> dict[str, object]:
     return json.loads(schema_path.read_text(encoding="utf-8"))

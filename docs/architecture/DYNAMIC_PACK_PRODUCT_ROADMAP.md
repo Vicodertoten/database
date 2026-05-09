@@ -258,7 +258,10 @@ Phase 2B name repair has corrected this for internal runtime handoff. The
 iNaturalist `localized_taxa`, rebuilds `playable_items.common_names_i18n_json`,
 projects `pack_pool.v1` with `2313/2313` common-name labels in each of `fr`,
 `en`, and `nl`, and adds Palier A `distractor_relationships` persistence for
-canonical-only validated distractors.
+canonical-only validated distractors. Phase 2B now also exports and persists
+`9` `session_snapshot.v2` fixtures for internal runtime handoff. The v2 audit is
+`GO_WITH_WARNINGS` only because traced `taxonomic_fallback_db` distractors are
+used where canonical relationship depth is still below `3`.
 
 Runtime option display should receive both common and scientific names from
 `database`. The runtime may render the common name as the primary option label

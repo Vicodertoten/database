@@ -1,0 +1,1684 @@
+{
+  "distractor_policy": {
+    "fallback_source": "taxonomic_fallback_db",
+    "max_referenced_only_per_question": 0,
+    "referenced_only_allowed": false,
+    "version": "phase2b.distractors.palier_a.v1"
+  },
+  "generated_at": "2026-05-09T18:22:28.831332+00:00",
+  "locale": "en",
+  "pool_id": "pack-pool:be-fr-birds-50:v1",
+  "question_count": 20,
+  "questions": [
+    {
+      "canonical_taxon_id": "taxon:birds:000032",
+      "common_name": "Eurasian Sparrowhawk",
+      "correct_option_id": "question:ef98bb43abe9f33b:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "wing",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Olivier Morel, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/247329640/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:247329640",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000032",
+          "common_name": "Eurasian Sparrowhawk",
+          "display_label": "Eurasian Sparrowhawk",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:ef98bb43abe9f33b:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Accipiter nisus",
+          "score": 1.0,
+          "source": "target_taxon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000001",
+          "common_name": "Common Wood-Pigeon",
+          "display_label": "Common Wood-Pigeon",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:ef98bb43abe9f33b:opt:d3",
+          "reason_codes": [
+            "shared_ancestor",
+            "palier_a_fallback"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Columba palumbus",
+          "score": 0.2,
+          "source": "taxonomic_fallback_db"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000033",
+          "common_name": "Eurasian Kestrel",
+          "display_label": "Eurasian Kestrel",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:ef98bb43abe9f33b:opt:d2",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:0a2727963245",
+          "scientific_name": "Falco tinnunculus",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000031",
+          "common_name": "Common Buzzard",
+          "display_label": "Common Buzzard",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:ef98bb43abe9f33b:opt:d1",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:4cf932f1d68e",
+          "scientific_name": "Buteo buteo",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:247329640",
+      "question_id": "question:ef98bb43abe9f33b",
+      "question_index": 1,
+      "scientific_name": "Accipiter nisus"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000042",
+      "common_name": "Western House Martin",
+      "correct_option_id": "question:e23939b270f9b3fd:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Alexis Lours, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/542452890/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:542452890",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000044",
+          "common_name": "Bank Swallow",
+          "display_label": "Bank Swallow",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:e23939b270f9b3fd:opt:d1",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:1e40c278e41b",
+          "scientific_name": "Riparia riparia",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "common_name": "Carrion Crow",
+          "display_label": "Carrion Crow",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:e23939b270f9b3fd:opt:d3",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:ce441a620ae0",
+          "scientific_name": "Corvus corone",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000009",
+          "common_name": "House Sparrow",
+          "display_label": "House Sparrow",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:e23939b270f9b3fd:opt:d2",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:a4c0b620dd93",
+          "scientific_name": "Passer domesticus",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000042",
+          "common_name": "Western House Martin",
+          "display_label": "Western House Martin",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:e23939b270f9b3fd:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Delichon urbicum",
+          "score": 1.0,
+          "source": "target_taxon"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:542452890",
+      "question_id": "question:e23939b270f9b3fd",
+      "question_index": 2,
+      "scientific_name": "Delichon urbicum"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000028",
+      "common_name": "Great Cormorant",
+      "correct_option_id": "question:50a79d33ae4096f8:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Alexis Lours, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/570150595/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:570150595",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "common_name": "Carrion Crow",
+          "display_label": "Carrion Crow",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:50a79d33ae4096f8:opt:d3",
+          "reason_codes": [
+            "shared_ancestor",
+            "palier_a_fallback"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Corvus corone",
+          "score": 0.2,
+          "source": "taxonomic_fallback_db"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000029",
+          "common_name": "Grey Heron",
+          "display_label": "Grey Heron",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:50a79d33ae4096f8:opt:d1",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:375264b8921e",
+          "scientific_name": "Ardea cinerea",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000028",
+          "common_name": "Great Cormorant",
+          "display_label": "Great Cormorant",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:50a79d33ae4096f8:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Phalacrocorax carbo",
+          "score": 1.0,
+          "source": "target_taxon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000001",
+          "common_name": "Common Wood-Pigeon",
+          "display_label": "Common Wood-Pigeon",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:50a79d33ae4096f8:opt:d2",
+          "reason_codes": [
+            "shared_ancestor",
+            "palier_a_fallback"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Columba palumbus",
+          "score": 0.2,
+          "source": "taxonomic_fallback_db"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:570150595",
+      "question_id": "question:50a79d33ae4096f8",
+      "question_index": 3,
+      "scientific_name": "Phalacrocorax carbo"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000070",
+      "common_name": "Great Crested Grebe",
+      "correct_option_id": "question:5d9278c2cc8dcb00:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) frangp, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/419967962/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:419967962",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000070",
+          "common_name": "Great Crested Grebe",
+          "display_label": "Great Crested Grebe",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:5d9278c2cc8dcb00:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Podiceps cristatus",
+          "score": 1.0,
+          "source": "target_taxon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000003",
+          "common_name": "Eurasian Blue Tit",
+          "display_label": "Eurasian Blue Tit",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:5d9278c2cc8dcb00:opt:d3",
+          "reason_codes": [
+            "shared_ancestor",
+            "palier_a_fallback"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Cyanistes caeruleus",
+          "score": 0.2,
+          "source": "taxonomic_fallback_db"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000001",
+          "common_name": "Common Wood-Pigeon",
+          "display_label": "Common Wood-Pigeon",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:5d9278c2cc8dcb00:opt:d1",
+          "reason_codes": [
+            "shared_ancestor",
+            "palier_a_fallback"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Columba palumbus",
+          "score": 0.2,
+          "source": "taxonomic_fallback_db"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "common_name": "Carrion Crow",
+          "display_label": "Carrion Crow",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:5d9278c2cc8dcb00:opt:d2",
+          "reason_codes": [
+            "shared_ancestor",
+            "palier_a_fallback"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Corvus corone",
+          "score": 0.2,
+          "source": "taxonomic_fallback_db"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:419967962",
+      "question_id": "question:5d9278c2cc8dcb00",
+      "question_index": 4,
+      "scientific_name": "Podiceps cristatus"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000039",
+      "common_name": "Great Spotted Woodpecker",
+      "correct_option_id": "question:faf5b36dd52f051c:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Donald Davesne, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/473695065/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:473695065",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000040",
+          "common_name": "Black Woodpecker",
+          "display_label": "Black Woodpecker",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:faf5b36dd52f051c:opt:d2",
+          "reason_codes": [
+            "taxonomic_neighbor_same_family"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:771fd52c2937",
+          "scientific_name": "Dryocopus martius",
+          "score": 0.6,
+          "source": "taxonomic_neighbor_same_family"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000004",
+          "common_name": "European Robin",
+          "display_label": "European Robin",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:faf5b36dd52f051c:opt:d3",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:6d76c12eb3e6",
+          "scientific_name": "Erithacus rubecula",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000039",
+          "common_name": "Great Spotted Woodpecker",
+          "display_label": "Great Spotted Woodpecker",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:faf5b36dd52f051c:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Dendrocopos major",
+          "score": 1.0,
+          "source": "target_taxon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000038",
+          "common_name": "Eurasian Green Woodpecker",
+          "display_label": "Eurasian Green Woodpecker",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:faf5b36dd52f051c:opt:d1",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:2206b1b44ce1",
+          "scientific_name": "Picus viridis",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:473695065",
+      "question_id": "question:faf5b36dd52f051c",
+      "question_index": 5,
+      "scientific_name": "Dendrocopos major"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000033",
+      "common_name": "Eurasian Kestrel",
+      "correct_option_id": "question:0eabdd32360ba6d0:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Alexis Lours, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/152993161/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:152993161",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000034",
+          "common_name": "Peregrine Falcon",
+          "display_label": "Peregrine Falcon",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:0eabdd32360ba6d0:opt:d3",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:3167c6935638",
+          "scientific_name": "Falco peregrinus",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000033",
+          "common_name": "Eurasian Kestrel",
+          "display_label": "Eurasian Kestrel",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:0eabdd32360ba6d0:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Falco tinnunculus",
+          "score": 1.0,
+          "source": "target_taxon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000079",
+          "common_name": "Eurasian Collared-Dove",
+          "display_label": "Eurasian Collared-Dove",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:0eabdd32360ba6d0:opt:d2",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:65487c838a2d",
+          "scientific_name": "Streptopelia decaocto",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000031",
+          "common_name": "Common Buzzard",
+          "display_label": "Common Buzzard",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:0eabdd32360ba6d0:opt:d1",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:3c7ca85b1f79",
+          "scientific_name": "Buteo buteo",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:152993161",
+      "question_id": "question:0eabdd32360ba6d0",
+      "question_index": 6,
+      "scientific_name": "Falco tinnunculus"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000047",
+      "common_name": "Red-backed Shrike",
+      "correct_option_id": "question:3454d80bbd4fe059:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Aur\u00e9lien Coste, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/294025852/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:294025852",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000005",
+          "common_name": "Common Chaffinch",
+          "display_label": "Common Chaffinch",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:3454d80bbd4fe059:opt:d3",
+          "reason_codes": [
+            "taxonomic_neighbor_same_order"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:de461444da3c",
+          "scientific_name": "Fringilla coelebs",
+          "score": 0.4,
+          "source": "taxonomic_neighbor_same_order"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000042",
+          "common_name": "Western House Martin",
+          "display_label": "Western House Martin",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:3454d80bbd4fe059:opt:d2",
+          "reason_codes": [
+            "taxonomic_neighbor_same_order"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:387a5caa03d2",
+          "scientific_name": "Delichon urbicum",
+          "score": 0.4,
+          "source": "taxonomic_neighbor_same_order"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000047",
+          "common_name": "Red-backed Shrike",
+          "display_label": "Red-backed Shrike",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:3454d80bbd4fe059:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Lanius collurio",
+          "score": 1.0,
+          "source": "target_taxon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000015",
+          "common_name": "Song Thrush",
+          "display_label": "Song Thrush",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:3454d80bbd4fe059:opt:d1",
+          "reason_codes": [
+            "taxonomic_neighbor_same_order"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:8bc1df30a9e7",
+          "scientific_name": "Turdus philomelos",
+          "score": 0.4,
+          "source": "taxonomic_neighbor_same_order"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:294025852",
+      "question_id": "question:3454d80bbd4fe059",
+      "question_index": 7,
+      "scientific_name": "Lanius collurio"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000030",
+      "common_name": "Little Egret",
+      "correct_option_id": "question:7ce3c08a9c85bbcb:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Jens-Christian Svenning, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/73788367/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:73788367",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000030",
+          "common_name": "Little Egret",
+          "display_label": "Little Egret",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:7ce3c08a9c85bbcb:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Egretta garzetta",
+          "score": 1.0,
+          "source": "target_taxon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000029",
+          "common_name": "Grey Heron",
+          "display_label": "Grey Heron",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:7ce3c08a9c85bbcb:opt:d1",
+          "reason_codes": [
+            "taxonomic_neighbor_same_family"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:aaad3c3105c8",
+          "scientific_name": "Ardea cinerea",
+          "score": 0.6,
+          "source": "taxonomic_neighbor_same_family"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000001",
+          "common_name": "Common Wood-Pigeon",
+          "display_label": "Common Wood-Pigeon",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:7ce3c08a9c85bbcb:opt:d2",
+          "reason_codes": [
+            "shared_ancestor",
+            "palier_a_fallback"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Columba palumbus",
+          "score": 0.2,
+          "source": "taxonomic_fallback_db"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "common_name": "Carrion Crow",
+          "display_label": "Carrion Crow",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:7ce3c08a9c85bbcb:opt:d3",
+          "reason_codes": [
+            "shared_ancestor",
+            "palier_a_fallback"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Corvus corone",
+          "score": 0.2,
+          "source": "taxonomic_fallback_db"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:73788367",
+      "question_id": "question:7ce3c08a9c85bbcb",
+      "question_index": 8,
+      "scientific_name": "Egretta garzetta"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000013",
+      "common_name": "Eurasian Wren",
+      "correct_option_id": "question:a6750ef570394dc7:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) C\u00e9line, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/197927562/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:197927562",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000009",
+          "common_name": "House Sparrow",
+          "display_label": "House Sparrow",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:a6750ef570394dc7:opt:d2",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:289d4a5cee15",
+          "scientific_name": "Passer domesticus",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000004",
+          "common_name": "European Robin",
+          "display_label": "European Robin",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:a6750ef570394dc7:opt:d1",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:0a64fbb88e76",
+          "scientific_name": "Erithacus rubecula",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000001",
+          "common_name": "Common Wood-Pigeon",
+          "display_label": "Common Wood-Pigeon",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:a6750ef570394dc7:opt:d3",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:062b36beebd7",
+          "scientific_name": "Columba palumbus",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000013",
+          "common_name": "Eurasian Wren",
+          "display_label": "Eurasian Wren",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:a6750ef570394dc7:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Troglodytes troglodytes",
+          "score": 1.0,
+          "source": "target_taxon"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:197927562",
+      "question_id": "question:a6750ef570394dc7",
+      "question_index": 9,
+      "scientific_name": "Troglodytes troglodytes"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000003",
+      "common_name": "Eurasian Blue Tit",
+      "correct_option_id": "question:0f15a9730b7dc818:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Dr. Thomas D\u00f6rner, some rights reserved (CC BY-SA)",
+        "license": "cc-by-sa",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/326647775/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:326647775",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "common_name": "Carrion Crow",
+          "display_label": "Carrion Crow",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:0f15a9730b7dc818:opt:d3",
+          "reason_codes": [
+            "shared_ancestor",
+            "palier_a_fallback"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Corvus corone",
+          "score": 0.2,
+          "source": "taxonomic_fallback_db"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000008",
+          "common_name": "Great Tit",
+          "display_label": "Great Tit",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:0f15a9730b7dc818:opt:d2",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:32e6e0b4d5c5",
+          "scientific_name": "Parus major",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000014",
+          "common_name": "Eurasian Blackbird",
+          "display_label": "Eurasian Blackbird",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:0f15a9730b7dc818:opt:d1",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:96d0c61d0124",
+          "scientific_name": "Turdus merula",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000003",
+          "common_name": "Eurasian Blue Tit",
+          "display_label": "Eurasian Blue Tit",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:0f15a9730b7dc818:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Cyanistes caeruleus",
+          "score": 1.0,
+          "source": "target_taxon"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:326647775",
+      "question_id": "question:0f15a9730b7dc818",
+      "question_index": 10,
+      "scientific_name": "Cyanistes caeruleus"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000026",
+      "common_name": "Yellow-legged Gull",
+      "correct_option_id": "question:7b7c681621711cf5:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "wing",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Oscar Dove, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/293680088/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:293680088",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "common_name": "Carrion Crow",
+          "display_label": "Carrion Crow",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:7b7c681621711cf5:opt:d3",
+          "reason_codes": [
+            "shared_ancestor",
+            "palier_a_fallback"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Corvus corone",
+          "score": 0.2,
+          "source": "taxonomic_fallback_db"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000026",
+          "common_name": "Yellow-legged Gull",
+          "display_label": "Yellow-legged Gull",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:7b7c681621711cf5:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Larus michahellis",
+          "score": 1.0,
+          "source": "target_taxon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000027",
+          "common_name": "European Herring Gull",
+          "display_label": "European Herring Gull",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:7b7c681621711cf5:opt:d1",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:ee1f5b82b1a0",
+          "scientific_name": "Larus argentatus",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000001",
+          "common_name": "Common Wood-Pigeon",
+          "display_label": "Common Wood-Pigeon",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:7b7c681621711cf5:opt:d2",
+          "reason_codes": [
+            "shared_ancestor",
+            "palier_a_fallback"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Columba palumbus",
+          "score": 0.2,
+          "source": "taxonomic_fallback_db"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:293680088",
+      "question_id": "question:7b7c681621711cf5",
+      "question_index": 11,
+      "scientific_name": "Larus michahellis"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000036",
+      "common_name": "Long-eared Owl",
+      "correct_option_id": "question:af4b9fdc3c657fbe:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "wing",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) bigayon, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/156086151/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:156086151",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000036",
+          "common_name": "Long-eared Owl",
+          "display_label": "Long-eared Owl",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:af4b9fdc3c657fbe:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Asio otus",
+          "score": 1.0,
+          "source": "target_taxon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000035",
+          "common_name": "Tawny Owl",
+          "display_label": "Tawny Owl",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:af4b9fdc3c657fbe:opt:d2",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:4381bfc193b1",
+          "scientific_name": "Strix aluco",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000037",
+          "common_name": "Little Owl",
+          "display_label": "Little Owl",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:af4b9fdc3c657fbe:opt:d1",
+          "reason_codes": [
+            "taxonomic_neighbor_same_family"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:071201d0637d",
+          "scientific_name": "Athene noctua",
+          "score": 0.6,
+          "source": "taxonomic_neighbor_same_family"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000001",
+          "common_name": "Common Wood-Pigeon",
+          "display_label": "Common Wood-Pigeon",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:af4b9fdc3c657fbe:opt:d3",
+          "reason_codes": [
+            "shared_ancestor",
+            "palier_a_fallback"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Columba palumbus",
+          "score": 0.2,
+          "source": "taxonomic_fallback_db"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:156086151",
+      "question_id": "question:af4b9fdc3c657fbe",
+      "question_index": 12,
+      "scientific_name": "Asio otus"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000035",
+      "common_name": "Tawny Owl",
+      "correct_option_id": "question:424e8661ba07345b:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "no rights reserved",
+        "license": "cc0",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/257362095/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:257362095",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000034",
+          "common_name": "Peregrine Falcon",
+          "display_label": "Peregrine Falcon",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:424e8661ba07345b:opt:d2",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:6f1e73ae9b9d",
+          "scientific_name": "Falco peregrinus",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000037",
+          "common_name": "Little Owl",
+          "display_label": "Little Owl",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:424e8661ba07345b:opt:d3",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:966e360809ad",
+          "scientific_name": "Athene noctua",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000035",
+          "common_name": "Tawny Owl",
+          "display_label": "Tawny Owl",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:424e8661ba07345b:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Strix aluco",
+          "score": 1.0,
+          "source": "target_taxon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000031",
+          "common_name": "Common Buzzard",
+          "display_label": "Common Buzzard",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:424e8661ba07345b:opt:d1",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:ecd20c831d76",
+          "scientific_name": "Buteo buteo",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:257362095",
+      "question_id": "question:424e8661ba07345b",
+      "question_index": 13,
+      "scientific_name": "Strix aluco"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000048",
+      "common_name": "Eurasian Jackdaw",
+      "correct_option_id": "question:6ad90bfa1e98595a:opt:correct",
+      "country_code": "BE",
+      "feedback_short": "body",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Matteo Marcandella, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/129885165/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:129885165",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000048",
+          "common_name": "Eurasian Jackdaw",
+          "display_label": "Eurasian Jackdaw",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:6ad90bfa1e98595a:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Coloeus monedula",
+          "score": 1.0,
+          "source": "target_taxon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000014",
+          "common_name": "Eurasian Blackbird",
+          "display_label": "Eurasian Blackbird",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:6ad90bfa1e98595a:opt:d1",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:68c6bb7dbff2",
+          "scientific_name": "Turdus merula",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000043",
+          "common_name": "Barn Swallow",
+          "display_label": "Barn Swallow",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:6ad90bfa1e98595a:opt:d2",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:e486a2150451",
+          "scientific_name": "Hirundo rustica",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000010",
+          "common_name": "Eurasian Magpie",
+          "display_label": "Eurasian Magpie",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:6ad90bfa1e98595a:opt:d3",
+          "reason_codes": [
+            "taxonomic_neighbor_same_family"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:97b57730d98d",
+          "scientific_name": "Pica pica",
+          "score": 0.6,
+          "source": "taxonomic_neighbor_same_family"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:129885165",
+      "question_id": "question:6ad90bfa1e98595a",
+      "question_index": 14,
+      "scientific_name": "Coloeus monedula"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000031",
+      "common_name": "Common Buzzard",
+      "correct_option_id": "question:2b7c8880a28bc1cd:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "wing",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Thomas Koffel, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/449685298/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:449685298",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000035",
+          "common_name": "Tawny Owl",
+          "display_label": "Tawny Owl",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:2b7c8880a28bc1cd:opt:d3",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:a5f039f2deeb",
+          "scientific_name": "Strix aluco",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000032",
+          "common_name": "Eurasian Sparrowhawk",
+          "display_label": "Eurasian Sparrowhawk",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:2b7c8880a28bc1cd:opt:d1",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:fc933cb7b9e9",
+          "scientific_name": "Accipiter nisus",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000033",
+          "common_name": "Eurasian Kestrel",
+          "display_label": "Eurasian Kestrel",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:2b7c8880a28bc1cd:opt:d2",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:8d5515c0907c",
+          "scientific_name": "Falco tinnunculus",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000031",
+          "common_name": "Common Buzzard",
+          "display_label": "Common Buzzard",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:2b7c8880a28bc1cd:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Buteo buteo",
+          "score": 1.0,
+          "source": "target_taxon"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:449685298",
+      "question_id": "question:2b7c8880a28bc1cd",
+      "question_index": 15,
+      "scientific_name": "Buteo buteo"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000021",
+      "common_name": "Mallard",
+      "correct_option_id": "question:272b56ee3c796cb3:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Jaro Guzinski, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/41951850/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:41951850",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000021",
+          "common_name": "Mallard",
+          "display_label": "Mallard",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:272b56ee3c796cb3:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Anas platyrhynchos",
+          "score": 1.0,
+          "source": "target_taxon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000025",
+          "common_name": "Common Moorhen",
+          "display_label": "Common Moorhen",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:272b56ee3c796cb3:opt:d2",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:08493998a3f2",
+          "scientific_name": "Gallinula chloropus",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000024",
+          "common_name": "Eurasian Coot",
+          "display_label": "Eurasian Coot",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:272b56ee3c796cb3:opt:d1",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:54e3d0530549",
+          "scientific_name": "Fulica atra",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000022",
+          "common_name": "Greylag Goose",
+          "display_label": "Greylag Goose",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:272b56ee3c796cb3:opt:d3",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:c719262a8d8b",
+          "scientific_name": "Anser anser",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:41951850",
+      "question_id": "question:272b56ee3c796cb3",
+      "question_index": 16,
+      "scientific_name": "Anas platyrhynchos"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000005",
+      "common_name": "Common Chaffinch",
+      "correct_option_id": "question:1d56acb017e32aad:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Bruce Slater, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/269097974/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:269097974",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000009",
+          "common_name": "House Sparrow",
+          "display_label": "House Sparrow",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:1d56acb017e32aad:opt:d1",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:5a92fc3fb0ce",
+          "scientific_name": "Passer domesticus",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000016",
+          "common_name": "European Goldfinch",
+          "display_label": "European Goldfinch",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:1d56acb017e32aad:opt:d2",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:b7dba19cf52b",
+          "scientific_name": "Carduelis carduelis",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000019",
+          "common_name": "Hawfinch",
+          "display_label": "Hawfinch",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:1d56acb017e32aad:opt:d3",
+          "reason_codes": [
+            "taxonomic_neighbor_same_family"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:3d4cbaa7b47b",
+          "scientific_name": "Coccothraustes coccothraustes",
+          "score": 0.6,
+          "source": "taxonomic_neighbor_same_family"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000005",
+          "common_name": "Common Chaffinch",
+          "display_label": "Common Chaffinch",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:1d56acb017e32aad:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Fringilla coelebs",
+          "score": 1.0,
+          "source": "target_taxon"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:269097974",
+      "question_id": "question:1d56acb017e32aad",
+      "question_index": 17,
+      "scientific_name": "Fringilla coelebs"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000040",
+      "common_name": "Black Woodpecker",
+      "correct_option_id": "question:e0a83af7616e13b2:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "bill",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Thierry Arbault, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/342380407/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:342380407",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000038",
+          "common_name": "Eurasian Green Woodpecker",
+          "display_label": "Eurasian Green Woodpecker",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:e0a83af7616e13b2:opt:d1",
+          "reason_codes": [
+            "taxonomic_neighbor_same_family"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:c45620b3fd71",
+          "scientific_name": "Picus viridis",
+          "score": 0.6,
+          "source": "taxonomic_neighbor_same_family"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000010",
+          "common_name": "Eurasian Magpie",
+          "display_label": "Eurasian Magpie",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:e0a83af7616e13b2:opt:d2",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:0abd16317a1f",
+          "scientific_name": "Pica pica",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000039",
+          "common_name": "Great Spotted Woodpecker",
+          "display_label": "Great Spotted Woodpecker",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:e0a83af7616e13b2:opt:d3",
+          "reason_codes": [
+            "taxonomic_neighbor_same_family"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:71cbee440171",
+          "scientific_name": "Dendrocopos major",
+          "score": 0.6,
+          "source": "taxonomic_neighbor_same_family"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000040",
+          "common_name": "Black Woodpecker",
+          "display_label": "Black Woodpecker",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:e0a83af7616e13b2:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Dryocopus martius",
+          "score": 1.0,
+          "source": "target_taxon"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:342380407",
+      "question_id": "question:e0a83af7616e13b2",
+      "question_index": 18,
+      "scientific_name": "Dryocopus martius"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000016",
+      "common_name": "European Goldfinch",
+      "correct_option_id": "question:257e3e2076f51b5e:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "no rights reserved",
+        "license": "cc0",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/605878822/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:605878822",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000017",
+          "common_name": "European Greenfinch",
+          "display_label": "European Greenfinch",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:257e3e2076f51b5e:opt:d1",
+          "reason_codes": [
+            "taxonomic_neighbor_same_family"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:6dcff5acf6a1",
+          "scientific_name": "Chloris chloris",
+          "score": 0.6,
+          "source": "taxonomic_neighbor_same_family"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000006",
+          "common_name": "Eurasian Jay",
+          "display_label": "Eurasian Jay",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:257e3e2076f51b5e:opt:d3",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:ad771e8e6816",
+          "scientific_name": "Garrulus glandarius",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000005",
+          "common_name": "Common Chaffinch",
+          "display_label": "Common Chaffinch",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:257e3e2076f51b5e:opt:d2",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:e3416fbfa513",
+          "scientific_name": "Fringilla coelebs",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000016",
+          "common_name": "European Goldfinch",
+          "display_label": "European Goldfinch",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:257e3e2076f51b5e:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Carduelis carduelis",
+          "score": 1.0,
+          "source": "target_taxon"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:605878822",
+      "question_id": "question:257e3e2076f51b5e",
+      "question_index": 19,
+      "scientific_name": "Carduelis carduelis"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000001",
+      "common_name": "Common Wood-Pigeon",
+      "correct_option_id": "question:b8db27a3e4401d31:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Lucie Partout, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/348890301/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:348890301",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000010",
+          "common_name": "Eurasian Magpie",
+          "display_label": "Eurasian Magpie",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:b8db27a3e4401d31:opt:d3",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:a1636ce30fbe",
+          "scientific_name": "Pica pica",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000079",
+          "common_name": "Eurasian Collared-Dove",
+          "display_label": "Eurasian Collared-Dove",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:b8db27a3e4401d31:opt:d1",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:b614f29205bc",
+          "scientific_name": "Streptopelia decaocto",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000001",
+          "common_name": "Common Wood-Pigeon",
+          "display_label": "Common Wood-Pigeon",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:b8db27a3e4401d31:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Columba palumbus",
+          "score": 1.0,
+          "source": "target_taxon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000013",
+          "common_name": "Eurasian Wren",
+          "display_label": "Eurasian Wren",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:b8db27a3e4401d31:opt:d2",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:bcb9216fbb7a",
+          "scientific_name": "Troglodytes troglodytes",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:348890301",
+      "question_id": "question:b8db27a3e4401d31",
+      "question_index": 20,
+      "scientific_name": "Columba palumbus"
+    }
+  ],
+  "schema_version": "database.schema.v19",
+  "seed": "phase2b-v2-seed-c",
+  "selector_policy": {
+    "max_questions_per_taxon": 1,
+    "unique_media_per_session": true,
+    "version": "phase2b.selector.v2"
+  },
+  "session_snapshot_id": "session:fe299bae55f3e967",
+  "session_snapshot_version": "session_snapshot.v2",
+  "source_run_id": "run:20260509T180000Z:2b18beef"
+}

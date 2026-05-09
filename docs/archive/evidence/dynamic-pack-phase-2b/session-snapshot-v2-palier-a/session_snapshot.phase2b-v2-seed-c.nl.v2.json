@@ -1,0 +1,1684 @@
+{
+  "distractor_policy": {
+    "fallback_source": "taxonomic_fallback_db",
+    "max_referenced_only_per_question": 0,
+    "referenced_only_allowed": false,
+    "version": "phase2b.distractors.palier_a.v1"
+  },
+  "generated_at": "2026-05-09T18:22:29.294028+00:00",
+  "locale": "nl",
+  "pool_id": "pack-pool:be-fr-birds-50:v1",
+  "question_count": 20,
+  "questions": [
+    {
+      "canonical_taxon_id": "taxon:birds:000025",
+      "common_name": "Waterhoen",
+      "correct_option_id": "question:b987728f0257c27e:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Aitor, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/232601251/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:232601251",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000025",
+          "common_name": "Waterhoen",
+          "display_label": "Waterhoen",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:b987728f0257c27e:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Gallinula chloropus",
+          "score": 1.0,
+          "source": "target_taxon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000024",
+          "common_name": "Meerkoet",
+          "display_label": "Meerkoet",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:b987728f0257c27e:opt:d2",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:1373cd8c606e",
+          "scientific_name": "Fulica atra",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000021",
+          "common_name": "Wilde Eend",
+          "display_label": "Wilde Eend",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:b987728f0257c27e:opt:d1",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:4f2b8692bc1e",
+          "scientific_name": "Anas platyrhynchos",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000001",
+          "common_name": "Houtduif",
+          "display_label": "Houtduif",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:b987728f0257c27e:opt:d3",
+          "reason_codes": [
+            "shared_ancestor",
+            "palier_a_fallback"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Columba palumbus",
+          "score": 0.2,
+          "source": "taxonomic_fallback_db"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:232601251",
+      "question_id": "question:b987728f0257c27e",
+      "question_index": 1,
+      "scientific_name": "Gallinula chloropus"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000040",
+      "common_name": "Zwarte Specht",
+      "correct_option_id": "question:c362bea687507c8b:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "no rights reserved",
+        "license": "cc0",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/349837170/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:349837170",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000010",
+          "common_name": "Ekster",
+          "display_label": "Ekster",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:c362bea687507c8b:opt:d2",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:0abd16317a1f",
+          "scientific_name": "Pica pica",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000040",
+          "common_name": "Zwarte Specht",
+          "display_label": "Zwarte Specht",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:c362bea687507c8b:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Dryocopus martius",
+          "score": 1.0,
+          "source": "target_taxon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000039",
+          "common_name": "Grote bonte specht",
+          "display_label": "Grote bonte specht",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:c362bea687507c8b:opt:d3",
+          "reason_codes": [
+            "taxonomic_neighbor_same_family"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:71cbee440171",
+          "scientific_name": "Dendrocopos major",
+          "score": 0.6,
+          "source": "taxonomic_neighbor_same_family"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000038",
+          "common_name": "Groene specht",
+          "display_label": "Groene specht",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:c362bea687507c8b:opt:d1",
+          "reason_codes": [
+            "taxonomic_neighbor_same_family"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:c45620b3fd71",
+          "scientific_name": "Picus viridis",
+          "score": 0.6,
+          "source": "taxonomic_neighbor_same_family"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:349837170",
+      "question_id": "question:c362bea687507c8b",
+      "question_index": 2,
+      "scientific_name": "Dryocopus martius"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000004",
+      "common_name": "Roodborst",
+      "correct_option_id": "question:0c8989f459484a70:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "breast",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Luis G Restrepo, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/448163135/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:448163135",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000012",
+          "common_name": "Zwartkop",
+          "display_label": "Zwartkop",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:0c8989f459484a70:opt:d3",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:04e24f9c820e",
+          "scientific_name": "Sylvia atricapilla",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000014",
+          "common_name": "Merel",
+          "display_label": "Merel",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:0c8989f459484a70:opt:d2",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:17818f552356",
+          "scientific_name": "Turdus merula",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000004",
+          "common_name": "Roodborst",
+          "display_label": "Roodborst",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:0c8989f459484a70:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Erithacus rubecula",
+          "score": 1.0,
+          "source": "target_taxon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000013",
+          "common_name": "Winterkoning",
+          "display_label": "Winterkoning",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:0c8989f459484a70:opt:d1",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:0abef6f659ce",
+          "scientific_name": "Troglodytes troglodytes",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:448163135",
+      "question_id": "question:0c8989f459484a70",
+      "question_index": 3,
+      "scientific_name": "Erithacus rubecula"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000003",
+      "common_name": "Pimpelmees",
+      "correct_option_id": "question:fc5d728461fbca9d:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Samuel GUIRAUDOU, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/262480664/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:262480664",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000003",
+          "common_name": "Pimpelmees",
+          "display_label": "Pimpelmees",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:fc5d728461fbca9d:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Cyanistes caeruleus",
+          "score": 1.0,
+          "source": "target_taxon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000008",
+          "common_name": "Koolmees",
+          "display_label": "Koolmees",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:fc5d728461fbca9d:opt:d1",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:32e6e0b4d5c5",
+          "scientific_name": "Parus major",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000014",
+          "common_name": "Merel",
+          "display_label": "Merel",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:fc5d728461fbca9d:opt:d2",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:96d0c61d0124",
+          "scientific_name": "Turdus merula",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "common_name": "Zwarte Kraai",
+          "display_label": "Zwarte Kraai",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:fc5d728461fbca9d:opt:d3",
+          "reason_codes": [
+            "shared_ancestor",
+            "palier_a_fallback"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Corvus corone",
+          "score": 0.2,
+          "source": "taxonomic_fallback_db"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:262480664",
+      "question_id": "question:fc5d728461fbca9d",
+      "question_index": 4,
+      "scientific_name": "Cyanistes caeruleus"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000022",
+      "common_name": "Grauwe Gans",
+      "correct_option_id": "question:e972ecde5b0202bb:opt:correct",
+      "country_code": "BE",
+      "feedback_short": "body",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "no rights reserved",
+        "license": "cc0",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/195882008/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:195882008",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000021",
+          "common_name": "Wilde Eend",
+          "display_label": "Wilde Eend",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:e972ecde5b0202bb:opt:d2",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:a9b5e58005b9",
+          "scientific_name": "Anas platyrhynchos",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000023",
+          "common_name": "Knobbelzwaan",
+          "display_label": "Knobbelzwaan",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:e972ecde5b0202bb:opt:d1",
+          "reason_codes": [
+            "taxonomic_neighbor_same_family"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:fcddcfe8f467",
+          "scientific_name": "Cygnus olor",
+          "score": 0.6,
+          "source": "taxonomic_neighbor_same_family"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000022",
+          "common_name": "Grauwe Gans",
+          "display_label": "Grauwe Gans",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:e972ecde5b0202bb:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Anser anser",
+          "score": 1.0,
+          "source": "target_taxon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000001",
+          "common_name": "Houtduif",
+          "display_label": "Houtduif",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:e972ecde5b0202bb:opt:d3",
+          "reason_codes": [
+            "shared_ancestor",
+            "palier_a_fallback"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Columba palumbus",
+          "score": 0.2,
+          "source": "taxonomic_fallback_db"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:195882008",
+      "question_id": "question:e972ecde5b0202bb",
+      "question_index": 5,
+      "scientific_name": "Anser anser"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000044",
+      "common_name": "Oeverzwaluw",
+      "correct_option_id": "question:143d67e4c57a6449:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Ben Costamagna, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/119290404/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:119290404",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000044",
+          "common_name": "Oeverzwaluw",
+          "display_label": "Oeverzwaluw",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:143d67e4c57a6449:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Riparia riparia",
+          "score": 1.0,
+          "source": "target_taxon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000043",
+          "common_name": "Boerenzwaluw",
+          "display_label": "Boerenzwaluw",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:143d67e4c57a6449:opt:d1",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:9346af4e211b",
+          "scientific_name": "Hirundo rustica",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "common_name": "Zwarte Kraai",
+          "display_label": "Zwarte Kraai",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:143d67e4c57a6449:opt:d3",
+          "reason_codes": [
+            "shared_ancestor",
+            "palier_a_fallback"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Corvus corone",
+          "score": 0.2,
+          "source": "taxonomic_fallback_db"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000042",
+          "common_name": "Huiszwaluw",
+          "display_label": "Huiszwaluw",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:143d67e4c57a6449:opt:d2",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:255d2389f1bf",
+          "scientific_name": "Delichon urbicum",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:119290404",
+      "question_id": "question:143d67e4c57a6449",
+      "question_index": 6,
+      "scientific_name": "Riparia riparia"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000014",
+      "common_name": "Merel",
+      "correct_option_id": "question:6e8192a2affab037:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Jules Reppert, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/604497104/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:604497104",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000003",
+          "common_name": "Pimpelmees",
+          "display_label": "Pimpelmees",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:6e8192a2affab037:opt:d2",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:631227fa8ce2",
+          "scientific_name": "Cyanistes caeruleus",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000012",
+          "common_name": "Zwartkop",
+          "display_label": "Zwartkop",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:6e8192a2affab037:opt:d1",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:aa6afbe7dd27",
+          "scientific_name": "Sylvia atricapilla",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000011",
+          "common_name": "Spreeuw",
+          "display_label": "Spreeuw",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:6e8192a2affab037:opt:d3",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:dacd6e7994d2",
+          "scientific_name": "Sturnus vulgaris",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000014",
+          "common_name": "Merel",
+          "display_label": "Merel",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:6e8192a2affab037:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Turdus merula",
+          "score": 1.0,
+          "source": "target_taxon"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:604497104",
+      "question_id": "question:6e8192a2affab037",
+      "question_index": 7,
+      "scientific_name": "Turdus merula"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000007",
+      "common_name": "Witte kwikstaart",
+      "correct_option_id": "question:d3964b4df535e5c6:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Pete Bradshaw, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/204206527/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:204206527",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000004",
+          "common_name": "Roodborst",
+          "display_label": "Roodborst",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:d3964b4df535e5c6:opt:d3",
+          "reason_codes": [
+            "shared_ancestor",
+            "palier_a_fallback"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Erithacus rubecula",
+          "score": 0.2,
+          "source": "taxonomic_fallback_db"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "common_name": "Zwarte Kraai",
+          "display_label": "Zwarte Kraai",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:d3964b4df535e5c6:opt:d1",
+          "reason_codes": [
+            "shared_ancestor",
+            "palier_a_fallback"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Corvus corone",
+          "score": 0.2,
+          "source": "taxonomic_fallback_db"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000007",
+          "common_name": "Witte kwikstaart",
+          "display_label": "Witte kwikstaart",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:d3964b4df535e5c6:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Motacilla alba",
+          "score": 1.0,
+          "source": "target_taxon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000003",
+          "common_name": "Pimpelmees",
+          "display_label": "Pimpelmees",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:d3964b4df535e5c6:opt:d2",
+          "reason_codes": [
+            "shared_ancestor",
+            "palier_a_fallback"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Cyanistes caeruleus",
+          "score": 0.2,
+          "source": "taxonomic_fallback_db"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:204206527",
+      "question_id": "question:d3964b4df535e5c6",
+      "question_index": 8,
+      "scientific_name": "Motacilla alba"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000015",
+      "common_name": "Zanglijster",
+      "correct_option_id": "question:34f190cf474583c9:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "wing",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Ludivine Lamare, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/165350948/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:165350948",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000004",
+          "common_name": "Roodborst",
+          "display_label": "Roodborst",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:34f190cf474583c9:opt:d2",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:ed4f55341f3e",
+          "scientific_name": "Erithacus rubecula",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000014",
+          "common_name": "Merel",
+          "display_label": "Merel",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:34f190cf474583c9:opt:d1",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:f37eecda0ccf",
+          "scientific_name": "Turdus merula",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000009",
+          "common_name": "Huismus",
+          "display_label": "Huismus",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:34f190cf474583c9:opt:d3",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:2a22a45007e4",
+          "scientific_name": "Passer domesticus",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000015",
+          "common_name": "Zanglijster",
+          "display_label": "Zanglijster",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:34f190cf474583c9:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Turdus philomelos",
+          "score": 1.0,
+          "source": "target_taxon"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:165350948",
+      "question_id": "question:34f190cf474583c9",
+      "question_index": 9,
+      "scientific_name": "Turdus philomelos"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000038",
+      "common_name": "Groene specht",
+      "correct_option_id": "question:92ef9814b762f4f1:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Aur\u00e9lien Coste, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/153511876/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:153511876",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000040",
+          "common_name": "Zwarte Specht",
+          "display_label": "Zwarte Specht",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:92ef9814b762f4f1:opt:d2",
+          "reason_codes": [
+            "taxonomic_neighbor_same_family"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:65b8a35cdc4d",
+          "scientific_name": "Dryocopus martius",
+          "score": 0.6,
+          "source": "taxonomic_neighbor_same_family"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000038",
+          "common_name": "Groene specht",
+          "display_label": "Groene specht",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:92ef9814b762f4f1:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Picus viridis",
+          "score": 1.0,
+          "source": "target_taxon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000039",
+          "common_name": "Grote bonte specht",
+          "display_label": "Grote bonte specht",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:92ef9814b762f4f1:opt:d1",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:ff3ff52f2cbb",
+          "scientific_name": "Dendrocopos major",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000001",
+          "common_name": "Houtduif",
+          "display_label": "Houtduif",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:92ef9814b762f4f1:opt:d3",
+          "reason_codes": [
+            "shared_ancestor",
+            "palier_a_fallback"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Columba palumbus",
+          "score": 0.2,
+          "source": "taxonomic_fallback_db"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:153511876",
+      "question_id": "question:92ef9814b762f4f1",
+      "question_index": 10,
+      "scientific_name": "Picus viridis"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000018",
+      "common_name": "Kleine Karekiet",
+      "correct_option_id": "question:758fb45ca6cb2ac7:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Alexis Lours, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/155002336/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:155002336",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000004",
+          "common_name": "Roodborst",
+          "display_label": "Roodborst",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:758fb45ca6cb2ac7:opt:d3",
+          "reason_codes": [
+            "shared_ancestor",
+            "palier_a_fallback"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Erithacus rubecula",
+          "score": 0.2,
+          "source": "taxonomic_fallback_db"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "common_name": "Zwarte Kraai",
+          "display_label": "Zwarte Kraai",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:758fb45ca6cb2ac7:opt:d1",
+          "reason_codes": [
+            "shared_ancestor",
+            "palier_a_fallback"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Corvus corone",
+          "score": 0.2,
+          "source": "taxonomic_fallback_db"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000003",
+          "common_name": "Pimpelmees",
+          "display_label": "Pimpelmees",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:758fb45ca6cb2ac7:opt:d2",
+          "reason_codes": [
+            "shared_ancestor",
+            "palier_a_fallback"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Cyanistes caeruleus",
+          "score": 0.2,
+          "source": "taxonomic_fallback_db"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000018",
+          "common_name": "Kleine Karekiet",
+          "display_label": "Kleine Karekiet",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:758fb45ca6cb2ac7:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Acrocephalus scirpaceus",
+          "score": 1.0,
+          "source": "target_taxon"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:155002336",
+      "question_id": "question:758fb45ca6cb2ac7",
+      "question_index": 11,
+      "scientific_name": "Acrocephalus scirpaceus"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000047",
+      "common_name": "Grauwe Klauwier",
+      "correct_option_id": "question:d0b7de0b13ea1c5c:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Sylvain Montagner, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/514123288/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:514123288",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000004",
+          "common_name": "Roodborst",
+          "display_label": "Roodborst",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:d0b7de0b13ea1c5c:opt:d3",
+          "reason_codes": [
+            "taxonomic_neighbor_same_order"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:d778dd7da86a",
+          "scientific_name": "Erithacus rubecula",
+          "score": 0.4,
+          "source": "taxonomic_neighbor_same_order"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000045",
+          "common_name": "Veldleeuwerik",
+          "display_label": "Veldleeuwerik",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:d0b7de0b13ea1c5c:opt:d1",
+          "reason_codes": [
+            "taxonomic_neighbor_same_order"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:6cc09943d604",
+          "scientific_name": "Alauda arvensis",
+          "score": 0.4,
+          "source": "taxonomic_neighbor_same_order"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000047",
+          "common_name": "Grauwe Klauwier",
+          "display_label": "Grauwe Klauwier",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:d0b7de0b13ea1c5c:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Lanius collurio",
+          "score": 1.0,
+          "source": "target_taxon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000009",
+          "common_name": "Huismus",
+          "display_label": "Huismus",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:d0b7de0b13ea1c5c:opt:d2",
+          "reason_codes": [
+            "taxonomic_neighbor_same_order"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:0dcbe6082dee",
+          "scientific_name": "Passer domesticus",
+          "score": 0.4,
+          "source": "taxonomic_neighbor_same_order"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:514123288",
+      "question_id": "question:d0b7de0b13ea1c5c",
+      "question_index": 12,
+      "scientific_name": "Lanius collurio"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000034",
+      "common_name": "Slechtvalk",
+      "correct_option_id": "question:5dbb6e31aa7e365b:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Jaro Guzinski, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/75893237/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:75893237",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000033",
+          "common_name": "Torenvalk",
+          "display_label": "Torenvalk",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:5dbb6e31aa7e365b:opt:d1",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:bf95676191d3",
+          "scientific_name": "Falco tinnunculus",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000035",
+          "common_name": "Bosuil",
+          "display_label": "Bosuil",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:5dbb6e31aa7e365b:opt:d2",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:e950796060f3",
+          "scientific_name": "Strix aluco",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000034",
+          "common_name": "Slechtvalk",
+          "display_label": "Slechtvalk",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:5dbb6e31aa7e365b:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Falco peregrinus",
+          "score": 1.0,
+          "source": "target_taxon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000001",
+          "common_name": "Houtduif",
+          "display_label": "Houtduif",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:5dbb6e31aa7e365b:opt:d3",
+          "reason_codes": [
+            "shared_ancestor",
+            "palier_a_fallback"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Columba palumbus",
+          "score": 0.2,
+          "source": "taxonomic_fallback_db"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:75893237",
+      "question_id": "question:5dbb6e31aa7e365b",
+      "question_index": 13,
+      "scientific_name": "Falco peregrinus"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000017",
+      "common_name": "Groenling",
+      "correct_option_id": "question:6cdaa7693f9ee609:opt:correct",
+      "country_code": "BE",
+      "feedback_short": "back",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Victor Brans, some rights reserved (CC BY-SA)",
+        "license": "cc-by-sa",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/112996356/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:112996356",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000009",
+          "common_name": "Huismus",
+          "display_label": "Huismus",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:6cdaa7693f9ee609:opt:d2",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:23c302ce1ff9",
+          "scientific_name": "Passer domesticus",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000017",
+          "common_name": "Groenling",
+          "display_label": "Groenling",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:6cdaa7693f9ee609:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Chloris chloris",
+          "score": 1.0,
+          "source": "target_taxon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000005",
+          "common_name": "Vink",
+          "display_label": "Vink",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:6cdaa7693f9ee609:opt:d1",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:928e019cb3d6",
+          "scientific_name": "Fringilla coelebs",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000019",
+          "common_name": "Appelvink",
+          "display_label": "Appelvink",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:6cdaa7693f9ee609:opt:d3",
+          "reason_codes": [
+            "taxonomic_neighbor_same_family"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:d4b731e04f4a",
+          "scientific_name": "Coccothraustes coccothraustes",
+          "score": 0.6,
+          "source": "taxonomic_neighbor_same_family"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:112996356",
+      "question_id": "question:6cdaa7693f9ee609",
+      "question_index": 14,
+      "scientific_name": "Chloris chloris"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000020",
+      "common_name": "Zwarte Roodstaart",
+      "correct_option_id": "question:145a95f6147cc843:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "bill",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Lucie Partout, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/348895766/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:348895766",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000020",
+          "common_name": "Zwarte Roodstaart",
+          "display_label": "Zwarte Roodstaart",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:145a95f6147cc843:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Phoenicurus ochruros",
+          "score": 1.0,
+          "source": "target_taxon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000004",
+          "common_name": "Roodborst",
+          "display_label": "Roodborst",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:145a95f6147cc843:opt:d2",
+          "reason_codes": [
+            "taxonomic_neighbor_same_family"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:c4c84c10f9ba",
+          "scientific_name": "Erithacus rubecula",
+          "score": 0.6,
+          "source": "taxonomic_neighbor_same_family"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000011",
+          "common_name": "Spreeuw",
+          "display_label": "Spreeuw",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:145a95f6147cc843:opt:d1",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:507992795ac4",
+          "scientific_name": "Sturnus vulgaris",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "common_name": "Zwarte Kraai",
+          "display_label": "Zwarte Kraai",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:145a95f6147cc843:opt:d3",
+          "reason_codes": [
+            "shared_ancestor",
+            "palier_a_fallback"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Corvus corone",
+          "score": 0.2,
+          "source": "taxonomic_fallback_db"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:348895766",
+      "question_id": "question:145a95f6147cc843",
+      "question_index": 15,
+      "scientific_name": "Phoenicurus ochruros"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000005",
+      "common_name": "Vink",
+      "correct_option_id": "question:c7c2d59f676b20f4:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Alexis Lours, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/341131121/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:341131121",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000004",
+          "common_name": "Roodborst",
+          "display_label": "Roodborst",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:c7c2d59f676b20f4:opt:d1",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:0f7787bff97a",
+          "scientific_name": "Erithacus rubecula",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000005",
+          "common_name": "Vink",
+          "display_label": "Vink",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:c7c2d59f676b20f4:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Fringilla coelebs",
+          "score": 1.0,
+          "source": "target_taxon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000009",
+          "common_name": "Huismus",
+          "display_label": "Huismus",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:c7c2d59f676b20f4:opt:d2",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:5a92fc3fb0ce",
+          "scientific_name": "Passer domesticus",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000014",
+          "common_name": "Merel",
+          "display_label": "Merel",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:c7c2d59f676b20f4:opt:d3",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:be18caa7d238",
+          "scientific_name": "Turdus merula",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:341131121",
+      "question_id": "question:c7c2d59f676b20f4",
+      "question_index": 16,
+      "scientific_name": "Fringilla coelebs"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000070",
+      "common_name": "Fuut",
+      "correct_option_id": "question:7121685215ec1e1a:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) frangp, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/419967962/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:419967962",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "common_name": "Zwarte Kraai",
+          "display_label": "Zwarte Kraai",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:7121685215ec1e1a:opt:d2",
+          "reason_codes": [
+            "shared_ancestor",
+            "palier_a_fallback"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Corvus corone",
+          "score": 0.2,
+          "source": "taxonomic_fallback_db"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000001",
+          "common_name": "Houtduif",
+          "display_label": "Houtduif",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:7121685215ec1e1a:opt:d1",
+          "reason_codes": [
+            "shared_ancestor",
+            "palier_a_fallback"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Columba palumbus",
+          "score": 0.2,
+          "source": "taxonomic_fallback_db"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000070",
+          "common_name": "Fuut",
+          "display_label": "Fuut",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:7121685215ec1e1a:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Podiceps cristatus",
+          "score": 1.0,
+          "source": "target_taxon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000003",
+          "common_name": "Pimpelmees",
+          "display_label": "Pimpelmees",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:7121685215ec1e1a:opt:d3",
+          "reason_codes": [
+            "shared_ancestor",
+            "palier_a_fallback"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Cyanistes caeruleus",
+          "score": 0.2,
+          "source": "taxonomic_fallback_db"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:419967962",
+      "question_id": "question:7121685215ec1e1a",
+      "question_index": 17,
+      "scientific_name": "Podiceps cristatus"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000023",
+      "common_name": "Knobbelzwaan",
+      "correct_option_id": "question:9c1445e6f8dc6169:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Jaro Guzinski, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/94873121/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:94873121",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000023",
+          "common_name": "Knobbelzwaan",
+          "display_label": "Knobbelzwaan",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:9c1445e6f8dc6169:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Cygnus olor",
+          "score": 1.0,
+          "source": "target_taxon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000021",
+          "common_name": "Wilde Eend",
+          "display_label": "Wilde Eend",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:9c1445e6f8dc6169:opt:d2",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:ecdac3f30b5a",
+          "scientific_name": "Anas platyrhynchos",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000001",
+          "common_name": "Houtduif",
+          "display_label": "Houtduif",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:9c1445e6f8dc6169:opt:d3",
+          "reason_codes": [
+            "shared_ancestor",
+            "palier_a_fallback"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Columba palumbus",
+          "score": 0.2,
+          "source": "taxonomic_fallback_db"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000022",
+          "common_name": "Grauwe Gans",
+          "display_label": "Grauwe Gans",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:9c1445e6f8dc6169:opt:d1",
+          "reason_codes": [
+            "taxonomic_neighbor_same_family"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:a21f8c43164e",
+          "scientific_name": "Anser anser",
+          "score": 0.6,
+          "source": "taxonomic_neighbor_same_family"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:94873121",
+      "question_id": "question:9c1445e6f8dc6169",
+      "question_index": 18,
+      "scientific_name": "Cygnus olor"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000029",
+      "common_name": "Blauwe Reiger",
+      "correct_option_id": "question:4e872321c14f1f5e:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "bill",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) bogsuckers, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/137254608/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:137254608",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000030",
+          "common_name": "Kleine Zilverreiger",
+          "display_label": "Kleine Zilverreiger",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:4e872321c14f1f5e:opt:d2",
+          "reason_codes": [
+            "taxonomic_neighbor_same_family"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:f09efcd53222",
+          "scientific_name": "Egretta garzetta",
+          "score": 0.6,
+          "source": "taxonomic_neighbor_same_family"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000001",
+          "common_name": "Houtduif",
+          "display_label": "Houtduif",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:4e872321c14f1f5e:opt:d3",
+          "reason_codes": [
+            "shared_ancestor",
+            "palier_a_fallback"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Columba palumbus",
+          "score": 0.2,
+          "source": "taxonomic_fallback_db"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000029",
+          "common_name": "Blauwe Reiger",
+          "display_label": "Blauwe Reiger",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:4e872321c14f1f5e:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Ardea cinerea",
+          "score": 1.0,
+          "source": "target_taxon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000028",
+          "common_name": "Aalscholver",
+          "display_label": "Aalscholver",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:4e872321c14f1f5e:opt:d1",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:0ac72f15ce68",
+          "scientific_name": "Phalacrocorax carbo",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:137254608",
+      "question_id": "question:4e872321c14f1f5e",
+      "question_index": 19,
+      "scientific_name": "Ardea cinerea"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000036",
+      "common_name": "Ransuil",
+      "correct_option_id": "question:de4eebabe750fa60:opt:correct",
+      "country_code": "BE",
+      "feedback_short": "head",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Maaike Verschueren, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/120207959/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:120207959",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000036",
+          "common_name": "Ransuil",
+          "display_label": "Ransuil",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:de4eebabe750fa60:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Asio otus",
+          "score": 1.0,
+          "source": "target_taxon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000035",
+          "common_name": "Bosuil",
+          "display_label": "Bosuil",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:de4eebabe750fa60:opt:d1",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:4381bfc193b1",
+          "scientific_name": "Strix aluco",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000001",
+          "common_name": "Houtduif",
+          "display_label": "Houtduif",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:de4eebabe750fa60:opt:d3",
+          "reason_codes": [
+            "shared_ancestor",
+            "palier_a_fallback"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Columba palumbus",
+          "score": 0.2,
+          "source": "taxonomic_fallback_db"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000037",
+          "common_name": "Steenuil",
+          "display_label": "Steenuil",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:de4eebabe750fa60:opt:d2",
+          "reason_codes": [
+            "taxonomic_neighbor_same_family"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:071201d0637d",
+          "scientific_name": "Athene noctua",
+          "score": 0.6,
+          "source": "taxonomic_neighbor_same_family"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:120207959",
+      "question_id": "question:de4eebabe750fa60",
+      "question_index": 20,
+      "scientific_name": "Asio otus"
+    }
+  ],
+  "schema_version": "database.schema.v19",
+  "seed": "phase2b-v2-seed-c",
+  "selector_policy": {
+    "max_questions_per_taxon": 1,
+    "unique_media_per_session": true,
+    "version": "phase2b.selector.v2"
+  },
+  "session_snapshot_id": "session:0c631413d80b083c",
+  "session_snapshot_version": "session_snapshot.v2",
+  "source_run_id": "run:20260509T180000Z:2b18beef"
+}

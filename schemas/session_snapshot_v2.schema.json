@@ -1,0 +1,157 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "session_snapshot_v2",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "session_snapshot_version",
+    "session_snapshot_id",
+    "pool_id",
+    "source_run_id",
+    "generated_at",
+    "locale",
+    "seed",
+    "question_count",
+    "selector_policy",
+    "distractor_policy",
+    "questions"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": { "type": "string", "minLength": 1 },
+    "session_snapshot_version": { "type": "string", "const": "session_snapshot.v2" },
+    "session_snapshot_id": { "type": "string", "minLength": 1 },
+    "pool_id": { "type": "string", "minLength": 1 },
+    "source_run_id": { "type": "string", "minLength": 1 },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "locale": { "type": "string", "enum": ["fr", "en", "nl"] },
+    "seed": { "type": "string", "minLength": 1 },
+    "question_count": { "type": "integer", "const": 20 },
+    "selector_policy": {
+      "type": "object",
+      "required": ["version", "max_questions_per_taxon", "unique_media_per_session"],
+      "additionalProperties": false,
+      "properties": {
+        "version": { "type": "string", "const": "phase2b.selector.v2" },
+        "max_questions_per_taxon": { "type": "integer", "const": 1 },
+        "unique_media_per_session": { "type": "boolean", "const": true }
+      }
+    },
+    "distractor_policy": {
+      "type": "object",
+      "required": [
+        "version",
+        "referenced_only_allowed",
+        "max_referenced_only_per_question",
+        "fallback_source"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "version": { "type": "string", "const": "phase2b.distractors.palier_a.v1" },
+        "referenced_only_allowed": { "type": "boolean", "const": false },
+        "max_referenced_only_per_question": { "type": "integer", "const": 0 },
+        "fallback_source": { "type": "string", "const": "taxonomic_fallback_db" }
+      }
+    },
+    "questions": {
+      "type": "array",
+      "minItems": 20,
+      "maxItems": 20,
+      "items": { "$ref": "#/$defs/question" }
+    }
+  },
+  "$defs": {
+    "question": {
+      "type": "object",
+      "required": [
+        "question_id",
+        "question_index",
+        "playable_item_id",
+        "canonical_taxon_id",
+        "media_asset_id",
+        "common_name",
+        "scientific_name",
+        "label_source",
+        "feedback_short",
+        "media",
+        "country_code",
+        "correct_option_id",
+        "options"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "question_id": { "type": "string", "minLength": 1 },
+        "question_index": { "type": "integer", "minimum": 1, "maximum": 20 },
+        "playable_item_id": { "type": "string", "minLength": 1 },
+        "canonical_taxon_id": { "type": "string", "minLength": 1 },
+        "media_asset_id": { "type": "string", "minLength": 1 },
+        "common_name": { "type": "string", "minLength": 1 },
+        "scientific_name": { "type": "string", "minLength": 1 },
+        "label_source": { "type": "string", "enum": ["common_name", "scientific_name"] },
+        "feedback_short": { "type": ["string", "null"] },
+        "media": { "$ref": "#/$defs/media" },
+        "country_code": { "type": "string", "enum": ["BE", "FR"] },
+        "correct_option_id": { "type": "string", "minLength": 1 },
+        "options": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "contains": {
+            "type": "object",
+            "required": ["is_correct"],
+            "properties": { "is_correct": { "const": true } }
+          },
+          "minContains": 1,
+          "maxContains": 1,
+          "items": { "$ref": "#/$defs/option" }
+        }
+      }
+    },
+    "media": {
+      "type": "object",
+      "required": ["render_url", "attribution", "license"],
+      "additionalProperties": false,
+      "properties": {
+        "render_url": { "type": "string", "minLength": 1 },
+        "attribution": { "type": "string", "minLength": 1 },
+        "license": { "type": ["string", "null"] }
+      }
+    },
+    "option": {
+      "type": "object",
+      "required": [
+        "option_id",
+        "canonical_taxon_id",
+        "common_name",
+        "scientific_name",
+        "display_label",
+        "label_source",
+        "is_correct",
+        "referenced_only",
+        "source",
+        "score",
+        "reason_codes"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "option_id": { "type": "string", "minLength": 1 },
+        "canonical_taxon_id": { "type": "string", "minLength": 1 },
+        "common_name": { "type": "string", "minLength": 1 },
+        "scientific_name": { "type": "string", "minLength": 1 },
+        "display_label": { "type": "string", "minLength": 1 },
+        "label_source": { "type": "string", "enum": ["common_name", "scientific_name"] },
+        "is_correct": { "type": "boolean" },
+        "referenced_only": { "type": "boolean", "const": false },
+        "source": { "type": "string", "minLength": 1 },
+        "score": { "type": "number", "minimum": 0 },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "relationship_id": { "type": ["string", "null"], "minLength": 1 }
+      }
+    }
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "blockers": [],
+  "fallback_option_count": 117,
+  "fixture_count": 9,
+  "generated_at": "2026-05-09T18:22:42.157612+00:00",
+  "pool_id": "pack-pool:be-fr-birds-50:v1",
+  "report_type": "session_snapshot_v2_audit",
+  "schema_version": "phase2b.session_snapshot_v2.audit.v1",
+  "sessions": [
+    {
+      "fallback_option_count": 10,
+      "locale": "fr",
+      "question_count": 20,
+      "seed": "phase2b-v2-seed-a",
+      "session_snapshot_id": "session:90fd6d105108bdbe",
+      "valid": true
+    },
+    {
+      "fallback_option_count": 11,
+      "locale": "en",
+      "question_count": 20,
+      "seed": "phase2b-v2-seed-a",
+      "session_snapshot_id": "session:329df6edcfc683d8",
+      "valid": true
+    },
+    {
+      "fallback_option_count": 14,
+      "locale": "nl",
+      "question_count": 20,
+      "seed": "phase2b-v2-seed-a",
+      "session_snapshot_id": "session:f42b659b07e385ef",
+      "valid": true
+    },
+    {
+      "fallback_option_count": 13,
+      "locale": "fr",
+      "question_count": 20,
+      "seed": "phase2b-v2-seed-b",
+      "session_snapshot_id": "session:ec1164fdf3ddd5ee",
+      "valid": true
+    },
+    {
+      "fallback_option_count": 9,
+      "locale": "en",
+      "question_count": 20,
+      "seed": "phase2b-v2-seed-b",
+      "session_snapshot_id": "session:43a25931bc38da5f",
+      "valid": true
+    },
+    {
+      "fallback_option_count": 13,
+      "locale": "nl",
+      "question_count": 20,
+      "seed": "phase2b-v2-seed-b",
+      "session_snapshot_id": "session:887d0fcee0786e64",
+      "valid": true
+    },
+    {
+      "fallback_option_count": 16,
+      "locale": "fr",
+      "question_count": 20,
+      "seed": "phase2b-v2-seed-c",
+      "session_snapshot_id": "session:0c3d1cb3f8859338",
+      "valid": true
+    },
+    {
+      "fallback_option_count": 12,
+      "locale": "en",
+      "question_count": 20,
+      "seed": "phase2b-v2-seed-c",
+      "session_snapshot_id": "session:fe299bae55f3e967",
+      "valid": true
+    },
+    {
+      "fallback_option_count": 19,
+      "locale": "nl",
+      "question_count": 20,
+      "seed": "phase2b-v2-seed-c",
+      "session_snapshot_id": "session:0c631413d80b083c",
+      "valid": true
+    }
+  ],
+  "status": "GO_WITH_WARNINGS",
+  "warnings": [
+    "taxonomic_fallback_db_used"
+  ]
+}

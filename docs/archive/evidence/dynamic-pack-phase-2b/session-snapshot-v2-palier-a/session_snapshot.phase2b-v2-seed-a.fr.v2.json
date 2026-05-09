@@ -1,0 +1,1684 @@
+{
+  "distractor_policy": {
+    "fallback_source": "taxonomic_fallback_db",
+    "max_referenced_only_per_question": 0,
+    "referenced_only_allowed": false,
+    "version": "phase2b.distractors.palier_a.v1"
+  },
+  "generated_at": "2026-05-09T18:22:25.543861+00:00",
+  "locale": "fr",
+  "pool_id": "pack-pool:be-fr-birds-50:v1",
+  "question_count": 20,
+  "questions": [
+    {
+      "canonical_taxon_id": "taxon:birds:000005",
+      "common_name": "Pinson des arbres",
+      "correct_option_id": "question:6d09278666de29a7:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "wing",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "no rights reserved",
+        "license": "cc0",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/269291251/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:269291251",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000008",
+          "common_name": "M\u00e9sange charbonni\u00e8re",
+          "display_label": "M\u00e9sange charbonni\u00e8re",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:6d09278666de29a7:opt:d2",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:f66676d1e2cf",
+          "scientific_name": "Parus major",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000004",
+          "common_name": "Rougegorge familier",
+          "display_label": "Rougegorge familier",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:6d09278666de29a7:opt:d1",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:0f7787bff97a",
+          "scientific_name": "Erithacus rubecula",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000019",
+          "common_name": "Gros-bec casse-noyaux",
+          "display_label": "Gros-bec casse-noyaux",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:6d09278666de29a7:opt:d3",
+          "reason_codes": [
+            "taxonomic_neighbor_same_family"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:3d4cbaa7b47b",
+          "scientific_name": "Coccothraustes coccothraustes",
+          "score": 0.6,
+          "source": "taxonomic_neighbor_same_family"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000005",
+          "common_name": "Pinson des arbres",
+          "display_label": "Pinson des arbres",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:6d09278666de29a7:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Fringilla coelebs",
+          "score": 1.0,
+          "source": "target_taxon"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:269291251",
+      "question_id": "question:6d09278666de29a7",
+      "question_index": 1,
+      "scientific_name": "Fringilla coelebs"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000036",
+      "common_name": "Hibou moyen-duc",
+      "correct_option_id": "question:8aa8d7f802cb8d13:opt:correct",
+      "country_code": "BE",
+      "feedback_short": "head",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Maaike Verschueren, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/509593965/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:509593965",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000035",
+          "common_name": "Chouette hulotte",
+          "display_label": "Chouette hulotte",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:8aa8d7f802cb8d13:opt:d2",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:4381bfc193b1",
+          "scientific_name": "Strix aluco",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000036",
+          "common_name": "Hibou moyen-duc",
+          "display_label": "Hibou moyen-duc",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:8aa8d7f802cb8d13:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Asio otus",
+          "score": 1.0,
+          "source": "target_taxon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000001",
+          "common_name": "Pigeon ramier",
+          "display_label": "Pigeon ramier",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:8aa8d7f802cb8d13:opt:d3",
+          "reason_codes": [
+            "shared_ancestor",
+            "palier_a_fallback"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Columba palumbus",
+          "score": 0.2,
+          "source": "taxonomic_fallback_db"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000037",
+          "common_name": "Chev\u00eache d'Ath\u00e9na",
+          "display_label": "Chev\u00eache d'Ath\u00e9na",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:8aa8d7f802cb8d13:opt:d1",
+          "reason_codes": [
+            "taxonomic_neighbor_same_family"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:071201d0637d",
+          "scientific_name": "Athene noctua",
+          "score": 0.6,
+          "source": "taxonomic_neighbor_same_family"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:509593965",
+      "question_id": "question:8aa8d7f802cb8d13",
+      "question_index": 2,
+      "scientific_name": "Asio otus"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000033",
+      "common_name": "Faucon cr\u00e9cerelle",
+      "correct_option_id": "question:a8e24043836aa88a:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "wing",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Nino, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/148343504/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:148343504",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000035",
+          "common_name": "Chouette hulotte",
+          "display_label": "Chouette hulotte",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:a8e24043836aa88a:opt:d1",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:ee5acfe47a12",
+          "scientific_name": "Strix aluco",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000031",
+          "common_name": "Buse variable",
+          "display_label": "Buse variable",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:a8e24043836aa88a:opt:d3",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:3c7ca85b1f79",
+          "scientific_name": "Buteo buteo",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000033",
+          "common_name": "Faucon cr\u00e9cerelle",
+          "display_label": "Faucon cr\u00e9cerelle",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:a8e24043836aa88a:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Falco tinnunculus",
+          "score": 1.0,
+          "source": "target_taxon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000034",
+          "common_name": "Faucon p\u00e8lerin",
+          "display_label": "Faucon p\u00e8lerin",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:a8e24043836aa88a:opt:d2",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:3167c6935638",
+          "scientific_name": "Falco peregrinus",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:148343504",
+      "question_id": "question:a8e24043836aa88a",
+      "question_index": 3,
+      "scientific_name": "Falco tinnunculus"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000024",
+      "common_name": "Foulque macroule",
+      "correct_option_id": "question:995b01b44b38f741:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "bill",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "no rights reserved",
+        "license": "cc0",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/624158846/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:624158846",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000001",
+          "common_name": "Pigeon ramier",
+          "display_label": "Pigeon ramier",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:995b01b44b38f741:opt:d3",
+          "reason_codes": [
+            "shared_ancestor",
+            "palier_a_fallback"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Columba palumbus",
+          "score": 0.2,
+          "source": "taxonomic_fallback_db"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000021",
+          "common_name": "Canard colvert",
+          "display_label": "Canard colvert",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:995b01b44b38f741:opt:d2",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:831d5d4ca3d1",
+          "scientific_name": "Anas platyrhynchos",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000024",
+          "common_name": "Foulque macroule",
+          "display_label": "Foulque macroule",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:995b01b44b38f741:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Fulica atra",
+          "score": 1.0,
+          "source": "target_taxon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000025",
+          "common_name": "Gallinule poule-d'eau",
+          "display_label": "Gallinule poule-d'eau",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:995b01b44b38f741:opt:d1",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:5a9510afff05",
+          "scientific_name": "Gallinula chloropus",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:624158846",
+      "question_id": "question:995b01b44b38f741",
+      "question_index": 4,
+      "scientific_name": "Fulica atra"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000016",
+      "common_name": "Chardonneret \u00e9l\u00e9gant",
+      "correct_option_id": "question:ebeea549f807a1c7:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "no rights reserved",
+        "license": "cc0",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/605878822/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:605878822",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000006",
+          "common_name": "Geai des ch\u00eanes",
+          "display_label": "Geai des ch\u00eanes",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:ebeea549f807a1c7:opt:d3",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:ad771e8e6816",
+          "scientific_name": "Garrulus glandarius",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000017",
+          "common_name": "Verdier d'Europe",
+          "display_label": "Verdier d'Europe",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:ebeea549f807a1c7:opt:d2",
+          "reason_codes": [
+            "taxonomic_neighbor_same_family"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:6dcff5acf6a1",
+          "scientific_name": "Chloris chloris",
+          "score": 0.6,
+          "source": "taxonomic_neighbor_same_family"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000016",
+          "common_name": "Chardonneret \u00e9l\u00e9gant",
+          "display_label": "Chardonneret \u00e9l\u00e9gant",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:ebeea549f807a1c7:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Carduelis carduelis",
+          "score": 1.0,
+          "source": "target_taxon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000005",
+          "common_name": "Pinson des arbres",
+          "display_label": "Pinson des arbres",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:ebeea549f807a1c7:opt:d1",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:e3416fbfa513",
+          "scientific_name": "Fringilla coelebs",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:605878822",
+      "question_id": "question:ebeea549f807a1c7",
+      "question_index": 5,
+      "scientific_name": "Carduelis carduelis"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000035",
+      "common_name": "Chouette hulotte",
+      "correct_option_id": "question:f54a2cb63ce2bfd5:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Sylvain Montagner, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/298959804/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:298959804",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000035",
+          "common_name": "Chouette hulotte",
+          "display_label": "Chouette hulotte",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:f54a2cb63ce2bfd5:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Strix aluco",
+          "score": 1.0,
+          "source": "target_taxon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000034",
+          "common_name": "Faucon p\u00e8lerin",
+          "display_label": "Faucon p\u00e8lerin",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:f54a2cb63ce2bfd5:opt:d3",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:6f1e73ae9b9d",
+          "scientific_name": "Falco peregrinus",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000037",
+          "common_name": "Chev\u00eache d'Ath\u00e9na",
+          "display_label": "Chev\u00eache d'Ath\u00e9na",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:f54a2cb63ce2bfd5:opt:d2",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:966e360809ad",
+          "scientific_name": "Athene noctua",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000033",
+          "common_name": "Faucon cr\u00e9cerelle",
+          "display_label": "Faucon cr\u00e9cerelle",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:f54a2cb63ce2bfd5:opt:d1",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:637b5fc82720",
+          "scientific_name": "Falco tinnunculus",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:298959804",
+      "question_id": "question:f54a2cb63ce2bfd5",
+      "question_index": 6,
+      "scientific_name": "Strix aluco"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000001",
+      "common_name": "Pigeon ramier",
+      "correct_option_id": "question:0271d8e23b0639a5:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Alexis Lours, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/369755362/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:369755362",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000001",
+          "common_name": "Pigeon ramier",
+          "display_label": "Pigeon ramier",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:0271d8e23b0639a5:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Columba palumbus",
+          "score": 1.0,
+          "source": "target_taxon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000013",
+          "common_name": "Troglodyte mignon",
+          "display_label": "Troglodyte mignon",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:0271d8e23b0639a5:opt:d3",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:bcb9216fbb7a",
+          "scientific_name": "Troglodytes troglodytes",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000079",
+          "common_name": "Tourterelle turque",
+          "display_label": "Tourterelle turque",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:0271d8e23b0639a5:opt:d2",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:b614f29205bc",
+          "scientific_name": "Streptopelia decaocto",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000010",
+          "common_name": "Pie bavarde",
+          "display_label": "Pie bavarde",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:0271d8e23b0639a5:opt:d1",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:a1636ce30fbe",
+          "scientific_name": "Pica pica",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:369755362",
+      "question_id": "question:0271d8e23b0639a5",
+      "question_index": 7,
+      "scientific_name": "Columba palumbus"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000020",
+      "common_name": "Rougequeue noir",
+      "correct_option_id": "question:b4d1552df8918317:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "bill",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Lucie Partout, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/348895766/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:348895766",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "common_name": "Corneille noire",
+          "display_label": "Corneille noire",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:b4d1552df8918317:opt:d3",
+          "reason_codes": [
+            "shared_ancestor",
+            "palier_a_fallback"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Corvus corone",
+          "score": 0.2,
+          "source": "taxonomic_fallback_db"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000020",
+          "common_name": "Rougequeue noir",
+          "display_label": "Rougequeue noir",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:b4d1552df8918317:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Phoenicurus ochruros",
+          "score": 1.0,
+          "source": "target_taxon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000004",
+          "common_name": "Rougegorge familier",
+          "display_label": "Rougegorge familier",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:b4d1552df8918317:opt:d2",
+          "reason_codes": [
+            "taxonomic_neighbor_same_family"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:c4c84c10f9ba",
+          "scientific_name": "Erithacus rubecula",
+          "score": 0.6,
+          "source": "taxonomic_neighbor_same_family"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000011",
+          "common_name": "\u00c9tourneau sansonnet",
+          "display_label": "\u00c9tourneau sansonnet",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:b4d1552df8918317:opt:d1",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:507992795ac4",
+          "scientific_name": "Sturnus vulgaris",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:348895766",
+      "question_id": "question:b4d1552df8918317",
+      "question_index": 8,
+      "scientific_name": "Phoenicurus ochruros"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000042",
+      "common_name": "Hirondelle de fen\u00eatre",
+      "correct_option_id": "question:473aaca91cf5637d:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "wing",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Sylvain G\u00e9rard, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/286661547/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:286661547",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000043",
+          "common_name": "Hirondelle rustique",
+          "display_label": "Hirondelle rustique",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:473aaca91cf5637d:opt:d1",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:a15da8d24247",
+          "scientific_name": "Hirundo rustica",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "common_name": "Corneille noire",
+          "display_label": "Corneille noire",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:473aaca91cf5637d:opt:d2",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:ce441a620ae0",
+          "scientific_name": "Corvus corone",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000042",
+          "common_name": "Hirondelle de fen\u00eatre",
+          "display_label": "Hirondelle de fen\u00eatre",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:473aaca91cf5637d:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Delichon urbicum",
+          "score": 1.0,
+          "source": "target_taxon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000044",
+          "common_name": "Hirondelle de rivage",
+          "display_label": "Hirondelle de rivage",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:473aaca91cf5637d:opt:d3",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:1e40c278e41b",
+          "scientific_name": "Riparia riparia",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:286661547",
+      "question_id": "question:473aaca91cf5637d",
+      "question_index": 9,
+      "scientific_name": "Delichon urbicum"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000041",
+      "common_name": "Martinet noir",
+      "correct_option_id": "question:b3ef9c017974f101:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "wing",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) bogsuckers, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/292920432/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:292920432",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000041",
+          "common_name": "Martinet noir",
+          "display_label": "Martinet noir",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:b3ef9c017974f101:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Apus apus",
+          "score": 1.0,
+          "source": "target_taxon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000001",
+          "common_name": "Pigeon ramier",
+          "display_label": "Pigeon ramier",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:b3ef9c017974f101:opt:d3",
+          "reason_codes": [
+            "shared_ancestor",
+            "palier_a_fallback"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Columba palumbus",
+          "score": 0.2,
+          "source": "taxonomic_fallback_db"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000042",
+          "common_name": "Hirondelle de fen\u00eatre",
+          "display_label": "Hirondelle de fen\u00eatre",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:b3ef9c017974f101:opt:d1",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:a4ad65cb630b",
+          "scientific_name": "Delichon urbicum",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000011",
+          "common_name": "\u00c9tourneau sansonnet",
+          "display_label": "\u00c9tourneau sansonnet",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:b3ef9c017974f101:opt:d2",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:27f2a21c2276",
+          "scientific_name": "Sturnus vulgaris",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:292920432",
+      "question_id": "question:b3ef9c017974f101",
+      "question_index": 10,
+      "scientific_name": "Apus apus"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000048",
+      "common_name": "Choucas des tours",
+      "correct_option_id": "question:fb6d85d0c3517b90:opt:correct",
+      "country_code": "BE",
+      "feedback_short": "head",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Josiah Londer\u00e9e, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/388671945/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:388671945",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000049",
+          "common_name": "Corbeau freux",
+          "display_label": "Corbeau freux",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:fb6d85d0c3517b90:opt:d3",
+          "reason_codes": [
+            "taxonomic_neighbor_same_family"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:33284c65e009",
+          "scientific_name": "Corvus frugilegus",
+          "score": 0.6,
+          "source": "taxonomic_neighbor_same_family"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "common_name": "Corneille noire",
+          "display_label": "Corneille noire",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:fb6d85d0c3517b90:opt:d2",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:af55265d83e6",
+          "scientific_name": "Corvus corone",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000048",
+          "common_name": "Choucas des tours",
+          "display_label": "Choucas des tours",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:fb6d85d0c3517b90:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Coloeus monedula",
+          "score": 1.0,
+          "source": "target_taxon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000014",
+          "common_name": "Merle noir",
+          "display_label": "Merle noir",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:fb6d85d0c3517b90:opt:d1",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:68c6bb7dbff2",
+          "scientific_name": "Turdus merula",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:388671945",
+      "question_id": "question:fb6d85d0c3517b90",
+      "question_index": 11,
+      "scientific_name": "Coloeus monedula"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000045",
+      "common_name": "Alouette des champs",
+      "correct_option_id": "question:a61cf418f47c7b73:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Alexis Lours, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/121493838/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:121493838",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "common_name": "Corneille noire",
+          "display_label": "Corneille noire",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:a61cf418f47c7b73:opt:d1",
+          "reason_codes": [
+            "shared_ancestor",
+            "palier_a_fallback"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Corvus corone",
+          "score": 0.2,
+          "source": "taxonomic_fallback_db"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000003",
+          "common_name": "M\u00e9sange bleue",
+          "display_label": "M\u00e9sange bleue",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:a61cf418f47c7b73:opt:d2",
+          "reason_codes": [
+            "shared_ancestor",
+            "palier_a_fallback"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Cyanistes caeruleus",
+          "score": 0.2,
+          "source": "taxonomic_fallback_db"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000045",
+          "common_name": "Alouette des champs",
+          "display_label": "Alouette des champs",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:a61cf418f47c7b73:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Alauda arvensis",
+          "score": 1.0,
+          "source": "target_taxon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000004",
+          "common_name": "Rougegorge familier",
+          "display_label": "Rougegorge familier",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:a61cf418f47c7b73:opt:d3",
+          "reason_codes": [
+            "shared_ancestor",
+            "palier_a_fallback"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Erithacus rubecula",
+          "score": 0.2,
+          "source": "taxonomic_fallback_db"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:121493838",
+      "question_id": "question:a61cf418f47c7b73",
+      "question_index": 12,
+      "scientific_name": "Alauda arvensis"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000010",
+      "common_name": "Pie bavarde",
+      "correct_option_id": "question:3c87c14193e8dfda:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "feather",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Alexis Lours, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/136548062/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:136548062",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000010",
+          "common_name": "Pie bavarde",
+          "display_label": "Pie bavarde",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:3c87c14193e8dfda:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Pica pica",
+          "score": 1.0,
+          "source": "target_taxon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000049",
+          "common_name": "Corbeau freux",
+          "display_label": "Corbeau freux",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:3c87c14193e8dfda:opt:d3",
+          "reason_codes": [
+            "taxonomic_neighbor_same_family"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:abf9b2f1eaac",
+          "scientific_name": "Corvus frugilegus",
+          "score": 0.6,
+          "source": "taxonomic_neighbor_same_family"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000048",
+          "common_name": "Choucas des tours",
+          "display_label": "Choucas des tours",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:3c87c14193e8dfda:opt:d2",
+          "reason_codes": [
+            "taxonomic_neighbor_same_family"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:636124d3ac85",
+          "scientific_name": "Coloeus monedula",
+          "score": 0.6,
+          "source": "taxonomic_neighbor_same_family"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "common_name": "Corneille noire",
+          "display_label": "Corneille noire",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:3c87c14193e8dfda:opt:d1",
+          "reason_codes": [
+            "taxonomic_neighbor_same_family"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:f373562b2d7c",
+          "scientific_name": "Corvus corone",
+          "score": 0.6,
+          "source": "taxonomic_neighbor_same_family"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:136548062",
+      "question_id": "question:3c87c14193e8dfda",
+      "question_index": 13,
+      "scientific_name": "Pica pica"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000014",
+      "common_name": "Merle noir",
+      "correct_option_id": "question:7cd98f5dd781aeb6:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "bill",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Jaro Guzinski, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/159277170/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:159277170",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000008",
+          "common_name": "M\u00e9sange charbonni\u00e8re",
+          "display_label": "M\u00e9sange charbonni\u00e8re",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:7cd98f5dd781aeb6:opt:d1",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:4b3d8c37e474",
+          "scientific_name": "Parus major",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000004",
+          "common_name": "Rougegorge familier",
+          "display_label": "Rougegorge familier",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:7cd98f5dd781aeb6:opt:d3",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:a0188f447d9d",
+          "scientific_name": "Erithacus rubecula",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000048",
+          "common_name": "Choucas des tours",
+          "display_label": "Choucas des tours",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:7cd98f5dd781aeb6:opt:d2",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:576bfbcd39db",
+          "scientific_name": "Coloeus monedula",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000014",
+          "common_name": "Merle noir",
+          "display_label": "Merle noir",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:7cd98f5dd781aeb6:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Turdus merula",
+          "score": 1.0,
+          "source": "target_taxon"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:159277170",
+      "question_id": "question:7cd98f5dd781aeb6",
+      "question_index": 14,
+      "scientific_name": "Turdus merula"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000038",
+      "common_name": "Pic vert",
+      "correct_option_id": "question:078c2db7c355edf1:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Alexis Lours, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/141737523/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:141737523",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000039",
+          "common_name": "Pic \u00e9peiche",
+          "display_label": "Pic \u00e9peiche",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:078c2db7c355edf1:opt:d2",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:ff3ff52f2cbb",
+          "scientific_name": "Dendrocopos major",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000040",
+          "common_name": "Pic noir",
+          "display_label": "Pic noir",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:078c2db7c355edf1:opt:d1",
+          "reason_codes": [
+            "taxonomic_neighbor_same_family"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:65b8a35cdc4d",
+          "scientific_name": "Dryocopus martius",
+          "score": 0.6,
+          "source": "taxonomic_neighbor_same_family"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000038",
+          "common_name": "Pic vert",
+          "display_label": "Pic vert",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:078c2db7c355edf1:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Picus viridis",
+          "score": 1.0,
+          "source": "target_taxon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000001",
+          "common_name": "Pigeon ramier",
+          "display_label": "Pigeon ramier",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:078c2db7c355edf1:opt:d3",
+          "reason_codes": [
+            "shared_ancestor",
+            "palier_a_fallback"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Columba palumbus",
+          "score": 0.2,
+          "source": "taxonomic_fallback_db"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:141737523",
+      "question_id": "question:078c2db7c355edf1",
+      "question_index": 15,
+      "scientific_name": "Picus viridis"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000037",
+      "common_name": "Chev\u00eache d'Ath\u00e9na",
+      "correct_option_id": "question:7465628b3026d9b8:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "silhouette",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) gerardbertrand, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/469099472/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:469099472",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000036",
+          "common_name": "Hibou moyen-duc",
+          "display_label": "Hibou moyen-duc",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:7465628b3026d9b8:opt:d2",
+          "reason_codes": [
+            "taxonomic_neighbor_same_family"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:1ca3f053a69b",
+          "scientific_name": "Asio otus",
+          "score": 0.6,
+          "source": "taxonomic_neighbor_same_family"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000001",
+          "common_name": "Pigeon ramier",
+          "display_label": "Pigeon ramier",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:7465628b3026d9b8:opt:d3",
+          "reason_codes": [
+            "shared_ancestor",
+            "palier_a_fallback"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Columba palumbus",
+          "score": 0.2,
+          "source": "taxonomic_fallback_db"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000037",
+          "common_name": "Chev\u00eache d'Ath\u00e9na",
+          "display_label": "Chev\u00eache d'Ath\u00e9na",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:7465628b3026d9b8:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Athene noctua",
+          "score": 1.0,
+          "source": "target_taxon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000035",
+          "common_name": "Chouette hulotte",
+          "display_label": "Chouette hulotte",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:7465628b3026d9b8:opt:d1",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:77d6ee90bda9",
+          "scientific_name": "Strix aluco",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:469099472",
+      "question_id": "question:7465628b3026d9b8",
+      "question_index": 16,
+      "scientific_name": "Athene noctua"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000004",
+      "common_name": "Rougegorge familier",
+      "correct_option_id": "question:aa5ab568f6fb38d4:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Guillaume Hoffmann, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/253273494/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:253273494",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000015",
+          "common_name": "Grive musicienne",
+          "display_label": "Grive musicienne",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:aa5ab568f6fb38d4:opt:d1",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:f0365479a796",
+          "scientific_name": "Turdus philomelos",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000004",
+          "common_name": "Rougegorge familier",
+          "display_label": "Rougegorge familier",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:aa5ab568f6fb38d4:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Erithacus rubecula",
+          "score": 1.0,
+          "source": "target_taxon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000014",
+          "common_name": "Merle noir",
+          "display_label": "Merle noir",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:aa5ab568f6fb38d4:opt:d2",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:17818f552356",
+          "scientific_name": "Turdus merula",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000013",
+          "common_name": "Troglodyte mignon",
+          "display_label": "Troglodyte mignon",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:aa5ab568f6fb38d4:opt:d3",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:0abef6f659ce",
+          "scientific_name": "Troglodytes troglodytes",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:253273494",
+      "question_id": "question:aa5ab568f6fb38d4",
+      "question_index": 17,
+      "scientific_name": "Erithacus rubecula"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000009",
+      "common_name": "Moineau domestique",
+      "correct_option_id": "question:e31a36479d687627:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "bill",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Joss Carr, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/363690811/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:363690811",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000043",
+          "common_name": "Hirondelle rustique",
+          "display_label": "Hirondelle rustique",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:e31a36479d687627:opt:d2",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:678935629818",
+          "scientific_name": "Hirundo rustica",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000009",
+          "common_name": "Moineau domestique",
+          "display_label": "Moineau domestique",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:e31a36479d687627:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Passer domesticus",
+          "score": 1.0,
+          "source": "target_taxon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000012",
+          "common_name": "Fauvette \u00e0 t\u00eate noire",
+          "display_label": "Fauvette \u00e0 t\u00eate noire",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:e31a36479d687627:opt:d3",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:8e27773b7782",
+          "scientific_name": "Sylvia atricapilla",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000008",
+          "common_name": "M\u00e9sange charbonni\u00e8re",
+          "display_label": "M\u00e9sange charbonni\u00e8re",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:e31a36479d687627:opt:d1",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:a4fabbaadc3b",
+          "scientific_name": "Parus major",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:363690811",
+      "question_id": "question:e31a36479d687627",
+      "question_index": 18,
+      "scientific_name": "Passer domesticus"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000008",
+      "common_name": "M\u00e9sange charbonni\u00e8re",
+      "correct_option_id": "question:16fc75c3b3b8caea:opt:correct",
+      "country_code": "BE",
+      "feedback_short": "head",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Matteo Marcandella, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/108991727/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:108991727",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000005",
+          "common_name": "Pinson des arbres",
+          "display_label": "Pinson des arbres",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:16fc75c3b3b8caea:opt:d2",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:2761fd568821",
+          "scientific_name": "Fringilla coelebs",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000008",
+          "common_name": "M\u00e9sange charbonni\u00e8re",
+          "display_label": "M\u00e9sange charbonni\u00e8re",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:16fc75c3b3b8caea:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Parus major",
+          "score": 1.0,
+          "source": "target_taxon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000003",
+          "common_name": "M\u00e9sange bleue",
+          "display_label": "M\u00e9sange bleue",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:16fc75c3b3b8caea:opt:d1",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:e74165946d63",
+          "scientific_name": "Cyanistes caeruleus",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000009",
+          "common_name": "Moineau domestique",
+          "display_label": "Moineau domestique",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:16fc75c3b3b8caea:opt:d3",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:e3903ebcc0c3",
+          "scientific_name": "Passer domesticus",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:108991727",
+      "question_id": "question:16fc75c3b3b8caea",
+      "question_index": 19,
+      "scientific_name": "Parus major"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000044",
+      "common_name": "Hirondelle de rivage",
+      "correct_option_id": "question:32cca8dddc2cca2e:opt:correct",
+      "country_code": "FR",
+      "feedback_short": "body",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Aur\u00e9lien Coste, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/127658654/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:127658654",
+      "options": [
+        {
+          "canonical_taxon_id": "taxon:birds:000042",
+          "common_name": "Hirondelle de fen\u00eatre",
+          "display_label": "Hirondelle de fen\u00eatre",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:32cca8dddc2cca2e:opt:d1",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:255d2389f1bf",
+          "scientific_name": "Delichon urbicum",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000002",
+          "common_name": "Corneille noire",
+          "display_label": "Corneille noire",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:32cca8dddc2cca2e:opt:d3",
+          "reason_codes": [
+            "shared_ancestor",
+            "palier_a_fallback"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Corvus corone",
+          "score": 0.2,
+          "source": "taxonomic_fallback_db"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000044",
+          "common_name": "Hirondelle de rivage",
+          "display_label": "Hirondelle de rivage",
+          "is_correct": true,
+          "label_source": "common_name",
+          "option_id": "question:32cca8dddc2cca2e:opt:correct",
+          "reason_codes": [
+            "correct_taxon"
+          ],
+          "referenced_only": false,
+          "scientific_name": "Riparia riparia",
+          "score": 1.0,
+          "source": "target_taxon"
+        },
+        {
+          "canonical_taxon_id": "taxon:birds:000043",
+          "common_name": "Hirondelle rustique",
+          "display_label": "Hirondelle rustique",
+          "is_correct": false,
+          "label_source": "common_name",
+          "option_id": "question:32cca8dddc2cca2e:opt:d2",
+          "reason_codes": [
+            "inaturalist_similar_species"
+          ],
+          "referenced_only": false,
+          "relationship_id": "dr:9346af4e211b",
+          "scientific_name": "Hirundo rustica",
+          "score": 1.0,
+          "source": "inaturalist_similar_species"
+        }
+      ],
+      "playable_item_id": "playable:qr:media:inaturalist:127658654",
+      "question_id": "question:32cca8dddc2cca2e",
+      "question_index": 20,
+      "scientific_name": "Riparia riparia"
+    }
+  ],
+  "schema_version": "database.schema.v19",
+  "seed": "phase2b-v2-seed-a",
+  "selector_policy": {
+    "max_questions_per_taxon": 1,
+    "unique_media_per_session": true,
+    "version": "phase2b.selector.v2"
+  },
+  "session_snapshot_id": "session:90fd6d105108bdbe",
+  "session_snapshot_version": "session_snapshot.v2",
+  "source_run_id": "run:20260509T180000Z:2b18beef"
+}

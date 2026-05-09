@@ -264,8 +264,8 @@ Phase 3 runtime work should:
 
 ## Immediate Next Steps
 
-Current status after the Phase 2B name-repair correction run and Palier A
-distractor persistence:
+Current status after the Phase 2B name-repair correction run, Palier A
+distractor persistence, and `session_snapshot.v2` fixture generation:
 
 - correction run: `phase2b-name-repair-v18`;
 - database schema: `database.schema.v19`;
@@ -279,6 +279,10 @@ distractor persistence:
 - scientific-name fallbacks in FR/EN/NL: `0`;
 - persisted distractor relationships: `203` canonical-only rows, all `validated`;
 - referenced-only distractors: `0` in Palier A.
+- `session_snapshot.v2` fixtures: `9` persisted and exported;
+- `session_snapshot.v2` audit: `GO_WITH_WARNINGS`;
+- `session_snapshot.v2` fallback options: `117` `taxonomic_fallback_db` options,
+  all canonical-only and traced.
 
 Evidence:
 
@@ -289,17 +293,18 @@ Evidence:
 - `docs/audits/evidence/phase2b/name_repair_audit.json`;
 - `docs/audits/evidence/phase2b/referenced_only_audit.json`;
 - `docs/audits/evidence/phase2b/distractor_relationships_palier_a_audit.json`.
+- `docs/archive/evidence/dynamic-pack-phase-2b/session-snapshot-v2-palier-a/`.
 
 Palier A intentionally imports only `canonical_taxon` distractor relationships
 from the Sprint 13 projection. The DB-first audit currently reports
 `GO_WITH_WARNINGS` because `11` pool targets have fewer than `3` persisted
-canonical distractors. `session_snapshot.v2` may use these validated
-relationships first, then a database-side traced taxonomic fallback for those
-targets. Runtime must still receive fully snapshotted options and must not
-derive distractors.
+canonical distractors. `session_snapshot.v2` uses these validated relationships
+first, then a database-side traced taxonomic fallback where needed. Runtime must
+still receive fully snapshotted options and must not derive distractors.
 
-Phase 2B.1 and the required name-repair correction are complete for internal
-runtime handoff. The next implementation step is `session_snapshot.v2`.
+Phase 2B now has a playable internal dynamic session contract. The next
+implementation step is the Phase 3 `runtime-app` dynamic pack mode, while
+`golden_pack.v1` remains the runtime fallback until dynamic mode is validated.
 
 Reference command sequence used for the correction:
 
@@ -396,7 +401,32 @@ Reference command sequence used for the correction:
    - `docs/audits/evidence/phase2b/distractor_relationships_palier_a_audit.json`
    - `docs/audits/phase2b-distractor-relationships-palier-a.md`
 
-10. Classify the audit decisions.
+10. Generate `session_snapshot.v2` fixtures.
+
+   ```bash
+   python scripts/phase2b_session_snapshot.py \
+     --database-url "$PHASE1_DATABASE_URL" \
+     build-fixtures \
+     --pool-id pack-pool:be-fr-birds-50:v1
+   ```
+
+11. Run the `session_snapshot.v2` audit.
+
+   ```bash
+   python scripts/phase2b_session_snapshot.py \
+     --database-url "$PHASE1_DATABASE_URL" \
+     audit \
+     --pool-id pack-pool:be-fr-birds-50:v1
+   ```
+
+   Expected outputs:
+
+   - `docs/archive/evidence/dynamic-pack-phase-2b/session-snapshot-v2-palier-a/session_fixture_index.json`
+   - `docs/archive/evidence/dynamic-pack-phase-2b/session-snapshot-v2-palier-a/session_snapshot_v2_audit.json`
+   - `docs/archive/evidence/dynamic-pack-phase-2b/session-snapshot-v2-palier-a/session_snapshot_v2_audit.md`
+   - `9` locale/seed fixture JSON files.
+
+12. Classify the audit decisions.
    - `NO_ISSUE_FOUND`: proceed to Phase 2B contract work for that axis.
    - `READY_FOR_CORRECTION`: patch the source/projection/enrichment issue before
      the next generation run.
