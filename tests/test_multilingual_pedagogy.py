@@ -139,6 +139,63 @@ def test_enrichment_merges_multilingual_names():
     assert "Merel" in enriched.common_names_by_language["nl"]
 
 
+def test_enrichment_reads_localized_taxa_preferred_names_first():
+    base_taxon = CanonicalTaxon(
+        canonical_taxon_id="taxon:birds:000001",
+        taxon_group=TaxonGroup.BIRDS,
+        accepted_scientific_name="Columba palumbus",
+        canonical_rank=CanonicalRank.SPECIES,
+        taxon_status=TaxonStatus.ACTIVE,
+        common_names=[],
+    )
+    payload = {
+        "localized_taxa": {
+            "fr": {
+                "results": [
+                    {
+                        "preferred_common_name": "Pigeon ramier",
+                        "names": [
+                            {"locale": "fr", "name": "Palombe", "is_valid": True},
+                            {"locale": "en", "name": "Wood Pigeon", "is_valid": True},
+                        ],
+                    }
+                ]
+            },
+            "en": {
+                "results": [
+                    {
+                        "preferred_common_name": "Common Wood-Pigeon",
+                        "names": [
+                            {"locale": "en", "name": "Wood Pigeon", "is_valid": True},
+                            {"locale": "fr", "name": "Palombe", "is_valid": True},
+                        ],
+                    }
+                ]
+            },
+            "nl": {
+                "results": [
+                    {
+                        "preferred_common_name": "Houtduif",
+                        "names": [{"locale": "nl", "name": "Houtduif", "is_valid": True}],
+                    }
+                ]
+            },
+        }
+    }
+
+    enriched = enrich_canonical_taxa(
+        [base_taxon],
+        taxon_payloads_by_canonical_taxon_id={"taxon:birds:000001": payload},
+    )[0]
+
+    assert enriched.common_names_by_language == {
+        "fr": ["Pigeon ramier", "Palombe"],
+        "en": ["Common Wood-Pigeon", "Wood Pigeon"],
+        "nl": ["Houtduif"],
+    }
+    assert enriched.common_names == ["Common Wood-Pigeon"]
+
+
 def test_enrichment_handles_missing_multilingual_data():
     """Test that enrichment gracefully handles payloads without multilingual data."""
     base_taxon = CanonicalTaxon(

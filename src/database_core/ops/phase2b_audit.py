@@ -173,12 +173,22 @@ def classify_locale_label(
     item_locale_names = _names(item_names, locale)
     playable_locale_names = _names(playable_names, locale)
     evidence_locale_names = _names(evidence_names, locale)
+    approved_locale_names = _dedupe([*source_names, *evidence_locale_names])
     other_locale_names = _other_locale_names(playable_names, item_names, locale)
+    evidence_other_locale_names = [
+        name
+        for evidence_locale, names in evidence_names.items()
+        if evidence_locale != locale
+        for name in names
+    ]
+    all_other_locale_names = _dedupe([*other_locale_names, *evidence_other_locale_names])
 
-    if pool_label and _matches_any(pool_label, other_locale_names) and not _matches_any(
-        pool_label, source_names
-    ):
-        issues.append("wrong_locale_mapping")
+    if pool_label and _matches_any(pool_label, all_other_locale_names):
+        if evidence_locale_names:
+            if not _matches_any(pool_label, evidence_locale_names):
+                issues.append("wrong_locale_mapping")
+        elif not _matches_any(pool_label, approved_locale_names):
+            issues.append("wrong_locale_mapping")
 
     if pool_label_source == "scientific_name":
         if item_locale_names and not playable_locale_names:
@@ -187,14 +197,24 @@ def classify_locale_label(
             issues.append("stale_playable_item")
         elif source_names:
             issues.append("wrong_pool_projection")
+        elif evidence_locale_names:
+            issues.append("wrong_pool_projection")
         elif locale == "en" and canonical_common_names:
             issues.append("wrong_pool_projection")
         else:
             issues.append("missing_source_name")
     elif pool_label_source == "common_name":
-        if source_names and pool_label and not _matches_any(pool_label, source_names):
-            issues.append("wrong_pool_projection")
-        if not source_names and not (locale == "en" and canonical_common_names):
+        if evidence_locale_names and pool_label and not _matches_any(
+            pool_label, evidence_locale_names
+        ):
+            if not _matches_any(pool_label, all_other_locale_names):
+                issues.append("approved_source_conflict")
+        elif approved_locale_names and pool_label and not _matches_any(
+            pool_label, approved_locale_names
+        ):
+            if not _matches_any(pool_label, all_other_locale_names):
+                issues.append("approved_source_conflict")
+        if not approved_locale_names and not (locale == "en" and canonical_common_names):
             issues.append("unknown")
     elif pool_label_source:
         issues.append("unknown")
@@ -514,6 +534,10 @@ def _pool_items(pool: dict[str, Any]) -> list[dict[str, Any]]:
 def _audit_decision(issue_counts: Counter[str]) -> str:
     if not issue_counts:
         return "NO_ISSUE_FOUND"
+    if issue_counts.get("wrong_locale_mapping", 0) > 0:
+        return "BLOCKED_BY_UNKNOWN_SOURCE"
+    if issue_counts.get("approved_source_conflict", 0) > 0:
+        return "BLOCKED_BY_UNKNOWN_SOURCE"
     if issue_counts.get("unknown", 0) > 0:
         return "BLOCKED_BY_UNKNOWN_SOURCE"
     return "READY_FOR_CORRECTION"
@@ -530,6 +554,11 @@ def _name_repair_recommendations(issue_counts: Counter[str]) -> list[str]:
         recommendations.append(
             "Repair pack pool label projection so existing localized names are "
             "selected before scientific fallback."
+        )
+    if issue_counts.get("approved_source_conflict"):
+        recommendations.append(
+            "Inspect label projection against approved localized-name sources; at least "
+            "one label conflicts with the expected locale value."
         )
     if issue_counts.get("stale_playable_item"):
         recommendations.append(

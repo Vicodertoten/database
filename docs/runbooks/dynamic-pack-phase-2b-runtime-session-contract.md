@@ -264,14 +264,76 @@ Phase 3 runtime work should:
 
 ## Immediate Next Steps
 
-Execute this sequence before any `session_snapshot.v2` implementation:
+Current status after the Phase 2B name-repair correction run:
+
+- correction run: `phase2b-name-repair-v18`;
+- database schema: `database.schema.v18`;
+- source run: `run:20260509T180000Z:2b18beef`;
+- `pack_pool.v1` pool: `pack-pool:be-fr-birds-50:v1`;
+- Phase 2A audit: `GO`;
+- Phase 2B `name-repair` audit: `NO_ISSUE_FOUND`;
+- Phase 2B `referenced-only` audit: `NO_ISSUE_FOUND`;
+- FR/EN/NL labels: `2313/2313` common-name labels per locale;
+- scientific-name fallbacks in FR/EN/NL: `0`.
+
+Evidence:
+
+- `docs/archive/evidence/dynamic-pack-phase-2a/phase2b-name-repair-v18/`;
+- `docs/audits/phase2b-name-repair-audit.md`;
+- `docs/audits/phase2b-referenced-only-audit.md`;
+- `docs/audits/evidence/phase2b/name_repair_audit.json`;
+- `docs/audits/evidence/phase2b/referenced_only_audit.json`.
+
+Phase 2B.1 and the required name-repair correction are complete for internal
+runtime handoff. The next implementation step is `session_snapshot.v2`.
+
+Reference command sequence used for the correction:
 
 1. Configure the clone database target.
    - Set `PHASE1_DATABASE_URL` to the isolated Phase 1/2A clone.
    - The URL must use `options=-csearch_path=phase1_be_fr_20260509,public`.
    - Do not run Phase 2B audits against `public` unless the runbook is revised.
 
-2. Run the name repair audit.
+2. Migrate the clone to `database.schema.v18`.
+
+   ```bash
+   python scripts/migrate_database.py --database-url "$PHASE1_DATABASE_URL"
+   ```
+
+3. Re-run the Phase 1 cached pipeline from the final snapshot.
+
+   ```bash
+   python scripts/run_pipeline.py \
+     --source-mode inat_snapshot \
+     --snapshot-id phase1-be-fr-20260509-final-input-v3 \
+     --database-url "$PHASE1_DATABASE_URL" \
+     --qualifier-mode cached \
+     --qualification-policy v1.1 \
+     --uncertain-policy reject
+   ```
+
+4. Rebuild `pack_pool.v1` from the corrected run.
+
+   ```bash
+   python scripts/phase2a_dynamic_pack.py \
+     --database-url "$PHASE1_DATABASE_URL" \
+     --run-id phase2b-name-repair-v18 \
+     build-pool \
+     --pool-id pack-pool:be-fr-birds-50:v1 \
+     --source-run-id run:20260509T180000Z:2b18beef
+   ```
+
+5. Re-run Phase 2A audit.
+
+   ```bash
+   python scripts/phase2a_dynamic_pack.py \
+     --database-url "$PHASE1_DATABASE_URL" \
+     --run-id phase2b-name-repair-v18 \
+     audit \
+     --pool-id pack-pool:be-fr-birds-50:v1
+   ```
+
+6. Run the name repair audit.
 
    ```bash
    python scripts/phase2b_audit.py \
@@ -285,7 +347,7 @@ Execute this sequence before any `session_snapshot.v2` implementation:
    - `docs/audits/evidence/phase2b/name_repair_audit.json`
    - `docs/audits/phase2b-name-repair-audit.md`
 
-3. Run the referenced-only audit.
+7. Run the referenced-only audit.
 
    ```bash
    python scripts/phase2b_audit.py \
@@ -298,25 +360,28 @@ Execute this sequence before any `session_snapshot.v2` implementation:
    - `docs/audits/evidence/phase2b/referenced_only_audit.json`
    - `docs/audits/phase2b-referenced-only-audit.md`
 
-4. Classify the audit decisions.
+8. Classify the audit decisions.
    - `NO_ISSUE_FOUND`: proceed to Phase 2B contract work for that axis.
    - `READY_FOR_CORRECTION`: patch the source/projection/enrichment issue before
      the next generation run.
    - `BLOCKED_BY_UNKNOWN_SOURCE`: stop and inspect manually before writing any
      `session_snapshot.v2` schema or generator.
 
-5. Apply corrections in a separate correction run.
+If this sequence regresses later, apply corrections in a separate correction run.
+
    - Name repairs should update the durable source used by `pack_pool.v1`, not
      patch runtime fixtures.
    - Referenced-only repairs should update governed referenced taxon data or
      localized-name evidence, not create active canonical taxa.
    - Keep corrections dry-run/audited before applying.
 
-6. Regenerate or refresh `pack_pool.v1` only after corrections are understood.
+Regenerate or refresh `pack_pool.v1` only after corrections are understood.
+
    - Preserve lineage to the corrected source run.
    - Re-run Phase 2A/2B audits after regeneration.
 
-7. Start `session_snapshot.v2` only when both audit axes are unblocked.
+Start `session_snapshot.v2` only when both audit axes are unblocked.
+
    - The first implementation must use the corrected label source.
    - The first fixture set must include at least `3` seeds for each of `fr`,
      `en`, and `nl`.

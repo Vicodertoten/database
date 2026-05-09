@@ -79,14 +79,69 @@ def test_initialize_can_reset_legacy_schema_version_with_explicit_flag(
         )
 
     assert "legacy_table" not in table_names
-    assert user_version == 17
+    assert user_version == 18
 
 
-def test_migrate_to_latest_initializes_v17_schema(database_url: str) -> None:
+def test_migrate_to_latest_initializes_v18_schema(database_url: str) -> None:
     repository = _build_repository(database_url)
     applied_versions = repository.migrate_to_latest()
-    assert applied_versions == (8, 9, 10, 11, 12, 13, 14, 15, 16, 17)
-    assert repository.current_schema_version() == 17
+    assert applied_versions == (8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18)
+    assert repository.current_schema_version() == 18
+    with repository.connect() as connection:
+        column = connection.execute(
+            """
+            SELECT column_name
+            FROM information_schema.columns
+            WHERE table_schema = current_schema()
+              AND table_name = 'canonical_taxa'
+              AND column_name = 'common_names_i18n_json'
+            """
+        ).fetchone()
+    assert column is not None
+
+
+def test_save_canonical_taxa_persists_common_names_i18n(database_url: str) -> None:
+    repository = _build_repository(database_url)
+    repository.initialize()
+    run_id = "run:20260509T000000Z:namesi18n"
+    captured_at = datetime(2026, 5, 9, 0, 0, tzinfo=UTC)
+    taxon = _canonical_taxon(
+        canonical_taxon_id="taxon:birds:000001",
+        name="Columba palumbus",
+    ).model_copy(
+        update={
+            "common_names_by_language": {
+                "fr": ["Pigeon ramier"],
+                "en": ["Common Wood-Pigeon"],
+                "nl": ["Houtduif"],
+            }
+        }
+    )
+
+    with repository.connect() as connection:
+        repository.start_pipeline_run(
+            run_id=run_id,
+            source_mode="fixture",
+            dataset_id="fixture:names",
+            snapshot_id=None,
+            started_at=captured_at,
+            connection=connection,
+        )
+        repository.save_canonical_taxa([taxon], run_id=run_id, connection=connection)
+        row = connection.execute(
+            """
+            SELECT common_names_i18n_json
+            FROM canonical_taxa
+            WHERE canonical_taxon_id = %s
+            """,
+            ("taxon:birds:000001",),
+        ).fetchone()
+
+    assert json.loads(str(row["common_names_i18n_json"])) == {
+        "en": ["Common Wood-Pigeon"],
+        "fr": ["Pigeon ramier"],
+        "nl": ["Houtduif"],
+    }
 
 
 def test_geospatial_queries_support_bbox_and_point_radius(database_url: str) -> None:

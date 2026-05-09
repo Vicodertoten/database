@@ -212,6 +212,7 @@ class PostgresStorageInternal:
                 display_slug,
                 synonyms_json,
                 common_names_json,
+                common_names_i18n_json,
                 key_identification_features_json,
                 source_enrichment_status,
                 bird_scope_compatible,
@@ -226,6 +227,7 @@ class PostgresStorageInternal:
                 authority_taxonomy_profile_json
             ) VALUES (
                 %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
+                %s,
                 %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
             )
             """,
@@ -240,6 +242,7 @@ class PostgresStorageInternal:
                     item.display_slug,
                     _json(item.synonyms),
                     _json(item.common_names),
+                    _json(item.common_names_by_language or {}),
                     _json(item.key_identification_features),
                     item.source_enrichment_status,
                     item.bird_scope_compatible,

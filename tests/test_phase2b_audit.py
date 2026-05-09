@@ -86,6 +86,67 @@ def test_en_label_matching_fr_source_name_is_wrong_locale_mapping() -> None:
     assert "wrong_locale_mapping" in issues
 
 
+def test_en_label_matching_fr_evidence_name_is_wrong_locale_mapping() -> None:
+    issues = classify_locale_label(
+        locale="en",
+        pool_label="Pigeon ramier",
+        pool_label_source="common_name",
+        playable_names={"fr": [], "en": ["Pigeon ramier"], "nl": []},
+        item_names={"fr": [], "en": ["Pigeon ramier"], "nl": []},
+        localized_evidence_names={
+            "fr": ["Pigeon ramier"],
+            "en": ["Common Wood-Pigeon"],
+            "nl": ["Houtduif"],
+        },
+        canonical_common_names=["Pigeon ramier"],
+        scientific_name="Columba palumbus",
+    )
+
+    assert "wrong_locale_mapping" in issues
+
+
+def test_name_repair_report_blocks_wrong_locale_mapping() -> None:
+    report = build_name_repair_report(
+        pool={"pool_id": "pack-pool:test", "source_run_id": "run:test"},
+        item_reports=[
+            {
+                "playable_item_id": "playable:1",
+                "canonical_taxon_id": "taxon:birds:1",
+                "scientific_name": "Columba palumbus",
+                "issues": ["wrong_locale_mapping"],
+                "locale_reports": [
+                    {
+                        "locale": "fr",
+                        "pool_label": "Columba palumbus",
+                        "pool_label_source": "scientific_name",
+                        "playable_corpus_names": [],
+                        "playable_item_names": [],
+                        "issues": [],
+                    },
+                    {
+                        "locale": "en",
+                        "pool_label": "Pigeon ramier",
+                        "pool_label_source": "common_name",
+                        "playable_corpus_names": ["Pigeon ramier"],
+                        "playable_item_names": ["Pigeon ramier"],
+                        "issues": ["wrong_locale_mapping"],
+                    },
+                    {
+                        "locale": "nl",
+                        "pool_label": "Columba palumbus",
+                        "pool_label_source": "scientific_name",
+                        "playable_corpus_names": [],
+                        "playable_item_names": [],
+                        "issues": [],
+                    },
+                ],
+            }
+        ],
+    )
+
+    assert report["decision"] == "BLOCKED_BY_UNKNOWN_SOURCE"
+
+
 def test_localized_name_plan_names_make_missing_db_projection_stale(tmp_path) -> None:
     plan_path = tmp_path / "localized_name_apply_plan_v1.json"
     plan_path.write_text(

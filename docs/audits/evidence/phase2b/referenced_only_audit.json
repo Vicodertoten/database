@@ -1,0 +1,28 @@
+{
+  "correction_recommendations": [
+    "No referenced-only correction required before Phase 2B generation."
+  ],
+  "decision": "NO_ISSUE_FOUND",
+  "examples": {
+    "missing_public_names": [],
+    "non_usable_statuses": []
+  },
+  "generated_at": "2026-05-09T16:23:37.878644+00:00",
+  "metrics": {
+    "internal_eligible_count": 0,
+    "mapping_status_counts": {},
+    "missing_common_name_by_locale": {
+      "en": 0,
+      "fr": 0,
+      "nl": 0
+    },
+    "public_eligible_by_locale": {
+      "en": 0,
+      "fr": 0,
+      "nl": 0
+    },
+    "referenced_taxa_total": 0
+  },
+  "report_type": "phase2b_referenced_only_audit",
+  "schema_version": "dynamic_pack_phase2b_audit.v1"
+}

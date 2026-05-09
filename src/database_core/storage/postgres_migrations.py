@@ -3,6 +3,7 @@ from __future__ import annotations
 from psycopg import Connection, sql
 
 from database_core.storage.postgres_schema import (
+    POSTGRES_CANONICAL_NAMES_I18N_V18_SQL,
     POSTGRES_CONFUSION_V13_SQL,
     POSTGRES_DYNAMIC_PACK_V17_SQL,
     POSTGRES_ENRICHMENT_QUEUE_V12_SQL,
@@ -27,6 +28,7 @@ _MIGRATION_SQL: dict[int, str] = {
     15: POSTGRES_PLAYABLE_INVALIDATION_REASONS_V15_SQL,
     16: POSTGRES_REFERENCED_TAXA_V16_SQL,
     17: POSTGRES_DYNAMIC_PACK_V17_SQL,
+    18: POSTGRES_CANONICAL_NAMES_I18N_V18_SQL,
 }
 
 

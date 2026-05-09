@@ -11,6 +11,8 @@ MALFORMED_ENRICHMENT_PAYLOAD_ERRORS = (
     ValueError,
 )
 
+SUPPORTED_COMMON_NAME_LOCALES = ("fr", "en", "nl")
+
 
 def enrich_canonical_taxa(
     canonical_taxa: Sequence[CanonicalTaxon],
@@ -103,34 +105,49 @@ def _extract_taxon_record(payload: Mapping[str, object]) -> Mapping[str, object]
 
 def _extract_common_names_by_language(record: Mapping[str, object]) -> dict[str, list[str]] | None:
     """Extract common names grouped by language from iNaturalist taxonomy names array.
-    
+
     iNaturalist provides a 'names' array with structure:
     [
-        {"name": "Common Blackbird", "language": "en", ...},
-        {"name": "Merle noir", "language": "fr", ...},
-        {"name": "Merel", "language": "nl", ...},
+        {"name": "Common Blackbird", "locale": "en", ...},
+        {"name": "Merle noir", "locale": "fr", ...},
+        {"name": "Merel", "locale": "nl", ...},
     ]
     """
     names_by_language: dict[str, list[str]] = {}
+    localized_taxa = record.get("localized_taxa")
+    if isinstance(localized_taxa, Mapping):
+        for locale in SUPPORTED_COMMON_NAME_LOCALES:
+            localized_record = _extract_taxon_record_from_localized_payload(
+                localized_taxa.get(locale)
+            )
+            if localized_record is None:
+                continue
+            preferred = _non_empty_string(localized_record.get("preferred_common_name"))
+            if preferred:
+                names_by_language.setdefault(locale, [])
+                if preferred not in names_by_language[locale]:
+                    names_by_language[locale].append(preferred)
+            for name in _extract_names_for_locale(localized_record, locale):
+                names_by_language.setdefault(locale, [])
+                if name not in names_by_language[locale]:
+                    names_by_language[locale].append(name)
+
     names_array = record.get("names")
-    
-    if not isinstance(names_array, Sequence) or isinstance(names_array, str):
-        return None
-    
-    for item in names_array:
-        if not isinstance(item, Mapping):
-            continue
-        language = item.get("language")
-        name = item.get("name")
-        if language and name:
-            language_code = str(language).strip().lower()
-            name_text = str(name).strip()
-            if language_code and name_text:
-                if language_code not in names_by_language:
-                    names_by_language[language_code] = []
-                if name_text not in names_by_language[language_code]:
-                    names_by_language[language_code].append(name_text)
-    
+    if isinstance(names_array, Sequence) and not isinstance(names_array, str):
+        for item in names_array:
+            if not isinstance(item, Mapping):
+                continue
+            language = item.get("locale") or item.get("language")
+            name = item.get("name")
+            if language and name:
+                language_code = str(language).strip().lower()
+                name_text = str(name).strip()
+                if language_code and name_text:
+                    if language_code not in names_by_language:
+                        names_by_language[language_code] = []
+                    if name_text not in names_by_language[language_code]:
+                        names_by_language[language_code].append(name_text)
+
     return names_by_language if names_by_language else None
 
 
@@ -164,6 +181,13 @@ def _extract_key_identification_features_by_language(
 
 def _extract_common_names(record: Mapping[str, object]) -> list[str]:
     names: list[str] = []
+    localized_taxa = record.get("localized_taxa")
+    if isinstance(localized_taxa, Mapping):
+        en_record = _extract_taxon_record_from_localized_payload(localized_taxa.get("en"))
+        if en_record is not None:
+            preferred = _non_empty_string(en_record.get("preferred_common_name"))
+            if preferred:
+                names.append(preferred)
     preferred_common_name = record.get("preferred_common_name")
     if preferred_common_name:
         names.append(str(preferred_common_name))
@@ -173,6 +197,40 @@ def _extract_common_names(record: Mapping[str, object]) -> list[str]:
         if name:
             names.append(str(name))
     return _dedupe_preserve_order(names)
+
+
+def _extract_taxon_record_from_localized_payload(value: object) -> Mapping[str, object] | None:
+    if isinstance(value, Mapping):
+        results = value.get("results")
+        if isinstance(results, Sequence) and not isinstance(results, str) and results:
+            first = results[0]
+            if isinstance(first, Mapping):
+                return first
+        return value
+    return None
+
+
+def _extract_names_for_locale(record: Mapping[str, object], locale: str) -> list[str]:
+    raw_names = record.get("names")
+    if not isinstance(raw_names, Sequence) or isinstance(raw_names, str):
+        return []
+    names: list[str] = []
+    for item in raw_names:
+        if not isinstance(item, Mapping):
+            continue
+        item_locale = str(item.get("locale") or item.get("language") or "").strip().lower()
+        name = _non_empty_string(item.get("name"))
+        is_valid = item.get("is_valid")
+        if item_locale == locale and name and is_valid is not False:
+            names.append(name)
+    return _dedupe_preserve_order(names)
+
+
+def _non_empty_string(value: object) -> str | None:
+    if value is None:
+        return None
+    text = str(value).strip()
+    return text or None
 
 
 def _extract_key_identification_features(record: Mapping[str, object]) -> list[str]:

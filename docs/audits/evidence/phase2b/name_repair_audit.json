@@ -1,0 +1,37 @@
+{
+  "correction_recommendations": [
+    "No name repair required before Phase 2B generation."
+  ],
+  "decision": "NO_ISSUE_FOUND",
+  "examples": {},
+  "generated_at": "2026-05-09T16:23:31.201496+00:00",
+  "metrics": {
+    "issue_counts": {},
+    "items_with_issues": 0,
+    "locale_metrics": {
+      "en": {
+        "issue_counts": {},
+        "pool_common_name_count": 2313,
+        "pool_scientific_fallback_count": 0,
+        "suspect_language_count": 0
+      },
+      "fr": {
+        "issue_counts": {},
+        "pool_common_name_count": 2313,
+        "pool_scientific_fallback_count": 0,
+        "suspect_language_count": 0
+      },
+      "nl": {
+        "issue_counts": {},
+        "pool_common_name_count": 2313,
+        "pool_scientific_fallback_count": 0,
+        "suspect_language_count": 0
+      }
+    },
+    "pool_item_count": 2313
+  },
+  "pool_id": "pack-pool:be-fr-birds-50:v1",
+  "report_type": "phase2b_name_repair_audit",
+  "schema_version": "dynamic_pack_phase2b_audit.v1",
+  "source_run_id": "run:20260509T180000Z:2b18beef"
+}

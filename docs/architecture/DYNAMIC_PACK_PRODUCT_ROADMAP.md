@@ -225,6 +225,15 @@ fixtures may use scientific-name-only referenced distractors, but public release
 must not use referenced-only distractors without a locale common name unless a
 specific editorial exception is recorded.
 
+Phase 2B audit status on the isolated Phase 1/2A clone:
+
+- correction run: `phase2b-name-repair-v18`;
+- source run: `run:20260509T180000Z:2b18beef`;
+- Phase 2A audit: `GO`;
+- Phase 2B `name-repair`: `NO_ISSUE_FOUND`;
+- Phase 2B `referenced-only`: `NO_ISSUE_FOUND`;
+- referenced taxa total in the clone: `0`.
+
 ### Locale Policy
 
 Session locale is fixed at session start.
@@ -243,6 +252,12 @@ project expects FR/EN/NL names to exist for the initial corpus, Phase 2B must
 treat that fallback as a likely data selection or propagation defect until
 proven otherwise. Phase 2B validation is blocked until the FR/NL label source is
 diagnosed and corrected or the remaining fallback cases are explicitly justified.
+
+Phase 2B name repair has corrected this for internal runtime handoff. The
+`database.schema.v18` pipeline now persists multilingual canonical names from
+iNaturalist `localized_taxa`, rebuilds `playable_items.common_names_i18n_json`,
+and projects `pack_pool.v1` with `2313/2313` common-name labels in each of
+`fr`, `en`, and `nl`.
 
 Runtime option display should receive both common and scientific names from
 `database`. The runtime may render the common name as the primary option label

@@ -30,6 +30,7 @@ CREATE TABLE IF NOT EXISTS canonical_taxa (
     display_slug TEXT NOT NULL,
     synonyms_json TEXT NOT NULL,
     common_names_json TEXT NOT NULL,
+    common_names_i18n_json TEXT NOT NULL DEFAULT '{}',
     key_identification_features_json TEXT NOT NULL,
     source_enrichment_status TEXT NOT NULL,
     bird_scope_compatible BOOLEAN NOT NULL,
@@ -839,4 +840,9 @@ CREATE INDEX IF NOT EXISTS idx_session_snapshots_pool
 
 CREATE INDEX IF NOT EXISTS idx_session_snapshots_locale
     ON session_snapshots (locale, generated_at DESC);
+"""
+
+POSTGRES_CANONICAL_NAMES_I18N_V18_SQL = """
+ALTER TABLE canonical_taxa
+    ADD COLUMN IF NOT EXISTS common_names_i18n_json TEXT NOT NULL DEFAULT '{}';
 """

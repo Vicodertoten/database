@@ -1,0 +1,103 @@
+{
+  "blockers": [],
+  "generated_at": "2026-05-09T16:24:13.280987+00:00",
+  "locale_sessions": {
+    "en": {
+      "can_generate": true,
+      "question_count": 20
+    },
+    "fr": {
+      "can_generate": true,
+      "question_count": 20
+    },
+    "nl": {
+      "can_generate": true,
+      "question_count": 20
+    }
+  },
+  "metrics": {
+    "attribution_completeness": 1.0,
+    "country_counts": {
+      "BE": 240,
+      "FR": 2073
+    },
+    "item_count": 2313,
+    "items_per_taxon": {
+      "taxon:birds:000001": 45,
+      "taxon:birds:000002": 53,
+      "taxon:birds:000003": 39,
+      "taxon:birds:000004": 47,
+      "taxon:birds:000005": 48,
+      "taxon:birds:000006": 48,
+      "taxon:birds:000007": 46,
+      "taxon:birds:000008": 47,
+      "taxon:birds:000009": 48,
+      "taxon:birds:000010": 52,
+      "taxon:birds:000011": 48,
+      "taxon:birds:000012": 45,
+      "taxon:birds:000013": 42,
+      "taxon:birds:000014": 48,
+      "taxon:birds:000015": 47,
+      "taxon:birds:000016": 45,
+      "taxon:birds:000017": 45,
+      "taxon:birds:000018": 36,
+      "taxon:birds:000019": 43,
+      "taxon:birds:000020": 50,
+      "taxon:birds:000021": 45,
+      "taxon:birds:000022": 53,
+      "taxon:birds:000023": 57,
+      "taxon:birds:000024": 50,
+      "taxon:birds:000025": 51,
+      "taxon:birds:000026": 55,
+      "taxon:birds:000027": 50,
+      "taxon:birds:000028": 49,
+      "taxon:birds:000029": 54,
+      "taxon:birds:000030": 51,
+      "taxon:birds:000031": 44,
+      "taxon:birds:000032": 44,
+      "taxon:birds:000033": 52,
+      "taxon:birds:000034": 47,
+      "taxon:birds:000035": 44,
+      "taxon:birds:000036": 25,
+      "taxon:birds:000037": 36,
+      "taxon:birds:000038": 51,
+      "taxon:birds:000039": 50,
+      "taxon:birds:000040": 28,
+      "taxon:birds:000041": 46,
+      "taxon:birds:000042": 48,
+      "taxon:birds:000043": 36,
+      "taxon:birds:000044": 44,
+      "taxon:birds:000045": 43,
+      "taxon:birds:000047": 48,
+      "taxon:birds:000048": 49,
+      "taxon:birds:000049": 52,
+      "taxon:birds:000070": 48,
+      "taxon:birds:000079": 41
+    },
+    "locale_label_common_name_counts": {
+      "en": 2313,
+      "fr": 2313,
+      "nl": 2313
+    },
+    "locale_label_completeness": {
+      "en": 1.0,
+      "fr": 1.0,
+      "nl": 1.0
+    },
+    "locale_label_fallback_counts": {
+      "en": 0,
+      "fr": 0,
+      "nl": 0
+    },
+    "media_url_completeness": 1.0,
+    "min_items_per_taxon": 25,
+    "taxa_with_at_least_20_items": 50,
+    "taxon_count": 50
+  },
+  "pool_id": "pack-pool:be-fr-birds-50:v1",
+  "promotion_allowed": false,
+  "report_type": "audit",
+  "schema_version": "dynamic_pack_phase2a.v1",
+  "status": "GO",
+  "warnings": []
+}
