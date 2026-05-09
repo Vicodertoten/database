@@ -1,6 +1,97 @@
 {
+  "compile_deficits_summary": {
+    "attempts_total": 7,
+    "non_compilable_attempts": 4,
+    "reason_counts": {
+      "compilable": 3,
+      "insufficient_media_per_taxon": 3,
+      "no_playable_items": 1
+    },
+    "top_blocking_taxa": [
+      {
+        "canonical_taxon_id": "taxon:birds:000026",
+        "count": 4
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000037",
+        "count": 4
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000040",
+        "count": 4
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000041",
+        "count": 4
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000044",
+        "count": 4
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000045",
+        "count": 4
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000047",
+        "count": 4
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000035",
+        "count": 3
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000032",
+        "count": 3
+      },
+      {
+        "canonical_taxon_id": "taxon:birds:000018",
+        "count": 2
+      }
+    ]
+  },
   "database_url": "postgresql://postgres:***@db.cduiheqceeghzrlbtwom.supabase.co:5432/postgres?sslmode=require",
-  "generated_at": "2026-04-09T09:32:19.763489+00:00",
+  "extended_kpis": {
+    "country_code_completeness_ratio": {
+      "actual": 0.401006,
+      "pass": null,
+      "stats": {
+        "playable_items_total": 3182,
+        "playable_items_with_country": 1276
+      },
+      "target": "baseline_observe"
+    },
+    "distractor_diversity_index": {
+      "actual": 0.196124,
+      "pass": null,
+      "stats": {
+        "latest_compiled_payloads": 9,
+        "total_distractor_slots": 1290,
+        "unique_directed_pairs": 253
+      },
+      "target": "baseline_observe"
+    },
+    "taxon_playable_coverage_ratio": {
+      "actual": 2.0,
+      "pass": null,
+      "stats": {
+        "accepted_taxa_total": 50,
+        "playable_taxa": 100,
+        "provisional_taxa_total": 0
+      },
+      "target": "baseline_observe"
+    },
+    "taxon_with_min2_media_ratio": {
+      "actual": 2.0,
+      "pass": null,
+      "stats": {
+        "accepted_taxa_total": 50,
+        "taxa_with_min2_media": 100
+      },
+      "target": "baseline_observe"
+    }
+  },
+  "generated_at": "2026-05-09T09:49:31.620789+00:00",
   "governance_review_alerts": {
     "avg_open_age_alert": false,
     "avg_open_age_hours": 0.0,
@@ -17,10 +108,10 @@
       "pass": true,
       "stats": {
         "coverage_ratio": 1.0,
-        "covered": 2,
+        "covered": 408,
         "missing_flags": 0,
         "missing_trace": 0,
-        "total": 2,
+        "total": 408,
         "untyped_uncertainty": 0
       },
       "target": "== 1.0"
@@ -35,35 +126,36 @@
       "pass": true,
       "stats": {
         "coverage_ratio": 1.0,
-        "covered": 3,
+        "covered": 205,
         "missing_reason": 0,
         "missing_signal_breakdown": 0,
         "missing_source_delta": 0,
-        "total": 3
+        "total": 205
       },
       "target": "== 1.0"
     }
   },
   "latest_run": {
-    "completed_at": "2026-04-09T09:32:16.867338+00:00",
-    "run_id": "run:20260409T093214Z:9fcfb752",
+    "completed_at": "2026-05-08T17:45:52.104597+00:00",
+    "run_id": "run:20260508T174545Z:a54172eb",
     "run_status": "completed",
-    "started_at": "2026-04-09T09:32:16.011851+00:00"
+    "started_at": "2026-05-08T17:45:46.827654+00:00"
   },
   "overall_pass": true,
+  "pre_ai_rejection_reason_counts": {},
   "report_version": "smoke.report.v1",
   "run_metrics": {
     "cost": {
-      "ai_qualified_images": 4,
-      "estimated_ai_cost_eur": 0.0048
+      "ai_qualified_images": 526,
+      "estimated_ai_cost_eur": 0.6312
     },
     "governance": {
       "avg_open_governance_review_age_hours": 0.0,
       "decision_reason_counts": {
-        "new_taxon_detected": 3
+        "new_taxon_detected": 205
       },
       "decision_status_counts": {
-        "auto_clear": 3
+        "auto_clear": 205
       },
       "open_governance_backlog_by_reason": {},
       "open_governance_review_items": 0,
@@ -71,27 +163,28 @@
       "resolved_governance_review_items": 0
     },
     "quality": {
-      "accepted_resources": 2,
-      "rejected_resources": 1,
-      "review_required_resources": 1,
+      "accepted_resources": 408,
+      "rejected_resources": 408,
+      "review_required_resources": 0,
       "top_rejection_flags": {
-        "insufficient_resolution": 1,
-        "insufficient_technical_quality": 1,
-        "low_ai_confidence": 1,
-        "unsafe_license": 1
+        "gemini_error": 226,
+        "insufficient_resolution": 134,
+        "insufficient_technical_quality": 157,
+        "missing_view_angle": 300,
+        "missing_visible_parts": 290
       }
     },
     "review_load": {
-      "avg_open_review_age_hours": 57.54,
-      "open_review_queue_items": 1
+      "avg_open_review_age_hours": 0.0,
+      "open_review_queue_items": 0
     },
     "run_id": null,
     "volume": {
-      "canonical_taxa": 3,
-      "exportable_resources": 2,
-      "media_assets": 4,
-      "qualified_resources": 4,
-      "source_observations": 3
+      "canonical_taxa": 50,
+      "exportable_resources": 408,
+      "media_assets": 816,
+      "qualified_resources": 816,
+      "source_observations": 817
     }
   },
   "snapshot_id": null

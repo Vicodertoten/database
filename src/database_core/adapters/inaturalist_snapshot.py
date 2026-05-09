@@ -32,6 +32,8 @@ MIN_ACCEPTED_WIDTH = 1000
 MIN_ACCEPTED_HEIGHT = 750
 INAT_PLACE_ID_TO_COUNTRY_CODE = {
     "7083": "BE",
+    "7008": "BE",
+    "6753": "FR",
 }
 
 
@@ -568,6 +570,8 @@ def _infer_country_code(
         return "BE"
     if "BELGIUM" in place_guess or "BELGIQUE" in place_guess or "BELGIE" in place_guess:
         return "BE"
+    if "FRANCE" in place_guess or ", FR" in place_guess or place_guess.endswith(" FR"):
+        return "FR"
     return None
 
 
