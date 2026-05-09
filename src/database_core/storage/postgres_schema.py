@@ -802,3 +802,41 @@ CREATE TABLE IF NOT EXISTS referenced_taxon_events (
 CREATE INDEX IF NOT EXISTS idx_referenced_taxon_events_reference
     ON referenced_taxon_events (referenced_taxon_id, created_at DESC);
 """
+
+POSTGRES_DYNAMIC_PACK_V17_SQL = """
+CREATE TABLE IF NOT EXISTS pack_pools (
+    pool_id TEXT PRIMARY KEY,
+    pack_pool_version TEXT NOT NULL,
+    source_run_id TEXT NOT NULL,
+    generated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    item_count INTEGER NOT NULL CHECK (item_count >= 0),
+    taxon_count INTEGER NOT NULL CHECK (taxon_count >= 0),
+    metrics_json TEXT NOT NULL,
+    payload_json TEXT NOT NULL,
+    FOREIGN KEY (source_run_id) REFERENCES pipeline_runs (run_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_pack_pools_generated_at
+    ON pack_pools (generated_at DESC);
+
+CREATE INDEX IF NOT EXISTS idx_pack_pools_source_run
+    ON pack_pools (source_run_id);
+
+CREATE TABLE IF NOT EXISTS session_snapshots (
+    session_snapshot_id TEXT PRIMARY KEY,
+    pool_id TEXT NOT NULL,
+    session_snapshot_version TEXT NOT NULL,
+    locale TEXT NOT NULL CHECK (locale IN ('fr', 'en', 'nl')),
+    seed TEXT NOT NULL,
+    question_count INTEGER NOT NULL CHECK (question_count >= 1),
+    generated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    payload_json TEXT NOT NULL,
+    FOREIGN KEY (pool_id) REFERENCES pack_pools (pool_id) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_session_snapshots_pool
+    ON session_snapshots (pool_id, generated_at DESC);
+
+CREATE INDEX IF NOT EXISTS idx_session_snapshots_locale
+    ON session_snapshots (locale, generated_at DESC);
+"""

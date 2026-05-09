@@ -1,0 +1,457 @@
+{
+  "generated_at": "2026-05-09T14:42:42.056111+00:00",
+  "locale": "fr",
+  "pool_id": "pack-pool:be-fr-birds-50:v1",
+  "question_count": 20,
+  "questions": [
+    {
+      "canonical_taxon_id": "taxon:birds:000013",
+      "country_code": "FR",
+      "feedback_short": "bill",
+      "label": "Troglodytes troglodytes",
+      "label_source": "scientific_name",
+      "media": {
+        "attribution": "(c) bogsuckers, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/326721513/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:326721513",
+      "option_generation": {
+        "reason": "Advanced distractor generation is outside Phase 2A scope.",
+        "status": "deferred_phase3"
+      },
+      "options": [],
+      "playable_item_id": "playable:qr:media:inaturalist:326721513",
+      "question_id": "question:6d8147e9569a2db6",
+      "question_index": 1,
+      "scientific_name": "Troglodytes troglodytes"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000016",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label": "Carduelis carduelis",
+      "label_source": "scientific_name",
+      "media": {
+        "attribution": "(c) Nefol, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/220966248/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:220966248",
+      "option_generation": {
+        "reason": "Advanced distractor generation is outside Phase 2A scope.",
+        "status": "deferred_phase3"
+      },
+      "options": [],
+      "playable_item_id": "playable:qr:media:inaturalist:220966248",
+      "question_id": "question:16bd6af2a73227e7",
+      "question_index": 2,
+      "scientific_name": "Carduelis carduelis"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000021",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label": "Anas platyrhynchos",
+      "label_source": "scientific_name",
+      "media": {
+        "attribution": "(c) John Hepburn, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/171292556/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:171292556",
+      "option_generation": {
+        "reason": "Advanced distractor generation is outside Phase 2A scope.",
+        "status": "deferred_phase3"
+      },
+      "options": [],
+      "playable_item_id": "playable:qr:media:inaturalist:171292556",
+      "question_id": "question:a2f06d553db0fb4e",
+      "question_index": 3,
+      "scientific_name": "Anas platyrhynchos"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000043",
+      "country_code": "FR",
+      "feedback_short": "wing",
+      "label": "Hirundo rustica",
+      "label_source": "scientific_name",
+      "media": {
+        "attribution": "(c) Alexis Lours, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/366762758/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:366762758",
+      "option_generation": {
+        "reason": "Advanced distractor generation is outside Phase 2A scope.",
+        "status": "deferred_phase3"
+      },
+      "options": [],
+      "playable_item_id": "playable:qr:media:inaturalist:366762758",
+      "question_id": "question:453659ba4396346c",
+      "question_index": 4,
+      "scientific_name": "Hirundo rustica"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000029",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label": "Ardea cinerea",
+      "label_source": "scientific_name",
+      "media": {
+        "attribution": "(c) Alexis Lours, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/326980273/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:326980273",
+      "option_generation": {
+        "reason": "Advanced distractor generation is outside Phase 2A scope.",
+        "status": "deferred_phase3"
+      },
+      "options": [],
+      "playable_item_id": "playable:qr:media:inaturalist:326980273",
+      "question_id": "question:934cd999ad3fa59f",
+      "question_index": 5,
+      "scientific_name": "Ardea cinerea"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000039",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label": "Dendrocopos major",
+      "label_source": "scientific_name",
+      "media": {
+        "attribution": "no rights reserved",
+        "license": "cc0",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/468062718/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:468062718",
+      "option_generation": {
+        "reason": "Advanced distractor generation is outside Phase 2A scope.",
+        "status": "deferred_phase3"
+      },
+      "options": [],
+      "playable_item_id": "playable:qr:media:inaturalist:468062718",
+      "question_id": "question:89793c614f227a0b",
+      "question_index": 6,
+      "scientific_name": "Dendrocopos major"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000019",
+      "country_code": "BE",
+      "feedback_short": "body",
+      "label": "Coccothraustes coccothraustes",
+      "label_source": "scientific_name",
+      "media": {
+        "attribution": "no rights reserved",
+        "license": "cc0",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/178457105/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:178457105",
+      "option_generation": {
+        "reason": "Advanced distractor generation is outside Phase 2A scope.",
+        "status": "deferred_phase3"
+      },
+      "options": [],
+      "playable_item_id": "playable:qr:media:inaturalist:178457105",
+      "question_id": "question:3fa7d5d90eee8533",
+      "question_index": 7,
+      "scientific_name": "Coccothraustes coccothraustes"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000037",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label": "Athene noctua",
+      "label_source": "scientific_name",
+      "media": {
+        "attribution": "(c) Olivier Morel, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/245410702/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:245410702",
+      "option_generation": {
+        "reason": "Advanced distractor generation is outside Phase 2A scope.",
+        "status": "deferred_phase3"
+      },
+      "options": [],
+      "playable_item_id": "playable:qr:media:inaturalist:245410702",
+      "question_id": "question:15b2111dc75cd513",
+      "question_index": 8,
+      "scientific_name": "Athene noctua"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000035",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label": "Strix aluco",
+      "label_source": "scientific_name",
+      "media": {
+        "attribution": "(c) David J, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/588795607/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:588795607",
+      "option_generation": {
+        "reason": "Advanced distractor generation is outside Phase 2A scope.",
+        "status": "deferred_phase3"
+      },
+      "options": [],
+      "playable_item_id": "playable:qr:media:inaturalist:588795607",
+      "question_id": "question:a5c5a5bf5db46df9",
+      "question_index": 9,
+      "scientific_name": "Strix aluco"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000040",
+      "country_code": "FR",
+      "feedback_short": "bill",
+      "label": "Dryocopus martius",
+      "label_source": "scientific_name",
+      "media": {
+        "attribution": "(c) Quentin Benet-Cibois, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/387028248/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:387028248",
+      "option_generation": {
+        "reason": "Advanced distractor generation is outside Phase 2A scope.",
+        "status": "deferred_phase3"
+      },
+      "options": [],
+      "playable_item_id": "playable:qr:media:inaturalist:387028248",
+      "question_id": "question:4f458babcd6328c7",
+      "question_index": 10,
+      "scientific_name": "Dryocopus martius"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000030",
+      "country_code": "FR",
+      "feedback_short": "bill",
+      "label": "Egretta garzetta",
+      "label_source": "scientific_name",
+      "media": {
+        "attribution": "(c) titouanma, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/449699966/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:449699966",
+      "option_generation": {
+        "reason": "Advanced distractor generation is outside Phase 2A scope.",
+        "status": "deferred_phase3"
+      },
+      "options": [],
+      "playable_item_id": "playable:qr:media:inaturalist:449699966",
+      "question_id": "question:03fd8b02525490bb",
+      "question_index": 11,
+      "scientific_name": "Egretta garzetta"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000033",
+      "country_code": "FR",
+      "feedback_short": "wing",
+      "label": "Falco tinnunculus",
+      "label_source": "scientific_name",
+      "media": {
+        "attribution": "(c) Alexis Lours, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/166119936/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:166119936",
+      "option_generation": {
+        "reason": "Advanced distractor generation is outside Phase 2A scope.",
+        "status": "deferred_phase3"
+      },
+      "options": [],
+      "playable_item_id": "playable:qr:media:inaturalist:166119936",
+      "question_id": "question:0b938bc37ee1cc13",
+      "question_index": 12,
+      "scientific_name": "Falco tinnunculus"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000006",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label": "Garrulus glandarius",
+      "label_source": "scientific_name",
+      "media": {
+        "attribution": "(c) Basile Petit, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/200001604/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:200001604",
+      "option_generation": {
+        "reason": "Advanced distractor generation is outside Phase 2A scope.",
+        "status": "deferred_phase3"
+      },
+      "options": [],
+      "playable_item_id": "playable:qr:media:inaturalist:200001604",
+      "question_id": "question:ecf9bba78e9b768f",
+      "question_index": 13,
+      "scientific_name": "Garrulus glandarius"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000036",
+      "country_code": "FR",
+      "feedback_short": "wing",
+      "label": "Asio otus",
+      "label_source": "scientific_name",
+      "media": {
+        "attribution": "(c) gerardbertrand, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/457858358/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:457858358",
+      "option_generation": {
+        "reason": "Advanced distractor generation is outside Phase 2A scope.",
+        "status": "deferred_phase3"
+      },
+      "options": [],
+      "playable_item_id": "playable:qr:media:inaturalist:457858358",
+      "question_id": "question:81ce04682e36546c",
+      "question_index": 14,
+      "scientific_name": "Asio otus"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000004",
+      "country_code": "FR",
+      "feedback_short": "beak",
+      "label": "Erithacus rubecula",
+      "label_source": "scientific_name",
+      "media": {
+        "attribution": "(c) Donald Davesne, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/112234042/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:112234042",
+      "option_generation": {
+        "reason": "Advanced distractor generation is outside Phase 2A scope.",
+        "status": "deferred_phase3"
+      },
+      "options": [],
+      "playable_item_id": "playable:qr:media:inaturalist:112234042",
+      "question_id": "question:735acafb6b55f2bf",
+      "question_index": 15,
+      "scientific_name": "Erithacus rubecula"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000007",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label": "Motacilla alba",
+      "label_source": "scientific_name",
+      "media": {
+        "attribution": "(c) Yves Bas, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/64794251/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:64794251",
+      "option_generation": {
+        "reason": "Advanced distractor generation is outside Phase 2A scope.",
+        "status": "deferred_phase3"
+      },
+      "options": [],
+      "playable_item_id": "playable:qr:media:inaturalist:64794251",
+      "question_id": "question:b3031089b622df23",
+      "question_index": 16,
+      "scientific_name": "Motacilla alba"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000014",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label": "Turdus merula",
+      "label_source": "scientific_name",
+      "media": {
+        "attribution": "no rights reserved",
+        "license": "cc0",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/182306548/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:182306548",
+      "option_generation": {
+        "reason": "Advanced distractor generation is outside Phase 2A scope.",
+        "status": "deferred_phase3"
+      },
+      "options": [],
+      "playable_item_id": "playable:qr:media:inaturalist:182306548",
+      "question_id": "question:b8ac0eab075620a5",
+      "question_index": 17,
+      "scientific_name": "Turdus merula"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000023",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label": "Cygnus olor",
+      "label_source": "scientific_name",
+      "media": {
+        "attribution": "(c) luluchouette, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/613862142/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:613862142",
+      "option_generation": {
+        "reason": "Advanced distractor generation is outside Phase 2A scope.",
+        "status": "deferred_phase3"
+      },
+      "options": [],
+      "playable_item_id": "playable:qr:media:inaturalist:613862142",
+      "question_id": "question:34e6cb1f1231dd49",
+      "question_index": 18,
+      "scientific_name": "Cygnus olor"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000022",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label": "Anser anser",
+      "label_source": "scientific_name",
+      "media": {
+        "attribution": "(c) Alexis Lours, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/150138671/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:150138671",
+      "option_generation": {
+        "reason": "Advanced distractor generation is outside Phase 2A scope.",
+        "status": "deferred_phase3"
+      },
+      "options": [],
+      "playable_item_id": "playable:qr:media:inaturalist:150138671",
+      "question_id": "question:d0381e9b58dfa46d",
+      "question_index": 19,
+      "scientific_name": "Anser anser"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000011",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label": "Sturnus vulgaris",
+      "label_source": "scientific_name",
+      "media": {
+        "attribution": "(c) anasacuta, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/43334081/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:43334081",
+      "option_generation": {
+        "reason": "Advanced distractor generation is outside Phase 2A scope.",
+        "status": "deferred_phase3"
+      },
+      "options": [],
+      "playable_item_id": "playable:qr:media:inaturalist:43334081",
+      "question_id": "question:700d26089812d16c",
+      "question_index": 20,
+      "scientific_name": "Sturnus vulgaris"
+    }
+  ],
+  "schema_version": "database.schema.v17",
+  "seed": "phase2a-smoke-v1",
+  "selector_policy": {
+    "max_questions_per_taxon": 1,
+    "option_generation": "deferred_phase3",
+    "version": "phase2a.selector.v1"
+  },
+  "session_snapshot_id": "session:0f72c8d4b617338f",
+  "session_snapshot_version": "session_snapshot.v1"
+}

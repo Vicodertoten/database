@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "pack_pool_v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "pack_pool_version",
+    "pool_id",
+    "generated_at",
+    "source_run_id",
+    "scope",
+    "metrics",
+    "items"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": { "type": "string", "minLength": 1 },
+    "pack_pool_version": { "type": "string", "const": "pack_pool.v1" },
+    "pool_id": { "type": "string", "minLength": 1 },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "source_run_id": { "type": "string", "minLength": 1 },
+    "scope": {
+      "type": "object",
+      "required": ["product_scope", "country_codes", "locale_policy"],
+      "additionalProperties": false,
+      "properties": {
+        "product_scope": { "type": "string", "minLength": 1 },
+        "country_codes": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["BE", "FR"] },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "locale_policy": { "type": "string", "const": "fallback_allowed_internal" }
+      }
+    },
+    "metrics": {
+      "type": "object",
+      "required": [
+        "item_count",
+        "taxon_count",
+        "country_counts",
+        "min_items_per_taxon",
+        "taxa_with_at_least_20_items",
+        "attribution_completeness",
+        "media_url_completeness",
+        "locale_label_completeness"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "item_count": { "type": "integer", "minimum": 0 },
+        "taxon_count": { "type": "integer", "minimum": 0 },
+        "country_counts": {
+          "type": "object",
+          "additionalProperties": { "type": "integer", "minimum": 0 }
+        },
+        "min_items_per_taxon": { "type": "integer", "minimum": 0 },
+        "taxa_with_at_least_20_items": { "type": "integer", "minimum": 0 },
+        "attribution_completeness": { "type": "number", "minimum": 0, "maximum": 1 },
+        "media_url_completeness": { "type": "number", "minimum": 0, "maximum": 1 },
+        "locale_label_completeness": {
+          "type": "object",
+          "required": ["fr", "en", "nl"],
+          "additionalProperties": false,
+          "properties": {
+            "fr": { "type": "number", "minimum": 0, "maximum": 1 },
+            "en": { "type": "number", "minimum": 0, "maximum": 1 },
+            "nl": { "type": "number", "minimum": 0, "maximum": 1 }
+          }
+        }
+      }
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "playable_item_id",
+          "qualified_resource_id",
+          "canonical_taxon_id",
+          "media_asset_id",
+          "scientific_name",
+          "labels",
+          "label_sources",
+          "difficulty_level",
+          "media_role",
+          "learning_suitability",
+          "diagnostic_feature_visibility",
+          "feedback_short",
+          "media",
+          "country_code"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "playable_item_id": { "type": "string", "minLength": 1 },
+          "qualified_resource_id": { "type": "string", "minLength": 1 },
+          "canonical_taxon_id": { "type": "string", "minLength": 1 },
+          "media_asset_id": { "type": "string", "minLength": 1 },
+          "scientific_name": { "type": "string", "minLength": 1 },
+          "labels": {
+            "type": "object",
+            "required": ["fr", "en", "nl"],
+            "additionalProperties": false,
+            "properties": {
+              "fr": { "type": "string", "minLength": 1 },
+              "en": { "type": "string", "minLength": 1 },
+              "nl": { "type": "string", "minLength": 1 }
+            }
+          },
+          "label_sources": {
+            "type": "object",
+            "required": ["fr", "en", "nl"],
+            "additionalProperties": false,
+            "properties": {
+              "fr": { "type": "string", "enum": ["common_name", "scientific_name"] },
+              "en": { "type": "string", "enum": ["common_name", "scientific_name"] },
+              "nl": { "type": "string", "enum": ["common_name", "scientific_name"] }
+            }
+          },
+          "difficulty_level": { "type": "string", "minLength": 1 },
+          "media_role": { "type": "string", "minLength": 1 },
+          "learning_suitability": { "type": "string", "minLength": 1 },
+          "diagnostic_feature_visibility": { "type": "string", "minLength": 1 },
+          "feedback_short": { "type": ["string", "null"] },
+          "media": {
+            "type": "object",
+            "required": ["render_url", "attribution", "license"],
+            "additionalProperties": false,
+            "properties": {
+              "render_url": { "type": "string", "minLength": 1 },
+              "attribution": { "type": "string", "minLength": 1 },
+              "license": { "type": ["string", "null"] }
+            }
+          },
+          "country_code": { "type": "string", "enum": ["BE", "FR"] }
+        }
+      }
+    }
+  }
+}

@@ -79,14 +79,14 @@ def test_initialize_can_reset_legacy_schema_version_with_explicit_flag(
         )
 
     assert "legacy_table" not in table_names
-    assert user_version == 16
+    assert user_version == 17
 
 
-def test_migrate_to_latest_initializes_v16_schema(database_url: str) -> None:
+def test_migrate_to_latest_initializes_v17_schema(database_url: str) -> None:
     repository = _build_repository(database_url)
     applied_versions = repository.migrate_to_latest()
-    assert applied_versions == (8, 9, 10, 11, 12, 13, 14, 15, 16)
-    assert repository.current_schema_version() == 16
+    assert applied_versions == (8, 9, 10, 11, 12, 13, 14, 15, 16, 17)
+    assert repository.current_schema_version() == 17
 
 
 def test_geospatial_queries_support_bbox_and_point_radius(database_url: str) -> None:

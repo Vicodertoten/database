@@ -30,6 +30,7 @@ from database_core.domain.models import (
     SourceObservation,
 )
 from database_core.storage.confusion_store import PostgresConfusionStore
+from database_core.storage.dynamic_pack_store import PostgresDynamicPackStore
 from database_core.storage.enrichment_store import PostgresEnrichmentStore
 from database_core.storage.inspection_store import PostgresInspectionStore
 from database_core.storage.pack_store import MIN_PACK_TOTAL_QUESTIONS, PostgresPackStore
@@ -61,6 +62,7 @@ class PostgresStorageInternal:
             pack_store=self.pack_store,
         )
         self.confusion_store = PostgresConfusionStore(connect=self.connect)
+        self.dynamic_pack_store = PostgresDynamicPackStore(connect=self.connect)
         self.inspection_store = PostgresInspectionStore(connect=self.connect)
         self.playable_store = PostgresPlayableStore(connect=self.connect)
 

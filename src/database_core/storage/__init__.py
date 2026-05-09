@@ -4,6 +4,7 @@ from database_core.storage.pack_store import (
     MIN_PACK_TOTAL_QUESTIONS,
     PostgresPackStore,
 )
+from database_core.storage.dynamic_pack_store import PostgresDynamicPackStore
 from database_core.storage.playable_store import PostgresPlayableStore
 from database_core.storage.postgres import RepositorySchemaVersionMismatchError
 from database_core.storage.services import (
@@ -18,6 +19,7 @@ __all__ = [
     "MIN_PACK_TAXA_SERVED",
     "MIN_PACK_TOTAL_QUESTIONS",
     "PostgresPlayableStore",
+    "PostgresDynamicPackStore",
     "PostgresDatabase",
     "PostgresPipelineStore",
     "PostgresPackStore",

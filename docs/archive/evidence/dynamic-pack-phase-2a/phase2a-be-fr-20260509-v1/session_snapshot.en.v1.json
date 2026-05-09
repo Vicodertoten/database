@@ -1,0 +1,457 @@
+{
+  "generated_at": "2026-05-09T14:42:42.065287+00:00",
+  "locale": "en",
+  "pool_id": "pack-pool:be-fr-birds-50:v1",
+  "question_count": 20,
+  "questions": [
+    {
+      "canonical_taxon_id": "taxon:birds:000002",
+      "country_code": "FR",
+      "feedback_short": "bill",
+      "label": "Corneille noire",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Y. Liu, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/326963785/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:326963785",
+      "option_generation": {
+        "reason": "Advanced distractor generation is outside Phase 2A scope.",
+        "status": "deferred_phase3"
+      },
+      "options": [],
+      "playable_item_id": "playable:qr:media:inaturalist:326963785",
+      "question_id": "question:2058cf3fb5a092ef",
+      "question_index": 1,
+      "scientific_name": "Corvus corone"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000032",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label": "\u00c9pervier d'Europe",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) M\u00e9lina No\u00ebl, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/614173885/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:614173885",
+      "option_generation": {
+        "reason": "Advanced distractor generation is outside Phase 2A scope.",
+        "status": "deferred_phase3"
+      },
+      "options": [],
+      "playable_item_id": "playable:qr:media:inaturalist:614173885",
+      "question_id": "question:3e385b0cb7748d50",
+      "question_index": 2,
+      "scientific_name": "Accipiter nisus"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000030",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label": "Aigrette garzette",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "no rights reserved",
+        "license": "cc0",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/422280693/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:422280693",
+      "option_generation": {
+        "reason": "Advanced distractor generation is outside Phase 2A scope.",
+        "status": "deferred_phase3"
+      },
+      "options": [],
+      "playable_item_id": "playable:qr:media:inaturalist:422280693",
+      "question_id": "question:dd844ec875cdfe29",
+      "question_index": 3,
+      "scientific_name": "Egretta garzetta"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000024",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label": "Foulque macroule",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Bruno Peixoto, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/323390193/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:323390193",
+      "option_generation": {
+        "reason": "Advanced distractor generation is outside Phase 2A scope.",
+        "status": "deferred_phase3"
+      },
+      "options": [],
+      "playable_item_id": "playable:qr:media:inaturalist:323390193",
+      "question_id": "question:0125e0c27d018ae2",
+      "question_index": 4,
+      "scientific_name": "Fulica atra"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000020",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label": "Rougequeue noir",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Ben Costamagna, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/166114178/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:166114178",
+      "option_generation": {
+        "reason": "Advanced distractor generation is outside Phase 2A scope.",
+        "status": "deferred_phase3"
+      },
+      "options": [],
+      "playable_item_id": "playable:qr:media:inaturalist:166114178",
+      "question_id": "question:6a583bd93cb25797",
+      "question_index": 5,
+      "scientific_name": "Phoenicurus ochruros"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000031",
+      "country_code": "FR",
+      "feedback_short": "wing",
+      "label": "Buse variable",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Ben Costamagna, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/106982569/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:106982569",
+      "option_generation": {
+        "reason": "Advanced distractor generation is outside Phase 2A scope.",
+        "status": "deferred_phase3"
+      },
+      "options": [],
+      "playable_item_id": "playable:qr:media:inaturalist:106982569",
+      "question_id": "question:65ff1183bb800e6d",
+      "question_index": 6,
+      "scientific_name": "Buteo buteo"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000049",
+      "country_code": "BE",
+      "feedback_short": "body",
+      "label": "Corbeau freux",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Victor Brans, some rights reserved (CC BY-SA)",
+        "license": "cc-by-sa",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/143943080/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:143943080",
+      "option_generation": {
+        "reason": "Advanced distractor generation is outside Phase 2A scope.",
+        "status": "deferred_phase3"
+      },
+      "options": [],
+      "playable_item_id": "playable:qr:media:inaturalist:143943080",
+      "question_id": "question:24f4f1d3ba09cb77",
+      "question_index": 7,
+      "scientific_name": "Corvus frugilegus"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000013",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label": "Troglodyte mignon",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Alexis Lours, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/187712471/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:187712471",
+      "option_generation": {
+        "reason": "Advanced distractor generation is outside Phase 2A scope.",
+        "status": "deferred_phase3"
+      },
+      "options": [],
+      "playable_item_id": "playable:qr:media:inaturalist:187712471",
+      "question_id": "question:1329cba2fca6a6e7",
+      "question_index": 8,
+      "scientific_name": "Troglodytes troglodytes"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000005",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label": "Pinson des arbres",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Alexis Lours, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/341131121/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:341131121",
+      "option_generation": {
+        "reason": "Advanced distractor generation is outside Phase 2A scope.",
+        "status": "deferred_phase3"
+      },
+      "options": [],
+      "playable_item_id": "playable:qr:media:inaturalist:341131121",
+      "question_id": "question:8cb69b924fd30876",
+      "question_index": 9,
+      "scientific_name": "Fringilla coelebs"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000036",
+      "country_code": "BE",
+      "feedback_short": "head",
+      "label": "Hibou moyen-duc",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "no rights reserved",
+        "license": "cc0",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/509695460/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:509695460",
+      "option_generation": {
+        "reason": "Advanced distractor generation is outside Phase 2A scope.",
+        "status": "deferred_phase3"
+      },
+      "options": [],
+      "playable_item_id": "playable:qr:media:inaturalist:509695460",
+      "question_id": "question:a2b7910c994967ba",
+      "question_index": 10,
+      "scientific_name": "Asio otus"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000023",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label": "Cygne tubercul\u00e9",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) ju_stine, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/362254189/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:362254189",
+      "option_generation": {
+        "reason": "Advanced distractor generation is outside Phase 2A scope.",
+        "status": "deferred_phase3"
+      },
+      "options": [],
+      "playable_item_id": "playable:qr:media:inaturalist:362254189",
+      "question_id": "question:e581478e82433301",
+      "question_index": 11,
+      "scientific_name": "Cygnus olor"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000041",
+      "country_code": "FR",
+      "feedback_short": "wing",
+      "label": "Martinet noir",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) bogsuckers, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/529160373/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:529160373",
+      "option_generation": {
+        "reason": "Advanced distractor generation is outside Phase 2A scope.",
+        "status": "deferred_phase3"
+      },
+      "options": [],
+      "playable_item_id": "playable:qr:media:inaturalist:529160373",
+      "question_id": "question:becf1b2493cfdd9f",
+      "question_index": 12,
+      "scientific_name": "Apus apus"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000025",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label": "Gallinule poule-d'eau",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "no rights reserved",
+        "license": "cc0",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/565002298/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:565002298",
+      "option_generation": {
+        "reason": "Advanced distractor generation is outside Phase 2A scope.",
+        "status": "deferred_phase3"
+      },
+      "options": [],
+      "playable_item_id": "playable:qr:media:inaturalist:565002298",
+      "question_id": "question:8285b565dc81049b",
+      "question_index": 13,
+      "scientific_name": "Gallinula chloropus"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000022",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label": "Oie cendr\u00e9e",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Leon Haag-Fank, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/623186418/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:623186418",
+      "option_generation": {
+        "reason": "Advanced distractor generation is outside Phase 2A scope.",
+        "status": "deferred_phase3"
+      },
+      "options": [],
+      "playable_item_id": "playable:qr:media:inaturalist:623186418",
+      "question_id": "question:9700b092866ea3d9",
+      "question_index": 14,
+      "scientific_name": "Anser anser"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000018",
+      "country_code": "FR",
+      "feedback_short": "bill",
+      "label": "Rousserolle effarvatte",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Olivier Morel, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/559509671/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:559509671",
+      "option_generation": {
+        "reason": "Advanced distractor generation is outside Phase 2A scope.",
+        "status": "deferred_phase3"
+      },
+      "options": [],
+      "playable_item_id": "playable:qr:media:inaturalist:559509671",
+      "question_id": "question:6b483bf631f2e7e1",
+      "question_index": 15,
+      "scientific_name": "Acrocephalus scirpaceus"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000026",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label": "Go\u00e9land leucoph\u00e9e",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Yves Bas, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/91264721/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:91264721",
+      "option_generation": {
+        "reason": "Advanced distractor generation is outside Phase 2A scope.",
+        "status": "deferred_phase3"
+      },
+      "options": [],
+      "playable_item_id": "playable:qr:media:inaturalist:91264721",
+      "question_id": "question:5a0a2a0dbcac008b",
+      "question_index": 16,
+      "scientific_name": "Larus michahellis"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000038",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label": "Pic vert",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) luluchouette, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/494391438/original.jpeg"
+      },
+      "media_asset_id": "media:inaturalist:494391438",
+      "option_generation": {
+        "reason": "Advanced distractor generation is outside Phase 2A scope.",
+        "status": "deferred_phase3"
+      },
+      "options": [],
+      "playable_item_id": "playable:qr:media:inaturalist:494391438",
+      "question_id": "question:6c3ae01e871e0fdc",
+      "question_index": 17,
+      "scientific_name": "Picus viridis"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000033",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label": "Faucon cr\u00e9cerelle",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Alexis Lours, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/152993161/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:152993161",
+      "option_generation": {
+        "reason": "Advanced distractor generation is outside Phase 2A scope.",
+        "status": "deferred_phase3"
+      },
+      "options": [],
+      "playable_item_id": "playable:qr:media:inaturalist:152993161",
+      "question_id": "question:6769545e87352426",
+      "question_index": 18,
+      "scientific_name": "Falco tinnunculus"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000008",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label": "M\u00e9sange charbonni\u00e8re",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) ju_stine, some rights reserved (CC BY)",
+        "license": "cc-by",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/362234805/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:362234805",
+      "option_generation": {
+        "reason": "Advanced distractor generation is outside Phase 2A scope.",
+        "status": "deferred_phase3"
+      },
+      "options": [],
+      "playable_item_id": "playable:qr:media:inaturalist:362234805",
+      "question_id": "question:e7c67a2a813cdafe",
+      "question_index": 19,
+      "scientific_name": "Parus major"
+    },
+    {
+      "canonical_taxon_id": "taxon:birds:000040",
+      "country_code": "FR",
+      "feedback_short": "head",
+      "label": "Pic noir",
+      "label_source": "common_name",
+      "media": {
+        "attribution": "(c) Thibaud Aronson, some rights reserved (CC BY-SA)",
+        "license": "cc-by-sa",
+        "render_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/154393130/original.jpg"
+      },
+      "media_asset_id": "media:inaturalist:154393130",
+      "option_generation": {
+        "reason": "Advanced distractor generation is outside Phase 2A scope.",
+        "status": "deferred_phase3"
+      },
+      "options": [],
+      "playable_item_id": "playable:qr:media:inaturalist:154393130",
+      "question_id": "question:bdf93d313a3047db",
+      "question_index": 20,
+      "scientific_name": "Dryocopus martius"
+    }
+  ],
+  "schema_version": "database.schema.v17",
+  "seed": "phase2a-smoke-v1",
+  "selector_policy": {
+    "max_questions_per_taxon": 1,
+    "option_generation": "deferred_phase3",
+    "version": "phase2a.selector.v1"
+  },
+  "session_snapshot_id": "session:f6d1237e01b8cde1",
+  "session_snapshot_version": "session_snapshot.v1"
+}

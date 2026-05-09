@@ -167,7 +167,7 @@ Critere de maintien de la phase transitoire:
 
 Etat d'avancement constate (2026-04-09):
 
-- schema `database.schema.v16` actif pour le lifecycle playable incremental
+- schema `database.schema.v17` actif pour le lifecycle playable incremental
 - `playable_items` n'est plus supprime globalement dans le run nominal PostgreSQL
 - lifecycle `active`/`invalidated` persiste en base et `playable_corpus.v1` ne sert que les items actifs
 - reactivation automatique couverte en test storage

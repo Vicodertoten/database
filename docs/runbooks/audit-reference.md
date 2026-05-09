@@ -177,7 +177,7 @@ Priorite:
 
 Etat schema applicatif observe:
 
-- `database.schema.v16`
+- `database.schema.v17`
 
 Contrats observes:
 
@@ -281,7 +281,7 @@ Criteres d'acceptation:
 
 Impacts techniques:
 
-- migration schema `database.schema.v16` sur `playable_item_lifecycle` (coherence statut/raison + index inspection)
+- migration schema `database.schema.v17` sur `playable_item_lifecycle` (coherence statut/raison + index inspection)
 - ajustement de `save_playable_items` pour raison explicite
 - ajout d'une surface inspect dediee aux invalidations playable
 - tests de persistance/lifecycle et CLI inspect couverts

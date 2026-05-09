@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-SCHEMA_VERSION = 16
-SCHEMA_VERSION_LABEL = "database.schema.v16"
+SCHEMA_VERSION = 17
+SCHEMA_VERSION_LABEL = "database.schema.v17"
 SNAPSHOT_MANIFEST_VERSION = "inaturalist.snapshot.v3"
 NORMALIZED_SNAPSHOT_VERSION = "normalized.snapshot.v3"
 ENRICHMENT_VERSION = "canonical.enrichment.v2"
@@ -15,5 +15,7 @@ COMPILED_PACK_VERSION = "pack.compiled.v1"
 PACK_MATERIALIZATION_VERSION = "pack.materialization.v1"
 COMPILED_PACK_V2_VERSION = "pack.compiled.v2"
 PACK_MATERIALIZATION_V2_VERSION = "pack.materialization.v2"
+PACK_POOL_VERSION = "pack_pool.v1"
+SESSION_SNAPSHOT_VERSION = "session_snapshot.v1"
 CONFUSION_EVENT_VERSION = "confusion.event.v1"
 CONFUSION_AGGREGATE_VERSION = "confusion.aggregate.v1"
