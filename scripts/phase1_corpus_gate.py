@@ -21,6 +21,7 @@ from database_core.ops.phase1_corpus_gate import (  # noqa: E402
     audit_phase1_corpus_gate,
     build_pre_ai_selection,
     build_preflight_report,
+    merge_phase1_ai_outputs,
 )
 
 
@@ -52,6 +53,13 @@ def _build_parser() -> argparse.ArgumentParser:
     select = subparsers.add_parser("select-pre-ai")
     select.add_argument("--snapshot-id", action="append", dest="snapshot_ids", required=True)
     select.add_argument("--output-snapshot-id", required=True)
+    select.add_argument(
+        "--final-input-snapshot-id",
+        help=(
+            "Optional full BE+FR corpus snapshot to preserve already-known media. "
+            "--output-snapshot-id remains the Gemini worklist."
+        ),
+    )
     select.add_argument("--snapshot-root", type=Path, default=DEFAULT_INAT_SNAPSHOT_ROOT)
     select.add_argument(
         "--current-database-url",
@@ -67,6 +75,15 @@ def _build_parser() -> argparse.ArgumentParser:
         "--estimated-cost-per-image-eur",
         type=float,
         default=PHASE1_ESTIMATED_COST_PER_IMAGE_EUR,
+    )
+
+    merge = subparsers.add_parser("merge-ai-outputs")
+    merge.add_argument("--final-input-snapshot-id", required=True)
+    merge.add_argument("--gemini-worklist-snapshot-id", required=True)
+    merge.add_argument("--snapshot-root", type=Path, default=DEFAULT_INAT_SNAPSHOT_ROOT)
+    merge.add_argument(
+        "--current-database-url",
+        default=os.environ.get("DATABASE_URL", ""),
     )
 
     audit = subparsers.add_parser("audit")
@@ -107,6 +124,7 @@ def main() -> None:
             snapshot_ids=args.snapshot_ids,
             output_snapshot_id=args.output_snapshot_id,
             output_dir=output_dir,
+            final_input_snapshot_id=args.final_input_snapshot_id,
             snapshot_root=args.snapshot_root,
             current_database_url=args.current_database_url or None,
             max_candidates_per_species=args.max_candidates_per_species,
@@ -118,6 +136,25 @@ def main() -> None:
             f" | output_dir={output_dir}"
             f" | selected={len(result.selected_candidates)}"
             f" | within_budget={result.report['budget']['within_budget']}"
+            f" | final_input={args.final_input_snapshot_id or 'not-written'}"
+        )
+        return
+
+    if args.command == "merge-ai-outputs":
+        if not args.current_database_url:
+            raise SystemExit("DATABASE_URL or --current-database-url is required")
+        report = merge_phase1_ai_outputs(
+            final_input_snapshot_id=args.final_input_snapshot_id,
+            gemini_worklist_snapshot_id=args.gemini_worklist_snapshot_id,
+            current_database_url=args.current_database_url,
+            output_dir=output_dir,
+            snapshot_root=args.snapshot_root,
+        )
+        print(
+            "Phase 1 AI outputs merged"
+            f" | output_dir={output_dir}"
+            f" | merged={report['merged_ai_outputs_count']}"
+            f" | missing={report['missing_ai_outputs_count']}"
         )
         return
 

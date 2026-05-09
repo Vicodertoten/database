@@ -12,12 +12,17 @@ import psycopg
 
 from database_core.adapters.inaturalist_snapshot import (
     DEFAULT_INAT_SNAPSHOT_ROOT,
+    INAT_PLACE_ID_TO_COUNTRY_CODE,
     InaturalistSnapshotManifest,
     SnapshotMediaDownload,
     SnapshotTaxonSeed,
     load_pilot_taxa,
     load_snapshot_manifest,
     write_snapshot_manifest,
+)
+from database_core.qualification.ai import (
+    AI_REVIEW_CONTRACT_V1_1,
+    DEFAULT_GEMINI_PROMPT_VERSION,
 )
 from database_core.security import redact_database_url
 from database_core.storage.services import build_storage_services
@@ -58,6 +63,12 @@ class Phase1Candidate:
 @dataclass(frozen=True)
 class Phase1SelectionResult:
     selected_candidates: list[Phase1Candidate]
+    report: dict[str, Any]
+
+
+@dataclass(frozen=True)
+class ExistingMediaLookup:
+    keys: set[tuple[str, str]]
     report: dict[str, Any]
 
 
@@ -187,6 +198,7 @@ def build_pre_ai_selection(
     snapshot_ids: list[str],
     output_snapshot_id: str,
     output_dir: Path,
+    final_input_snapshot_id: str | None = None,
     snapshot_root: Path = DEFAULT_INAT_SNAPSHOT_ROOT,
     current_database_url: str | None = None,
     max_candidates_per_species: int = PHASE1_MAX_CANDIDATES_PER_SPECIES,
@@ -194,16 +206,38 @@ def build_pre_ai_selection(
     estimated_cost_per_image_eur: float = PHASE1_ESTIMATED_COST_PER_IMAGE_EUR,
 ) -> Phase1SelectionResult:
     candidates = _collect_candidates(snapshot_ids=snapshot_ids, snapshot_root=snapshot_root)
-    existing_keys = (
-        _fetch_existing_media_keys(current_database_url) if current_database_url else set()
+    existing_lookup = (
+        _fetch_existing_media_keys(current_database_url)
+        if current_database_url
+        else ExistingMediaLookup(
+            keys=set(),
+            report={
+                "enabled": False,
+                "status": "skipped",
+                "key_count": 0,
+                "media_asset_row_count": 0,
+            },
+        )
     )
+    final_input_report = _build_candidate_inventory_report(candidates)
+    if final_input_snapshot_id:
+        _write_selected_snapshot(
+            selected_candidates=candidates,
+            output_snapshot_id=final_input_snapshot_id,
+            snapshot_root=snapshot_root,
+        )
+        final_input_report["snapshot_id"] = final_input_snapshot_id
+        final_input_report["snapshot_path"] = str(snapshot_root / final_input_snapshot_id)
     result = select_pre_ai_candidates(
         candidates=candidates,
-        existing_media_keys=existing_keys,
+        existing_media_keys=existing_lookup.keys,
         max_candidates_per_species=max_candidates_per_species,
         budget_cap_eur=budget_cap_eur,
         estimated_cost_per_image_eur=estimated_cost_per_image_eur,
     )
+    result.report["gemini_worklist_snapshot_id"] = output_snapshot_id
+    result.report["final_input_snapshot"] = final_input_report
+    result.report["current_db_existing_media_lookup"] = existing_lookup.report
     budget = result.report["budget"]
     if not budget["within_budget"]:
         _write_report_pair(
@@ -237,11 +271,103 @@ def build_pre_ai_selection(
             "Status: `READY_FOR_GEMINI`",
             f"Selected candidates: `{len(result.selected_candidates)}`",
             f"Estimated cost: `EUR {budget['estimated_cost_eur']}`",
-            f"Output snapshot: `{output_snapshot_id}`",
+            f"Gemini worklist snapshot: `{output_snapshot_id}`",
+            f"Final input snapshot: `{final_input_snapshot_id or 'not written'}`",
         ],
     )
     _write_json(output_dir / "gemini_cost_report.json", result.report["budget"])
     return result
+
+
+def merge_phase1_ai_outputs(
+    *,
+    final_input_snapshot_id: str,
+    gemini_worklist_snapshot_id: str,
+    current_database_url: str,
+    output_dir: Path,
+    snapshot_root: Path = DEFAULT_INAT_SNAPSHOT_ROOT,
+) -> dict[str, Any]:
+    final_manifest, final_snapshot_dir = load_snapshot_manifest(
+        snapshot_id=final_input_snapshot_id,
+        snapshot_root=snapshot_root,
+    )
+    worklist_manifest, worklist_snapshot_dir = load_snapshot_manifest(
+        snapshot_id=gemini_worklist_snapshot_id,
+        snapshot_root=snapshot_root,
+    )
+    if not worklist_manifest.ai_outputs_path:
+        raise ValueError(
+            "Gemini worklist snapshot has no ai_outputs_path: "
+            f"{gemini_worklist_snapshot_id}"
+        )
+    worklist_ai_outputs_path = worklist_snapshot_dir / worklist_manifest.ai_outputs_path
+    worklist_ai_outputs = json.loads(worklist_ai_outputs_path.read_text(encoding="utf-8"))
+    if not isinstance(worklist_ai_outputs, dict):
+        raise ValueError(f"Invalid ai_outputs payload: {worklist_ai_outputs_path}")
+
+    final_media_ids = {item.source_media_id for item in final_manifest.media_downloads}
+    merged_outputs = {
+        str(key): value
+        for key, value in worklist_ai_outputs.items()
+        if _source_media_id_from_ai_output_key(str(key)) in final_media_ids
+    }
+    missing_media_ids = sorted(
+        media_id
+        for media_id in final_media_ids
+        if f"inaturalist::{media_id}" not in merged_outputs
+    )
+    cached_outputs = _fetch_cached_ai_outputs_from_current_db(
+        database_url=current_database_url,
+        source_media_ids=missing_media_ids,
+    )
+    merged_outputs.update(cached_outputs)
+
+    still_missing_media_ids = sorted(
+        media_id
+        for media_id in final_media_ids
+        if f"inaturalist::{media_id}" not in merged_outputs
+    )
+    ai_outputs_path = final_snapshot_dir / "ai_outputs.json"
+    _write_json(ai_outputs_path, dict(sorted(merged_outputs.items())))
+    write_snapshot_manifest(
+        final_snapshot_dir,
+        final_manifest.model_copy(update={"ai_outputs_path": "ai_outputs.json"}),
+    )
+    status_counts = Counter(
+        str(value.get("status") or "unknown")
+        for value in merged_outputs.values()
+        if isinstance(value, dict)
+    )
+    report = {
+        "schema_version": PHASE1_REPORT_VERSION,
+        "report_type": "ai_outputs_merge",
+        "generated_at": _now_iso(),
+        "final_input_snapshot_id": final_input_snapshot_id,
+        "gemini_worklist_snapshot_id": gemini_worklist_snapshot_id,
+        "final_media_count": len(final_media_ids),
+        "worklist_ai_outputs_count": len(worklist_ai_outputs),
+        "merged_ai_outputs_count": len(merged_outputs),
+        "cached_current_db_outputs_count": len(cached_outputs),
+        "missing_ai_outputs_count": len(still_missing_media_ids),
+        "missing_source_media_ids": still_missing_media_ids,
+        "status_counts": dict(sorted(status_counts.items())),
+        "ai_outputs_path": str(ai_outputs_path),
+        "current_database_url": redact_database_url(current_database_url),
+    }
+    _write_report_pair(
+        output_dir=output_dir,
+        json_name="ai_outputs_merge_report.json",
+        markdown_name="ai_outputs_merge_report.md",
+        payload=report,
+        title="Phase 1 AI Outputs Merge Report",
+        summary_lines=[
+            f"Final media: `{len(final_media_ids)}`",
+            f"Merged outputs: `{len(merged_outputs)}`",
+            f"Cached DB outputs: `{len(cached_outputs)}`",
+            f"Missing outputs: `{len(still_missing_media_ids)}`",
+        ],
+    )
+    return report
 
 
 def select_pre_ai_candidates(
@@ -257,6 +383,12 @@ def select_pre_ai_candidates(
     seen_keys = set(existing_media_keys)
     duplicate_reason_counts: Counter[str] = Counter()
     raw_by_taxon: Counter[str] = Counter()
+    raw_by_country: Counter[str] = Counter()
+    selected_by_country: Counter[str] = Counter()
+    existing_exclusions_by_taxon: Counter[str] = Counter()
+    existing_exclusions_by_country: Counter[str] = Counter()
+    internal_duplicate_by_taxon: Counter[str] = Counter()
+    internal_duplicate_by_country: Counter[str] = Counter()
 
     for candidate in sorted(
         candidates,
@@ -268,20 +400,32 @@ def select_pre_ai_candidates(
         ),
     ):
         raw_by_taxon[candidate.canonical_taxon_id] += 1
+        raw_by_country[candidate.country_code or "unknown"] += 1
         if selected_by_taxon[candidate.canonical_taxon_id] >= max_candidates_per_species:
             duplicate_reason_counts["per_taxon_candidate_cap"] += 1
+            internal_duplicate_by_taxon[candidate.canonical_taxon_id] += 1
+            internal_duplicate_by_country[candidate.country_code or "unknown"] += 1
             continue
         keys = _candidate_keys(candidate)
-        duplicate_reasons = sorted(
-            reason
-            for reason, key in keys
-            if key[1] and key in seen_keys
+        existing_duplicate_reasons = sorted(
+            reason for reason, key in keys if key[1] and key in existing_media_keys
         )
-        if duplicate_reasons:
-            duplicate_reason_counts[duplicate_reasons[0]] += 1
+        if existing_duplicate_reasons:
+            duplicate_reason_counts["already_in_current_db"] += 1
+            existing_exclusions_by_taxon[candidate.canonical_taxon_id] += 1
+            existing_exclusions_by_country[candidate.country_code or "unknown"] += 1
+            continue
+        internal_duplicate_reasons = sorted(
+            reason for reason, key in keys if key[1] and key in seen_keys
+        )
+        if internal_duplicate_reasons:
+            duplicate_reason_counts[internal_duplicate_reasons[0]] += 1
+            internal_duplicate_by_taxon[candidate.canonical_taxon_id] += 1
+            internal_duplicate_by_country[candidate.country_code or "unknown"] += 1
             continue
         selected.append(candidate)
         selected_by_taxon[candidate.canonical_taxon_id] += 1
+        selected_by_country[candidate.country_code or "unknown"] += 1
         seen_keys.update(key for _, key in keys if key[1])
 
     budget = assert_gemini_budget(
@@ -296,12 +440,48 @@ def select_pre_ai_candidates(
         "raw_candidates_total": len(candidates),
         "selected_candidates_total": len(selected),
         "raw_candidates_by_taxon": dict(sorted(raw_by_taxon.items())),
+        "raw_candidates_by_country": dict(sorted(raw_by_country.items())),
         "selected_candidates_by_taxon": dict(sorted(selected_by_taxon.items())),
+        "selected_candidates_by_country": dict(sorted(selected_by_country.items())),
         "duplicate_or_blocked_reason_counts": dict(sorted(duplicate_reason_counts.items())),
+        "already_in_current_db_by_taxon": dict(sorted(existing_exclusions_by_taxon.items())),
+        "already_in_current_db_by_country": dict(sorted(existing_exclusions_by_country.items())),
+        "internal_duplicate_or_blocked_by_taxon": dict(sorted(internal_duplicate_by_taxon.items())),
+        "internal_duplicate_or_blocked_by_country": dict(
+            sorted(internal_duplicate_by_country.items())
+        ),
         "max_candidates_per_species": max_candidates_per_species,
         "budget": budget,
     }
     return Phase1SelectionResult(selected_candidates=selected, report=report)
+
+
+def _build_candidate_inventory_report(candidates: list[Phase1Candidate]) -> dict[str, Any]:
+    by_taxon: Counter[str] = Counter()
+    by_country: Counter[str] = Counter()
+    by_taxon_country: dict[str, Counter[str]] = {}
+    for candidate in candidates:
+        country = candidate.country_code or "unknown"
+        by_taxon[candidate.canonical_taxon_id] += 1
+        by_country[country] += 1
+        by_taxon_country.setdefault(candidate.canonical_taxon_id, Counter())[country] += 1
+    totals = list(by_taxon.values())
+    return {
+        "purpose": "phase1_final_input_before_gemini_merge",
+        "candidate_count": len(candidates),
+        "candidates_by_country": dict(sorted(by_country.items())),
+        "candidates_by_taxon": dict(sorted(by_taxon.items())),
+        "candidates_by_taxon_country": {
+            taxon_id: dict(sorted(counts.items()))
+            for taxon_id, counts in sorted(by_taxon_country.items())
+        },
+        "min_candidates_per_taxon": min(totals) if totals else 0,
+        "max_candidates_per_taxon": max(totals) if totals else 0,
+        "taxa_with_zero_candidates": PHASE1_TARGET_SPECIES_COUNT - len(by_taxon),
+        "taxa_below_target_images": sum(
+            1 for count in totals if count < PHASE1_TARGET_IMAGES_PER_SPECIES
+        ),
+    }
 
 
 def audit_phase1_corpus_gate(
@@ -421,7 +601,6 @@ def _collect_candidates(
         download_by_media_id = {item.source_media_id: item for item in manifest.media_downloads}
         for seed in manifest.taxon_seeds:
             payload = json.loads((snapshot_dir / seed.response_path).read_text(encoding="utf-8"))
-            country_code = _infer_seed_country_code(seed)
             for result in payload.get("results", []):
                 if not isinstance(result, dict):
                     continue
@@ -435,6 +614,9 @@ def _collect_candidates(
                 download = download_by_media_id.get(source_media_id)
                 if download is None or download.download_status != "downloaded":
                     continue
+                if not (snapshot_dir / download.image_path).exists():
+                    continue
+                country_code = _infer_candidate_country_code(result=result, seed=seed)
                 response_result = dict(result)
                 if country_code and not response_result.get("country_code"):
                     response_result["country_code"] = country_code
@@ -616,7 +798,7 @@ def _fetch_product_scoped_metrics(
     }
 
 
-def _fetch_existing_media_keys(database_url: str) -> set[tuple[str, str]]:
+def _fetch_existing_media_keys(database_url: str) -> ExistingMediaLookup:
     keys: set[tuple[str, str]] = set()
     try:
         services = build_storage_services(database_url)
@@ -628,8 +810,18 @@ def _fetch_existing_media_keys(database_url: str) -> set[tuple[str, str]]:
                 WHERE source_name = 'inaturalist'
                 """
             ).fetchall()
-    except (psycopg.Error, OSError):
-        return keys
+    except (psycopg.Error, OSError) as exc:
+        return ExistingMediaLookup(
+            keys=keys,
+            report={
+                "enabled": True,
+                "status": "failed",
+                "key_count": 0,
+                "media_asset_row_count": 0,
+                "error_type": type(exc).__name__,
+                "error": str(exc),
+            },
+        )
     for row in rows:
         if row["source_media_id"]:
             keys.add(("source_media_id", str(row["source_media_id"])))
@@ -637,7 +829,115 @@ def _fetch_existing_media_keys(database_url: str) -> set[tuple[str, str]]:
             keys.add(("source_url", _normalize_url(str(row["source_url"]))))
         if row["checksum"]:
             keys.add(("sha256", str(row["checksum"])))
-    return keys
+    return ExistingMediaLookup(
+        keys=keys,
+        report={
+            "enabled": True,
+            "status": "ok",
+            "key_count": len(keys),
+            "media_asset_row_count": len(rows),
+        },
+    )
+
+
+def _fetch_cached_ai_outputs_from_current_db(
+    *,
+    database_url: str,
+    source_media_ids: list[str],
+) -> dict[str, Any]:
+    if not source_media_ids:
+        return {}
+    services = build_storage_services(database_url)
+    with services.database.connect() as connection:
+        rows = connection.execute(
+            """
+            SELECT
+                media.source_media_id,
+                media.width AS image_width,
+                media.height AS image_height,
+                q.technical_quality,
+                q.pedagogical_quality,
+                q.life_stage,
+                q.sex,
+                q.visible_parts_json,
+                q.view_angle,
+                q.difficulty_level,
+                q.media_role,
+                q.confusion_relevance,
+                q.diagnostic_feature_visibility,
+                q.learning_suitability,
+                q.uncertainty_reason,
+                q.ai_confidence,
+                q.qualification_notes,
+                q.qualification_flags_json
+            FROM qualified_resources AS q
+            JOIN media_assets AS media
+                ON media.media_id = q.media_asset_id
+            WHERE media.source_name = 'inaturalist'
+              AND media.source_media_id = ANY(%s)
+            """,
+            [source_media_ids],
+        ).fetchall()
+
+    outputs: dict[str, Any] = {}
+    for row in rows:
+        source_media_id = str(row["source_media_id"])
+        visible_parts = _json_list(row["visible_parts_json"])
+        flags = _json_list(row["qualification_flags_json"])
+        qualification = {
+            "technical_quality": str(row["technical_quality"]),
+            "pedagogical_quality": str(row["pedagogical_quality"]),
+            "life_stage": str(row["life_stage"]),
+            "sex": str(row["sex"]),
+            "visible_parts": visible_parts,
+            "view_angle": str(row["view_angle"]),
+            "difficulty_level": str(row["difficulty_level"]),
+            "media_role": str(row["media_role"]),
+            "confusion_relevance": str(row["confusion_relevance"]),
+            "diagnostic_feature_visibility": str(row["diagnostic_feature_visibility"]),
+            "learning_suitability": str(row["learning_suitability"]),
+            "uncertainty_reason": str(row["uncertainty_reason"]),
+            "confidence": float(row["ai_confidence"] or 0.0),
+            "model_name": "current-db-cached",
+            "notes": row["qualification_notes"],
+        }
+        outputs[f"inaturalist::{source_media_id}"] = {
+            "status": "ok",
+            "qualification": qualification,
+            "flags": flags,
+            "note": row["qualification_notes"],
+            "model_name": "current-db-cached",
+            "prompt_version": DEFAULT_GEMINI_PROMPT_VERSION,
+            "review_contract_version": AI_REVIEW_CONTRACT_V1_1,
+            "bird_image_pedagogical_review": None,
+            "bird_image_pedagogical_score": None,
+            "pedagogical_media_profile": None,
+            "pedagogical_media_profile_score": None,
+            "qualified_at": None,
+            "image_width": row["image_width"],
+            "image_height": row["image_height"],
+        }
+    return outputs
+
+
+def _source_media_id_from_ai_output_key(value: str) -> str:
+    if "::" in value:
+        return value.rsplit("::", 1)[-1]
+    return value
+
+
+def _json_list(value: object) -> list[str]:
+    if value is None:
+        return []
+    if isinstance(value, list):
+        return [str(item) for item in value]
+    try:
+        parsed = json.loads(str(value))
+    except json.JSONDecodeError:
+        return []
+    if not isinstance(parsed, list):
+        return []
+    return [str(item) for item in parsed]
 
 
 def _candidate_keys(candidate: Phase1Candidate) -> list[tuple[str, tuple[str, str]]]:
@@ -650,7 +950,7 @@ def _candidate_keys(candidate: Phase1Candidate) -> list[tuple[str, tuple[str, st
 
 def _infer_seed_country_code(seed: SnapshotTaxonSeed) -> str | None:
     country_code = str(seed.query_params.get("country_code") or "").strip().upper()
-    if country_code:
+    if country_code and "," not in country_code:
         return country_code
     place_id = str(seed.query_params.get("place_id") or "").strip()
     if place_id == PHASE1_FRANCE_INAT_PLACE_ID:
@@ -658,6 +958,25 @@ def _infer_seed_country_code(seed: SnapshotTaxonSeed) -> str | None:
     if place_id in {"7008", "7083"}:
         return "BE"
     return None
+
+
+def _infer_candidate_country_code(
+    *,
+    result: dict[str, Any],
+    seed: SnapshotTaxonSeed,
+) -> str | None:
+    explicit = str(result.get("country_code") or "").strip().upper()
+    if len(explicit) == 2:
+        return explicit
+
+    place_ids = result.get("place_ids")
+    if isinstance(place_ids, list):
+        for place_id in place_ids:
+            mapped = INAT_PLACE_ID_TO_COUNTRY_CODE.get(str(place_id).strip())
+            if mapped is not None:
+                return mapped
+
+    return _infer_seed_country_code(seed)
 
 
 def _normalize_url(value: str) -> str:

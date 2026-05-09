@@ -112,6 +112,7 @@ def fetch_inat_snapshot(
         country_code=country_code,
         place_id=place_id,
     )
+    preferred_place_id = _single_place_id(resolved_place_id)
 
     for seed in load_pilot_taxa(pilot_taxa_path):
         (
@@ -159,7 +160,7 @@ def fetch_inat_snapshot(
             source_taxon_id=seed.source_taxon_id,
             canonical_taxon_id=seed.canonical_taxon_id,
             timeout_seconds=timeout_seconds,
-            preferred_place_id=resolved_place_id,
+            preferred_place_id=preferred_place_id,
         )
 
         response_path = Path("responses") / f"{_slugify_filename(seed.canonical_taxon_id)}.json"
@@ -381,7 +382,9 @@ def _fetch_seed_payload(
         base_params.update(_bbox_to_inat_params(bbox))
     if place_id:
         base_params["place_id"] = place_id
-        base_params["preferred_place_id"] = place_id
+        preferred_place_id = _single_place_id(place_id)
+        if preferred_place_id:
+            base_params["preferred_place_id"] = preferred_place_id
     if observed_from:
         base_params["d1"] = observed_from
     if observed_to:
@@ -517,14 +520,26 @@ def _resolve_geo_country_filters(
     country_code: str | None,
     place_id: str | None,
 ) -> tuple[str | None, str | None]:
-    normalized_country_code = _normalize_country_code(country_code)
+    normalized_country_codes = _normalize_country_codes(country_code)
     normalized_place_id = str(place_id).strip() if place_id else None
 
-    if normalized_country_code is None:
+    if not normalized_country_codes:
         return None, normalized_place_id
 
-    mapped_place_id = COUNTRY_CODE_TO_INAT_PLACE_ID.get(normalized_country_code)
-    if mapped_place_id is None:
+    mapped_place_ids: list[str] = []
+    for normalized_country_code in normalized_country_codes:
+        mapped_place_id = COUNTRY_CODE_TO_INAT_PLACE_ID.get(normalized_country_code)
+        if mapped_place_id is None:
+            supported = ", ".join(sorted(COUNTRY_CODE_TO_INAT_PLACE_ID))
+            raise ValueError(
+                "Unsupported country_code filter "
+                f"{normalized_country_code!r}. Supported values: {supported}"
+            )
+        mapped_place_ids.append(mapped_place_id)
+    mapped_place_id = ",".join(mapped_place_ids)
+    normalized_country_code = ",".join(normalized_country_codes)
+
+    if not mapped_place_ids:
         supported = ", ".join(sorted(COUNTRY_CODE_TO_INAT_PLACE_ID))
         raise ValueError(
             "Unsupported country_code filter "
@@ -540,14 +555,27 @@ def _resolve_geo_country_filters(
     return normalized_country_code, mapped_place_id
 
 
-def _normalize_country_code(value: str | None) -> str | None:
+def _normalize_country_codes(value: str | None) -> tuple[str, ...]:
     if value is None:
+        return ()
+    normalized_codes: list[str] = []
+    for part in value.split(","):
+        normalized = part.strip().upper()
+        if not normalized:
+            continue
+        if len(normalized) != 2:
+            raise ValueError("country_code must be an ISO alpha-2 code or comma list")
+        if normalized not in normalized_codes:
+            normalized_codes.append(normalized)
+    return tuple(normalized_codes)
+
+
+def _single_place_id(place_id: str | None) -> str | None:
+    if not place_id:
         return None
-    normalized = value.strip().upper()
-    if not normalized:
+    normalized = str(place_id).strip()
+    if not normalized or "," in normalized:
         return None
-    if len(normalized) != 2:
-        raise ValueError("country_code must be an ISO alpha-2 code")
     return normalized
 
 

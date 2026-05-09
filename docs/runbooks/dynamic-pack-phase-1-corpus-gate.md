@@ -87,9 +87,9 @@ Minimal Phase 1 tooling is provided by:
 ```bash
 python scripts/phase1_corpus_gate.py --run-id <run-id> preflight
 python scripts/phase1_corpus_gate.py --run-id <run-id> select-pre-ai \
-  --snapshot-id <be-snapshot-id> \
-  --snapshot-id <fr-snapshot-id> \
-  --output-snapshot-id <deduped-output-snapshot-id>
+  --snapshot-id <be-fr-snapshot-id> \
+  --output-snapshot-id <gemini-worklist-snapshot-id> \
+  --final-input-snapshot-id <final-input-snapshot-id>
 python scripts/phase1_corpus_gate.py --run-id <run-id> audit
 ```
 
@@ -107,8 +107,115 @@ The tooling produces:
 - `phase1_corpus_gate_report.json`;
 - `phase1_corpus_gate_summary.md`.
 
+`select-pre-ai` has two distinct snapshot outputs:
+
+- `--output-snapshot-id`: Gemini worklist only. It excludes media already present
+  in `DATABASE_URL` and is the only snapshot that should be sent to Gemini.
+- `--final-input-snapshot-id`: full BE+FR corpus input. It preserves already-known
+  media and new worklist media so the final Phase 1 corpus can merge cached
+  existing qualifications with newly qualified images.
+
 France is represented by iNaturalist `place_id=6753`. `FR` is now accepted as a
 country filter in the iNaturalist harvest adapter.
+
+Phase 1 BE+FR harvest must be captured as a single iNaturalist snapshot, not as
+separate BE and FR snapshots merged later:
+
+```bash
+python scripts/fetch_inat_snapshot.py \
+  --snapshot-id phase1-be-fr-20260509-be-fr-smoke \
+  --pilot-taxa-path data/fixtures/inaturalist_pilot_taxa_palier1_be_50_run003_v11_baseline.json \
+  --country-code BE,FR \
+  --max-observations-per-taxon 1
+```
+
+Smoke validation must pass before a full harvest:
+
+```bash
+test -d data/raw/inaturalist/phase1-be-fr-20260509-be-fr-smoke/responses
+test -d data/raw/inaturalist/phase1-be-fr-20260509-be-fr-smoke/taxa
+test -d data/raw/inaturalist/phase1-be-fr-20260509-be-fr-smoke/images
+test -f data/raw/inaturalist/phase1-be-fr-20260509-be-fr-smoke/manifest.json
+find data/raw/inaturalist/phase1-be-fr-20260509-be-fr-smoke/images -type f | wc -l
+jq '[.media_downloads[] | select(.download_status == "downloaded")] | length' \
+  data/raw/inaturalist/phase1-be-fr-20260509-be-fr-smoke/manifest.json
+```
+
+Full harvest, only after smoke validation:
+
+```bash
+python scripts/fetch_inat_snapshot.py \
+  --snapshot-id phase1-be-fr-20260509-be-fr-raw-v1 \
+  --pilot-taxa-path data/fixtures/inaturalist_pilot_taxa_palier1_be_50_run003_v11_baseline.json \
+  --country-code BE,FR \
+  --max-observations-per-taxon 60
+```
+
+Progress monitor:
+
+```bash
+SNAPSHOT=data/raw/inaturalist/phase1-be-fr-20260509-be-fr-raw-v1
+date
+find "$SNAPSHOT/responses" -type f 2>/dev/null | wc -l
+jq -s '[.[].results[]?] | length' "$SNAPSHOT"/responses/*.json
+jq -s '[.[].results[]?.photos[]?] | length' "$SNAPSHOT"/responses/*.json
+find "$SNAPSHOT/images" -type f 2>/dev/null | wc -l
+jq '[.media_downloads[]?.download_status] | group_by(.) | map({status: .[0], count: length})' \
+  "$SNAPSHOT/manifest.json"
+```
+
+Pre-AI selection, after full harvest validation:
+
+```bash
+python scripts/phase1_corpus_gate.py \
+  --run-id phase1-be-fr-20260509-pre-ai-v3 \
+  select-pre-ai \
+  --snapshot-id phase1-be-fr-20260509-be-fr-raw-v1 \
+  --output-snapshot-id phase1-be-fr-20260509-gemini-worklist-v3 \
+  --final-input-snapshot-id phase1-be-fr-20260509-final-input-v3
+```
+
+Gemini must run only on the worklist snapshot:
+
+```bash
+python scripts/qualify_inat_snapshot.py \
+  --snapshot-id phase1-be-fr-20260509-gemini-worklist-v3
+```
+
+Merge Gemini outputs back into the final input snapshot before running the cached
+pipeline:
+
+```bash
+python scripts/phase1_corpus_gate.py \
+  --run-id phase1-be-fr-20260509-ai-merge-v4 \
+  merge-ai-outputs \
+  --final-input-snapshot-id phase1-be-fr-20260509-final-input-v3 \
+  --gemini-worklist-snapshot-id phase1-be-fr-20260509-gemini-worklist-v3
+```
+
+The merge writes `ai_outputs.json` into
+`phase1-be-fr-20260509-final-input-v3` and updates that snapshot manifest. It
+must report `missing=0` before `run_pipeline`.
+
+Final cached pipeline must use the isolated Phase 1 schema, never `public`:
+
+```bash
+python scripts/run_pipeline.py \
+  --source-mode inat_snapshot \
+  --snapshot-id phase1-be-fr-20260509-final-input-v3 \
+  --qualifier-mode cached \
+  --qualification-policy v1.1 \
+  --uncertain-policy reject
+```
+
+Final gate:
+
+```bash
+python scripts/phase1_corpus_gate.py \
+  --run-id phase1-be-fr-20260509-final-audit-v1 \
+  audit \
+  --question-generation-success-rate 0.99
+```
 
 ## Baseline Findings - 2026-05-09
 

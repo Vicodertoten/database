@@ -1,0 +1,460 @@
+{
+  "already_in_current_db_by_country": {
+    "BE": 370
+  },
+  "already_in_current_db_by_taxon": {
+    "taxon:birds:000001": 12,
+    "taxon:birds:000002": 11,
+    "taxon:birds:000003": 7,
+    "taxon:birds:000004": 10,
+    "taxon:birds:000005": 2,
+    "taxon:birds:000006": 7,
+    "taxon:birds:000007": 6,
+    "taxon:birds:000008": 10,
+    "taxon:birds:000009": 5,
+    "taxon:birds:000010": 10,
+    "taxon:birds:000011": 4,
+    "taxon:birds:000012": 4,
+    "taxon:birds:000013": 14,
+    "taxon:birds:000014": 7,
+    "taxon:birds:000015": 11,
+    "taxon:birds:000016": 4,
+    "taxon:birds:000017": 5,
+    "taxon:birds:000018": 6,
+    "taxon:birds:000019": 7,
+    "taxon:birds:000020": 4,
+    "taxon:birds:000021": 14,
+    "taxon:birds:000022": 20,
+    "taxon:birds:000023": 5,
+    "taxon:birds:000024": 13,
+    "taxon:birds:000025": 9,
+    "taxon:birds:000027": 4,
+    "taxon:birds:000028": 7,
+    "taxon:birds:000029": 9,
+    "taxon:birds:000031": 7,
+    "taxon:birds:000032": 4,
+    "taxon:birds:000033": 2,
+    "taxon:birds:000034": 11,
+    "taxon:birds:000035": 11,
+    "taxon:birds:000036": 10,
+    "taxon:birds:000037": 2,
+    "taxon:birds:000038": 8,
+    "taxon:birds:000039": 11,
+    "taxon:birds:000040": 6,
+    "taxon:birds:000041": 2,
+    "taxon:birds:000042": 4,
+    "taxon:birds:000043": 10,
+    "taxon:birds:000044": 3,
+    "taxon:birds:000045": 1,
+    "taxon:birds:000047": 3,
+    "taxon:birds:000048": 20,
+    "taxon:birds:000049": 8,
+    "taxon:birds:000070": 13,
+    "taxon:birds:000079": 7
+  },
+  "budget": {
+    "budget_cap_eur": 10.0,
+    "candidate_count": 2541,
+    "estimated_cost_eur": 3.0492,
+    "estimated_cost_per_image_eur": 0.0012,
+    "within_budget": true
+  },
+  "current_db_existing_media_lookup": {
+    "enabled": true,
+    "key_count": 2447,
+    "media_asset_row_count": 816,
+    "status": "ok"
+  },
+  "duplicate_or_blocked_reason_counts": {
+    "already_in_current_db": 370
+  },
+  "final_input_snapshot": {
+    "candidate_count": 2911,
+    "candidates_by_country": {
+      "BE": 379,
+      "FR": 2532
+    },
+    "candidates_by_taxon": {
+      "taxon:birds:000001": 60,
+      "taxon:birds:000002": 60,
+      "taxon:birds:000003": 60,
+      "taxon:birds:000004": 60,
+      "taxon:birds:000005": 60,
+      "taxon:birds:000006": 60,
+      "taxon:birds:000007": 60,
+      "taxon:birds:000008": 60,
+      "taxon:birds:000009": 60,
+      "taxon:birds:000010": 60,
+      "taxon:birds:000011": 60,
+      "taxon:birds:000012": 60,
+      "taxon:birds:000013": 60,
+      "taxon:birds:000014": 60,
+      "taxon:birds:000015": 60,
+      "taxon:birds:000016": 60,
+      "taxon:birds:000017": 60,
+      "taxon:birds:000018": 48,
+      "taxon:birds:000019": 60,
+      "taxon:birds:000020": 60,
+      "taxon:birds:000021": 60,
+      "taxon:birds:000022": 60,
+      "taxon:birds:000023": 60,
+      "taxon:birds:000024": 60,
+      "taxon:birds:000025": 60,
+      "taxon:birds:000026": 60,
+      "taxon:birds:000027": 60,
+      "taxon:birds:000028": 60,
+      "taxon:birds:000029": 60,
+      "taxon:birds:000030": 60,
+      "taxon:birds:000031": 60,
+      "taxon:birds:000032": 60,
+      "taxon:birds:000033": 60,
+      "taxon:birds:000034": 60,
+      "taxon:birds:000035": 54,
+      "taxon:birds:000036": 34,
+      "taxon:birds:000037": 47,
+      "taxon:birds:000038": 60,
+      "taxon:birds:000039": 60,
+      "taxon:birds:000040": 29,
+      "taxon:birds:000041": 60,
+      "taxon:birds:000042": 60,
+      "taxon:birds:000043": 60,
+      "taxon:birds:000044": 59,
+      "taxon:birds:000045": 60,
+      "taxon:birds:000047": 60,
+      "taxon:birds:000048": 60,
+      "taxon:birds:000049": 60,
+      "taxon:birds:000070": 60,
+      "taxon:birds:000079": 60
+    },
+    "candidates_by_taxon_country": {
+      "taxon:birds:000001": {
+        "BE": 12,
+        "FR": 48
+      },
+      "taxon:birds:000002": {
+        "BE": 11,
+        "FR": 49
+      },
+      "taxon:birds:000003": {
+        "BE": 7,
+        "FR": 53
+      },
+      "taxon:birds:000004": {
+        "BE": 10,
+        "FR": 50
+      },
+      "taxon:birds:000005": {
+        "BE": 2,
+        "FR": 58
+      },
+      "taxon:birds:000006": {
+        "BE": 7,
+        "FR": 53
+      },
+      "taxon:birds:000007": {
+        "BE": 6,
+        "FR": 54
+      },
+      "taxon:birds:000008": {
+        "BE": 10,
+        "FR": 50
+      },
+      "taxon:birds:000009": {
+        "BE": 5,
+        "FR": 55
+      },
+      "taxon:birds:000010": {
+        "BE": 10,
+        "FR": 50
+      },
+      "taxon:birds:000011": {
+        "BE": 4,
+        "FR": 56
+      },
+      "taxon:birds:000012": {
+        "BE": 4,
+        "FR": 56
+      },
+      "taxon:birds:000013": {
+        "BE": 14,
+        "FR": 46
+      },
+      "taxon:birds:000014": {
+        "BE": 7,
+        "FR": 53
+      },
+      "taxon:birds:000015": {
+        "BE": 11,
+        "FR": 49
+      },
+      "taxon:birds:000016": {
+        "BE": 4,
+        "FR": 56
+      },
+      "taxon:birds:000017": {
+        "BE": 5,
+        "FR": 55
+      },
+      "taxon:birds:000018": {
+        "BE": 6,
+        "FR": 42
+      },
+      "taxon:birds:000019": {
+        "BE": 7,
+        "FR": 53
+      },
+      "taxon:birds:000020": {
+        "BE": 4,
+        "FR": 56
+      },
+      "taxon:birds:000021": {
+        "BE": 14,
+        "FR": 46
+      },
+      "taxon:birds:000022": {
+        "BE": 27,
+        "FR": 33
+      },
+      "taxon:birds:000023": {
+        "BE": 5,
+        "FR": 55
+      },
+      "taxon:birds:000024": {
+        "BE": 13,
+        "FR": 47
+      },
+      "taxon:birds:000025": {
+        "BE": 9,
+        "FR": 51
+      },
+      "taxon:birds:000026": {
+        "FR": 60
+      },
+      "taxon:birds:000027": {
+        "BE": 4,
+        "FR": 56
+      },
+      "taxon:birds:000028": {
+        "BE": 7,
+        "FR": 53
+      },
+      "taxon:birds:000029": {
+        "BE": 9,
+        "FR": 51
+      },
+      "taxon:birds:000030": {
+        "FR": 60
+      },
+      "taxon:birds:000031": {
+        "BE": 7,
+        "FR": 53
+      },
+      "taxon:birds:000032": {
+        "BE": 4,
+        "FR": 56
+      },
+      "taxon:birds:000033": {
+        "BE": 2,
+        "FR": 58
+      },
+      "taxon:birds:000034": {
+        "BE": 11,
+        "FR": 49
+      },
+      "taxon:birds:000035": {
+        "BE": 11,
+        "FR": 43
+      },
+      "taxon:birds:000036": {
+        "BE": 10,
+        "FR": 24
+      },
+      "taxon:birds:000037": {
+        "BE": 2,
+        "FR": 45
+      },
+      "taxon:birds:000038": {
+        "BE": 8,
+        "FR": 52
+      },
+      "taxon:birds:000039": {
+        "BE": 11,
+        "FR": 49
+      },
+      "taxon:birds:000040": {
+        "BE": 6,
+        "FR": 23
+      },
+      "taxon:birds:000041": {
+        "BE": 2,
+        "FR": 58
+      },
+      "taxon:birds:000042": {
+        "BE": 4,
+        "FR": 56
+      },
+      "taxon:birds:000043": {
+        "BE": 10,
+        "FR": 50
+      },
+      "taxon:birds:000044": {
+        "BE": 3,
+        "FR": 56
+      },
+      "taxon:birds:000045": {
+        "BE": 1,
+        "FR": 59
+      },
+      "taxon:birds:000047": {
+        "BE": 3,
+        "FR": 57
+      },
+      "taxon:birds:000048": {
+        "BE": 22,
+        "FR": 38
+      },
+      "taxon:birds:000049": {
+        "BE": 8,
+        "FR": 52
+      },
+      "taxon:birds:000070": {
+        "BE": 13,
+        "FR": 47
+      },
+      "taxon:birds:000079": {
+        "BE": 7,
+        "FR": 53
+      }
+    },
+    "max_candidates_per_taxon": 60,
+    "min_candidates_per_taxon": 29,
+    "purpose": "phase1_final_input_before_gemini_merge",
+    "snapshot_id": "phase1-be-fr-20260509-final-input-v3",
+    "snapshot_path": "data/raw/inaturalist/phase1-be-fr-20260509-final-input-v3",
+    "taxa_below_target_images": 0,
+    "taxa_with_zero_candidates": 0
+  },
+  "gemini_worklist_snapshot_id": "phase1-be-fr-20260509-gemini-worklist-v3",
+  "generated_at": "2026-05-09T12:25:16.424225+00:00",
+  "internal_duplicate_or_blocked_by_country": {},
+  "internal_duplicate_or_blocked_by_taxon": {},
+  "max_candidates_per_species": 60,
+  "output_snapshot_id": "phase1-be-fr-20260509-gemini-worklist-v3",
+  "output_snapshot_path": "data/raw/inaturalist/phase1-be-fr-20260509-gemini-worklist-v3",
+  "raw_candidates_by_country": {
+    "BE": 379,
+    "FR": 2532
+  },
+  "raw_candidates_by_taxon": {
+    "taxon:birds:000001": 60,
+    "taxon:birds:000002": 60,
+    "taxon:birds:000003": 60,
+    "taxon:birds:000004": 60,
+    "taxon:birds:000005": 60,
+    "taxon:birds:000006": 60,
+    "taxon:birds:000007": 60,
+    "taxon:birds:000008": 60,
+    "taxon:birds:000009": 60,
+    "taxon:birds:000010": 60,
+    "taxon:birds:000011": 60,
+    "taxon:birds:000012": 60,
+    "taxon:birds:000013": 60,
+    "taxon:birds:000014": 60,
+    "taxon:birds:000015": 60,
+    "taxon:birds:000016": 60,
+    "taxon:birds:000017": 60,
+    "taxon:birds:000018": 48,
+    "taxon:birds:000019": 60,
+    "taxon:birds:000020": 60,
+    "taxon:birds:000021": 60,
+    "taxon:birds:000022": 60,
+    "taxon:birds:000023": 60,
+    "taxon:birds:000024": 60,
+    "taxon:birds:000025": 60,
+    "taxon:birds:000026": 60,
+    "taxon:birds:000027": 60,
+    "taxon:birds:000028": 60,
+    "taxon:birds:000029": 60,
+    "taxon:birds:000030": 60,
+    "taxon:birds:000031": 60,
+    "taxon:birds:000032": 60,
+    "taxon:birds:000033": 60,
+    "taxon:birds:000034": 60,
+    "taxon:birds:000035": 54,
+    "taxon:birds:000036": 34,
+    "taxon:birds:000037": 47,
+    "taxon:birds:000038": 60,
+    "taxon:birds:000039": 60,
+    "taxon:birds:000040": 29,
+    "taxon:birds:000041": 60,
+    "taxon:birds:000042": 60,
+    "taxon:birds:000043": 60,
+    "taxon:birds:000044": 59,
+    "taxon:birds:000045": 60,
+    "taxon:birds:000047": 60,
+    "taxon:birds:000048": 60,
+    "taxon:birds:000049": 60,
+    "taxon:birds:000070": 60,
+    "taxon:birds:000079": 60
+  },
+  "raw_candidates_total": 2911,
+  "report_type": "pre_ai_selection",
+  "schema_version": "dynamic_pack_phase1_corpus_gate.v1",
+  "selected_candidates_by_country": {
+    "BE": 9,
+    "FR": 2532
+  },
+  "selected_candidates_by_taxon": {
+    "taxon:birds:000001": 48,
+    "taxon:birds:000002": 49,
+    "taxon:birds:000003": 53,
+    "taxon:birds:000004": 50,
+    "taxon:birds:000005": 58,
+    "taxon:birds:000006": 53,
+    "taxon:birds:000007": 54,
+    "taxon:birds:000008": 50,
+    "taxon:birds:000009": 55,
+    "taxon:birds:000010": 50,
+    "taxon:birds:000011": 56,
+    "taxon:birds:000012": 56,
+    "taxon:birds:000013": 46,
+    "taxon:birds:000014": 53,
+    "taxon:birds:000015": 49,
+    "taxon:birds:000016": 56,
+    "taxon:birds:000017": 55,
+    "taxon:birds:000018": 42,
+    "taxon:birds:000019": 53,
+    "taxon:birds:000020": 56,
+    "taxon:birds:000021": 46,
+    "taxon:birds:000022": 40,
+    "taxon:birds:000023": 55,
+    "taxon:birds:000024": 47,
+    "taxon:birds:000025": 51,
+    "taxon:birds:000026": 60,
+    "taxon:birds:000027": 56,
+    "taxon:birds:000028": 53,
+    "taxon:birds:000029": 51,
+    "taxon:birds:000030": 60,
+    "taxon:birds:000031": 53,
+    "taxon:birds:000032": 56,
+    "taxon:birds:000033": 58,
+    "taxon:birds:000034": 49,
+    "taxon:birds:000035": 43,
+    "taxon:birds:000036": 24,
+    "taxon:birds:000037": 45,
+    "taxon:birds:000038": 52,
+    "taxon:birds:000039": 49,
+    "taxon:birds:000040": 23,
+    "taxon:birds:000041": 58,
+    "taxon:birds:000042": 56,
+    "taxon:birds:000043": 50,
+    "taxon:birds:000044": 56,
+    "taxon:birds:000045": 59,
+    "taxon:birds:000047": 57,
+    "taxon:birds:000048": 40,
+    "taxon:birds:000049": 52,
+    "taxon:birds:000070": 47,
+    "taxon:birds:000079": 53
+  },
+  "selected_candidates_total": 2541
+}

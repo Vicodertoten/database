@@ -1,0 +1,19 @@
+{
+  "ai_outputs_path": "data/raw/inaturalist/phase1-be-fr-20260509-final-input-v3/ai_outputs.json",
+  "cached_current_db_outputs_count": 370,
+  "current_database_url": "postgresql://postgres:***@db.cduiheqceeghzrlbtwom.supabase.co:5432/postgres?sslmode=require",
+  "final_input_snapshot_id": "phase1-be-fr-20260509-final-input-v3",
+  "final_media_count": 2911,
+  "gemini_worklist_snapshot_id": "phase1-be-fr-20260509-gemini-worklist-v3",
+  "generated_at": "2026-05-09T14:23:40.433306+00:00",
+  "merged_ai_outputs_count": 2911,
+  "missing_ai_outputs_count": 0,
+  "missing_source_media_ids": [],
+  "report_type": "ai_outputs_merge",
+  "schema_version": "dynamic_pack_phase1_corpus_gate.v1",
+  "status_counts": {
+    "insufficient_resolution_pre_ai": 280,
+    "ok": 2631
+  },
+  "worklist_ai_outputs_count": 2541
+}
