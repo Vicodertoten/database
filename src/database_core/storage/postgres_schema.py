@@ -846,3 +846,113 @@ POSTGRES_CANONICAL_NAMES_I18N_V18_SQL = """
 ALTER TABLE canonical_taxa
     ADD COLUMN IF NOT EXISTS common_names_i18n_json TEXT NOT NULL DEFAULT '{}';
 """
+
+POSTGRES_DISTRACTOR_RELATIONSHIPS_V19_SQL = """
+CREATE TABLE IF NOT EXISTS distractor_relationships (
+    relationship_id TEXT PRIMARY KEY,
+    target_canonical_taxon_id TEXT NOT NULL,
+    target_scientific_name TEXT NOT NULL,
+    candidate_taxon_ref_type TEXT NOT NULL CHECK (
+        candidate_taxon_ref_type IN (
+            'canonical_taxon',
+            'referenced_taxon',
+            'unresolved_taxon'
+        )
+    ),
+    candidate_taxon_ref_id TEXT,
+    candidate_scientific_name TEXT NOT NULL,
+    source TEXT NOT NULL CHECK (
+        source IN (
+            'inaturalist_similar_species',
+            'taxonomic_neighbor_same_genus',
+            'taxonomic_neighbor_same_family',
+            'taxonomic_neighbor_same_order',
+            'ai_pedagogical_proposal',
+            'manual_expert',
+            'emergency_diversity_fallback'
+        )
+    ),
+    source_rank INTEGER NOT NULL CHECK (source_rank >= 1),
+    confusion_types_json TEXT NOT NULL DEFAULT '[]',
+    pedagogical_value TEXT NOT NULL CHECK (
+        pedagogical_value IN ('high', 'medium', 'low', 'unknown')
+    ),
+    difficulty_level TEXT NOT NULL CHECK (
+        difficulty_level IN ('easy', 'medium', 'hard', 'expert')
+    ),
+    learner_level TEXT NOT NULL CHECK (
+        learner_level IN ('beginner', 'intermediate', 'advanced', 'expert', 'mixed')
+    ),
+    reason TEXT,
+    status TEXT NOT NULL CHECK (
+        status IN (
+            'candidate',
+            'validated',
+            'needs_review',
+            'rejected',
+            'unavailable_missing_taxon',
+            'unavailable_missing_localized_name',
+            'unavailable_missing_media'
+        )
+    ),
+    constraints_json TEXT NOT NULL DEFAULT '{}',
+    created_at TIMESTAMPTZ NOT NULL,
+    updated_at TIMESTAMPTZ,
+    payload_json TEXT NOT NULL,
+    candidate_canonical_taxon_id TEXT GENERATED ALWAYS AS (
+        CASE
+            WHEN candidate_taxon_ref_type = 'canonical_taxon'
+            THEN candidate_taxon_ref_id
+            ELSE NULL
+        END
+    ) STORED,
+    candidate_referenced_taxon_id TEXT GENERATED ALWAYS AS (
+        CASE
+            WHEN candidate_taxon_ref_type = 'referenced_taxon'
+            THEN candidate_taxon_ref_id
+            ELSE NULL
+        END
+    ) STORED,
+    FOREIGN KEY (target_canonical_taxon_id)
+        REFERENCES canonical_taxa (canonical_taxon_id),
+    FOREIGN KEY (candidate_canonical_taxon_id)
+        REFERENCES canonical_taxa (canonical_taxon_id),
+    FOREIGN KEY (candidate_referenced_taxon_id)
+        REFERENCES referenced_taxa (referenced_taxon_id),
+    CONSTRAINT distractor_relationship_candidate_ref_required
+        CHECK (
+            (
+                candidate_taxon_ref_type IN ('canonical_taxon', 'referenced_taxon')
+                AND candidate_taxon_ref_id IS NOT NULL
+                AND NULLIF(TRIM(candidate_taxon_ref_id), '') IS NOT NULL
+            )
+            OR
+            (
+                candidate_taxon_ref_type = 'unresolved_taxon'
+                AND candidate_taxon_ref_id IS NULL
+            )
+        ),
+    CONSTRAINT distractor_relationship_no_self_scientific
+        CHECK (target_scientific_name <> candidate_scientific_name),
+    CONSTRAINT distractor_relationship_validated_not_unresolved
+        CHECK (
+            NOT (
+                candidate_taxon_ref_type = 'unresolved_taxon'
+                AND status = 'validated'
+            )
+        ),
+    CONSTRAINT distractor_relationship_no_validated_emergency_fallback
+        CHECK (
+            NOT (
+                source = 'emergency_diversity_fallback'
+                AND status = 'validated'
+            )
+        )
+);
+
+CREATE INDEX IF NOT EXISTS idx_distractor_relationships_target_status_source
+    ON distractor_relationships (target_canonical_taxon_id, status, source);
+
+CREATE INDEX IF NOT EXISTS idx_distractor_relationships_candidate_ref
+    ON distractor_relationships (candidate_taxon_ref_type, candidate_taxon_ref_id);
+"""

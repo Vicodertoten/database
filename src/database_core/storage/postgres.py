@@ -30,6 +30,9 @@ from database_core.domain.models import (
     SourceObservation,
 )
 from database_core.storage.confusion_store import PostgresConfusionStore
+from database_core.storage.distractor_relationship_store import (
+    PostgresDistractorRelationshipStore,
+)
 from database_core.storage.dynamic_pack_store import PostgresDynamicPackStore
 from database_core.storage.enrichment_store import PostgresEnrichmentStore
 from database_core.storage.inspection_store import PostgresInspectionStore
@@ -63,6 +66,9 @@ class PostgresStorageInternal:
         )
         self.confusion_store = PostgresConfusionStore(connect=self.connect)
         self.dynamic_pack_store = PostgresDynamicPackStore(connect=self.connect)
+        self.distractor_relationship_store = PostgresDistractorRelationshipStore(
+            connect=self.connect
+        )
         self.inspection_store = PostgresInspectionStore(connect=self.connect)
         self.playable_store = PostgresPlayableStore(connect=self.connect)
 
@@ -177,6 +183,7 @@ class PostgresStorageInternal:
             # Phase 3 referenced-only taxa may point to canonical taxa.
             # Clear them before canonical reset to avoid FK violations
             # during pipeline overwrite runs.
+            "DELETE FROM distractor_relationships",
             "DELETE FROM referenced_taxa",
             "DELETE FROM canonical_taxa",
         ):

@@ -177,7 +177,7 @@ Priorite:
 
 Etat schema applicatif observe:
 
-- `database.schema.v17`
+- `database.schema.v19`
 
 Contrats observes:
 
@@ -281,7 +281,7 @@ Criteres d'acceptation:
 
 Impacts techniques:
 
-- migration schema `database.schema.v17` sur `playable_item_lifecycle` (coherence statut/raison + index inspection)
+- migration schema `database.schema.v19` sur `distractor_relationships` (Palier A canonical-only + audit DB-first)
 - ajustement de `save_playable_items` pour raison explicite
 - ajout d'une surface inspect dediee aux invalidations playable
 - tests de persistance/lifecycle et CLI inspect couverts

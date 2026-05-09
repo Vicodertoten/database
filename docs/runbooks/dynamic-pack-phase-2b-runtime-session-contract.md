@@ -264,25 +264,39 @@ Phase 3 runtime work should:
 
 ## Immediate Next Steps
 
-Current status after the Phase 2B name-repair correction run:
+Current status after the Phase 2B name-repair correction run and Palier A
+distractor persistence:
 
 - correction run: `phase2b-name-repair-v18`;
-- database schema: `database.schema.v18`;
+- database schema: `database.schema.v19`;
 - source run: `run:20260509T180000Z:2b18beef`;
 - `pack_pool.v1` pool: `pack-pool:be-fr-birds-50:v1`;
 - Phase 2A audit: `GO`;
 - Phase 2B `name-repair` audit: `NO_ISSUE_FOUND`;
 - Phase 2B `referenced-only` audit: `NO_ISSUE_FOUND`;
+- Phase 2B distractor relationships Palier A audit: `GO_WITH_WARNINGS`;
 - FR/EN/NL labels: `2313/2313` common-name labels per locale;
-- scientific-name fallbacks in FR/EN/NL: `0`.
+- scientific-name fallbacks in FR/EN/NL: `0`;
+- persisted distractor relationships: `203` canonical-only rows, all `validated`;
+- referenced-only distractors: `0` in Palier A.
 
 Evidence:
 
 - `docs/archive/evidence/dynamic-pack-phase-2a/phase2b-name-repair-v18/`;
 - `docs/audits/phase2b-name-repair-audit.md`;
 - `docs/audits/phase2b-referenced-only-audit.md`;
+- `docs/audits/phase2b-distractor-relationships-palier-a.md`;
 - `docs/audits/evidence/phase2b/name_repair_audit.json`;
-- `docs/audits/evidence/phase2b/referenced_only_audit.json`.
+- `docs/audits/evidence/phase2b/referenced_only_audit.json`;
+- `docs/audits/evidence/phase2b/distractor_relationships_palier_a_audit.json`.
+
+Palier A intentionally imports only `canonical_taxon` distractor relationships
+from the Sprint 13 projection. The DB-first audit currently reports
+`GO_WITH_WARNINGS` because `11` pool targets have fewer than `3` persisted
+canonical distractors. `session_snapshot.v2` may use these validated
+relationships first, then a database-side traced taxonomic fallback for those
+targets. Runtime must still receive fully snapshotted options and must not
+derive distractors.
 
 Phase 2B.1 and the required name-repair correction are complete for internal
 runtime handoff. The next implementation step is `session_snapshot.v2`.
@@ -294,7 +308,7 @@ Reference command sequence used for the correction:
    - The URL must use `options=-csearch_path=phase1_be_fr_20260509,public`.
    - Do not run Phase 2B audits against `public` unless the runbook is revised.
 
-2. Migrate the clone to `database.schema.v18`.
+2. Migrate the clone to `database.schema.v19`.
 
    ```bash
    python scripts/migrate_database.py --database-url "$PHASE1_DATABASE_URL"
@@ -360,7 +374,29 @@ Reference command sequence used for the correction:
    - `docs/audits/evidence/phase2b/referenced_only_audit.json`
    - `docs/audits/phase2b-referenced-only-audit.md`
 
-8. Classify the audit decisions.
+8. Import Palier A canonical distractor relationships.
+
+   ```bash
+   python scripts/phase2b_distractor_relationships.py \
+     --database-url "$PHASE1_DATABASE_URL" \
+     import-canonical
+   ```
+
+9. Run the DB-first distractor relationship audit.
+
+   ```bash
+   python scripts/phase2b_distractor_relationships.py \
+     --database-url "$PHASE1_DATABASE_URL" \
+     audit-db \
+     --pool-id pack-pool:be-fr-birds-50:v1
+   ```
+
+   Expected outputs:
+
+   - `docs/audits/evidence/phase2b/distractor_relationships_palier_a_audit.json`
+   - `docs/audits/phase2b-distractor-relationships-palier-a.md`
+
+10. Classify the audit decisions.
    - `NO_ISSUE_FOUND`: proceed to Phase 2B contract work for that axis.
    - `READY_FOR_CORRECTION`: patch the source/projection/enrichment issue before
      the next generation run.

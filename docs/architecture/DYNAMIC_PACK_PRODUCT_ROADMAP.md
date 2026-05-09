@@ -254,10 +254,11 @@ proven otherwise. Phase 2B validation is blocked until the FR/NL label source is
 diagnosed and corrected or the remaining fallback cases are explicitly justified.
 
 Phase 2B name repair has corrected this for internal runtime handoff. The
-`database.schema.v18` pipeline now persists multilingual canonical names from
+`database.schema.v19` pipeline persists multilingual canonical names from
 iNaturalist `localized_taxa`, rebuilds `playable_items.common_names_i18n_json`,
-and projects `pack_pool.v1` with `2313/2313` common-name labels in each of
-`fr`, `en`, and `nl`.
+projects `pack_pool.v1` with `2313/2313` common-name labels in each of `fr`,
+`en`, and `nl`, and adds Palier A `distractor_relationships` persistence for
+canonical-only validated distractors.
 
 Runtime option display should receive both common and scientific names from
 `database`. The runtime may render the common name as the primary option label

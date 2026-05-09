@@ -1,0 +1,85 @@
+{
+  "artifact_path": null,
+  "blockers": [],
+  "details": {
+    "blockers": [],
+    "candidate_taxon_ref_type_counts": {
+      "canonical_taxon": 203
+    },
+    "pool_id": "pack-pool:be-fr-birds-50:v1",
+    "relationship_count": 203,
+    "source_counts": {
+      "inaturalist_similar_species": 119,
+      "taxonomic_neighbor_same_family": 66,
+      "taxonomic_neighbor_same_genus": 8,
+      "taxonomic_neighbor_same_order": 10
+    },
+    "status": "GO_WITH_WARNINGS",
+    "status_counts": {
+      "validated": 203
+    },
+    "target_taxon_count": 50,
+    "targets_below_min": [
+      {
+        "target_canonical_taxon_id": "taxon:birds:000007",
+        "validated_canonical_distractor_count": 0
+      },
+      {
+        "target_canonical_taxon_id": "taxon:birds:000018",
+        "validated_canonical_distractor_count": 0
+      },
+      {
+        "target_canonical_taxon_id": "taxon:birds:000020",
+        "validated_canonical_distractor_count": 2
+      },
+      {
+        "target_canonical_taxon_id": "taxon:birds:000026",
+        "validated_canonical_distractor_count": 2
+      },
+      {
+        "target_canonical_taxon_id": "taxon:birds:000027",
+        "validated_canonical_distractor_count": 2
+      },
+      {
+        "target_canonical_taxon_id": "taxon:birds:000028",
+        "validated_canonical_distractor_count": 1
+      },
+      {
+        "target_canonical_taxon_id": "taxon:birds:000029",
+        "validated_canonical_distractor_count": 2
+      },
+      {
+        "target_canonical_taxon_id": "taxon:birds:000030",
+        "validated_canonical_distractor_count": 1
+      },
+      {
+        "target_canonical_taxon_id": "taxon:birds:000041",
+        "validated_canonical_distractor_count": 2
+      },
+      {
+        "target_canonical_taxon_id": "taxon:birds:000045",
+        "validated_canonical_distractor_count": 0
+      },
+      {
+        "target_canonical_taxon_id": "taxon:birds:000070",
+        "validated_canonical_distractor_count": 0
+      }
+    ],
+    "warnings": [
+      "targets_below_min_validated_canonical_distractors"
+    ]
+  },
+  "generated_at": "2026-05-09T17:09:55.202129+00:00",
+  "palier_a_policy": {
+    "import_scope": "canonical_taxon_only",
+    "persisted_status": "validated",
+    "referenced_only_runtime_usage": false,
+    "referenced_taxa_storage": "audit_only"
+  },
+  "report_type": "db_audit",
+  "schema_version": "phase2b.distractor_relationships_palier_a.v1",
+  "status": "GO_WITH_WARNINGS",
+  "warnings": [
+    "targets_below_min_validated_canonical_distractors"
+  ]
+}

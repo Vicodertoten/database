@@ -1,12 +1,14 @@
 import json
 from datetime import UTC, datetime
 
+import psycopg
 import pytest
 from pydantic import ValidationError
 
 from database_core.domain.enums import SourceName
 from database_core.domain.models import (
     CanonicalTaxon,
+    DistractorRelationship,
     ExternalMapping,
     GeoPoint,
     LocationMetadata,
@@ -79,14 +81,14 @@ def test_initialize_can_reset_legacy_schema_version_with_explicit_flag(
         )
 
     assert "legacy_table" not in table_names
-    assert user_version == 18
+    assert user_version == 19
 
 
-def test_migrate_to_latest_initializes_v18_schema(database_url: str) -> None:
+def test_migrate_to_latest_initializes_v19_schema(database_url: str) -> None:
     repository = _build_repository(database_url)
     applied_versions = repository.migrate_to_latest()
-    assert applied_versions == (8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18)
-    assert repository.current_schema_version() == 18
+    assert applied_versions == (8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19)
+    assert repository.current_schema_version() == 19
     with repository.connect() as connection:
         column = connection.execute(
             """
@@ -97,7 +99,16 @@ def test_migrate_to_latest_initializes_v18_schema(database_url: str) -> None:
               AND column_name = 'common_names_i18n_json'
             """
         ).fetchone()
+        table = connection.execute(
+            """
+            SELECT table_name
+            FROM information_schema.tables
+            WHERE table_schema = current_schema()
+              AND table_name = 'distractor_relationships'
+            """
+        ).fetchone()
     assert column is not None
+    assert table is not None
 
 
 def test_save_canonical_taxa_persists_common_names_i18n(database_url: str) -> None:
@@ -142,6 +153,117 @@ def test_save_canonical_taxa_persists_common_names_i18n(database_url: str) -> No
         "fr": ["Pigeon ramier"],
         "nl": ["Houtduif"],
     }
+
+
+def test_distractor_relationship_store_persists_validated_canonical_relationships(
+    database_url: str,
+) -> None:
+    repository = _build_repository(database_url)
+    repository.initialize()
+    services = build_storage_services(database_url)
+    run_id = "run:20260509T010000Z:distractors"
+    now = datetime(2026, 5, 9, 1, 0, tzinfo=UTC)
+    target = _canonical_taxon(
+        canonical_taxon_id="taxon:birds:000001",
+        name="Columba palumbus",
+    )
+    candidate = _canonical_taxon(
+        canonical_taxon_id="taxon:birds:000079",
+        name="Streptopelia decaocto",
+    )
+    relationship = DistractorRelationship(
+        relationship_id="dr:test:canonical",
+        target_canonical_taxon_id=target.canonical_taxon_id,
+        target_scientific_name=target.accepted_scientific_name,
+        candidate_taxon_ref_type="canonical_taxon",
+        candidate_taxon_ref_id=candidate.canonical_taxon_id,
+        candidate_scientific_name=candidate.accepted_scientific_name,
+        source="inaturalist_similar_species",
+        source_rank=1,
+        confusion_types=["visual_similarity"],
+        pedagogical_value="high",
+        difficulty_level="medium",
+        learner_level="mixed",
+        status="validated",
+        created_at=now,
+    )
+
+    with repository.connect() as connection:
+        repository.start_pipeline_run(
+            run_id=run_id,
+            source_mode="inat_snapshot",
+            dataset_id="dataset:test",
+            snapshot_id="snapshot:test",
+            started_at=now,
+            connection=connection,
+        )
+        repository.save_canonical_taxa([target, candidate], run_id=run_id, connection=connection)
+        services.distractor_relationship_store.save_distractor_relationships(
+            [relationship],
+            connection=connection,
+        )
+        services.distractor_relationship_store.save_distractor_relationships(
+            [relationship],
+            connection=connection,
+        )
+
+    grouped = services.distractor_relationship_store.fetch_validated_distractors_by_target(
+        target_canonical_taxon_ids=[target.canonical_taxon_id]
+    )
+    audit = services.distractor_relationship_store.audit_distractor_relationship_coverage(
+        target_canonical_taxon_ids=[target.canonical_taxon_id],
+    )
+
+    assert len(grouped[target.canonical_taxon_id]) == 1
+    assert audit["relationship_count"] == 1
+    assert audit["status"] == "GO_WITH_WARNINGS"
+    assert audit["source_counts"] == {"inaturalist_similar_species": 1}
+
+
+def test_distractor_relationship_store_fk_blocks_missing_candidate(
+    database_url: str,
+) -> None:
+    repository = _build_repository(database_url)
+    repository.initialize()
+    services = build_storage_services(database_url)
+    run_id = "run:20260509T013000Z:distractorfk"
+    now = datetime(2026, 5, 9, 1, 30, tzinfo=UTC)
+    target = _canonical_taxon(
+        canonical_taxon_id="taxon:birds:000001",
+        name="Columba palumbus",
+    )
+    relationship = DistractorRelationship(
+        relationship_id="dr:test:missing-candidate",
+        target_canonical_taxon_id=target.canonical_taxon_id,
+        target_scientific_name=target.accepted_scientific_name,
+        candidate_taxon_ref_type="canonical_taxon",
+        candidate_taxon_ref_id="taxon:birds:999999",
+        candidate_scientific_name="Missing species",
+        source="taxonomic_neighbor_same_family",
+        source_rank=1,
+        confusion_types=["same_family"],
+        pedagogical_value="medium",
+        difficulty_level="medium",
+        learner_level="mixed",
+        status="validated",
+        created_at=now,
+    )
+
+    with repository.connect() as connection:
+        repository.start_pipeline_run(
+            run_id=run_id,
+            source_mode="inat_snapshot",
+            dataset_id="dataset:test",
+            snapshot_id="snapshot:test",
+            started_at=now,
+            connection=connection,
+        )
+        repository.save_canonical_taxa([target], run_id=run_id, connection=connection)
+        with pytest.raises(psycopg.errors.ForeignKeyViolation):
+            services.distractor_relationship_store.save_distractor_relationships(
+                [relationship],
+                connection=connection,
+            )
 
 
 def test_geospatial_queries_support_bbox_and_point_radius(database_url: str) -> None:

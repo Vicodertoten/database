@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-SCHEMA_VERSION = 18
-SCHEMA_VERSION_LABEL = "database.schema.v18"
+SCHEMA_VERSION = 19
+SCHEMA_VERSION_LABEL = "database.schema.v19"
 SNAPSHOT_MANIFEST_VERSION = "inaturalist.snapshot.v3"
 NORMALIZED_SNAPSHOT_VERSION = "normalized.snapshot.v3"
 ENRICHMENT_VERSION = "canonical.enrichment.v2"

@@ -15,6 +15,9 @@ from database_core.domain.models import (
 	SourceObservation,
 )
 from database_core.storage.confusion_store import PostgresConfusionStore
+from database_core.storage.distractor_relationship_store import (
+	PostgresDistractorRelationshipStore,
+)
 from database_core.storage.dynamic_pack_store import PostgresDynamicPackStore
 from database_core.storage.enrichment_store import PostgresEnrichmentStore
 from database_core.storage.inspection_store import PostgresInspectionStore
@@ -190,6 +193,7 @@ class StorageServices:
 	pipeline_store: PostgresPipelineStore
 	pack_store: PostgresPackStore
 	dynamic_pack_store: PostgresDynamicPackStore
+	distractor_relationship_store: PostgresDistractorRelationshipStore
 	enrichment_store: PostgresEnrichmentStore
 	confusion_store: PostgresConfusionStore
 	inspection_store: PostgresInspectionStore
@@ -204,6 +208,7 @@ def build_storage_services(database_url: str) -> StorageServices:
 		pipeline_store=PostgresPipelineStore(repository),
 		pack_store=repository.pack_store,
 		dynamic_pack_store=repository.dynamic_pack_store,
+		distractor_relationship_store=repository.distractor_relationship_store,
 		enrichment_store=repository.enrichment_store,
 		confusion_store=repository.confusion_store,
 		inspection_store=repository.inspection_store,
