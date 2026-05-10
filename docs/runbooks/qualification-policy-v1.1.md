@@ -14,7 +14,10 @@ Objectif v1.1: separer l'acceptation data de la selection pedagogique.
 
 - v1 gardait une logique binaire: de nombreux defauts pedagogiques/visuels passaient en rejet.
 - v1.1 conserve plus d'observations en base (accepted + flags) et deplace la selectivite vers les profils de pack.
-- Le runtime reste inchangé: il continue de lire les surfaces officielles (`playable_corpus.v1`, packs compiles/materialises), jamais `export.bundle.v4`.
+- Le runtime reste separe: il ne lit jamais `export.bundle.v4`. Le contrat
+  runtime jouable actif est maintenant `session_snapshot.v2`, avec
+  `golden_pack.v1` comme fallback. `playable_corpus.v1` et les packs
+  compiles/materialises restent owner-side, historiques, ou strategic-later.
 
 ## 2. Activation
 
@@ -155,7 +158,7 @@ Filtrage modere:
 - pas de changement runtime
 - pas de changement strategie distracteurs
 - pas de changement modele feedback
-- pas de changement de schema runtime (`playable_corpus.v1`) dans cette iteration
+- pas de changement de schema runtime actif (`session_snapshot.v2`) dans cette iteration
 - `pack.diagnostic.v1` reste le contrat de diagnose
 
 ## 8. Verification minimale

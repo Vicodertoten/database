@@ -693,7 +693,7 @@ Gaps déjà visibles:
 - `docs/runbooks/ingestion-code-to-gate-map.md`
 - `docs/runbooks/v0.1-scope.md`
 - `docs/runbooks/program-kpis.md`
-- `docs/runbooks/phase3-distractor-strategy.md`
+- `docs/archive/superseded-contracts/phase3-distractor-strategy.md`
 - `docs/foundation/domain-model.md`
 - `docs/foundation/pipeline.md`
 - `docs/foundation/runtime-consumption-v1.md`

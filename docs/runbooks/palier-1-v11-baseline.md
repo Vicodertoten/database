@@ -13,6 +13,10 @@ scope: runbook
 Freeze an operational baseline for Palier 1 v1.1 with deterministic, reproducible
 artifacts and explicit hard gates.
 
+This is a historical/operator baseline for the pack/materialization v2 semantic
+reference family. It is not the current runtime handoff. Current contract status
+is canonical in `docs/architecture/contract-map.md`.
+
 ## Program decision
 
 - Technical baseline: `GO`
@@ -85,9 +89,9 @@ The v2 compile target ordering uses deterministic round-robin by taxon
 - [Palier 1 v1.1 manual review sheet](../audits/palier-1-v11-manual-review-sheet.md)
 - [Phase 3 distractor audit report (evidence)](../audits/evidence/palier1_v11_baseline/phase3_distractor_audit_report.json)
 
-## Next documentation-sensitive chantiers
+## Historical follow-up notes
 
-- True runtime consumption check with Palier-1 v1.1 run003 materialization.
+- Do not use Palier-1 v1.1 materialization as the current runtime handoff.
 - Pedagogical image usage layer.
 - Distractor quality policy.
 - Multilingual labels and feedback.

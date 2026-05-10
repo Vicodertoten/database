@@ -45,7 +45,7 @@ This scope is intentionally narrow and assumes birds-first, image-first, mobile-
 ## Runtime contract stack
 
 The canonical runtime contract stack is documented in
-`docs/foundation/runtime-contract-stack-v1.md`.
+`docs/architecture/contract-map.md`.
 
 Current contract status:
 
@@ -65,10 +65,10 @@ Pack mode is disabled or unavailable.
 runtime quiz inputs. Audits and evidence JSON remain in `docs/audits/` and
 `docs/audits/evidence/`, linked from the manifest when relevant.
 
-`playable_corpus.v1`, `pack.compiled.v1`, `pack.materialization.v1`, planned
+`playable_corpus.v1`, `pack.compiled.v1`, `pack.materialization.v1`,
 `pack.compiled.v2`/`pack.materialization.v2`, and owner-side HTTP read services
-remain existing, historical, or strategic-later surfaces. They are not the
-current runtime target.
+remain internal, transitional, historical, or strategic-later surfaces. They are
+not the current runtime target.
 
 ## Current baseline
 
@@ -94,7 +94,7 @@ That is the main architectural priority before any significant new scope is adde
 ## Reference docs
 
 - Documentation index: `docs/README.md`
-- Runtime contract stack: `docs/foundation/runtime-contract-stack-v1.md`
+- Runtime contract stack: `docs/architecture/contract-map.md`
 - Post-MVP dynamic pack roadmap: `docs/architecture/DYNAMIC_PACK_PRODUCT_ROADMAP.md`
 - Archived Dynamic Pack Phase 0 alignment record: `docs/archive/runbooks/dynamic-pack-phase-0-plan.md`
 - Active audits index: `docs/audits/`
@@ -120,11 +120,11 @@ That is the main architectural priority before any significant new scope is adde
 
 ## Runtime visible baseline (cross-repo)
 
-For the pre-Golden-Pack owner-side runtime surface family, inter-repo wording was
-locked as follows:
+For the pre-Golden-Pack owner-side runtime surface family, archived inter-repo
+wording recorded:
 
-- owner-side runtime read is nominal and real (minimal bounded HTTP read in `database`)
-- runtime sessions are nominal and persisted in `runtime-app`
+- owner-side runtime read existed as a minimal bounded HTTP read in `database`
+- runtime sessions were persisted in `runtime-app`
 - runtime web is a minimal pedagogical player
 - runtime mobile is a minimal real image-first surface (image rendered as primary UI content)
 

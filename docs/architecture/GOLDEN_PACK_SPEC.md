@@ -12,7 +12,7 @@ scope: golden_pack_v1_contract
 
 `golden_pack.v1` is the fallback runtime contract for the Belgian birds first
 corpus. The active runtime contract stack is defined in
-`docs/foundation/runtime-contract-stack-v1.md`.
+`docs/architecture/contract-map.md`.
 
 It is separate from `pack.materialization.v2`. `pack.materialization.v2` remains
 legacy / historical context and must not be deleted now, but it is not the

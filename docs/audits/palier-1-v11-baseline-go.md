@@ -6,6 +6,12 @@ source_of_truth: docs/audits/palier-1-v11-baseline-go.md
 scope: audit
 ---
 
+> Historical audit note.
+> This audit may reference superseded pack/materialization contracts.
+> Current contract source of truth: `docs/architecture/contract-map.md`.
+> Do not use this audit as current runtime implementation guidance.
+
+
 # Palier 1 v1.1 Baseline GO Audit
 
 ## Decision

@@ -32,7 +32,7 @@ builds compiles, materializations, runtime-read owner-side) restent historiques 
 strategic-later et ne sont pas la cible runtime actuelle.
 
 Source canonique du stack contractuel runtime:
-`docs/foundation/runtime-contract-stack-v1.md`.
+`docs/architecture/contract-map.md`.
 
 Direction produit suivante: challenges quotidiens et assignments figes, batchs
 de signaux runtime vers `database`, puis adaptation utilisateur. Cette direction
@@ -508,7 +508,7 @@ Fichiers cibles:
 
 - `docs/runbooks/smoke-runbook.md`
 - `docs/runbooks/program-kpis.md`
-- `docs/runbooks/inter-repo/phase6-pilot-runbook.md`
+- `docs/archive/superseded-contracts/phase6-pilot-runbook.md` (historical context only)
 - CI/tests de verification
 
 Backlog technique:

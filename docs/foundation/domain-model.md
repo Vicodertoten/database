@@ -194,7 +194,7 @@ Status: legacy / historical / strategic-later for runtime handoff.
 This section documents the existing pack materialization lineage. It must not be
 read as the active runtime contract.
 
-CompiledPackBuild (`pack.compiled.v1`, current):
+CompiledPackBuild (`pack.compiled.v1`, legacy current storage version):
 
 - dynamic build computed from current `playable_items` + one pack revision
 - deterministic question set:
@@ -204,7 +204,7 @@ CompiledPackBuild (`pack.compiled.v1`, current):
 - persisted with build traceability (`build_id`, `pack_id`, `revision`, `built_at`, `source_run_id`)
 - historical builds are kept and queryable for audit and operational reproducibility
 
-PackMaterialization (`pack.materialization.v1`, current):
+PackMaterialization (`pack.materialization.v1`, legacy current storage version):
 
 - frozen snapshot derived from one compiled build (`source_build_id`)
 - immutable question payload (targets + distractors exacts)

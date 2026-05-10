@@ -1,7 +1,7 @@
 ---
 owner: database
-status: in_progress
-last_reviewed: 2026-05-09
+status: stable
+last_reviewed: 2026-05-10
 source_of_truth: docs/runbooks/dynamic-pack-phase-2b-runtime-session-contract.md
 scope: dynamic_pack_phase_2b_runtime_session_contract
 ---
@@ -13,7 +13,7 @@ scope: dynamic_pack_phase_2b_runtime_session_contract
 Phase 2B turns the Phase 2A dynamic pack pool into the first playable dynamic
 runtime contract for `Common birds Belgium/France`.
 
-Contract status is tracked in `docs/foundation/runtime-contract-stack-v1.md`.
+Contract status is tracked in `docs/architecture/contract-map.md`.
 Internal compiler concepts are tracked separately in
 `docs/foundation/dynamic-session-compiler-internals-v1.md`, so
 `session_snapshot.v2` remains an exported product contract rather than the
@@ -259,19 +259,25 @@ requires a separate editorial threshold for labels and referenced-only usage.
 
 ## Phase 3 Handoff Boundary
 
-Phase 3 may start only after Phase 2B produces a validated `session_snapshot.v2`
-fixture set and handoff document.
+Status: done / historical boundary.
 
-Phase 3 runtime work should:
+Phase 3 was allowed to start after Phase 2B produced a validated
+`session_snapshot.v2` fixture set and handoff document. That runtime-side
+boundary is now satisfied in `runtime-app`: Dynamic Pack sessions exist, the
+consumed snapshot is persisted, answers use `selectedOptionId`, selected taxon
+is derived from the snapshotted option, and `golden_pack.v1` remains available
+as fallback.
 
-- add `dynamic_pack` session mode;
-- store `pool_id`, `session_snapshot_id`, and `locale`;
-- persist the consumed snapshot;
-- submit answers with `selectedOptionId`;
-- derive selected taxon from the snapshotted option;
-- preserve `golden_pack.v1` as fallback until dynamic mode is validated.
+Phase 4 is the active generated-session path: `runtime-app` reads a local
+`serving_bundle.v1` and projects it into a fresh `session_snapshot.v2` at
+session start. The 9 Phase 2B snapshots remain regression presets.
 
-## Immediate Next Steps
+Phase 5 is active / partially validated: `runtime-app` can persist and export
+`runtime_answer_signals.v1`, and `database` can ingest those batches into owner
+confusion events and aggregates. Live remote Postgres validation remains an
+environmental validation item, not a Phase 2B contract blocker.
+
+## Closure Status
 
 Current status after the Phase 2B name-repair correction run, Palier A
 distractor persistence, and `session_snapshot.v2` fixture generation:
@@ -312,8 +318,10 @@ first, then a database-side traced taxonomic fallback where needed. Runtime must
 still receive fully snapshotted options and must not derive distractors.
 
 Phase 2B now has a playable internal dynamic session contract. The next
-implementation step is the Phase 3 `runtime-app` dynamic pack mode, while
-`golden_pack.v1` remains the runtime fallback until dynamic mode is validated.
+implementation steps recorded at the time have since moved forward:
+`runtime-app` now has Dynamic Pack session mode, local `serving_bundle.v1`
+generation, fixture presets, answer-signal persistence/export, and
+`golden_pack.v1` fallback.
 
 Reference command sequence used for the correction:
 

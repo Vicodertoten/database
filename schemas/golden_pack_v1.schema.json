@@ -1,6 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "golden_pack_v1",
+  "$comment": "Runtime fallback contract and regression harness, not the primary Dynamic Pack path. Contract status source: docs/architecture/contract-map.md.",
   "type": "object",
   "required": [
     "schema_version",

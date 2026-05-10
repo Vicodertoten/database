@@ -3,16 +3,19 @@ owner: database
 status: stable
 last_reviewed: 2026-05-10
 source_of_truth: docs/foundation/runtime-contract-stack-v1.md
-scope: durable_artifact_truth_table
+scope: durable_artifact_inventory
 ---
 
-# Durable Artifact Truth Table V1
+# Durable Artifact Inventory V1
 
-This document is the canonical source of truth for durable contract artifacts
-across `database` and `runtime-app`. Scope is limited to schema-backed artifacts
-and stable version constants used as handoff, storage, runtime, or
-owner/operator boundaries. One-off audit/report/evidence outputs are intentionally
-out of scope.
+This document is a broad inventory of durable artifact versions across
+`database` and `runtime-app`. It is not the runtime contract-status source of
+truth. Current contract status, runtime role, and archive/deprecation decisions
+are canonical in `docs/architecture/contract-map.md`.
+
+Scope here is limited to schema-backed artifacts and stable version constants
+used as handoff, storage, runtime, or owner/operator boundaries. One-off
+audit/report/evidence outputs are intentionally out of scope.
 
 `session_snapshot.v2` is an exported product contract. It is not the internal
 dynamic session compiler domain model. Internal compiler concepts and the
@@ -20,6 +23,8 @@ allowed product-constant boundary are documented in
 `docs/foundation/dynamic-session-compiler-internals-v1.md`.
 
 ## Current Runtime Stack
+
+Canonical status: `docs/architecture/contract-map.md`.
 
 `runtime-app` starts quiz sessions from owner-produced local artifacts. The
 active playable runtime contract is `session_snapshot.v2`, generated from a
@@ -32,7 +37,7 @@ audit evidence as quiz input. Runtime may select among already provided
 bundle/snapshot data, persist session state, score answers by `selectedOptionId`,
 and export answer signals back to `database`.
 
-## Contract Truth Table
+## Artifact Inventory
 
 | Contract | Owner | Consumer | Purpose | Status | Source-of-truth schema | Stability class | Deprecation path |
 |---|---|---|---|---|---|---|---|
@@ -51,7 +56,7 @@ and export answer signals back to `database`.
 | `distractor_ai_proposal_v1` | `database` | `database` distractor review tooling | AI proposal payload for candidate distractor relationships. | Active owner/operator | `schemas/distractor_ai_proposal_v1.schema.json` | Experimental owner contract | Can be replaced when distractor proposal workflow is revised. |
 | `distractor_relationship.v1` | `database` | `database` pack/session compilers | Governed distractor relationship between target and candidate taxon. | Active owner domain contract | `schemas/distractor_relationship_v1.schema.json` | Stable owner contract | Future versions must preserve compiled option lineage or provide migration. |
 | `taxon_localized_name_patch.v1` | `database` | `database` localized-name enrichment | Manual/localized name patch entries for canonical and referenced taxa. | Active owner/operator | `schemas/taxon_localized_name_patch_v1.schema.json` | Internal stable | Superseded by a normalized multilingual names subsystem. |
-| `playable_corpus.v1` | `database` | Historical owner-read consumers | Owner-prepared playable item corpus with minimal player-ready metadata. | Historical / strategic-later | `schemas/playable_corpus_v1.schema.json` | Legacy stable | Keep for lineage and old owner-read context; not a current runtime target. |
+| `playable_corpus.v1` | `database` | Owner/operator tools; historical owner-read consumers | Owner-prepared playable item corpus with minimal player-ready metadata. | Internal / historical owner-read | `schemas/playable_corpus_v1.schema.json` | Legacy/internal stable | Keep for lineage and old owner-read context; not a current runtime target. |
 | `pack.spec.v1` | `database` | `database` pack tooling | Pack specification/revision contract. | Active owner contract | `schemas/pack_spec_v1.schema.json` | Stable owner contract | Superseded only by a future pack spec version. |
 | `pack.diagnostic.v1` | `database` | `database` pack tooling/operator | Deterministic pack compilability diagnostic. | Active owner/operator | `schemas/pack_diagnostic_v1.schema.json` | Stable owner contract | Superseded only by a future diagnostic version. |
 | `pack.create.v1` | `database` | `database` CLI/operator | Pack creation operation payload. | Active owner operation | `schemas/pack_create_v1.schema.json` | Internal stable | Superseded by a future operation contract. |
@@ -60,8 +65,8 @@ and export answer signals back to `database`.
 | `pack.materialize.v1` | `database` | `database` CLI/operator | Pack materialization operation payload. | Active owner operation | `schemas/pack_materialize_operation_v1.schema.json` | Internal stable | Superseded by a future operation contract. |
 | `pack.compiled.v1` | `database` | Historical owner-read consumers | Deterministic compiled pack build. | Historical / strategic-later | `schemas/pack_compiled_v1.schema.json` | Legacy stable | Keep for lineage and old owner-read context; not a current runtime target. |
 | `pack.materialization.v1` | `database` | Historical owner-read consumers | Frozen materialization derived from a compiled v1 build. | Historical / strategic-later | `schemas/pack_materialization_v1.schema.json` | Legacy stable | Keep for lineage and old owner-read context; not a current runtime target. |
-| `pack.compiled.v2` | `database` | `database` reference docs/tests | Historical `QuestionOption[]` compiled-pack semantics reference. | Historical / strategic-later | `schemas/pack_compiled_v2.schema.json` | Legacy stable | Do not use as the Dynamic Pack runtime handoff. |
-| `pack.materialization.v2` | `database` | `database` reference docs/tests | Historical `QuestionOption[]` materialization semantics reference. | Historical / strategic-later | `schemas/pack_materialization_v2.schema.json` | Legacy stable | Superseded by `session_snapshot.v2` for playable dynamic runtime handoff. |
+| `pack.compiled.v2` | `database` | `database` reference docs/tests | `QuestionOption[]` compiled-pack semantics reference. | Transitional semantic reference | `schemas/pack_compiled_v2.schema.json` | Legacy semantic reference | Do not use as the Dynamic Pack runtime handoff. |
+| `pack.materialization.v2` | `database` | `database` reference docs/tests | `QuestionOption[]` materialization semantics reference. | Transitional semantic reference | `schemas/pack_materialization_v2.schema.json` | Legacy semantic reference | Superseded by `session_snapshot.v2` for playable dynamic runtime handoff. |
 | `pack_pool.v1` | `database` | `database` dynamic compiler/export | Owner-side dynamic source pool used to build serving bundles and session snapshots. | Active owner-only | `schemas/pack_pool_v1.schema.json` | Stable owner contract | Runtime must not consume directly; future pool versions must be explicit. |
 | `session_snapshot.v1` | `database` | `database`/historical runtime fixtures | Phase 2A target-only dynamic session proof surface. | Historical proof surface | `schemas/session_snapshot_v1.schema.json` | Legacy stable | Superseded by `session_snapshot.v2` for playable runtime use. |
 | `session_snapshot.v2` | `database` | `runtime-app` | Frozen playable quiz session with questions, media, option order, labels, correctness, feedback, and distractor metadata. | Active runtime | `schemas/session_snapshot_v2.schema.json`; mirrored in `runtime-app/packages/contracts/schemas-owner/session_snapshot_v2.schema.json` | Product runtime contract | Stable for current Dynamic Pack runtime; future product changes require a new session snapshot version. |

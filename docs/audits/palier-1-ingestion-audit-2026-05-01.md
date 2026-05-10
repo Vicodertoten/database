@@ -231,7 +231,7 @@ Rationale:
 - `docs/runbooks/pre-scale-ingestion-roadmap.md`
 - `docs/runbooks/ingestion-quality-gates.md`
 - `docs/runbooks/ingestion-code-to-gate-map.md`
-- `docs/runbooks/phase3-distractor-strategy.md`
+- `docs/archive/superseded-contracts/phase3-distractor-strategy.md`
 - `docs/archive/evidence/2026-04/phase2_playable_corpus_report.v1.json`
 - `data/qualified/phase2-birds-be-20260429T083143Z-a1.json`
 - `data/normalized/phase2-birds-be-20260429T083143Z-a1.json`

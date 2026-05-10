@@ -1,15 +1,22 @@
 ---
 owner: database
-status: in_progress
-last_reviewed: 2026-05-01
+status: stable
+last_reviewed: 2026-05-10
 source_of_truth: docs/audits/learning-loop-audit-v0.md
 scope: cross_repo_learning_loop_audit
 ---
 
+> Historical audit note.
+> This audit may reference superseded pack/materialization contracts.
+> Current contract source of truth: `docs/architecture/contract-map.md`.
+> Do not use this audit as current runtime implementation guidance.
+> Status: stable historical evidence; not an active implementation workstream.
+
+
 # Learning Loop Audit v0
 
 Date: 2026-05-01
-Perimetre: `database -> materialization.v2 -> runtime session -> answer -> learning -> revision -> distractors -> feedback readiness`
+Perimetre historique: `database -> materialization.v2 -> runtime session -> answer -> learning -> revision -> distractors -> feedback readiness`
 
 ## 1. Etat des contrats
 

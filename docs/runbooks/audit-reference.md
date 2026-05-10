@@ -33,7 +33,9 @@ Etat de transition confirme:
 - le lifecycle playable cumulatif/incremental (`active`/`invalidated`) est implemente et visible en schema + code
 - la decomposition storage en stores specialises est deja engagee et operationnelle, avec `storage/services.py` comme point d'orchestration
 - `storage/postgres.py` reste une facade de compatibilite encore transitoire (responsabilites reduites, mais simplification a poursuivre)
-- la sequence transport inter-repos est explicite et active: V1 fixtures publiees -> V1.5 API minimale runtime -> Phase 1 owner-side HTTP nominal
+- la sequence transport owner-side runtime-read est preservee comme contexte
+  historique; le runtime courant consomme `session_snapshot.v2` et fallback
+  `golden_pack.v1`
 
 Positionnement recommande:
 
@@ -188,15 +190,15 @@ Contrats observes:
 - `qualification.staged.v1`
 - `export.bundle.v4`
 - `review.override.v1`
-- `playable_corpus.v1`
+- `playable_corpus.v1` (owner/internal, pas cible runtime courante)
 - `pack.spec.v1`
 - `pack.diagnostic.v1`
-- `pack.compiled.v1`
-- `pack.materialization.v1`
+- `pack.compiled.v1` (historique)
+- `pack.materialization.v1` (historique)
 - `confusion.event.v1`
 - `confusion.aggregate.v1`
 
-Contrats planifies Phase 3:
+References semantiques historiques / transitional:
 
 - `pack.compiled.v2`
 - `pack.materialization.v2`
@@ -214,12 +216,17 @@ ni le format de ces KPI.
 
 ## 8. Recommandation de pilotage
 
-Le prochain chantier structurant planifie est Phase 3 taxon-based question options, documente dans:
+Le chantier Phase 3 taxon-based question options est maintenant un contexte
+historique / transitional. Les anciens plans sont archives dans
+`docs/archive/superseded-contracts/`.
 
-- `docs/foundation/adr/0006-taxon-based-question-options.md`
-- `docs/runbooks/phase3-distractor-strategy.md`
+Le pilotage courant doit suivre `docs/architecture/contract-map.md`:
 
-Il reste database-first et contract-first. Le runtime ne doit pas etre adapte avant que `database` produise des artefacts ou fixtures v2.
+- `session_snapshot.v2` est le contrat runtime jouable actif;
+- `pack_pool.v1` est le pool source owner-side;
+- `golden_pack.v1` est le fallback;
+- `pack.compiled.v2` et `pack.materialization.v2` restent des references
+  semantiques, pas le prochain handoff runtime.
 
 Gate 4.5 closure checklist:
 
@@ -236,7 +243,8 @@ Les prochains travaux ne doivent etre ouverts que si leur cadrage respecte les p
 3. pas de derive runtime/session/scoring/progression
 4. toute extension multi-source ou multi-taxa reste subordonnee aux deux points precedents
 5. pas d'auto-creation de taxons canoniques actifs pour des distracteurs seulement references
-6. `pack.compiled.v1` et `pack.materialization.v1` restent compatibles pendant l'introduction de v2
+6. `pack.compiled.v1` et `pack.materialization.v1` restent compatibles pour
+   l'historique et l'outillage owner, sans redevenir contrats runtime actifs
 
 ## 9. Garde-fous de documentation
 
@@ -269,7 +277,7 @@ Perimetre recommande:
 
 - formaliser le lifecycle d'un `PlayableItem`
 - introduire les metadonnees de validite/invalidation necessaires
-- conserver `playable_corpus.v1` comme contrat de lecture stable
+- conserver `playable_corpus.v1` comme contrat de lecture owner/internal stable
 - separer persistance historique et surface de serving courante sans full reset a chaque run
 
 Criteres d'acceptation:
@@ -277,7 +285,8 @@ Criteres d'acceptation:
 - aucun `DELETE FROM playable_items` global dans le run nominal
 - un item valide au run N reste disponible au run N+1 tant qu'aucune invalidation explicite ne l'exclut
 - les invalidations sont traceables par cause explicite (`qualification_not_exportable`, `canonical_taxon_not_active`, `source_record_removed`, `policy_filtered`)
-- `playable_corpus.v1` reste compatible pour les consommateurs actuels
+- `playable_corpus.v1` reste compatible pour les consommateurs owner/internal
+  explicites, sans redevenir cible runtime courante
 - tests d'integration couvrent ajout, maintien, invalidation et non-regression des filtres geo/date/pedagogie
 
 Impacts techniques:
@@ -396,7 +405,10 @@ Responsabilites:
 ### Interfaces recommandees
 
 - `database` expose des contrats de donnees stables, pas une logique de runtime
-- `runtime backend` lit `playable_corpus.v1`, `pack.compiled.v1`, `pack.materialization.v1`, puis les contrats v2 seulement apres production owner-side
+- `runtime backend` lit `session_snapshot.v2` comme contrat jouable actif et
+  `golden_pack.v1` comme fallback; toute reouverture de
+  `playable_corpus.v1`, `pack.compiled.*`, `pack.materialization.*`, ou
+  owner-read comme chemin runtime doit faire l'objet d'une decision explicite
 - `editorial backend` pilote les operations de packs/review/gouvernance contre la couche database
 - `institutional backend` consomme les sorties runtime et certains indicateurs consolides, pas le brut pipeline
 

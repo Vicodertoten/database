@@ -10,7 +10,7 @@ scope: golden_pack_runtime_handoff
 
 This runbook defines the database-owned Golden Pack handoff. `golden_pack.v1` is
 now the runtime fallback; the active runtime contract stack is defined in
-`docs/foundation/runtime-contract-stack-v1.md`.
+`docs/architecture/contract-map.md`.
 
 ## Current Promoted Artifact
 

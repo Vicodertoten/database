@@ -20,21 +20,23 @@ Before making meaningful changes, read in this order:
 
 1. `README.md`
 2. `docs/README.md`
-3. `docs/foundation/scope.md`
-4. `docs/foundation/canonical-charter-v1.md`
-5. `docs/foundation/domain-model.md`
-6. `docs/foundation/pipeline.md`
-7. `docs/foundation/runtime-consumption-v1.md`
-8. `docs/runbooks/audit-reference.md`
-9. `docs/runbooks/execution-plan.md`
-10. `docs/runbooks/inter-repo/`
+3. `docs/architecture/contract-map.md`
+4. `docs/foundation/scope.md`
+5. `docs/foundation/canonical-charter-v1.md`
+6. `docs/foundation/domain-model.md`
+7. `docs/foundation/pipeline.md`
+8. `docs/foundation/runtime-consumption-v1.md`
+9. `docs/runbooks/audit-reference.md`
+10. `docs/runbooks/execution-plan.md`
+11. `docs/runbooks/inter-repo/`
 
 ---
 
 ## Core boundaries
 
 - `database` is the source of truth for inter-repo active tracking.
-- Runtime consumers read official serving surfaces only.
+- Runtime contract status is canonical in `docs/architecture/contract-map.md`.
+- Runtime consumers read official owner-produced artifacts only.
 - Runtime must never consume `export.bundle.v4` as live surface.
 
 ---

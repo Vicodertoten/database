@@ -1,8 +1,14 @@
+> Archived / superseded document.
+> This document is preserved for historical context only.
+> It does not define the current runtime contract stack.
+> Current contract source of truth: `docs/architecture/contract-map.md`.
+> Do not use this document as current implementation guidance.
+
 ---
 owner: database
 status: stable
 last_reviewed: 2026-04-27
-source_of_truth: docs/foundation/adr/0004-runtime-consumption-transport-v1.md
+source_of_truth: docs/archive/superseded-contracts/adr-0004-runtime-consumption-transport-v1.md
 scope: foundation
 ---
 

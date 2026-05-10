@@ -359,8 +359,8 @@ Le système de distracteurs est critique avant la montée en volume.
 
 Référence existante:
 
-- `docs/runbooks/phase3-distractor-strategy.md`;
-- `docs/foundation/adr/0006-taxon-based-question-options.md`.
+- `docs/archive/superseded-contracts/phase3-distractor-strategy.md`;
+- `docs/archive/superseded-contracts/adr-0006-taxon-based-question-options.md`.
 
 ### 10.1 Objectif
 
@@ -971,8 +971,8 @@ Ces sujets ne doivent pas être traités comme de simples détails d'implémenta
 - `docs/runbooks/ingestion-code-to-gate-map.md`
 - `docs/runbooks/v0.1-scope.md`
 - `docs/runbooks/program-kpis.md`
-- `docs/runbooks/phase3-distractor-strategy.md`
+- `docs/archive/superseded-contracts/phase3-distractor-strategy.md`
 - `docs/foundation/domain-model.md`
 - `docs/foundation/pipeline.md`
 - `docs/foundation/runtime-consumption-v1.md`
-- `docs/foundation/adr/0006-taxon-based-question-options.md`
+- `docs/archive/superseded-contracts/adr-0006-taxon-based-question-options.md`

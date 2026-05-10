@@ -1,8 +1,14 @@
+> Archived / superseded document.
+> This document is preserved for historical context only.
+> It does not define the current runtime contract stack.
+> Current contract source of truth: `docs/architecture/contract-map.md`.
+> Do not use this document as current implementation guidance.
+
 ---
 owner: database
 status: in_progress
 last_reviewed: 2026-04-27
-source_of_truth: docs/runbooks/inter-repo/phase6-pilot-runbook.md
+source_of_truth: docs/archive/superseded-contracts/phase6-pilot-runbook.md
 scope: runbook_inter_repo
 ---
 

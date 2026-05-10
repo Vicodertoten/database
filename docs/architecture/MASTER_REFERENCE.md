@@ -12,7 +12,7 @@ scope: golden_pack_fallback_reference
 
 This document is the historical Golden Pack runtime reference and fallback
 contract context. The active runtime contract stack is now defined in
-`docs/foundation/runtime-contract-stack-v1.md`.
+`docs/architecture/contract-map.md`.
 
 `golden_pack.v1` is primarily a pedagogical product artifact. It also contains a
 strict runtime data contract so the runtime can render a real quiz experience
@@ -558,7 +558,7 @@ operationally useful.
 
 | Current document | Proposed role |
 |---|---|
-| `docs/foundation/runtime-contract-stack-v1.md` | Canonical durable artifact truth table and current runtime contract stack |
+| `docs/architecture/contract-map.md` | Canonical contract status map and current runtime stack |
 | `docs/architecture/MASTER_REFERENCE.md` | Historical Golden Pack fallback reference |
 | `docs/architecture/GOLDEN_PACK_SPEC.md` | Active `golden_pack.v1` artifact contract |
 | `docs/foundation/localized-name-source-policy-v1.md` | Canonical localized-name MVP policy |
@@ -567,7 +567,8 @@ operationally useful.
 | `docs/foundation/pedagogical-media-profile-v1.md` | Canonical PMP descriptive contract |
 | `docs/foundation/pmp-qualification-policy-v1.md` | Canonical PMP policy interpretation |
 | `docs/foundation/runtime-consumption-v1.md` | Runtime consumption boundary and historical owner-read context |
-| `docs/foundation/adr/*` | Historical ADRs, keep in place |
+| `docs/foundation/adr/*` | Active foundation ADRs |
+| `docs/archive/superseded-contracts/*` | Superseded contract/transport ADRs and plans |
 | `docs/audits/*sprint13*` | Historical active evidence |
 | `docs/audits/*sprint14*` | Historical active evidence |
 | `docs/audits/evidence/*.json` | Evidence, keep in place |

@@ -1,8 +1,14 @@
+> Archived / superseded document.
+> This document is preserved for historical context only.
+> It does not define the current runtime contract stack.
+> Current contract source of truth: `docs/architecture/contract-map.md`.
+> Do not use this document as current implementation guidance.
+
 ---
 owner: database
 status: stable
 last_reviewed: 2026-04-29
-source_of_truth: docs/runbooks/phase3-distractor-strategy.md
+source_of_truth: docs/archive/superseded-contracts/phase3-distractor-strategy.md
 scope: runbook
 ---
 
@@ -240,7 +246,7 @@ The iNaturalist threshold is a KPI, not an absolute hard gate, because some taxa
 Priority files:
 
 - `docs/foundation/domain-model.md`
-- `docs/foundation/adr/0006-taxon-based-question-options.md`
+- `docs/archive/superseded-contracts/adr-0006-taxon-based-question-options.md`
 - `docs/runbooks/execution-plan.md`
 - `schemas/pack_compiled_v2.schema.json`
 - `schemas/pack_materialization_v2.schema.json`

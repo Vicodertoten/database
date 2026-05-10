@@ -18,10 +18,11 @@ fixed shared challenges, institutional assignments, and later user-created packs
 
 This document is a product/architecture roadmap. It does not replace:
 
-- `docs/foundation/runtime-contract-stack-v1.md` for the current contract stack;
+- `docs/architecture/contract-map.md` for the current contract stack;
 - `docs/architecture/MASTER_REFERENCE.md` for the historical Golden Pack fallback reference;
 - `docs/runbooks/pre-scale-ingestion-roadmap.md` for ingestion hardening;
-- `docs/runbooks/phase3-distractor-strategy.md` for distractor policy details.
+- `docs/archive/superseded-contracts/phase3-distractor-strategy.md` only for
+  historical distractor-policy context.
 
 Phase 0 execution is archived in
 `docs/archive/runbooks/dynamic-pack-phase-0-plan.md`.
@@ -323,18 +324,20 @@ The next serving surface should support:
 - stable question snapshots;
 - performance telemetry identifiers.
 
-Candidate future contract family:
+Current and planned contract family:
 
 ```text
 pack_pool.v1
-session_snapshot.v1
+session_snapshot.v2
 fixed_challenge.v1
 assignment_materialization.v1
 runtime_answer_signals.v1
 ```
 
-Exact names are candidate names and remain unlocked until Phase 2
-implementation. The important distinction is the object model:
+`fixed_challenge.v1` and `assignment_materialization.v1` remain planned until
+schema-backed. They should be treated as variants of the same internal
+snapshot/materialization family, not as uncontrolled new contract families. The
+important distinction is the object model:
 
 - pack definition: what the pack means;
 - pack pool: eligible serving-ready items;
@@ -527,6 +530,13 @@ Phase 2 is split into:
 - Phase 2A: `pack_pool.v1` and `session_snapshot.v1` target-only fixtures.
 - Phase 2B: `session_snapshot.v2` playable runtime contract with options.
 
+Status:
+
+- Phase 2A: done; `pack_pool.v1` remains the active owner-side dynamic source
+  pool, and `session_snapshot.v1` is historical.
+- Phase 2B: done; `session_snapshot.v2` is the active playable dynamic runtime
+  contract, with Phase 2B fixtures retained as regression presets.
+
 Actions:
 
 - define pool contract;
@@ -557,6 +567,8 @@ Exit criteria:
 
 ### Phase 3 - Runtime Dynamic Sessions
 
+Status: done.
+
 Goal: move from static `pack.json` sessions to dynamic pack sessions.
 
 Actions:
@@ -574,6 +586,8 @@ Exit criteria:
 - static Golden Pack remains available as fallback/reference.
 
 ### Phase 4 - Dynamic Pack Generator V1 And Runtime Signals
+
+Status: active.
 
 Goal: move runtime dynamic sessions from frozen fixture replay to local
 generation from a serving-ready bundle.
@@ -599,6 +613,8 @@ Exit criteria:
 
 ### Phase 5 - Runtime Signal Export And Confusion Ingestion
 
+Status: active / partially validated.
+
 Goal: close the first runtime-to-owner feedback loop.
 
 Actions:
@@ -621,6 +637,8 @@ Exit criteria:
 - global confusion aggregates distinguish locale and distractor source.
 
 ### Phase 6 - Fixed Challenges And Assignments
+
+Status: upcoming.
 
 Goal: support shared fixed quiz experiences.
 

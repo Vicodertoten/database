@@ -1,10 +1,17 @@
 ---
 owner: database
-status: in_progress
-last_reviewed: 2026-05-01
+status: stable
+last_reviewed: 2026-05-10
 source_of_truth: docs/audits/phase3-distractor-audit.md
 scope: phase3_distractor_validation
 ---
+
+> Historical audit note.
+> This audit may reference superseded pack/materialization contracts.
+> Current contract source of truth: `docs/architecture/contract-map.md`.
+> Do not use this audit as current runtime implementation guidance.
+> Status: stable historical evidence; not an active implementation workstream.
+
 
 # Phase 3 Distractor Audit
 

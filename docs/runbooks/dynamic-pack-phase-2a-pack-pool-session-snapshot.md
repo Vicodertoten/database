@@ -1,7 +1,7 @@
 ---
 owner: database
-status: in_progress
-last_reviewed: 2026-05-09
+status: stable
+last_reviewed: 2026-05-10
 source_of_truth: docs/runbooks/dynamic-pack-phase-2a-pack-pool-session-snapshot.md
 scope: runbook
 ---
@@ -10,14 +10,26 @@ scope: runbook
 
 ## Scope
 
-Phase 2A creates the first runtime-ready dynamic serving surface from the Phase 1
-BE+FR corpus gate.
+Phase 2A created the first owner-side dynamic source pool from the Phase 1
+BE+FR corpus gate. `pack_pool.v1` remains active owner-side input;
+`session_snapshot.v1` is now a historical target-only proof surface superseded
+for runtime play by `session_snapshot.v2`.
 
-Contract status is tracked in `docs/foundation/runtime-contract-stack-v1.md`.
+Contract status is tracked in `docs/architecture/contract-map.md`.
 Internal dynamic compiler concepts are tracked separately in
 `docs/foundation/dynamic-session-compiler-internals-v1.md`; Phase 2A product
 constants such as BE+FR, `fr`/`en`/`nl`, and `20` questions are materialization
 inputs, not generic domain model constraints.
+
+## Closure Status
+
+Status: done / historical active reference.
+
+Phase 2A is closed as an execution phase. Its durable output, `pack_pool.v1`,
+remains the active owner-side dynamic source pool. Its target-only
+`session_snapshot.v1` fixtures are historical proof artifacts and are not a
+current playable runtime contract. Runtime play uses `session_snapshot.v2`, or
+generated `session_snapshot.v2` projected from `serving_bundle.v1`.
 
 Included:
 

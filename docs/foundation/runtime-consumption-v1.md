@@ -16,7 +16,7 @@ Cette note fixe la frontiere de consommation entre `database` et `runtime-app`.
 ## Note contract stack active (2026-05-10)
 
 La source canonique du statut des contrats runtime est
-`docs/foundation/runtime-contract-stack-v1.md`.
+`docs/architecture/contract-map.md`.
 La frontiere entre le compilateur dynamique interne et le contrat produit
 `session_snapshot.v2` est documentee dans
 `docs/foundation/dynamic-session-compiler-internals-v1.md`.
@@ -60,20 +60,12 @@ Cette famille est historical / strategic-later. Elle n'est pas le mode nominal
 du runtime courant, qui consomme des artefacts locaux `serving_bundle.v1`,
 `session_snapshot.v2`, et fallback `golden_pack.v1`.
 
-## Etat courant visible (reference de wording hors MVP Golden Pack)
+## Ancien wording inter-repos
 
-Pour l'alignement inter-repos de la famille owner-side historique, l'etat
-courant
-doit etre formule sans ambiguite:
-
-- lecture runtime nominale: owner-side reelle en place (`database`)
-- sessions runtime nominales: persistees cote `runtime-app`
-- web runtime: minimal pedagogical player
-- mobile runtime: surface minimale reelle image-first (rendu image prioritaire en UI)
-
-Aucun texte majeur ne doit presenter cet etat historique comme la cible runtime
-courante. Le runtime courant consomme `session_snapshot.v2`, avec
-`golden_pack.v1` comme fallback, et ne depend pas du transport HTTP owner-side.
+Les anciens documents inter-repos peuvent decrire une lecture owner-side
+runtime-read comme nominale. Ce wording est supersede. Le runtime courant
+consomme `session_snapshot.v2`, avec `golden_pack.v1` comme fallback, et ne
+depend pas du transport HTTP owner-side.
 
 ## Phase 1 - read transport owner-side minimal (en place)
 

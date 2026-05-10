@@ -1,10 +1,17 @@
 ---
 owner: database
-status: in_progress
-last_reviewed: 2026-05-02
+status: stable
+last_reviewed: 2026-05-10
 source_of_truth: docs/audits/palier-1-run001-coverage-audit.md
 scope: audit
 ---
+
+> Historical audit note.
+> This audit may reference superseded pack/materialization contracts.
+> Current contract source of truth: `docs/architecture/contract-map.md`.
+> Do not use this audit as current runtime implementation guidance.
+> Status: stable historical evidence; not an active implementation workstream.
+
 
 # Palier 1 Run001 Coverage Audit
 
@@ -12,7 +19,7 @@ Generated: `2026-05-02 09:40 UTC`
 
 ## Context
 - Pack: `pack:palier1:be:birds:run001`
-- Contract target: `pack.compiled.v2` / `pack.materialization.v2`
+- Historical contract target: `pack.compiled.v2` / `pack.materialization.v2`
 - Observed compile blocker: `insufficient_media_per_taxon` (minimum required per taxon = `2`)
 
 ## Summary

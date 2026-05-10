@@ -1,6 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "pack_pool_v1",
+  "$comment": "Active owner-side dynamic source pool. Runtime must not consume pack_pool.v1 directly. Contract status source: docs/architecture/contract-map.md.",
   "type": "object",
   "required": [
     "schema_version",
