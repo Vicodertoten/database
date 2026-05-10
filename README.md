@@ -42,28 +42,24 @@ This scope is intentionally narrow and assumes birds-first, image-first, mobile-
 - no live iNaturalist call in the runtime play loop
 - target volume: 50 species / 1,000 qualified images
 
-## Golden Pack MVP handoff
+## Runtime contract stack
 
-The active MVP runtime handoff contract is `golden_pack.v1`, documented in
-`docs/architecture/MASTER_REFERENCE.md` and `docs/architecture/GOLDEN_PACK_SPEC.md`.
-The operational handoff runbook is
-`docs/runbooks/golden-pack-v1-runtime-handoff.md`.
+The canonical runtime contract stack is documented in
+`docs/foundation/runtime-contract-stack-v1.md`.
 
-Canonical MVP output:
+Current contract status:
 
-```text
-data/exports/golden_packs/belgian_birds_mvp_v1/
-  manifest.json
-  pack.json
-  validation_report.json
-  media/
-```
+- active playable runtime contract: `session_snapshot.v2`
+- active local runtime input: `serving_bundle.v1`
+- runtime fallback: `golden_pack.v1`
+- owner-only dynamic source pool: `pack_pool.v1`
+- runtime-to-owner handback: `runtime_answer_signals.v1`
 
-For the first UI/UX smoke test, the runtime consumes only `pack.json` as a local,
-versioned, artifact-only payload produced by `database`. The runtime may display
-questions, shuffle the provided options, record the presented order, and
-orchestrate the experience. It must not invent labels, fetch missing data,
-replace distractors, recalculate difficulty, map taxa, or correct taxonomy.
+The Golden Pack artifact remains documented in
+`docs/architecture/GOLDEN_PACK_SPEC.md` and
+`docs/runbooks/golden-pack-v1-runtime-handoff.md`, but it is no longer the
+default runtime target. Runtime falls back to `golden_pack.v1` only when Dynamic
+Pack mode is disabled or unavailable.
 
 `manifest.json` and `validation_report.json` are operator/audit files, not
 runtime quiz inputs. Audits and evidence JSON remain in `docs/audits/` and
@@ -72,7 +68,7 @@ runtime quiz inputs. Audits and evidence JSON remain in `docs/audits/` and
 `playable_corpus.v1`, `pack.compiled.v1`, `pack.materialization.v1`, planned
 `pack.compiled.v2`/`pack.materialization.v2`, and owner-side HTTP read services
 remain existing, historical, or strategic-later surfaces. They are not the
-active MVP Golden Pack runtime contract.
+current runtime target.
 
 ## Current baseline
 
@@ -82,8 +78,9 @@ packs, diagnostics, compiled builds, frozen materializations, asynchronous
 enrichment queue persistence, batch confusion ingestion, and operator metrics.
 
 That baseline remains useful database infrastructure, but its playable/compiled/
-materialized serving surfaces are not the active MVP handoff. The MVP path is the
-artifact-only `golden_pack.v1` export described above.
+materialized serving surfaces are not the active runtime target. The active
+runtime target is `session_snapshot.v2`, with `golden_pack.v1` retained as
+fallback.
 
 Current structural priorities remain explicit:
 
@@ -97,8 +94,9 @@ That is the main architectural priority before any significant new scope is adde
 ## Reference docs
 
 - Documentation index: `docs/README.md`
+- Runtime contract stack: `docs/foundation/runtime-contract-stack-v1.md`
 - Post-MVP dynamic pack roadmap: `docs/architecture/DYNAMIC_PACK_PRODUCT_ROADMAP.md`
-- Dynamic pack Phase 0 alignment plan: `docs/runbooks/dynamic-pack-phase-0-plan.md`
+- Archived Dynamic Pack Phase 0 alignment record: `docs/archive/runbooks/dynamic-pack-phase-0-plan.md`
 - Active audits index: `docs/audits/`
 - Living audit reference: `docs/runbooks/audit-reference.md`
 - Codex execution plan (sequential gates): `docs/runbooks/execution-plan.md`
@@ -112,8 +110,9 @@ That is the main architectural priority before any significant new scope is adde
 ## Boundaries doctrinaux
 
 - runtime never reads `export.bundle.v4`
-- MVP runtime reads only `data/exports/golden_packs/belgian_birds_mvp_v1/pack.json`
-- MVP runtime does not read audit evidence, apply plans, unresolved candidates, or validation blockers as quiz inputs
+- runtime reads `session_snapshot.v2` as the active playable contract and
+  `golden_pack.v1` only as fallback
+- runtime does not read audit evidence, apply plans, unresolved candidates, or validation blockers as quiz inputs
 - `database` owns canonical, qualification, export, and future playable/pack/materialization/enrichment/confusion aggregates
 - runtime owns session/question serving/answers/score/progression UX
 - pack is a durable specification object; a runtime game session is separate and ephemeral
@@ -129,8 +128,9 @@ locked as follows:
 - runtime web is a minimal pedagogical player
 - runtime mobile is a minimal real image-first surface (image rendered as primary UI content)
 
-This remains historical/strategic-later context. The MVP Golden Pack runtime
-validation is artifact-only and does not require owner-side HTTP read.
+This remains historical/strategic-later context. Current runtime validation uses
+local `serving_bundle.v1` / `session_snapshot.v2` artifacts, with Golden Pack as
+fallback, and does not require owner-side HTTP read.
 
 ## Strategic positioning
 
@@ -184,8 +184,9 @@ Recommended target architecture around this repository:
 
 Recommended data boundaries:
 
-- MVP runtime reads `golden_pack.v1` through the local `pack.json` payload only
-- strategic-later runtime serving may read `playable_corpus.v1`, `pack.compiled.v1`, or `pack.materialization.v1` after an explicit contract decision
+- runtime reads `session_snapshot.v2` as the active playable contract and
+  `golden_pack.v1` through the local `pack.json` payload only as fallback
+- strategic-later runtime serving may read `playable_corpus.v1`, `pack.compiled.v1`, or `pack.materialization.v1` only after an explicit contract decision
 - editorial tooling reads and writes pack/review/governance operations against database-owned contracts
 - institutional systems consume runtime outputs and selected database analytics, not raw pipeline state
 - no consumer should use `export.bundle.v4` as the live quiz surface
@@ -230,7 +231,7 @@ Installed entrypoints mirror the script wrappers:
 - pack layer v1 with immutable revisions (`pack.spec.v1`) and deterministic compilability diagnostics (`pack.diagnostic.v1`)
 - deterministic compiled pack builds persisted as `pack.compiled.v1`
 - frozen pack materializations persisted as `pack.materialization.v1` for `assignment` and `daily_challenge`
-- planned Phase 3 contract family (`pack.compiled.v2`, `pack.materialization.v2`) defines taxon-based `QuestionOption[]` while keeping v1 as legacy compatibility; this family is not the active MVP Golden Pack handoff contract
+- historical Phase 3 contract family (`pack.compiled.v2`, `pack.materialization.v2`) defines taxon-based `QuestionOption[]` while keeping v1 as legacy compatibility; this family is not the active runtime handoff contract
 - pack persistence/compilation/materialization logic extracted in `storage/pack_store.py` and consumed directly by CLI pack/inspect pack entrypoints
 - enrichment queue operations extracted in `storage/enrichment_store.py` (`PostgresEnrichmentStore`)
 - confusion batch ingestion and aggregates extracted in `storage/confusion_store.py` (`PostgresConfusionStore`)
@@ -239,6 +240,7 @@ Installed entrypoints mirror the script wrappers:
 - `storage/postgres.py` was reduced substantially via domain extraction; orchestration now routes through `storage/services.py` with explicit service composition
 - asynchronous enrichment request queue with execution tracking for non-compilable packs
 - batch confusion ingestion with directed global confusion aggregates
+- runtime answer signal batch ingestion from `runtime_answer_signals.v1`
 - compiled build history is preserved and queryable for traceability
 - materializations are frozen immutable snapshots derived from one compiled build
 - versioned normalized, qualification, and export artifacts
@@ -406,7 +408,7 @@ The manifest records which sort was requested and which one was actually used.
 
 The repository now writes explicit stage versions into generated artifacts:
 
-- schema version: `database.schema.v19`
+- schema version: `database.schema.v20`
 - snapshot manifest version: `inaturalist.snapshot.v3`
 - normalized snapshot version: `normalized.snapshot.v3`
 - canonical enrichment version: `canonical.enrichment.v2`
@@ -422,6 +424,7 @@ The repository now writes explicit stage versions into generated artifacts:
 - planned pack materialization version: `pack.materialization.v2`
 - confusion event version: `confusion.event.v1`
 - confusion aggregate version: `confusion.aggregate.v1`
+- runtime answer signal export version: `runtime_answer_signals.v1`
 
 Snapshot manifests without `manifest_version` are rejected.
 Unknown manifest versions are rejected explicitly.

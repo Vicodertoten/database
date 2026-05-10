@@ -1,7 +1,7 @@
 ---
 owner: database
 status: stable
-last_reviewed: 2026-04-29
+last_reviewed: 2026-05-09
 source_of_truth: docs/runbooks/audit-reference.md
 scope: runbook
 ---
@@ -9,8 +9,8 @@ scope: runbook
 # Audit De Reference - database
 
 Statut: document vivant (reference d'execution)
-Version: v8.1
-Date de mise a jour: 2026-04-29
+Version: v8.2
+Date de mise a jour: 2026-05-09
 Perimetre: etat reel du repo apres Gate 9 et synthese des constats structurants
 
 ---
@@ -56,6 +56,7 @@ Le repo fait aujourd'hui, de maniere operationnelle:
 - packs versionnes, diagnostics, builds compiles, materializations figees
 - queue d'enrichissement asynchrone persistante
 - ingestion batch de confusions et agregats globaux diriges
+- ingestion `runtime_answer_signals.v1` vers confusion events owner et agregats globaux par locale/source
 - inspection operateur et historique run-level en PostgreSQL/PostGIS
 
 Le repo ne fait pas:
@@ -87,9 +88,9 @@ La cible recommandee reste:
 
 - une database specialisee de connaissance et de qualification naturaliste
 - un playable corpus cumulatif incremental avec invalidation explicite
-- `golden_pack.v1` comme surface runtime MVP actuelle
+- `session_snapshot.v2` comme surface runtime active et `golden_pack.v1` comme fallback
 - des surfaces historiques / strategic-later (`playable_corpus.v1`, `pack.compiled.v1`, `pack.materialization.v1`) conservees comme infrastructure utile, mais pas cible runtime actuelle
-- une direction post-MVP dynamic pack pool + session snapshot documentee dans `docs/architecture/DYNAMIC_PACK_PRODUCT_ROADMAP.md`
+- une direction produit dynamic pack documentee dans `docs/architecture/DYNAMIC_PACK_PRODUCT_ROADMAP.md`
 - une separation stricte entre data/core et runtime/session/scoring
 - une extension progressive vers multi-source, multi-taxa, et meilleure qualite editoriale
 
@@ -177,7 +178,7 @@ Priorite:
 
 Etat schema applicatif observe:
 
-- `database.schema.v19`
+- `database.schema.v20`
 
 Contrats observes:
 
@@ -282,6 +283,7 @@ Criteres d'acceptation:
 Impacts techniques:
 
 - migration schema `database.schema.v19` sur `distractor_relationships` (Palier A canonical-only + audit DB-first)
+- migration schema `database.schema.v20` sur les signaux runtime: enrichissement des batches/evenements de confusion et agregats globaux par locale/source
 - ajustement de `save_playable_items` pour raison explicite
 - ajout d'une surface inspect dediee aux invalidations playable
 - tests de persistance/lifecycle et CLI inspect couverts

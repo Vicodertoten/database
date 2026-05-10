@@ -65,7 +65,7 @@ Excluded:
 - `runtime-app` dynamic mode implementation.
 - public release gate.
 - accounts, personalization, revision mode, and assignment UI.
-- `runtime_signal_batch.v1`.
+- `runtime_answer_signals.v1`.
 - live runtime calls to iNaturalist, Gemini, or any external enrichment service.
 
 ## Blocking Name Repair Gate

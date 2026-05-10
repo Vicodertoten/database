@@ -1,7 +1,7 @@
 ---
 owner: database
 status: stable
-last_reviewed: 2026-04-29
+last_reviewed: 2026-05-10
 source_of_truth: docs/foundation/pipeline.md
 scope: foundation
 ---
@@ -16,17 +16,20 @@ Gate 0 to Gate 9 are implemented and operational. Playable persistence now uses 
 
 Corrective strategic alignment (Gate 4.5): contracts stayed stable while the sequencing was tightened before opening new structural workstreams.
 
-Golden Pack MVP boundary (2026-05-05):
+Runtime contract boundary (2026-05-10):
 
-- `golden_pack.v1` is the active MVP runtime handoff contract.
+- `session_snapshot.v2` is the active playable runtime contract.
+- `serving_bundle.v1` is the active local input used to generate sessions.
+- `golden_pack.v1` remains the runtime fallback contract.
 - The Gate 8-10 playable/pack/compiled/materialization pipeline remains valid
-  database infrastructure and historical context, but it is not the active MVP
+  database infrastructure and historical context, but it is not the active
   runtime contract.
 - `playable_corpus.v1`, `pack.compiled.v1`, `pack.materialization.v1`, and the
   planned `pack.compiled.v2`/`pack.materialization.v2` family are legacy /
-  historical / strategic-later for the Golden Pack MVP handoff.
-- The MVP runtime consumes only the local Golden Pack `pack.json`; it does not
-  fetch owner-side HTTP surfaces, choose distractors, resolve labels, or map taxa.
+  historical / strategic-later for runtime handoff.
+- Runtime consumes local `serving_bundle.v1` / `session_snapshot.v2` artifacts,
+  with local Golden Pack `pack.json` as fallback; it does not fetch owner-side
+  HTTP surfaces, choose distractors, resolve labels, or map taxa.
 
 ## 1. Ingest
 
@@ -139,7 +142,7 @@ is not the first UI/UX smoke-test payload.
 
 ## 10. Compile and materialize packs (Gate 4)
 
-MVP status: legacy / historical / strategic-later for the Golden Pack handoff.
+Status: legacy / historical / strategic-later for runtime handoff.
 `golden_pack.v1` is a separate artifact-only export contract and must not be
 treated as a rename of `pack.materialization.v1`.
 
@@ -157,11 +160,11 @@ treated as a rename of `pack.materialization.v1`.
   - no runtime/session/scoring/progression logic
   - no change to `export.bundle.v4`
 
-Planned Phase 3 v2 extension:
+Historical Phase 3 v2 extension:
 
-Status: non-MVP context. `pack.compiled.v2` and `pack.materialization.v2` remain
-useful historical/planned surfaces, but they are not the active runtime handoff
-for the Golden Pack MVP.
+Status: historical / strategic-later context. `pack.compiled.v2` and
+`pack.materialization.v2` remain useful surfaces, but they are not the active
+runtime handoff.
 
 - `pack.compiled.v2` and `pack.materialization.v2` replace playable-item distractor slots with `QuestionOption[]`
 - the target remains a playable item from the pack

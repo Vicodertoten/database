@@ -18,12 +18,13 @@ fixed shared challenges, institutional assignments, and later user-created packs
 
 This document is a product/architecture roadmap. It does not replace:
 
-- `docs/architecture/MASTER_REFERENCE.md` for the current `golden_pack.v1` MVP handoff;
+- `docs/foundation/runtime-contract-stack-v1.md` for the current contract stack;
+- `docs/architecture/MASTER_REFERENCE.md` for the historical Golden Pack fallback reference;
 - `docs/runbooks/pre-scale-ingestion-roadmap.md` for ingestion hardening;
 - `docs/runbooks/phase3-distractor-strategy.md` for distractor policy details.
 
-Phase 0 execution is tracked in
-`docs/runbooks/dynamic-pack-phase-0-plan.md`.
+Phase 0 execution is archived in
+`docs/archive/runbooks/dynamic-pack-phase-0-plan.md`.
 
 Phase 2B execution is tracked in
 `docs/runbooks/dynamic-pack-phase-2b-runtime-session-contract.md`.
@@ -311,7 +312,7 @@ not be forced into `database`.
 
 ### Serving Surface Direction
 
-`golden_pack.v1` remains the current MVP handoff contract.
+`golden_pack.v1` remains the runtime fallback contract.
 
 The next serving surface should support:
 
@@ -329,7 +330,7 @@ pack_pool.v1
 session_snapshot.v1
 fixed_challenge.v1
 assignment_materialization.v1
-runtime_signal_batch.v1
+runtime_answer_signals.v1
 ```
 
 Exact names are candidate names and remain unlocked until Phase 2
@@ -455,7 +456,7 @@ Example flow:
 
 ```text
 runtime_session_answers
-  -> runtime_signal_batch.v1
+  -> runtime_answer_signals.v1
   -> database confusion_events / review queue / aggregate metrics
   -> corpus and distractor improvements
   -> next pack pool build
@@ -472,7 +473,7 @@ Goal: align docs and decisions after the Golden Pack MVP.
 
 Actions:
 
-- keep `golden_pack.v1` documented as the current MVP surface;
+- keep `golden_pack.v1` documented as the fallback runtime surface;
 - document the dynamic pack target;
 - remove or annotate stale docs that still present old materialization surfaces
   as the active runtime contract;
@@ -596,7 +597,30 @@ Exit criteria:
 - answer submission writes one non-idempotent runtime signal;
 - bundle audit is `GO` or `GO_WITH_WARNINGS` with fallback explicitly traced.
 
-### Phase 5 - Fixed Challenges And Assignments
+### Phase 5 - Runtime Signal Export And Confusion Ingestion
+
+Goal: close the first runtime-to-owner feedback loop.
+
+Actions:
+
+- export `runtime_answer_signals.v1` from `runtime-app` through an internal
+  command;
+- ingest runtime answer signal batches in `database`;
+- convert only incorrect answers to owner `confusion_events`;
+- count correct answers as skipped during ingestion;
+- preserve runtime session, snapshot, seed, locale, selected option, and option
+  source metadata;
+- recompute global confusion aggregates by selected taxon, correct taxon,
+  locale, and distractor source.
+
+Exit criteria:
+
+- runtime Postgres can produce answer signal rows;
+- a stable `runtime_answer_signals.v1` batch validates against the owner schema;
+- duplicate batch ingestion is a no-op;
+- global confusion aggregates distinguish locale and distractor source.
+
+### Phase 6 - Fixed Challenges And Assignments
 
 Goal: support shared fixed quiz experiences.
 
@@ -613,7 +637,7 @@ Exit criteria:
 - daily challenge can be generated and served;
 - assignment materialization can be reproduced and audited.
 
-### Phase 6 - User Metrics And Adaptation
+### Phase 7 - User Metrics And Adaptation
 
 Goal: introduce simple personalization without corrupting corpus ownership.
 
@@ -630,7 +654,7 @@ Exit criteria:
 - runtime can adapt question selection using user metrics;
 - `database` receives batch signals and updates aggregate insights.
 
-### Phase 7 - Revision Mode
+### Phase 8 - Revision Mode
 
 Goal: introduce spaced repetition.
 

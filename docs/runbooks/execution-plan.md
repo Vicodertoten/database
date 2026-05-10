@@ -1,7 +1,7 @@
 ---
 owner: database
 status: stable
-last_reviewed: 2026-04-29
+last_reviewed: 2026-05-10
 source_of_truth: docs/runbooks/execution-plan.md
 scope: runbook
 ---
@@ -25,13 +25,18 @@ en conservant:
 - separation stricte avec le runtime
 
 Le runtime ne lit jamais `export.bundle.v4`.
-Le runtime MVP actuel lit `golden_pack.v1` en mode artifact-only. Les anciennes
-surfaces dediees (`playable_corpus.v1`, builds compiles, materializations)
-restent legacy / strategic-later et ne sont pas la cible runtime actuelle.
+Le contrat runtime jouable actif est `session_snapshot.v2`, genere depuis
+`serving_bundle.v1` local ou lu depuis des fixtures figees. `golden_pack.v1`
+reste le contrat fallback. Les anciennes surfaces dediees (`playable_corpus.v1`,
+builds compiles, materializations, runtime-read owner-side) restent historiques /
+strategic-later et ne sont pas la cible runtime actuelle.
 
-Direction post-MVP: dynamic pack pool + session snapshot, avec materialisations
-figees pour daily challenge et assignments. Cette direction est documentee dans
-`docs/architecture/DYNAMIC_PACK_PRODUCT_ROADMAP.md`.
+Source canonique du stack contractuel runtime:
+`docs/foundation/runtime-contract-stack-v1.md`.
+
+Direction produit suivante: challenges quotidiens et assignments figes, batchs
+de signaux runtime vers `database`, puis adaptation utilisateur. Cette direction
+est documentee dans `docs/architecture/DYNAMIC_PACK_PRODUCT_ROADMAP.md`.
 
 ## 1.1 Cadrage court terme verrouille (v0.1)
 
@@ -130,24 +135,24 @@ Markers de traçabilite (compatibilite verification):
 
 ## 5. Chantiers prioritaires admissibles
 
-Le prochain chantier structurant planifie est Phase 3 taxon-based question options.
-Il est documente dans:
+Le chantier de stabilisation contractuelle actif est le stack runtime:
 
-- `docs/foundation/adr/0006-taxon-based-question-options.md`
-- `docs/runbooks/phase3-distractor-strategy.md`
+- `session_snapshot.v2` est le contrat jouable runtime actif
+- `serving_bundle.v1` est l'input local actif pour generation de session
+- `golden_pack.v1` est le fallback runtime
+- `pack_pool.v1` reste owner-only
+- `runtime_answer_signals.v1` est le handback runtime -> owner
 
-Ce chantier est database-first et contract-first:
-
-- verrouiller doctrine et invariants avant code lourd
-- creer `pack.compiled.v2` et `pack.materialization.v2`
-- conserver v1 en compatibilite
-- ne pas commencer l'adaptation `runtime-app` avant production owner-side v2
+`pack.compiled.v2` et `pack.materialization.v2` restent des references
+historiques utiles pour la semantique `QuestionOption[]`; ils ne sont plus le
+prochain handoff runtime a produire.
 
 Si un nouveau chantier structurant est ouvert, il doit appartenir a l'un des axes suivants:
 
 1. consolidation operatoire du playable cumulatif incremental implemente
 2. consolidation finale de l'extraction de responsabilites hors `PostgresRepository`
-3. options de question taxon-based et distracteurs hors pack gouvernes
+3. options de question taxon-based et distracteurs hors pack gouvernes, seulement
+   comme travail owner-side ou reference historique si necessaire
 4. qualite editoriale et multilingue des surfaces pedagogiques
 5. extension multi-source ou multi-taxa seulement apres 1 et 2
 
@@ -163,7 +168,7 @@ Critere de maintien de la phase transitoire:
 - pas de retour a une reconstruction latest-only du serving playable
 - causes d'invalidation conservees explicites et testees
 - `playable_corpus.v1` reste stable pour les consommateurs
-- `pack.compiled.v1` et `pack.materialization.v1` restent disponibles pendant l'introduction de v2
+- `pack.compiled.v1` et `pack.materialization.v1` restent disponibles comme surfaces historiques / strategic-later
 
 Etat d'avancement constate (2026-04-09):
 
@@ -573,7 +578,7 @@ KPI de robustesse:
 2. pas de detournement de `export.bundle.v4` en surface runtime
 3. contrats versionnes, migrations explicites, tests systematiques
 4. aucune rupture non documentee des surfaces `playable_corpus.v1`, `pack.compiled.v1`, `pack.materialization.v1`
-5. aucune adaptation runtime v2 avant production owner-side de `pack.materialization.v2`
+5. aucune adaptation runtime ne doit cibler `pack.materialization.v2` comme handoff courant
 6. aucun taxon reference-only ne devient automatiquement active/playable/fully qualified
 
 ### 9.14 Alignement strategique (audit produit) a appliquer immediatement

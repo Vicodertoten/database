@@ -622,6 +622,57 @@ CREATE INDEX IF NOT EXISTS idx_confusion_aggregates_global_event_count
     ON confusion_aggregates_global (event_count DESC, taxon_confused_for_id, taxon_correct_id);
 """
 
+POSTGRES_CONFUSION_RUNTIME_SIGNALS_V20_SQL = """
+ALTER TABLE confusion_batches
+    ADD COLUMN IF NOT EXISTS source_schema_version TEXT,
+    ADD COLUMN IF NOT EXISTS source_export_id TEXT,
+    ADD COLUMN IF NOT EXISTS source_app TEXT,
+    ADD COLUMN IF NOT EXISTS source_table TEXT,
+    ADD COLUMN IF NOT EXISTS source_filters_json TEXT,
+    ADD COLUMN IF NOT EXISTS skipped_correct_count INTEGER NOT NULL DEFAULT 0
+        CHECK (skipped_correct_count >= 0);
+
+ALTER TABLE confusion_events
+    ADD COLUMN IF NOT EXISTS source_signal_id TEXT UNIQUE,
+    ADD COLUMN IF NOT EXISTS runtime_session_id TEXT,
+    ADD COLUMN IF NOT EXISTS question_position INTEGER
+        CHECK (question_position IS NULL OR question_position >= 1),
+    ADD COLUMN IF NOT EXISTS session_snapshot_id TEXT,
+    ADD COLUMN IF NOT EXISTS pool_id TEXT,
+    ADD COLUMN IF NOT EXISTS locale TEXT CHECK (locale IS NULL OR locale IN ('fr', 'en', 'nl')),
+    ADD COLUMN IF NOT EXISTS seed TEXT,
+    ADD COLUMN IF NOT EXISTS selected_option_id TEXT,
+    ADD COLUMN IF NOT EXISTS distractor_source TEXT,
+    ADD COLUMN IF NOT EXISTS option_sources_json TEXT;
+
+ALTER TABLE confusion_aggregates_global
+    ADD COLUMN IF NOT EXISTS locale TEXT NOT NULL DEFAULT 'unknown',
+    ADD COLUMN IF NOT EXISTS distractor_source TEXT NOT NULL DEFAULT 'unknown';
+
+ALTER TABLE confusion_aggregates_global
+    DROP CONSTRAINT IF EXISTS confusion_aggregates_global_pkey;
+
+ALTER TABLE confusion_aggregates_global
+    ADD PRIMARY KEY (
+        taxon_confused_for_id,
+        taxon_correct_id,
+        locale,
+        distractor_source
+    );
+
+CREATE INDEX IF NOT EXISTS idx_confusion_events_runtime_signal
+    ON confusion_events (source_signal_id);
+
+CREATE INDEX IF NOT EXISTS idx_confusion_events_dimensions
+    ON confusion_events (
+        taxon_confused_for_id,
+        taxon_correct_id,
+        locale,
+        distractor_source,
+        occurred_at DESC
+    );
+"""
+
 POSTGRES_PLAYABLE_INCREMENTAL_V14_SQL = """
 ALTER TABLE playable_items
     DROP CONSTRAINT IF EXISTS playable_items_qualified_resource_id_fkey;

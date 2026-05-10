@@ -1818,6 +1818,19 @@ class PostgresStorageInternal:
             connection=connection,
         )
 
+    def ingest_runtime_answer_signals_batch(
+        self,
+        *,
+        batch_id: str,
+        payload: dict[str, object],
+        connection: psycopg.Connection | None = None,
+    ) -> dict[str, object]:
+        return self.confusion_store.ingest_runtime_answer_signals_batch(
+            batch_id=batch_id,
+            payload=payload,
+            connection=connection,
+        )
+
     def recompute_confusion_aggregates_global(
         self,
         *,

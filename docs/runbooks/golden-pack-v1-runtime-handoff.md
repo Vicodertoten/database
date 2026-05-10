@@ -1,14 +1,16 @@
 ---
 owner: database
 status: stable
-last_reviewed: 2026-05-09
+last_reviewed: 2026-05-10
 source_of_truth: docs/runbooks/golden-pack-v1-runtime-handoff.md
 scope: golden_pack_runtime_handoff
 ---
 
 # Golden Pack v1 Runtime Handoff
 
-This runbook defines the database-owned handoff for the MVP runtime app.
+This runbook defines the database-owned Golden Pack handoff. `golden_pack.v1` is
+now the runtime fallback; the active runtime contract stack is defined in
+`docs/foundation/runtime-contract-stack-v1.md`.
 
 ## Current Promoted Artifact
 

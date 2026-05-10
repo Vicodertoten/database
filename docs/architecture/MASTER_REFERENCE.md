@@ -1,23 +1,31 @@
 ---
 owner: database
 status: ready_for_validation
-last_reviewed: 2026-05-05
+last_reviewed: 2026-05-10
 source_of_truth: docs/architecture/MASTER_REFERENCE.md
-scope: golden_pack_runtime_handoff
+scope: golden_pack_fallback_reference
 ---
 
-# Database Runtime Master Reference
+# Database Golden Pack Reference
 
 ## Executive Summary
 
-The current architectural direction is to contract the database work around one
-first runtime-safe artifact: `golden_pack.v1`.
+This document is the historical Golden Pack runtime reference and fallback
+contract context. The active runtime contract stack is now defined in
+`docs/foundation/runtime-contract-stack-v1.md`.
 
 `golden_pack.v1` is primarily a pedagogical product artifact. It also contains a
 strict runtime data contract so the runtime can render a real quiz experience
 without performing domain decisions.
 
-The immediate priority is:
+Current runtime stack:
+
+1. Active playable runtime contract: `session_snapshot.v2`.
+2. Active local runtime input: `serving_bundle.v1`.
+3. Runtime fallback: `golden_pack.v1`.
+4. Owner-only dynamic source pool: `pack_pool.v1`.
+
+The original Golden Pack priority was:
 
 1. Materialize a Belgian birds MVP Golden Pack as an artifact-only export.
 2. Validate the manifest, pack payload, media, names, distractors, feedback, and
@@ -29,10 +37,9 @@ This is not a database perfection milestone. It is the first audited,
 runtime-safe, pedagogically usable artifact sufficient to test the real product
 experience.
 
-Post-MVP dynamic pack direction is tracked separately in
-`docs/architecture/DYNAMIC_PACK_PRODUCT_ROADMAP.md`, with Phase 0 alignment in
-`docs/runbooks/dynamic-pack-phase-0-plan.md`. This document remains the MVP
-Golden Pack reference.
+Dynamic Pack direction is tracked in
+`docs/architecture/DYNAMIC_PACK_PRODUCT_ROADMAP.md`. The Phase 0 alignment
+record is archived at `docs/archive/runbooks/dynamic-pack-phase-0-plan.md`.
 
 Current decision state:
 
@@ -43,10 +50,10 @@ Current decision state:
 | `PERSIST_DISTRACTOR_RELATIONSHIPS_V1` | false |
 | `DATABASE_PHASE_CLOSED` | false |
 
-Main architectural verdict: the database architecture is strong enough to produce
-the first Golden Pack, but the MVP runtime surface must be narrowed. Older
-runtime-serving contracts remain legacy, historical, or strategic-later
-references. They must not compete with `golden_pack.v1` as the MVP handoff.
+Main architectural verdict: the database architecture produced a narrowed Golden
+Pack fallback, and the current runtime surface has moved to `session_snapshot.v2`.
+Older runtime-serving contracts remain legacy, historical, or strategic-later
+references. They must not compete with the active contract stack.
 
 ## Product And Philosophy
 
@@ -71,7 +78,7 @@ The database-first doctrine remains:
 
 ## Architecture Map
 
-The current MVP path is:
+The historical Golden Pack path is:
 
 ```text
 source snapshots / cached evidence
@@ -89,14 +96,14 @@ source snapshots / cached evidence
   -> minimal UI/UX smoke test
 ```
 
-Non-MVP or strategic-later surfaces may continue to exist in the repo, including
+Historical or strategic-later surfaces may continue to exist in the repo, including
 `playable_corpus.v1`, `pack.compiled.v1`, `pack.materialization.v1`, owner-side
-runtime-read HTTP transport, and editorial write transport. For the MVP Golden
-Pack milestone, these are not the primary runtime contract.
+runtime-read HTTP transport, and editorial write transport. For current runtime,
+these are not the primary runtime contract.
 
 `pack.materialization.v2` is now legacy / historical / non-MVP context for the
-MVP runtime handoff. It must not be deleted now, but it must not be treated as
-the active MVP runtime specification.
+runtime handoff. It must not be deleted now, but it must not be treated as the
+active runtime specification.
 
 ## Database Vs Runtime Responsibilities
 
@@ -110,12 +117,13 @@ Database owns:
 - PMP media qualification.
 - PMP policy interpretation for usage-specific eligibility.
 - Media attribution and legal/source metadata.
-- Golden Pack materialization and validation.
+- Golden Pack materialization and validation as fallback.
 - Evidence links, plan hashes, audit reports, and readiness gates.
 
 Runtime owns:
 
-- Reading `pack.json` from a versioned local Golden Pack artifact.
+- Reading `session_snapshot.v2` from a generated or frozen Dynamic Pack session,
+  with `pack.json` from a versioned local Golden Pack artifact as fallback.
 - Rendering the image-first quiz experience.
 - Shuffling display order among already-provided options, if desired.
 - Recording the displayed option order.
@@ -136,7 +144,7 @@ Runtime must not:
 
 `manifest.json` and `validation_report.json` are database/operator artifacts.
 They support identity, checksums, warnings, blockers, and traceability. They are
-not required runtime payloads for the MVP quiz flow.
+not runtime quiz inputs.
 
 ## Golden Pack V1
 
@@ -550,14 +558,15 @@ operationally useful.
 
 | Current document | Proposed role |
 |---|---|
-| `docs/architecture/MASTER_REFERENCE.md` | Current canonical MVP direction |
+| `docs/foundation/runtime-contract-stack-v1.md` | Current canonical runtime contract stack |
+| `docs/architecture/MASTER_REFERENCE.md` | Historical Golden Pack fallback reference |
 | `docs/architecture/GOLDEN_PACK_SPEC.md` | Active `golden_pack.v1` artifact contract |
 | `docs/foundation/localized-name-source-policy-v1.md` | Canonical localized-name MVP policy |
 | `docs/foundation/taxon-localized-names-enrichment-v1.md` | Canonical localized-name enrichment workflow |
 | `docs/foundation/distractor-relationships-v1.md` | Canonical distractor domain foundation, with MVP wording to clarify later |
 | `docs/foundation/pedagogical-media-profile-v1.md` | Canonical PMP descriptive contract |
 | `docs/foundation/pmp-qualification-policy-v1.md` | Canonical PMP policy interpretation |
-| `docs/foundation/runtime-consumption-v1.md` | Historical/current non-MVP runtime-serving foundation; clarify MVP Golden Pack relationship later |
+| `docs/foundation/runtime-consumption-v1.md` | Runtime consumption boundary and historical owner-read context |
 | `docs/foundation/adr/*` | Historical ADRs, keep in place |
 | `docs/audits/*sprint13*` | Historical active evidence |
 | `docs/audits/*sprint14*` | Historical active evidence |
@@ -566,13 +575,12 @@ operationally useful.
 
 ## Roadmap
 
-### Now / Before Golden Pack
+### Historical / Golden Pack Fallback
 
-- Finalize `golden_pack.v1` shape.
-- Materialize `manifest.json`, `pack.json`, and `validation_report.json`.
-- Ensure every displayed taxon has a FR runtime-safe label.
-- Ensure every question has three database-selected distractors.
-- Ensure every primary quiz image is locally stable and policy-eligible.
+- Keep `golden_pack.v1` available as fallback.
+- Keep `manifest.json`, `pack.json`, and `validation_report.json` traceable.
+- Do not promote Golden Pack back to the default runtime contract unless the
+  canonical contract stack is updated.
 - Ensure every question has short database-authored feedback.
 - Add validation checks for all blocking criteria.
 - Keep `pack.json` runtime-sufficient but free of raw audit evidence and debug
@@ -628,7 +636,7 @@ Do not do the following now:
 - Do not make runtime choose distractors.
 - Do not make AI a source of taxonomic truth.
 - Do not expand into audio, multi-taxon, institutions, or field activities before
-  MVP runtime validation.
+  current runtime validation.
 - Do not revive older runtime-serving contracts as competing MVP handoff
   surfaces.
 - Do not refactor broad documentation history before the Golden Pack is proven.

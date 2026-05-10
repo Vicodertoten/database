@@ -1,7 +1,7 @@
 ---
 owner: database
 status: ready_for_validation
-last_reviewed: 2026-05-05
+last_reviewed: 2026-05-10
 source_of_truth: docs/foundation/localized-name-source-policy-v1.md
 scope: localized_name_runtime_display
 ---
@@ -10,7 +10,8 @@ scope: localized_name_runtime_display
 
 ## Purpose
 
-Define a deterministic, source-attested localized-name policy for MVP runtime display so first-corpus handoff does not require full human review of every name.
+Define a deterministic, source-attested localized-name policy for first-corpus
+runtime display so handoff does not require full human review of every name.
 
 ## Approved Sources
 

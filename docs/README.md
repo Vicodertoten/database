@@ -32,6 +32,7 @@ This repository now uses a four-zone documentation architecture:
 ## Start here
 
 - Foundation: `docs/foundation/`
+  - Runtime contract stack: `docs/foundation/runtime-contract-stack-v1.md`
   - Pedagogical media qualification contract: `docs/foundation/pedagogical-media-profile-v1.md`
   - Qualification contracts status (v1_1 / v1_2 / PMP v1): `docs/foundation/qualification-contracts-status.md`
 - Active runbooks: `docs/runbooks/`
@@ -39,7 +40,8 @@ This repository now uses a four-zone documentation architecture:
 - Locked short-term scope v0.1: `docs/runbooks/v0.1-scope.md`
 - Pre-scale ingestion roadmap: `docs/runbooks/pre-scale-ingestion-roadmap.md`
 - Dynamic pack product roadmap: `docs/architecture/DYNAMIC_PACK_PRODUCT_ROADMAP.md`
-- Dynamic pack Phase 0 alignment plan: `docs/runbooks/dynamic-pack-phase-0-plan.md`
+- Archived Dynamic Pack Phase 0 alignment record:
+  `docs/archive/runbooks/dynamic-pack-phase-0-plan.md`
 - Dynamic pack Phase 2B runtime session contract:
   `docs/runbooks/dynamic-pack-phase-2b-runtime-session-contract.md`
 - Ingestion quality gates: `docs/runbooks/ingestion-quality-gates.md`

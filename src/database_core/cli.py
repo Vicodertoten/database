@@ -8,6 +8,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from dotenv import load_dotenv
+from jsonschema import FormatChecker, validate
 
 from database_core.adapters import (
     DEFAULT_GEMINI_CONCURRENCY,
@@ -425,6 +426,17 @@ def _build_argument_parser() -> argparse.ArgumentParser:
     confusion_ingest_parser.add_argument("--batch-id", required=True)
     confusion_ingest_parser.add_argument("--events-file", type=Path, required=True)
 
+    confusion_runtime_ingest_parser = confusion_subparsers.add_parser(
+        "ingest-runtime-signals"
+    )
+    confusion_runtime_ingest_parser.add_argument(
+        "--database-url",
+        type=str,
+        default=os.environ.get("DATABASE_URL", DEFAULT_DATABASE_URL),
+    )
+    confusion_runtime_ingest_parser.add_argument("--batch-id", required=True)
+    confusion_runtime_ingest_parser.add_argument("--signals-file", type=Path, required=True)
+
     confusion_recompute_parser = confusion_subparsers.add_parser("aggregate-recompute")
     confusion_recompute_parser.add_argument(
         "--database-url",
@@ -688,6 +700,14 @@ def main() -> None:
             payload = services.confusion_store.ingest_confusion_batch(
                 batch_id=args.batch_id,
                 events=events,
+            )
+            print(json.dumps(payload, indent=2, sort_keys=True))
+            return
+        if args.confusion_command == "ingest-runtime-signals":
+            signals_payload = _load_runtime_answer_signals_from_file(args.signals_file)
+            payload = services.confusion_store.ingest_runtime_answer_signals_batch(
+                batch_id=args.batch_id,
+                payload=signals_payload,
             )
             print(json.dumps(payload, indent=2, sort_keys=True))
             return
@@ -992,6 +1012,33 @@ def _load_confusion_events_from_file(path: Path) -> list[dict[str, object]]:
             raise SystemExit(f"Invalid event at index {index}: {exc}") from exc
         validated.append(event.model_dump(mode="json"))
     return validated
+
+
+def _load_runtime_answer_signals_from_file(path: Path) -> dict[str, object]:
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except OSError as exc:
+        raise SystemExit(f"Cannot read signals file: {path}") from exc
+    except json.JSONDecodeError as exc:
+        raise SystemExit(f"Invalid JSON in signals file: {path}") from exc
+
+    if not isinstance(payload, dict):
+        raise SystemExit("--signals-file must be a runtime_answer_signals.v1 object")
+
+    schema_path = (
+        Path(__file__).resolve().parents[2]
+        / "schemas"
+        / "runtime_answer_signals_v1.schema.json"
+    )
+    try:
+        validate(
+            instance=payload,
+            schema=json.loads(schema_path.read_text(encoding="utf-8")),
+            format_checker=FormatChecker(),
+        )
+    except Exception as exc:  # pragma: no cover - CLI validation failure path.
+        raise SystemExit(f"Invalid runtime_answer_signals.v1 payload: {exc}") from exc
+    return payload
 
 
 def _parse_optional_iso8601_datetime(value: str | None) -> datetime | None:

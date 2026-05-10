@@ -892,6 +892,12 @@ class ConfusionBatch(DomainModel):
     batch_id: str
     created_at: datetime
     event_count: int = Field(ge=0)
+    source_schema_version: str | None = None
+    source_export_id: str | None = None
+    source_app: str | None = None
+    source_table: str | None = None
+    source_filters_json: str | None = None
+    skipped_correct_count: int = Field(default=0, ge=0)
 
     @field_validator("batch_id")
     @classmethod
@@ -905,6 +911,16 @@ class ConfusionEventInput(DomainModel):
     taxon_confused_for_id: str
     taxon_correct_id: str
     occurred_at: datetime
+    source_signal_id: str | None = None
+    runtime_session_id: str | None = None
+    question_position: int | None = Field(default=None, ge=1)
+    session_snapshot_id: str | None = None
+    pool_id: str | None = None
+    locale: str | None = None
+    seed: str | None = None
+    selected_option_id: str | None = None
+    distractor_source: str | None = None
+    option_sources_json: str | None = None
 
     @field_validator("taxon_confused_for_id", "taxon_correct_id")
     @classmethod
@@ -927,6 +943,16 @@ class ConfusionEvent(DomainModel):
     taxon_correct_id: str
     occurred_at: datetime
     created_at: datetime
+    source_signal_id: str | None = None
+    runtime_session_id: str | None = None
+    question_position: int | None = Field(default=None, ge=1)
+    session_snapshot_id: str | None = None
+    pool_id: str | None = None
+    locale: str | None = None
+    seed: str | None = None
+    selected_option_id: str | None = None
+    distractor_source: str | None = None
+    option_sources_json: str | None = None
 
     @field_validator(
         "confusion_event_id",
@@ -950,6 +976,8 @@ class ConfusionEvent(DomainModel):
 class ConfusionAggregateGlobal(DomainModel):
     taxon_confused_for_id: str
     taxon_correct_id: str
+    locale: str = "unknown"
+    distractor_source: str = "unknown"
     event_count: int = Field(ge=0)
     latest_occurred_at: datetime
     aggregated_at: datetime

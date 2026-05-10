@@ -33,9 +33,9 @@ A `DistractorRelationship` is **not** a question option and **not** a runtime ob
 The relationship layer is upstream of compile-time. It feeds the compiler, which then
 produces `QuestionOption` entries. The compiler consumes relationships; it does not own them.
 
-For the `golden_pack.v1` MVP path, runtime may shuffle and display options that
-are already present in the artifact. Runtime must not select, replace, add,
-score, or remap distractor taxa.
+For the current runtime stack, runtime may display options that are already
+present in `session_snapshot.v2` or in the `golden_pack.v1` fallback artifact.
+Runtime must not select, replace, add, score, or remap distractor taxa.
 
 ---
 

@@ -1,0 +1,28 @@
+{
+  "schema_version": "database.schema.v20",
+  "evidence_id": "runtime-answer-signals-ingestion-phase5",
+  "generated_at": "2026-05-09T20:10:00.000Z",
+  "runtime_export_schema": "runtime_answer_signals.v1",
+  "database_ingestion_command": "database-core confusion ingest-runtime-signals --signals-file <path> --batch-id <batch-id>",
+  "implemented_behavior": {
+    "correct_answers": "skipped and counted in confusion_batches.skipped_correct_count",
+    "incorrect_answers": "persisted as confusion_events",
+    "duplicate_batch": "no-op",
+    "aggregate_dimensions": [
+      "taxon_confused_for_id",
+      "taxon_correct_id",
+      "locale",
+      "distractor_source"
+    ]
+  },
+  "synthetic_validation_expectation": {
+    "input_signals": 2,
+    "incorrect_confusion_events": 1,
+    "skipped_correct_count": 1,
+    "aggregate_rows": 1
+  },
+  "real_postgres_validation": {
+    "status": "BLOCKED",
+    "reason": "Local DNS resolution failed for the configured runtime Supabase hostname: getaddrinfo ENOTFOUND db.xswpeuxipdhowyfyqzum.supabase.co"
+  }
+}

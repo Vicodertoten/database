@@ -1,7 +1,7 @@
 ---
 owner: database
 status: stable
-last_reviewed: 2026-04-29
+last_reviewed: 2026-05-10
 source_of_truth: docs/foundation/runtime-consumption-v1.md
 scope: foundation
 ---
@@ -13,51 +13,51 @@ Cette note fixe la frontiere de consommation entre `database` et `runtime-app`.
 `database` porte la verite des contrats et des artefacts de reference.
 `runtime-app` consomme ces surfaces officielles; il ne les redefinit pas.
 
-## Note MVP Golden Pack (2026-05-05)
+## Note contract stack active (2026-05-10)
 
-Pour le MVP Golden Pack, la surface runtime prioritaire est
-`golden_pack.v1`, produite comme artefact local versionne sous
-`data/exports/golden_packs/belgian_birds_mvp_v1/`.
+La source canonique du statut des contrats runtime est
+`docs/foundation/runtime-contract-stack-v1.md`.
 
-`golden_pack.v1` est un artefact pedagogique exporte contenant un contrat
-runtime strict. Le runtime MVP le consomme en mode artifact-only, sans transport
-HTTP owner-side obligatoire.
+Etat actif:
+
+- `session_snapshot.v2` est le contrat runtime jouable actif.
+- `serving_bundle.v1` est l'input local actif que `runtime-app` peut projeter en
+  `session_snapshot.v2` au demarrage d'une session.
+- `golden_pack.v1` reste le fallback runtime quand le mode Dynamic Pack est
+  desactive ou indisponible.
+- `pack_pool.v1` est owner-only.
+- `runtime_answer_signals.v1` est le handback batch runtime -> owner.
 
 Les surfaces et transports decrits ci-dessous (`playable_corpus.v1`,
 `pack.compiled.v1`, `pack.materialization.v1`, service HTTP owner-side) restent
-des surfaces existantes ou strategiques, mais ne sont pas le contrat MVP Golden
-Pack. Pour les decisions Golden Pack et runtime artifact-only, la reference
-canonique est `docs/architecture/MASTER_REFERENCE.md`, avec le contrat detaille
-dans `docs/architecture/GOLDEN_PACK_SPEC.md`.
+historiques / strategic-later. Ils ne sont pas la cible runtime actuelle.
 
-## Note Post-MVP Dynamic Pack (2026-05-09)
+## Note Dynamic Pack (2026-05-09)
 
-Apres le MVP `golden_pack.v1`, la cible strategique n'est pas une reprise
-directe des anciennes surfaces owner-side. La direction est un pool dynamique
-serving-ready, des sessions snapshottees au demarrage, des challenges/devoirs
-figes, et des batchs de signaux runtime vers `database`.
+La cible Dynamic Pack est maintenant verrouillee pour le runtime courant:
+`serving_bundle.v1` -> `session_snapshot.v2`. La suite produit reste:
+challenges/devoirs figes et batchs de signaux runtime vers `database`.
 
-Les noms `pack_pool.v1`, `session_snapshot.v1`, `fixed_challenge.v1`,
-`assignment_materialization.v1`, et `runtime_signal_batch.v1` sont des noms
-candidats non verrouilles jusqu'a la phase d'implementation. La reference de
-vision est `docs/architecture/DYNAMIC_PACK_PRODUCT_ROADMAP.md`; le plan
-d'alignement Phase 0 est `docs/runbooks/dynamic-pack-phase-0-plan.md`.
+La reference de vision est `docs/architecture/DYNAMIC_PACK_PRODUCT_ROADMAP.md`.
+Le plan Phase 0 est archive dans
+`docs/archive/runbooks/dynamic-pack-phase-0-plan.md`.
 
-## Etat de transport actuel
+## Etat de transport historique
 
-Hors MVP Golden Pack, le transport inter-repos existant suit la sequence
-suivante:
+La famille owner-side runtime-read suit l'historique suivant:
 
 - V1: fixtures de reference publiees cote owner et validees cote consumer
 - V1.5: API minimale de lecture cote `runtime-app/apps/api`
 - Phase 1: service HTTP owner-side minimal de lecture runtime cote `database`
 
-Pour cette famille de surfaces, le mode nominal de lecture runtime n'est plus fixture-only.
-Le provider owner-side est maintenant la jonction nominale; les fixtures restent un fallback explicite dev/test.
+Cette famille est historical / strategic-later. Elle n'est pas le mode nominal
+du runtime courant, qui consomme des artefacts locaux `serving_bundle.v1`,
+`session_snapshot.v2`, et fallback `golden_pack.v1`.
 
 ## Etat courant visible (reference de wording hors MVP Golden Pack)
 
-Pour l'alignement inter-repos de la famille owner-side non-MVP, l'etat courant
+Pour l'alignement inter-repos de la famille owner-side historique, l'etat
+courant
 doit etre formule sans ambiguite:
 
 - lecture runtime nominale: owner-side reelle en place (`database`)
@@ -65,16 +65,14 @@ doit etre formule sans ambiguite:
 - web runtime: minimal pedagogical player
 - mobile runtime: surface minimale reelle image-first (rendu image prioritaire en UI)
 
-Aucun texte majeur ne doit presenter cet etat courant comme un simple
-demonstrateur technique d'IDs. Cette consigne ne remplace pas le contrat MVP
-Golden Pack: pour le smoke test UI/UX initial, le runtime consomme un artefact
-local `golden_pack.v1` et ne depend pas du transport HTTP owner-side.
+Aucun texte majeur ne doit presenter cet etat historique comme la cible runtime
+courante. Le runtime courant consomme `session_snapshot.v2`, avec
+`golden_pack.v1` comme fallback, et ne depend pas du transport HTTP owner-side.
 
 ## Phase 1 - read transport owner-side minimal (en place)
 
-Statut MVP: non-MVP / strategic-later pour le handoff Golden Pack. Cette section
-documente le transport owner-side existant; elle ne definit pas le contrat
-runtime MVP artifact-only.
+Statut: historical / strategic-later. Cette section documente le transport
+owner-side existant; elle ne definit pas le contrat runtime courant.
 
 Un service owner-side de lecture runtime est maintenant en place dans `database`,
 borne strictement aux 3 surfaces officielles:
@@ -118,21 +116,20 @@ Pour le deploiement cible Fly.io:
 
 ## Surfaces owner-side historiques / strategic-later
 
-Hors MVP Golden Pack artifact-only, `runtime-app` peut consommer les surfaces
-suivantes quand cette famille owner-side est explicitement dans le scope. Elles
-restent legacy / strategic-later et ne sont pas la cible runtime actuelle:
+`runtime-app` peut consommer les surfaces suivantes seulement si cette famille
+owner-side est explicitement rouverte dans le scope. Elles restent legacy /
+strategic-later et ne sont pas la cible runtime actuelle:
 
 - `playable_corpus.v1`
 - `pack.compiled.v1`
 - `pack.materialization.v1`
 
-Contrats Phase 3 planifies, a consommer seulement apres production cote `database`:
+Contrats Phase 3 historiques / strategic-later:
 
 - `pack.compiled.v2`
 - `pack.materialization.v2`
 
-Pour le MVP Golden Pack, ces surfaces ne doivent pas etre traitees comme le
-contrat runtime principal.
+Ces surfaces ne doivent pas etre traitees comme le contrat runtime principal.
 
 ## Surface interdite pour le runtime
 
@@ -147,9 +144,9 @@ Ce bundle peut servir a des usages d'export ou d'inspection, mais pas a la lectu
 
 ## Schemas de reference officielle
 
-Les schemas JSON suivants sont la source de verite officielle pour la famille de
-consommation runtime owner-side / legacy / strategic-later. Ils ne sont pas les
-schemas `golden_pack.v1`.
+Les schemas JSON suivants restent la source de verite officielle pour la famille
+owner-side / legacy / strategic-later. Ils ne sont pas les schemas du stack
+runtime actif.
 
 Tout type consumer (TypeScript ou autre) qui consomme cette famille doit refleter
 ces schemas champ par champ, sans renommage local.
@@ -169,13 +166,13 @@ Regles Phase 3 v2:
 - `selectedOptionId` devient la soumission standard pour v2
 - `selectedPlayableItemId` reste legacy pour v1 pendant la transition
 
-Statut MVP Golden Pack:
+Statut historique:
 
 - `pack.compiled.v2` et `pack.materialization.v2` sont legacy / historical /
-  non-MVP context tant que `golden_pack.v1` porte le handoff MVP
-- le runtime MVP ne selectionne pas de distracteurs depuis ces surfaces
-- le runtime MVP ne resout pas de labels depuis ces surfaces
-- le runtime MVP ne depend pas d'un fetch HTTP owner-side
+  non-runtime context
+- le runtime courant ne selectionne pas de distracteurs depuis ces surfaces
+- le runtime courant ne resout pas de labels depuis ces surfaces
+- le runtime courant ne depend pas d'un fetch HTTP owner-side
 
 Extension additive historique sur `playable_corpus.v1` (sans changement de version de contrat):
 

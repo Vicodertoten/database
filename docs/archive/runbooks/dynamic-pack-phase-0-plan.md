@@ -1,12 +1,15 @@
 ---
 owner: database
 status: stable
-last_reviewed: 2026-05-09
-source_of_truth: docs/runbooks/dynamic-pack-phase-0-plan.md
+last_reviewed: 2026-05-10
+source_of_truth: docs/archive/runbooks/dynamic-pack-phase-0-plan.md
 scope: dynamic_pack_phase_0_alignment
 ---
 
 # Dynamic Pack Phase 0 Plan
+
+Archive note: Phase 0 exit criteria were met on `2026-05-09`. Current contract
+status is now owned by `docs/foundation/runtime-contract-stack-v1.md`.
 
 ## Purpose
 
@@ -31,7 +34,7 @@ gate baseline and audit-only preparation for dynamic packs.
   - `session_snapshot.v1`
   - `fixed_challenge.v1`
   - `assignment_materialization.v1`
-  - `runtime_signal_batch.v1`
+  - `runtime_answer_signals.v1`
 - `playable_corpus.v1`, `pack.compiled.v1`, and `pack.materialization.v1` are
   legacy / strategic-later surfaces, not the current runtime target.
 - Daily challenge uses the same questions, images, and options for all users,

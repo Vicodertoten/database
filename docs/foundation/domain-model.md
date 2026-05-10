@@ -1,7 +1,7 @@
 ---
 owner: database
 status: stable
-last_reviewed: 2026-04-29
+last_reviewed: 2026-05-10
 source_of_truth: docs/foundation/domain-model.md
 scope: foundation
 ---
@@ -17,17 +17,20 @@ Gate 4.5 migration framing:
 - keep contracts stable while correcting structural drifts
 - treat `PostgresRepository` decomposition as a dedicated controlled workstream
 
-Golden Pack MVP boundary (2026-05-05):
+Runtime contract boundary (2026-05-10):
 
-- `golden_pack.v1` is the active MVP runtime handoff contract.
+- `session_snapshot.v2` is the active playable runtime contract.
+- `serving_bundle.v1` is the active local input used to generate sessions.
+- `golden_pack.v1` remains the runtime fallback contract.
 - `golden_pack.v1` is a pedagogical product artifact first, with a strict
   runtime contract inside the exported `pack.json`.
 - `PlayableItem`, `CompiledPackBuild`, `PackMaterialization`,
   `playable_corpus.v1`, `pack.compiled.v1`, `pack.materialization.v1`, and the
   planned v2 materialization family remain valid database/domain history and
-  operational context, but they are not the active MVP runtime contract.
-- MVP runtime consumers must use the artifact-only Golden Pack payload and must
-  not choose distractors, resolve labels, map taxa, or complete referenced taxa.
+  operational context, but they are not the active runtime contract.
+- Runtime consumers must use `session_snapshot.v2` or the Golden Pack fallback
+  payload and must not choose distractors, resolve labels, map taxa, or complete
+  referenced taxa.
 
 ## CanonicalTaxon
 
@@ -130,9 +133,9 @@ Qualification stays explicit. Unknown and review-required are first-class outcom
 
 Derived, queryable runtime-facing item persisted in database (without runtime session logic).
 
-MVP status: non-MVP / legacy context for the Golden Pack handoff. Playable items
-can feed database-side selection and validation, but `playable_corpus.v1` is not
-the runtime payload for the first Golden Pack UI/UX smoke test.
+Status: legacy context for runtime handoff. Playable items can feed
+database-side selection and validation, but `playable_corpus.v1` is not the
+current runtime payload.
 
 Persistence posture:
 
@@ -187,9 +190,9 @@ PackCompilationAttempt (deterministic diagnosis):
 
 ## CompiledPackBuild / PackMaterialization (Gate 4)
 
-MVP status: legacy / historical / strategic-later for the Golden Pack handoff.
+Status: legacy / historical / strategic-later for runtime handoff.
 This section documents the existing pack materialization lineage. It must not be
-read as the `golden_pack.v1` runtime contract.
+read as the active runtime contract.
 
 CompiledPackBuild (`pack.compiled.v1`, current):
 
@@ -211,7 +214,7 @@ PackMaterialization (`pack.materialization.v1`, current):
 - immutable once written; later compiled builds do not retroactively mutate old materializations
 - materialization persistence is still in `database` scope; no runtime/session/scoring/progression object is introduced here
 
-Planned Phase 3 contracts (`pack.compiled.v2`, `pack.materialization.v2`):
+Historical Phase 3 contracts (`pack.compiled.v2`, `pack.materialization.v2`):
 
 - target remains a `PlayableItem` and keeps `target_playable_item_id`
 - options become `QuestionOption[]` snapshots
@@ -222,9 +225,9 @@ Planned Phase 3 contracts (`pack.compiled.v2`, `pack.materialization.v2`):
 - runtime consumes displayed options and submits `selectedOptionId`; it does not resolve labels, score distractors, or map external similar species
 - v1 remains the legacy compatibility family until consumers no longer require `distractor_playable_item_ids`
 
-For MVP, `pack.materialization.v2` is not promoted to the active handoff. The
-active contract is `golden_pack.v1`, with generic `taxon_ref` options and a
-runtime-sufficient, non-evidence-heavy `pack.json`.
+For runtime handoff, `pack.materialization.v2` is not promoted to the active
+contract. The active playable contract is `session_snapshot.v2`, with
+`golden_pack.v1` retained as fallback.
 
 ## EnrichmentRequest / EnrichmentExecution (Gate 6)
 

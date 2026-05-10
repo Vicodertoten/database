@@ -1,7 +1,7 @@
 ---
 owner: database
 status: ready_for_validation
-last_reviewed: 2026-05-05
+last_reviewed: 2026-05-10
 source_of_truth: docs/architecture/GOLDEN_PACK_SPEC.md
 scope: golden_pack_v1_contract
 ---
@@ -10,15 +10,16 @@ scope: golden_pack_v1_contract
 
 ## Purpose
 
-`golden_pack.v1` is the canonical MVP runtime handoff contract for the Belgian
-birds first corpus.
+`golden_pack.v1` is the fallback runtime contract for the Belgian birds first
+corpus. The active runtime contract stack is defined in
+`docs/foundation/runtime-contract-stack-v1.md`.
 
 It is separate from `pack.materialization.v2`. `pack.materialization.v2` remains
-legacy / historical / non-MVP context and must not be deleted now, but it is not
-the active runtime handoff specification for MVP.
+legacy / historical context and must not be deleted now, but it is not the
+active runtime handoff specification.
 
 The Golden Pack is a pedagogical product artifact first. It contains a strict
-runtime contract so the MVP runtime can display the quiz flow without making
+runtime contract so the fallback runtime path can display the quiz flow without making
 domain decisions.
 
 ## Output Layout
@@ -37,7 +38,7 @@ Responsibilities:
 
 | File / directory | Responsibility |
 |---|---|
-| `pack.json` | Only runtime payload required for the MVP quiz flow. |
+| `pack.json` | Runtime payload required for the Golden Pack fallback quiz flow. |
 | `manifest.json` | Artifact identity, versioning, gates, warnings, checksums, build metadata, links to evidence. |
 | `validation_report.json` | Validation results, rejected targets, warnings, blockers, and diagnostics. |
 | `media/` | Pack-local copied quiz images referenced by `pack.json`. |
@@ -314,4 +315,3 @@ Test coverage must include:
 - Do not add runtime business logic to database.
 - Do not make runtime invent, fetch, correct, or map names.
 - Do not make runtime choose or replace distractors.
-

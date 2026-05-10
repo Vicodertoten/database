@@ -1684,6 +1684,170 @@ def test_recompute_confusion_aggregates_global_counts_directed_pairs(database_ur
     assert by_pair[("taxon:birds:000002", "taxon:birds:000001")] == 1
 
 
+def test_ingest_runtime_answer_signals_filters_correct_and_keeps_dimensions(
+    database_url: str,
+) -> None:
+    repository = _build_repository(database_url)
+    repository.initialize()
+    payload = {
+        "schema_version": "runtime_answer_signals.v1",
+        "export_id": "runtime-answer-signals:test",
+        "exported_at": datetime(2026, 5, 9, 20, 0, tzinfo=UTC).isoformat(),
+        "source": {
+            "app": "runtime-app",
+            "table": "runtime_answer_signals",
+            "filters": {"since": None, "until": None, "session_id": None, "limit": None},
+        },
+        "event_count": 2,
+        "signals": [
+            {
+                "signal_id": "runtime-session:1:1",
+                "session_id": "runtime-session:1",
+                "question_position": 1,
+                "session_snapshot_id": "session:snapshot",
+                "pool_id": "pack-pool:test",
+                "locale": "fr",
+                "seed": "seed",
+                "expected_canonical_taxon_id": "taxon:birds:correct",
+                "selected_canonical_taxon_id": "taxon:birds:selected",
+                "selected_option_id": "option:selected",
+                "is_correct": False,
+                "distractor_canonical_taxon_ids": [
+                    "taxon:birds:selected",
+                    "taxon:birds:d2",
+                    "taxon:birds:d3",
+                ],
+                "option_sources": [
+                    {
+                        "optionId": "option:correct",
+                        "canonicalTaxonId": "taxon:birds:correct",
+                        "source": "target_taxon",
+                        "score": 1,
+                        "reasonCodes": ["correct_taxon"],
+                        "relationshipId": None,
+                        "isCorrect": True,
+                    },
+                    {
+                        "optionId": "option:selected",
+                        "canonicalTaxonId": "taxon:birds:selected",
+                        "source": "inaturalist_similar_species",
+                        "score": 1,
+                        "reasonCodes": ["inaturalist_similar_species"],
+                        "relationshipId": "dr:test",
+                        "isCorrect": False,
+                    },
+                    {
+                        "optionId": "option:d2",
+                        "canonicalTaxonId": "taxon:birds:d2",
+                        "source": "taxonomic_fallback_db",
+                        "score": 0.2,
+                        "reasonCodes": ["shared_parent"],
+                        "relationshipId": None,
+                        "isCorrect": False,
+                    },
+                    {
+                        "optionId": "option:d3",
+                        "canonicalTaxonId": "taxon:birds:d3",
+                        "source": "taxonomic_fallback_db",
+                        "score": 0.2,
+                        "reasonCodes": ["shared_parent"],
+                        "relationshipId": None,
+                        "isCorrect": False,
+                    },
+                ],
+                "answered_at": datetime(2026, 5, 9, 20, 1, tzinfo=UTC).isoformat(),
+            },
+            {
+                "signal_id": "runtime-session:1:2",
+                "session_id": "runtime-session:1",
+                "question_position": 2,
+                "session_snapshot_id": "session:snapshot",
+                "pool_id": "pack-pool:test",
+                "locale": "fr",
+                "seed": "seed",
+                "expected_canonical_taxon_id": "taxon:birds:correct",
+                "selected_canonical_taxon_id": "taxon:birds:correct",
+                "selected_option_id": "option:correct",
+                "is_correct": True,
+                "distractor_canonical_taxon_ids": [
+                    "taxon:birds:d1",
+                    "taxon:birds:d2",
+                    "taxon:birds:d3",
+                ],
+                "option_sources": [
+                    {
+                        "optionId": "option:correct",
+                        "canonicalTaxonId": "taxon:birds:correct",
+                        "source": "target_taxon",
+                        "score": 1,
+                        "reasonCodes": ["correct_taxon"],
+                        "relationshipId": None,
+                        "isCorrect": True,
+                    },
+                    {
+                        "optionId": "option:d1",
+                        "canonicalTaxonId": "taxon:birds:d1",
+                        "source": "taxonomic_fallback_db",
+                        "score": 0.2,
+                        "reasonCodes": ["shared_parent"],
+                        "relationshipId": None,
+                        "isCorrect": False,
+                    },
+                    {
+                        "optionId": "option:d2",
+                        "canonicalTaxonId": "taxon:birds:d2",
+                        "source": "taxonomic_fallback_db",
+                        "score": 0.2,
+                        "reasonCodes": ["shared_parent"],
+                        "relationshipId": None,
+                        "isCorrect": False,
+                    },
+                    {
+                        "optionId": "option:d3",
+                        "canonicalTaxonId": "taxon:birds:d3",
+                        "source": "taxonomic_fallback_db",
+                        "score": 0.2,
+                        "reasonCodes": ["shared_parent"],
+                        "relationshipId": None,
+                        "isCorrect": False,
+                    },
+                ],
+                "answered_at": datetime(2026, 5, 9, 20, 2, tzinfo=UTC).isoformat(),
+            },
+        ],
+    }
+
+    result = repository.ingest_runtime_answer_signals_batch(
+        batch_id="batch:runtime-signals:test",
+        payload=payload,
+    )
+    assert result["ingested"] is True
+    assert result["event_count"] == 1
+    assert result["skipped_correct_count"] == 1
+
+    duplicate = repository.ingest_runtime_answer_signals_batch(
+        batch_id="batch:runtime-signals:test",
+        payload=payload,
+    )
+    assert duplicate == {
+        "ingested": False,
+        "reason": "duplicate_batch",
+        "batch_id": "batch:runtime-signals:test",
+    }
+
+    events = repository.fetch_confusion_events(batch_id="batch:runtime-signals:test")
+    assert len(events) == 1
+    assert events[0]["source_signal_id"] == "runtime-session:1:1"
+    assert events[0]["locale"] == "fr"
+    assert events[0]["distractor_source"] == "inaturalist_similar_species"
+
+    recomputed = repository.recompute_confusion_aggregates_global()
+    assert recomputed["pair_count"] == 1
+    aggregates = repository.fetch_confusion_aggregates_global(limit=10)
+    assert aggregates[0]["locale"] == "fr"
+    assert aggregates[0]["distractor_source"] == "inaturalist_similar_species"
+
+
 def test_recompute_confusion_aggregates_global_is_idempotent(database_url: str) -> None:
     repository = _build_repository(database_url)
     repository.initialize()
@@ -1818,6 +1982,8 @@ def test_fetch_confusion_metrics_reports_top_pairs(database_url: str) -> None:
     assert metrics["top_pairs"][0] == {
         "taxon_confused_for_id": "taxon:birds:000031",
         "taxon_correct_id": "taxon:birds:000032",
+        "locale": "unknown",
+        "distractor_source": "unknown",
         "event_count": 2,
     }
 

@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "runtime_answer_signals_v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "export_id",
+    "exported_at",
+    "source",
+    "event_count",
+    "signals"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": { "type": "string", "const": "runtime_answer_signals.v1" },
+    "export_id": { "type": "string", "minLength": 1 },
+    "exported_at": { "type": "string", "format": "date-time" },
+    "source": {
+      "type": "object",
+      "required": ["app", "table"],
+      "additionalProperties": false,
+      "properties": {
+        "app": { "type": "string", "const": "runtime-app" },
+        "table": { "type": "string", "const": "runtime_answer_signals" },
+        "filters": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "since": { "type": ["string", "null"], "format": "date-time" },
+            "until": { "type": ["string", "null"], "format": "date-time" },
+            "session_id": { "type": ["string", "null"], "minLength": 1 },
+            "limit": { "type": ["integer", "null"], "minimum": 1 }
+          }
+        }
+      }
+    },
+    "event_count": { "type": "integer", "minimum": 0 },
+    "signals": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/signal" }
+    }
+  },
+  "$defs": {
+    "signal": {
+      "type": "object",
+      "required": [
+        "signal_id",
+        "session_id",
+        "question_position",
+        "session_snapshot_id",
+        "pool_id",
+        "locale",
+        "seed",
+        "expected_canonical_taxon_id",
+        "selected_canonical_taxon_id",
+        "selected_option_id",
+        "is_correct",
+        "distractor_canonical_taxon_ids",
+        "option_sources",
+        "answered_at"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "signal_id": { "type": "string", "minLength": 1 },
+        "session_id": { "type": "string", "minLength": 1 },
+        "question_position": { "type": "integer", "minimum": 1 },
+        "session_snapshot_id": { "type": ["string", "null"], "minLength": 1 },
+        "pool_id": { "type": "string", "minLength": 1 },
+        "locale": { "type": ["string", "null"], "enum": ["fr", "en", "nl", null] },
+        "seed": { "type": ["string", "null"], "minLength": 1 },
+        "expected_canonical_taxon_id": { "type": "string", "minLength": 1 },
+        "selected_canonical_taxon_id": { "type": "string", "minLength": 1 },
+        "selected_option_id": { "type": "string", "minLength": 1 },
+        "is_correct": { "type": "boolean" },
+        "distractor_canonical_taxon_ids": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "option_sources": {
+          "type": "array",
+          "minItems": 4,
+          "items": { "$ref": "#/$defs/option_source" }
+        },
+        "answered_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "option_source": {
+      "type": "object",
+      "required": [
+        "optionId",
+        "canonicalTaxonId",
+        "source",
+        "score",
+        "reasonCodes",
+        "relationshipId",
+        "isCorrect"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "optionId": { "type": "string", "minLength": 1 },
+        "canonicalTaxonId": { "type": "string", "minLength": 1 },
+        "source": { "type": "string", "minLength": 1 },
+        "score": { "type": "number", "minimum": 0 },
+        "reasonCodes": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "relationshipId": { "type": ["string", "null"], "minLength": 1 },
+        "isCorrect": { "type": "boolean" }
+      }
+    }
+  }
+}
