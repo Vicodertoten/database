@@ -13,6 +13,12 @@ scope: dynamic_pack_phase_2b_runtime_session_contract
 Phase 2B turns the Phase 2A dynamic pack pool into the first playable dynamic
 runtime contract for `Common birds Belgium/France`.
 
+Contract status is tracked in `docs/foundation/runtime-contract-stack-v1.md`.
+Internal compiler concepts are tracked separately in
+`docs/foundation/dynamic-session-compiler-internals-v1.md`, so
+`session_snapshot.v2` remains an exported product contract rather than the
+internal dynamic session domain model.
+
 Phase 2A proved that `database` can build a BE+FR birds `pack_pool.v1` and
 target-only `session_snapshot.v1` fixtures. Phase 2B adds the missing playable
 surface: snapshotted options and distractors that `runtime-app` can consume
@@ -33,6 +39,9 @@ Locked contract direction:
 `runtime-app` must consume `session_snapshot.v2` as produced by `database`.
 It must not locally derive labels, similar species, taxonomic proximity,
 distractor scores, referenced-only status, or option correctness.
+Product constants in this runbook, including BE/FR scope, `fr`/`en`/`nl`
+locales, `20` questions, and Phase 2B policy versions, belong at the
+materialization/export/runtime-consumption boundary.
 
 ## Product Name
 

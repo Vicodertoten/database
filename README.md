@@ -418,10 +418,10 @@ The repository now writes explicit stage versions into generated artifacts:
 - playable corpus version: `playable_corpus.v1`
 - pack spec version: `pack.spec.v1`
 - pack diagnostic version: `pack.diagnostic.v1`
-- compiled pack version: `pack.compiled.v1`
-- pack materialization version: `pack.materialization.v1`
-- planned compiled pack version: `pack.compiled.v2`
-- planned pack materialization version: `pack.materialization.v2`
+- compiled pack version: `pack.compiled.v1` (historical)
+- pack materialization version: `pack.materialization.v1` (historical)
+- compiled pack v2 reference: `pack.compiled.v2` (historical / strategic-later)
+- pack materialization v2 reference: `pack.materialization.v2` (historical / strategic-later)
 - confusion event version: `confusion.event.v1`
 - confusion aggregate version: `confusion.aggregate.v1`
 - runtime answer signal export version: `runtime_answer_signals.v1`

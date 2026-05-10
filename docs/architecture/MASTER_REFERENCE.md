@@ -150,8 +150,8 @@ not runtime quiz inputs.
 
 ### Definition
 
-`golden_pack.v1` is the first canonical MVP handoff artifact. It is a
-pedagogical product artifact containing a strict runtime contract.
+`golden_pack.v1` is the retained Golden Pack fallback artifact. It is a
+pedagogical product artifact containing a strict fallback runtime contract.
 
 It is intentionally separate from `pack.materialization.v2` because the pipeline
 and runtime handoff have changed enough to justify a clean contract. The older
@@ -558,7 +558,7 @@ operationally useful.
 
 | Current document | Proposed role |
 |---|---|
-| `docs/foundation/runtime-contract-stack-v1.md` | Current canonical runtime contract stack |
+| `docs/foundation/runtime-contract-stack-v1.md` | Canonical durable artifact truth table and current runtime contract stack |
 | `docs/architecture/MASTER_REFERENCE.md` | Historical Golden Pack fallback reference |
 | `docs/architecture/GOLDEN_PACK_SPEC.md` | Active `golden_pack.v1` artifact contract |
 | `docs/foundation/localized-name-source-policy-v1.md` | Canonical localized-name MVP policy |

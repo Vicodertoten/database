@@ -13,6 +13,12 @@ scope: runbook
 Phase 2A creates the first runtime-ready dynamic serving surface from the Phase 1
 BE+FR corpus gate.
 
+Contract status is tracked in `docs/foundation/runtime-contract-stack-v1.md`.
+Internal dynamic compiler concepts are tracked separately in
+`docs/foundation/dynamic-session-compiler-internals-v1.md`; Phase 2A product
+constants such as BE+FR, `fr`/`en`/`nl`, and `20` questions are materialization
+inputs, not generic domain model constraints.
+
 Included:
 
 - `pack_pool.v1`

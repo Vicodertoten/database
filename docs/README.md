@@ -33,6 +33,8 @@ This repository now uses a four-zone documentation architecture:
 
 - Foundation: `docs/foundation/`
   - Runtime contract stack: `docs/foundation/runtime-contract-stack-v1.md`
+  - Dynamic session compiler internals:
+    `docs/foundation/dynamic-session-compiler-internals-v1.md`
   - Pedagogical media qualification contract: `docs/foundation/pedagogical-media-profile-v1.md`
   - Qualification contracts status (v1_1 / v1_2 / PMP v1): `docs/foundation/qualification-contracts-status.md`
 - Active runbooks: `docs/runbooks/`

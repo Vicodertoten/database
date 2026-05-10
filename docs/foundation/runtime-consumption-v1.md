@@ -17,6 +17,9 @@ Cette note fixe la frontiere de consommation entre `database` et `runtime-app`.
 
 La source canonique du statut des contrats runtime est
 `docs/foundation/runtime-contract-stack-v1.md`.
+La frontiere entre le compilateur dynamique interne et le contrat produit
+`session_snapshot.v2` est documentee dans
+`docs/foundation/dynamic-session-compiler-internals-v1.md`.
 
 Etat actif:
 
@@ -37,6 +40,9 @@ historiques / strategic-later. Ils ne sont pas la cible runtime actuelle.
 La cible Dynamic Pack est maintenant verrouillee pour le runtime courant:
 `serving_bundle.v1` -> `session_snapshot.v2`. La suite produit reste:
 challenges/devoirs figes et batchs de signaux runtime vers `database`.
+`session_snapshot.v2` est un contrat produit exporte; les politiques de
+selection, de seed, de distracteurs, de locale et de nombre de questions sont
+des inputs de materialisation/export, pas le modele domaine interne generique.
 
 La reference de vision est `docs/architecture/DYNAMIC_PACK_PRODUCT_ROADMAP.md`.
 Le plan Phase 0 est archive dans
@@ -154,8 +160,8 @@ ces schemas champ par champ, sans renommage local.
 - `schemas/playable_corpus_v1.schema.json` — reference pour `playable_corpus.v1`
 - `schemas/pack_compiled_v1.schema.json` — reference pour `pack.compiled.v1`
 - `schemas/pack_materialization_v1.schema.json` — reference pour `pack.materialization.v1`
-- `schemas/pack_compiled_v2.schema.json` — reference planifiee pour `pack.compiled.v2`
-- `schemas/pack_materialization_v2.schema.json` — reference planifiee pour `pack.materialization.v2`
+- `schemas/pack_compiled_v2.schema.json` — reference historique / strategic-later pour `pack.compiled.v2`
+- `schemas/pack_materialization_v2.schema.json` — reference historique / strategic-later pour `pack.materialization.v2`
 
 Regles Phase 3 v2:
 

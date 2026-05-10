@@ -25,7 +25,7 @@ Runtime contract boundary (2026-05-10):
   database infrastructure and historical context, but it is not the active
   runtime contract.
 - `playable_corpus.v1`, `pack.compiled.v1`, `pack.materialization.v1`, and the
-  planned `pack.compiled.v2`/`pack.materialization.v2` family are legacy /
+  `pack.compiled.v2`/`pack.materialization.v2` family are legacy /
   historical / strategic-later for runtime handoff.
 - Runtime consumes local `serving_bundle.v1` / `session_snapshot.v2` artifacts,
   with local Golden Pack `pack.json` as fallback; it does not fetch owner-side

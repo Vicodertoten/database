@@ -56,7 +56,7 @@ Evidence-backed facts:
 
 ## 3. Active Contracts and Status
 
-- `golden_pack.v1`: **active MVP runtime contract**.
+- `golden_pack.v1`: **active at the time of this audit; retained now as runtime fallback**.
 - `golden_pack_manifest.v1`: **active**.
 - `golden_pack_validation_report.v1`: **active**.
 - Localized names source/display policy (`docs/foundation/localized-name-source-policy-v1.md`): **active**.
